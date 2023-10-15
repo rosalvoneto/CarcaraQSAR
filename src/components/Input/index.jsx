@@ -1,10 +1,10 @@
 import styles from './styles.module.css';
 
-export default function Input() {
+export default function Input({ name }) {
   return(
     <div>
-      <p>Email</p>
-      <input type="text" />
+      <p className={styles.description}>{name}</p>
+      <input className={styles.input} type="text" />
     </div>
   )
 }

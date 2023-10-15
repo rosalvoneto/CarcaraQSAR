@@ -1,0 +1,47 @@
+
+.container {
+  width: 400px;
+  height: 450px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border-radius: 17px;
+  background: var(--white-color-2);
+
+  padding: 25px;
+}
+
+.title {
+  font-size: 29px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.link {
+  width: 100%;
+
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+
+  cursor: pointer;
+
+  display: flex;
+}
+
+.centerLink {
+  width: 100%;
+  
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+}
+
+.button {}
