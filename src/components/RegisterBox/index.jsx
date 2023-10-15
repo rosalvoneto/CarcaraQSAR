@@ -1,22 +1,22 @@
 import Input from '../Input';
 import styles from './styles.module.css';
 
-export default function AuntenticBox({ setRegisterBoxAppears }) {
+export default function RegisterBox({ setRegisterBoxAppears }) {
 
-  const handleRegisterBox = () => {
-    setRegisterBoxAppears(true);
+  const handleAutenticBox = () => {
+    setRegisterBoxAppears(false);
   }
 
   return(
     <div className={styles.container}>
-      <h4 className={styles.title}>Auntenticação</h4>
+      <h4 className={styles.title}>Cadastro</h4>
 
       <div className={styles.inputsContainer}>
+        <Input name={"Nome"}/>
         <Input name={"Email"}/>
-        <div className={styles.inputContainer}>
-          <Input name={"Senha"}/>
-          <a className={styles.link}>Esqueci a senha</a>
-        </div>
+        <Input name={"Senha"}/>
+        <Input name={"País"}/>
+        <Input name={"Instituição/Departamento"}/>
       </div>
 
       <div className={styles.buttonContainer}>
@@ -25,9 +25,9 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
         </button>
         <a 
           className={styles.centerLink}
-          onClick={handleRegisterBox}
+          onClick={handleAutenticBox}
         >
-          Novo por aqui? Crie um conta
+          Já tem uma conta? Se autentique
         </a>
       </div>
     </div>
