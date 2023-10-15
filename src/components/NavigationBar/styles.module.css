@@ -1,0 +1,62 @@
+.container {
+  height: 100vh;
+  width: 250px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+
+  border: 0px solid red;
+  border-right: 1px solid var(--black-color-1);
+
+  position: relative;
+}
+
+.logoImage {
+  height: 250px;
+}
+
+.linksContainer {
+  border: 0px solid red;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.link {
+  display: inline-block;
+
+  text-align: center;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  margin: 2px;
+}
+
+.link:hover {
+  font-weight: 500;
+}
+
+.button {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  height: 38px;
+  width: 180px;
+}
+
+.cactusImage {
+  width: 100%;
+
+  position: relative;
+  bottom: 0;
+}

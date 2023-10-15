@@ -36,6 +36,8 @@ a {
   font-weight: 500;
   color: var(--black-color-1);
   text-decoration: inherit;
+
+  cursor: pointer;
 }
 a:hover {
   color: var(--black-color-1);

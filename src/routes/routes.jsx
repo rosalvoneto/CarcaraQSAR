@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import { NotFound } from "../pages/NotFound";
 import { Login } from "../pages/Login";
+import { Home } from "../pages/Home";
 
 export const Routes = () => {
   return (
@@ -10,6 +11,7 @@ export const Routes = () => {
       <Switch>
         <Route path="*" Component={NotFound} />
         <Route path="/" Component={Login} />
+        <Route path="/home" Component={Home} />
       </Switch>
     </BrowserRouter>
   );
