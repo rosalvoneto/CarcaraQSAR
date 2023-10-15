@@ -1,0 +1,24 @@
+
+.container {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+}
+
+.image {
+  height: 400px;
+}
+
+.description {
+  width: 472px;
+  text-align: center;
+
+  color: var(--primary-color-2);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+}
