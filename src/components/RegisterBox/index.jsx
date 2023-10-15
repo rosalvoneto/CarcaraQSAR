@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Input from '../Input';
 import styles from './styles.module.css';
 
@@ -5,6 +6,11 @@ export default function RegisterBox({ setRegisterBoxAppears }) {
 
   const handleAutenticBox = () => {
     setRegisterBoxAppears(false);
+  }
+
+  const navigate = useNavigate();
+  const handleToHomePage = () => {
+    navigate('/home');
   }
 
   return(
@@ -20,8 +26,11 @@ export default function RegisterBox({ setRegisterBoxAppears }) {
       </div>
 
       <div className={styles.buttonContainer}>
-        <button className={styles.button}>
-          Entrar
+        <button 
+          className={styles.button}
+          onClick={handleToHomePage}
+        >
+          Registrar
         </button>
         <a 
           className={styles.centerLink}
