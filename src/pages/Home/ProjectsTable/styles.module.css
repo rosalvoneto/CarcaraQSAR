@@ -1,0 +1,54 @@
+
+.table {
+  border: 0px solid red;
+}
+
+.header {
+  border: 0px solid red;
+}
+
+.descriptionHeader {
+  border: 0px solid red;
+}
+
+.descriptionItem {
+  border: 0px solid red;
+  text-align: left;
+}
+
+.item1 {
+  width: 1%;
+}
+
+.item2 {
+  width: 30%;
+}
+
+.item3 {
+  width: 10%;
+}
+
+.item4 {
+  width: 10%;
+}
+
+.body {
+  border: 0px solid red;
+}
+
+.descriptionBody {
+  border: 0px solid red;
+}
+
+.item {
+  border: 0px solid red;
+}
+
+.checkboxContainer {
+  min-height: 30px;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
