@@ -1,9 +1,11 @@
 import NavigationBar from '../../components/NavigationBar';
 import Input from '../../components/Input';
+import { UserBar } from './UserBar';
+
 import { ProjectsTable } from './ProjectsTable';
+import { Table } from './Table'; 
 
 import styles from './styles.module.css';
-import { UserBar } from './UserBar';
 
 export function Home() {
 
@@ -16,6 +18,7 @@ export function Home() {
         <UserBar name={name}/>
         <Input name={"Todos os projetos"}/>
         <ProjectsTable />
+        <Table />
       </div>
     </div>
   )

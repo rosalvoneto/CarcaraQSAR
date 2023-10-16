@@ -1,0 +1,23 @@
+.tableHeader {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  border: 1px solid red;
+}
+
+.checkboxItem {
+  border: 1px solid red;
+}
+
+.nameItem {
+  border: 1px solid red;
+}
+
+.statusItem {
+  border: 1px solid red;
+}
+
+.dateItem {
+  border: 1px solid red;
+}
