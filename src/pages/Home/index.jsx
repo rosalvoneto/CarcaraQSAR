@@ -18,7 +18,6 @@ export function Home() {
         <UserBar name={name}/>
         <Input name={"Todos os projetos"}/>
         <ProjectsTable />
-        <Table />
       </div>
     </div>
   )
