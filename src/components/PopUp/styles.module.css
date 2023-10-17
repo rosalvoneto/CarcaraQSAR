@@ -1,0 +1,31 @@
+.fade {
+  z-index: 1;
+
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.61);
+  
+  position: fixed;
+  right: 0;
+  top: 0;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  z-index: 2;
+
+  border: 0px solid red;
+  background-color: var(--white-color-1);
+
+  width: 200px;
+  height: 120px;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+}

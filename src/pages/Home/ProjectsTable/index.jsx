@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 
 import { TrashSimple } from "@phosphor-icons/react";
+import PopUp from '../../../components/PopUp';
 
 export function ProjectsTable() {
 
@@ -57,6 +58,7 @@ export function ProjectsTable() {
     },
 
   ]);
+  const [showPopUp, setShowPopup] = useState(false);
 
   const toggleSelecionado = (id) => {
     setDados(
@@ -67,7 +69,7 @@ export function ProjectsTable() {
 
     console.log(dados);
   };
-  
+
   const removeItem = (index) => {
     dados.splice(index, 1);
     setDados([...dados]);
@@ -76,46 +78,49 @@ export function ProjectsTable() {
   };
 
   return (
-    <table className={styles.table}>
-      <thead className={styles.header}>
-        <tr className={styles.descriptionHeader}>
-          <th className={`${styles.descriptionItem} ${styles.item1}`}></th>
-          <th className={`${styles.descriptionItem} ${styles.item2}`}>Nome</th>
-          <th className={`${styles.descriptionItem} ${styles.item3}`}>Status</th>
-          <th className={`${styles.descriptionItem} ${styles.item4}`}>
-            Data de modificação
-          </th>
-          <th className={`${styles.descriptionItem} ${styles.item5}`}></th>
-        </tr>
-      </thead>
+    <>
+      <table className={styles.table}>
+        <thead className={styles.header}>
+          <tr className={styles.descriptionHeader}>
+            <th className={`${styles.descriptionItem} ${styles.item1}`}></th>
+            <th className={`${styles.descriptionItem} ${styles.item2}`}>Nome</th>
+            <th className={`${styles.descriptionItem} ${styles.item3}`}>Status</th>
+            <th className={`${styles.descriptionItem} ${styles.item4}`}>
+              Data de modificação
+            </th>
+            <th className={`${styles.descriptionItem} ${styles.item5}`}></th>
+          </tr>
+        </thead>
 
-      <tbody className={styles.body}>
-        {
-          dados.map((item, index) => (
-            <tr key={item.id} className={styles.descriptionBody}>
-              <td className={`${styles.item} ${styles.checkboxContainer}`}>
-                <input
-                  type="checkbox"
-                  checked={item.selecionado}
-                  onChange={() => toggleSelecionado(item.id)}
-                />
-              </td>
-              <td className={styles.item}>{item.nome}</td>
-              <td className={styles.item}>{item.status}</td>
-              <td className={styles.item}>{item.date}</td>
-              <td className={styles.item}>
-                <a 
-                  className={styles.removeButton}
-                  onClick={() => removeItem(index)}
-                >
-                  <TrashSimple size={20} />
-                </a>  
-              </td>
-            </tr>
-          ))
-        }
-      </tbody>
+        <tbody className={styles.body}>
+          {
+            dados.map((item, index) => (
+              <tr key={item.id} className={styles.descriptionBody}>
+                <td className={`${styles.item} ${styles.checkboxContainer}`}>
+                  <input
+                    type="checkbox"
+                    checked={item.selecionado}
+                    onChange={() => toggleSelecionado(item.id)}
+                  />
+                </td>
+                <td className={styles.item}>{item.nome}</td>
+                <td className={styles.item}>{item.status}</td>
+                <td className={styles.item}>{item.date}</td>
+                <td className={styles.item}>
+                  <a 
+                    className={styles.removeButton}
+                    onClick={() => setShowPopup(true)}
+                  >
+                    <TrashSimple size={20} />
+                  </a>  
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
 
-    </table>
+      <PopUp show={showPopUp}/>
+    </>
   )
 }
