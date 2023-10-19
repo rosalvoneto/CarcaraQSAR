@@ -10,27 +10,44 @@ export function ProgressBar() {
   const states = [
     {
       index: 0,
-      name: "Base de Dados"
+      name: "Base de Dados",
+      childs: []
     },
     {
       index: 1,
-      name: "Pré-processamento"
+      name: "Pré-processamento",
+      childs: [
+        {
+          index: 1.1,
+          name: "Estatística descritiva",
+          childs: []
+        },
+        {
+          index: 1.2,
+          name: "Normalização dos dados",
+          childs: []
+        },
+      ]
     },
     {
       index: 2,
-      name: "Seleção de Variáveis"
+      name: "Seleção de Variáveis",
+      childs: []
     },
     {
       index: 3,
-      name: "Treinamento"
+      name: "Treinamento",
+      childs: []
     },
     {
       index: 4,
-      name: "Resultados"
+      name: "Resultados",
+      childs: []
     },
     {
       index: 5,
-      name: "Outliers"
+      name: "Outliers",
+      childs: []
     },
   ];
   const [progress, setProgress] = useState(0);
@@ -40,7 +57,6 @@ export function ProgressBar() {
   }
 
   const block = (state, useImage) => {
-
     const activeText = state.index <= progress;
     const activeImage = state.index < progress;
 
@@ -79,16 +95,32 @@ export function ProgressBar() {
 
   return(
     <div className={styles.container}>
-      {
-        states.map((state, index) => {
+      <div className={styles.barContainer}>
+        {
+          states.map((state, index) => {
 
-          const useImage = index != (states.length - 1);
-          return(
-            block(state, useImage)
-          );
+            const useImage = index != (states.length - 1);
+            return(
+              block(state, useImage)
+            );
 
-        })
-      }
+          })
+        }
+      </div>
+      <div className={styles.barContainer}>
+        {
+          (states[Math.floor(progress)].childs.length != 0) &&
+          states[Math.floor(progress)].childs.map((state, index) => {
+          
+            const childLength = states[Math.floor(progress)].childs.length;
+            const useImage = index != (childLength - 1);
+            return(
+              block(state, useImage)
+            );
+  
+          })
+        }
+      </div>
     </div>
   )
 }

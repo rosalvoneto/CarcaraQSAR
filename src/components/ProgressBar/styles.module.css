@@ -3,6 +3,13 @@
   border: 0px solid red;
 
   display: flex;
+  flex-direction: column;
+}
+
+.barContainer {
+  border: 0px solid red;
+
+  display: flex;
 }
 
 .text {
