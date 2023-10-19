@@ -70,3 +70,14 @@ button {
 button:hover {
   border-color: var(--neutral-color-1);
 }
+
+input, textarea {
+  width: 100%;
+
+  border-radius: 29px;
+  border: 1px solid var(--black-color-1);
+  background-color: var(--white-color-1);
+
+  padding: 10px;
+  font-size: 15px;
+}

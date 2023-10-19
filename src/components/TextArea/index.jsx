@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
 
-export default function Input({ name, setValue }) {
+export default function TextArea({ name, setValue }) {
 
   const [text, setText] = useState("");
 
@@ -13,12 +13,13 @@ export default function Input({ name, setValue }) {
   return(
     <div>
       <p className={styles.description}>{name}</p>
-      <input 
-        className={`${styles.inputType}`} 
-        type="text"
+      <textarea 
+        className={`${styles.textareaType}`}
+        rows={5}
         value={text}
         onChange={changeText}
-      />
+      >
+      </textarea>
     </div>
   )
 }

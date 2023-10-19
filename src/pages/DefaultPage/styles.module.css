@@ -1,0 +1,14 @@
+.container {
+  border: 0px solid red;
+
+  display: flex;
+  width: 100%;
+}
+
+.pageContentContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  padding: 10px;
+}
