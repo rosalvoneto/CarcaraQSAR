@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DefaultPage } from '../DefaultPage';
-import { UserBar } from '../Home/UserBar';
+import { UserBar } from '../../components/UserBar';
 
 import Input from '../../components/Input';
 import TextArea from '../../components/TextArea';

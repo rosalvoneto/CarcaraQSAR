@@ -1,6 +1,6 @@
 
 import { DefaultPage } from '../DefaultPage';
-import { UserBar } from './UserBar';
+import { UserBar } from '../../components/UserBar';
 import Input from '../../components/Input';
 import { ProjectsTable } from './ProjectsTable';
 

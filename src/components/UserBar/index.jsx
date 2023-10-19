@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 
-import defaultUserImage from '../../../assets/defaultUserImage.svg';
+import defaultUserImage from '../../assets/defaultUserImage.svg';
 
 export function UserBar({ name }) {
   return(
