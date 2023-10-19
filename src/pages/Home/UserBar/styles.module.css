@@ -1,11 +1,13 @@
 .container {
-  border: 1px solid red;
+  border: 0px solid red;
 
   width: 100%;
   display: flex;
   align-items: center;
 
   justify-content: flex-end;
+
+  margin-bottom: 20px;
 }
 
 .name {

@@ -16,7 +16,9 @@ export function Home() {
       <NavigationBar />
       <div className={styles.pageContentContainer}>
         <UserBar name={name}/>
-        <Input name={"Todos os projetos"}/>
+        <div className={styles.inputContainer}>
+          <Input name={"Todos os projetos"}/>
+        </div>
         <ProjectsTable />
       </div>
     </div>
