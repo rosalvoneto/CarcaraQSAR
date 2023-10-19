@@ -15,7 +15,7 @@ export const Routes = () => {
         <Route path="/" Component={Login} />
         <Route path="/home" Component={Home} />
         <Route path="/new" Component={NewProject} />
-        <Route path="/new" Component={Project} />
+        <Route path="/project" Component={Project} />
       </Switch>
     </BrowserRouter>
   );

@@ -37,7 +37,7 @@ export function NewProject() {
           />
           <button 
             className={styles.button}
-            onClick={() => handleTo('project')}
+            onClick={() => handleTo('/project')}
           >
             Criar projeto
           </button>
