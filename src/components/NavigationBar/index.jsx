@@ -8,8 +8,8 @@ export default function NavigationBar() {
 
   const navigate = useNavigate();
 
-  const handleToNewProjectPage = () => {
-    navigate('/new');
+  const handleTo = (url) => {
+    navigate(url);
   };
 
   return(
@@ -17,14 +17,30 @@ export default function NavigationBar() {
       <img src={logoImage} alt="logo" className={styles.logoImage} />
 
       <div className={styles.linksContainer}>
-        <a className={styles.link}>Todos os projetos</a>
-        <a className={styles.link}>Compartilhados</a>
-        <a className={styles.link}>Projetos excluídos</a>
-        <a className={styles.link}>Modelos disponíveis</a>
+        <a className={styles.link}
+          onClick={() => handleTo('/home')}
+        >
+          Todos os projetos
+        </a>
+        <a className={styles.link}
+          onClick={() => handleTo('/home')}
+        >
+          Compartilhados
+        </a>
+        <a className={styles.link}
+          onClick={() => handleTo('/home')}
+        >
+          Projetos escolhidos
+        </a>
+        <a className={styles.link}
+          onClick={() => handleTo('/home')}
+        >
+          Modelos disponíveis
+        </a>
 
         <button 
           className={styles.button}
-          onClick={handleToNewProjectPage}
+          onClick={() => handleTo('/new')}
         >
           Novo projeto
         </button>

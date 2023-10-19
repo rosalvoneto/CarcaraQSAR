@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { DefaultPage } from '../DefaultPage';
 import { UserBar } from '../Home/UserBar';
 
@@ -11,6 +13,11 @@ export function NewProject() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+
+  const navigate = useNavigate();
+  const handleTo = (url) => {
+    navigate(url);
+  };
 
   return(
     <DefaultPage>
@@ -28,6 +35,12 @@ export function NewProject() {
             setValue={setDescription}
             value={description}
           />
+          <button 
+            className={styles.button}
+            onClick={() => handleTo('project')}
+          >
+            Criar projeto
+          </button>
         </div>
       </div>
 

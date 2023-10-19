@@ -11,7 +11,7 @@ export default function TextArea({ name, setValue }) {
   };
 
   return(
-    <div>
+    <div className={styles.container}>
       <p className={styles.description}>{name}</p>
       <textarea 
         className={`${styles.textareaType}`}

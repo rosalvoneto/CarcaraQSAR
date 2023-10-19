@@ -3,13 +3,22 @@
   height: 100%;
 
   border: 0px solid red;
-
+  
   display: flex;
   justify-content: center;
-
+  
   padding-top: 80px;
 }
 
 .contentContainer {
+  border: 0px solid red;
+
   width: 500px;
+}
+
+.button {
+  width: 150px;
+  height: 35px;
+
+  margin: auto;
 }

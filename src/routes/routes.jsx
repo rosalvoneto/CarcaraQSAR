@@ -5,6 +5,7 @@ import { NotFound } from "../pages/NotFound";
 import { Login } from "../pages/Login";
 import { Home } from "../pages/Home";
 import { NewProject } from "../pages/NewProject";
+import { Project } from "../pages/Project";
 
 export const Routes = () => {
   return (
@@ -14,6 +15,7 @@ export const Routes = () => {
         <Route path="/" Component={Login} />
         <Route path="/home" Component={Home} />
         <Route path="/new" Component={NewProject} />
+        <Route path="/new" Component={Project} />
       </Switch>
     </BrowserRouter>
   );

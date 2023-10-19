@@ -1,4 +1,8 @@
 
+.container {
+  margin-bottom: 10px;
+}
+
 .description {
   font-size: 18px;
   font-style: normal;

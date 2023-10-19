@@ -11,7 +11,7 @@ export default function Input({ name, setValue }) {
   };
 
   return(
-    <div>
+    <div className={styles.container}>
       <p className={styles.description}>{name}</p>
       <input 
         className={`${styles.inputType}`} 
