@@ -1,6 +1,6 @@
 
 .container {
-  border: 1px solid red;
+  border: 0px solid red;
 
   display: flex;
 }
@@ -10,6 +10,8 @@
   border-radius: 10px;
   
   cursor: pointer;
+  
+  transition: all 0.2s ease;
 }
 
 .activatedText {
@@ -22,6 +24,7 @@
   background-color: var(--trasnparent-color-1);
 }
 
+
 .image {
   display: flex;
   justify-content: center;
@@ -29,6 +32,10 @@
   
   padding-right: 10px;
   padding-left: 10px;
+
+  transition: all 0.2s ease;
+
+  margin: 0 -8px;
 }
 
 .deactivatedImage {

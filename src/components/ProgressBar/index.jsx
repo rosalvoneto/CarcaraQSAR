@@ -35,6 +35,10 @@ export function ProgressBar() {
   ];
   const [progress, setProgress] = useState(0);
 
+  const activateState = (state) => {
+    setProgress(state.index);
+  }
+
   const block = (state, useImage) => {
 
     const activeText = state.index <= progress;
@@ -56,19 +60,20 @@ export function ProgressBar() {
       'var(--white-color-1)' : 'var(--black-color-1)';
 
     return(
-      <>
+      <div key={state.index} style={{ display: 'flex' }}>
         <p 
           className={classNamesText}
+          onClick={() => activateState(state)}
         >
           {state.name}
         </p>
         {
           useImage &&
           <div className={classNamesImage}>
-            <CaretRight size={27} color={colorCaretRight} />
+            <CaretRight size={22} color={colorCaretRight} />
           </div>
         }
-      </>
+      </div>
     )
   }
 
