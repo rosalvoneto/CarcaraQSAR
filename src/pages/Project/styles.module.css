@@ -1,0 +1,39 @@
+
+.inlineInputContainer {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 10px 0;
+}
+
+.input {
+  width: 30px;
+  height: 30px;
+
+  border-radius: 5px;
+
+  background-color: var(--white-color-2);
+
+  text-align: center;
+}
+
+.uploadContainer {
+  width: 100%;
+  height: 100px;
+
+  background-color: var(--primary-color-2);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 5px;
+
+}
+
+.uploadDescription {
+  color: var(--white-color-1);
+
+}

@@ -37,12 +37,49 @@ export function ProgressBar() {
     {
       index: 3,
       name: "Treinamento",
-      childs: []
+      childs: [
+        {
+          index: 3.1,
+          name: "Algoritmo",
+          childs: []
+        },
+        {
+          index: 3.2,
+          name: "Hiperparâmetros",
+          childs: []
+        },
+      ]
     },
     {
       index: 4,
       name: "Resultados",
-      childs: []
+      childs: [
+        {
+          index: 4.1,
+          name: "Importância das variáveis",
+          childs: []
+        },
+        {
+          index: 4.2,
+          name: "Leave One Out",
+          childs: []
+        },
+        {
+          index: 4.3,
+          name: "K-Fold Cross Validation",
+          childs: []
+        },
+        {
+          index: 4.4,
+          name: "Y-Scrambling",
+          childs: []
+        },
+        {
+          index: 4.5,
+          name: "Bootstrap",
+          childs: []
+        },
+      ]
     },
     {
       index: 5,
@@ -79,6 +116,7 @@ export function ProgressBar() {
       <div key={state.index} style={{ display: 'flex' }}>
         <p 
           className={classNamesText}
+          style={Math.floor(state.index) != state.index ? { fontSize: 13 } : {}}
           onClick={() => activateState(state)}
         >
           {state.name}
@@ -86,7 +124,7 @@ export function ProgressBar() {
         {
           useImage &&
           <div className={classNamesImage}>
-            <CaretRight size={22} color={colorCaretRight} />
+            <CaretRight size={16} color={colorCaretRight} />
           </div>
         }
       </div>
@@ -109,7 +147,7 @@ export function ProgressBar() {
       </div>
       <div className={styles.barContainer}>
         {
-          (states[Math.floor(progress)].childs.length != 0) &&
+          states[Math.floor(progress)].childs.length != 0 &&
           states[Math.floor(progress)].childs.map((state, index) => {
           
             const childLength = states[Math.floor(progress)].childs.length;
