@@ -5,39 +5,34 @@
 }
 
 .contentContainer {
-  border: 0px solid red;
   border-radius: 5px;
 }
 
 .table {
-  border: 1px solid #5B5B5B;
-
+  border: 1px solid var(--black-color-4);
   border-collapse: collapse;
-  border-radius: 5px;
 }
 
 .header {
-  border: 1px solid #5B5B5B;
+
 }
 
 .headerRegister {
-  border: 1px solid #5B5B5B;
+
 }
 
 .itemHeaderRegister {
-  border: 1px solid #5B5B5B;
-  
   padding: 5px 20px;
   
   font-size: 15px;
   font-weight: 500;
   width: auto;
   
+  border: 1px solid var(--black-color-4);
   color: var(--white-color-1);
-  background-color: #474646;
+  background-color: var(--black-color-3);
 
   text-align: center;
-
   /* Impede que o texto quebre em várias linhas */
   white-space: nowrap; 
   /* Oculta o conteúdo que não cabe na célula */
@@ -47,18 +42,17 @@
 }
 
 .body {
-  border: 1px solid #5B5B5B;
+
 }
 
 .bodyRegister {
-  border: 1px solid #5B5B5B;
+
 }
 
 .itemBodyRegister {
-  border: 1px solid #5B5B5B;
-
   text-align: center;
-
+  
+  border: 1px solid var(--black-color-4);
   color: var(--white-color-1);
-  background-color: #3f3e3e;
+  background-color: var(--black-color-2);
 }
