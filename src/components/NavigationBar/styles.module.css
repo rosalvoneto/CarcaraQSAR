@@ -10,8 +10,6 @@
 
   border: 0px solid red;
   border-right: 1px solid var(--black-color-1);
-
-  position: relative;
 }
 
 .logoImage {

@@ -1,3 +1,4 @@
+import { DataTable } from '../../components/DataTable';
 import { ProgressBar } from '../../components/ProgressBar';
 import { UserBar } from '../../components/UserBar';
 import { DefaultPage } from '../DefaultPage';
@@ -20,6 +21,7 @@ export function Project() {
         </p>
       </div>
 
+      <DataTable />
     </DefaultPage>
   )
 }
