@@ -48,6 +48,14 @@
   border: 0px solid red;
 }
 
+.name {
+  cursor: pointer;
+}
+
+.name:hover {
+  text-decoration: underline;
+}
+
 .checkboxContainer {
   min-height: 30px;
   height: 100%;

@@ -146,7 +146,7 @@ export function ProjectsTable() {
                     onChange={() => toggleSelected(item.id)}
                   />
                 </td>
-                <td className={styles.item}>{item.nome}</td>
+                <td className={`${styles.item} ${styles.name}`}>{item.nome}</td>
                 <td className={styles.item}>{item.status}</td>
                 <td className={styles.item}>{item.date}</td>
                 <td className={styles.item}>
