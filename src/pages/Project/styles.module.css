@@ -20,7 +20,8 @@
 }
 
 .uploadContainer {
-  height: 100px;
+  height: 70px;
+  max-height: 70px;
 
   background-color: var(--primary-color-2);
   
@@ -37,20 +38,9 @@
   color: var(--white-color-1);
 }
 
-.containerInput {
+.tableInfomation {
   display: flex;
-  gap: 5px;
-
-  border: 0px solid red;
-}
-
-.descritptorInput {
-  border: 0px solid red;
-  width: auto;
-}
-
-.inputCheck {
-  border: 0px solid red;
-
-  width: 20px;
+  justify-content: space-between;
+  
+  width: 100%;
 }

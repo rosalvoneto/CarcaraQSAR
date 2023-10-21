@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { DataTable } from '../../components/DataTable';
 import { ProgressBar } from '../../components/ProgressBar';
 import { UserBar } from '../../components/UserBar';
 import { DefaultPage } from '../DefaultPage';
+import { CheckboxInput } from '../../components/CheckboxInput';
 
 import styles from './styles.module.css';
 
@@ -26,14 +27,11 @@ export function Project() {
         </p>
       </div>
 
-      <div className={styles.containerInput}>
-        <p className={styles.descritptorInput}>Trasposição:</p>
-        <input 
-          type="checkbox" 
-          className={styles.inputCheck}
-          checked={transpose} 
-          onClick={() => setTranspose(!transpose)} 
-        />
+      <div className={styles.tableInfomation}>
+        <CheckboxInput value={transpose} setValue={setTranspose}/>
+        <p className={styles.tableDescription}>
+          4000 linhas x 30 colunas
+        </p>
       </div>
 
       <DataTable vertical={transpose}/>

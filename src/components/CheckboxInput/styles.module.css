@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  gap: 5px;
+
+  border: 0px solid red;
+}
+
+.description {
+  border: 0px solid red;
+  width: auto;
+}
+
+.input {
+  border: 0px solid red;
+
+  width: 20px;
+}

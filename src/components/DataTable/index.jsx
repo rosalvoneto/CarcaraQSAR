@@ -20,7 +20,6 @@ export function DataTable({ vertical }) {
     [1,2,3,4,5,6,7,8,9,10],
     [1,2,3,4,5,6,7,8,9,10],
     [1,2,3,4,5,6,7,8,9,10],
-    [1,2,3,4,5,6,7,8,9,10],
   ];
 
   let dataTable = [variablesNames, ...registers];
@@ -46,7 +45,9 @@ export function DataTable({ vertical }) {
   }
   
   return(
-    <div className={styles.container}>
+    <div 
+      className={styles.container}
+    >
       <div className={styles.contentContainer}>
         <table className={styles.table}>
           {
@@ -54,9 +55,14 @@ export function DataTable({ vertical }) {
             <thead className={styles.header}>
               <tr className={styles.headerRegister}>
                 {
-                  dataTable[0].map((variableName) => {
+                  dataTable[0].map((variableName, index) => {
                     return(
-                      <th className={styles.itemHeaderRegister}>{ variableName }</th>
+                      <th 
+                        className={styles.itemHeaderRegister}
+                        key={index}
+                      >
+                        { variableName }
+                      </th>
                     )
                   })
                 }
@@ -66,13 +72,21 @@ export function DataTable({ vertical }) {
           }
           <tbody className={styles.body}>
             {
-              dataTable.map((register) => {
+              dataTable.map((register, index) => {
                 return(
-                  <tr className={styles.bodyRegister}>
+                  <tr 
+                    className={styles.bodyRegister}
+                    key={index}
+                  >
                   {
-                    register.map((itemRegister) => {
+                    register.map((itemRegister, indexItem) => {
                       return(
-                        <td className={styles.itemBodyRegister}>{ itemRegister }</td>
+                        <td 
+                          className={styles.itemBodyRegister}
+                          key={indexItem}
+                        >
+                          { itemRegister }
+                        </td>
                       )
                     })
                   }
