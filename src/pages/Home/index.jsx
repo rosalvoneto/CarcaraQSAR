@@ -11,12 +11,12 @@ import styles from './styles.module.css';
 export function Home() {
 
   return(
-    <DefaultPage>
+    <>
       <UserBar name={userName}/>
       <div className={styles.inputContainer}>
         <Input name={"Todos os projetos"}/>
       </div>
       <ProjectsTable />
-    </DefaultPage>
+    </>
   )
 }

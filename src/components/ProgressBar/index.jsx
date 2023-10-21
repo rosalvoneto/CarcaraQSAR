@@ -1,106 +1,14 @@
 
 import { useState } from 'react';
 
+import { statesProgressBar } from '../../settings';
 import { CaretRight } from '@phosphor-icons/react';
 
 import styles from './styles.module.css';
 import { useNavigate } from 'react-router-dom';
 
-export function ProgressBar() {
-
-  const states = [
-    {
-      index: 0,
-      name: "Base de Dados",
-      childs: [],
-      href: '/project',
-    },
-    {
-      index: 1,
-      name: "Pré-processamento",
-      childs: [
-        {
-          index: 1.1,
-          name: "Estatística descritiva",
-          childs: [],
-          href: '/pre',
-        },
-        {
-          index: 1.2,
-          name: "Normalização dos dados",
-          childs: [],
-          href: '/pre',
-        },
-      ]
-    },
-    {
-      index: 2,
-      name: "Seleção de Variáveis",
-      childs: [],
-      href: '/project',
-    },
-    {
-      index: 3,
-      name: "Treinamento",
-      childs: [
-        {
-          index: 3.1,
-          name: "Algoritmo",
-          childs: [],
-          href: '/project',
-        },
-        {
-          index: 3.2,
-          name: "Hiperparâmetros",
-          childs: [],
-          href: '/project',
-        },
-      ]
-    },
-    {
-      index: 4,
-      name: "Resultados",
-      childs: [
-        {
-          index: 4.1,
-          name: "Importância das variáveis",
-          childs: [],
-          href: '/project',
-        },
-        {
-          index: 4.2,
-          name: "Leave One Out",
-          childs: [],
-          href: '/project',
-        },
-        {
-          index: 4.3,
-          name: "K-Fold Cross Validation",
-          childs: [],
-          href: '/project',
-        },
-        {
-          index: 4.4,
-          name: "Y-Scrambling",
-          childs: [],
-          href: '/project',
-        },
-        {
-          index: 4.5,
-          name: "Bootstrap",
-          childs: [],
-          href: '/project',
-        },
-      ]
-    },
-    {
-      index: 5,
-      name: "Outliers",
-      childs: [],
-      href: '/project',
-    },
-  ];
-  const [progress, setProgress] = useState(0);
+export function ProgressBar({ progressNumber }) {
+  const [progress, setProgress] = useState(progressNumber);
 
   const navigate = useNavigate();
 
@@ -151,9 +59,9 @@ export function ProgressBar() {
     <div className={styles.container}>
       <div className={styles.barContainer}>
         {
-          states.map((state, index) => {
+          statesProgressBar.map((state, index) => {
 
-            const useImage = index != (states.length - 1);
+            const useImage = index != (statesProgressBar.length - 1);
             return(
               block(state, useImage)
             );
@@ -163,10 +71,10 @@ export function ProgressBar() {
       </div>
       <div className={styles.barContainer}>
         {
-          states[Math.floor(progress)].childs.length != 0 &&
-          states[Math.floor(progress)].childs.map((state, index) => {
+          statesProgressBar[Math.floor(progress)].childs.length != 0 &&
+          statesProgressBar[Math.floor(progress)].childs.map((state, index) => {
           
-            const childLength = states[Math.floor(progress)].childs.length;
+            const childLength = statesProgressBar[Math.floor(progress)].childs.length;
             const useImage = index != (childLength - 1);
             return(
               block(state, useImage)

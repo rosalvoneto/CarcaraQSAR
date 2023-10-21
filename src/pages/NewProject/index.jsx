@@ -22,7 +22,7 @@ export function NewProject() {
   };
 
   return(
-    <DefaultPage>
+    <>
       <UserBar name={userName}/>
       
       <div className={styles.container}>
@@ -39,13 +39,13 @@ export function NewProject() {
           />
           <button 
             className={styles.button}
-            onClick={() => handleTo('/project')}
+            onClick={() => handleTo('/database')}
           >
             Criar projeto
           </button>
         </div>
       </div>
 
-    </DefaultPage>
+    </>
   )
 }

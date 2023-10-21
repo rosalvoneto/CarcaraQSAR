@@ -11,9 +11,10 @@ import styles from './styles.module.css';
 import { useNavigate } from 'react-router-dom'; 
 import { userName } from '../../settings';
 
-export function Project() {
+export function Database() {
 
-  const progress = 1;
+  const href = '/database';
+  const progress = 0;
 
   const [transpose, setTranspose] = useState(false);
 
@@ -23,9 +24,9 @@ export function Project() {
   }
 
   return(
-    <DefaultPage>
+    <>
       <UserBar name={userName}/>
-      <ProgressBar progress={0}/>
+      <ProgressBar progressNumber={progress}/>
 
       <div className={styles.inlineInputContainer}>
         <p className={styles.descritptor}>Tipo de separador: </p>
@@ -48,10 +49,10 @@ export function Project() {
 
       <button 
         className={styles.button}
-        onClick={() => handleTo('/pre')}
+        onClick={() => handleTo('/pre-processing')}
       >
         Próximo
       </button>
-    </DefaultPage>
+    </>
   )
 }
