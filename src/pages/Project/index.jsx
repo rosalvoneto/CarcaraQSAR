@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { DataTable } from '../../components/DataTable';
 import { ProgressBar } from '../../components/ProgressBar';
 import { UserBar } from '../../components/UserBar';
@@ -6,6 +8,9 @@ import { DefaultPage } from '../DefaultPage';
 import styles from './styles.module.css';
 
 export function Project() {
+
+  const [transpose, setTranspose] = useState(false);
+
   return(
     <DefaultPage>
       <UserBar name={"Daniel Alencar"}/>
@@ -21,7 +26,17 @@ export function Project() {
         </p>
       </div>
 
-      <DataTable />
+      <div className={styles.containerInput}>
+        <p className={styles.descritptorInput}>Trasposição:</p>
+        <input 
+          type="checkbox" 
+          className={styles.inputCheck}
+          checked={transpose} 
+          onClick={() => setTranspose(!transpose)} 
+        />
+      </div>
+
+      <DataTable vertical={transpose}/>
     </DefaultPage>
   )
 }

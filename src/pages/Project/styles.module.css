@@ -30,9 +30,27 @@
 
   border-radius: 5px;
 
+  margin-bottom: 20px;
 }
 
 .uploadDescription {
   color: var(--white-color-1);
+}
 
+.containerInput {
+  display: flex;
+  gap: 5px;
+
+  border: 0px solid red;
+}
+
+.descritptorInput {
+  border: 0px solid red;
+  width: auto;
+}
+
+.inputCheck {
+  border: 0px solid red;
+
+  width: 20px;
 }
