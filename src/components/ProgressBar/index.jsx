@@ -116,7 +116,7 @@ export function ProgressBar() {
       <div key={state.index} style={{ display: 'flex' }}>
         <p 
           className={classNamesText}
-          style={Math.floor(state.index) != state.index ? { fontSize: 13 } : {}}
+          style={Math.floor(state.index) != state.index ? { fontSize: 12 } : {}}
           onClick={() => activateState(state)}
         >
           {state.name}

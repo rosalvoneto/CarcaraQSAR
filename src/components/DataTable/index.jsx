@@ -47,6 +47,7 @@ export function DataTable({ vertical }) {
   return(
     <div 
       className={styles.container}
+      style={vertical ? { width: 'fit-content' } : {}}
     >
       <div className={styles.contentContainer}>
         <table className={styles.table}>

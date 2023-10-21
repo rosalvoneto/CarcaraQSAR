@@ -35,6 +35,10 @@ export function Project() {
       </div>
 
       <DataTable vertical={transpose}/>
+
+      <button className={styles.button}>
+        Próximo
+      </button>
     </DefaultPage>
   )
 }
