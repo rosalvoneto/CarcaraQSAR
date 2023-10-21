@@ -2,7 +2,10 @@ import styles from './styles.module.css';
 
 import cactusImage from '../../assets/cactus.png';
 import logoImage from '../../assets/logo.svg';
+
 import { useNavigate } from 'react-router-dom';
+
+import { NavigationBarWidth } from '../../settings';
 
 export default function NavigationBar() {
 
@@ -13,7 +16,10 @@ export default function NavigationBar() {
   };
 
   return(
-    <div className={styles.container}>
+    <div 
+      className={styles.container}
+      style={{ width: NavigationBarWidth }}
+    >
       <img src={logoImage} alt="logo" className={styles.logoImage} />
 
       <div className={styles.linksContainer}>

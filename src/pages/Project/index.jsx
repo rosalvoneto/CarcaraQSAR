@@ -15,7 +15,7 @@ export function Project() {
   return(
     <DefaultPage>
       <UserBar name={"Daniel Alencar"}/>
-      <ProgressBar />
+      <ProgressBar progress={0}/>
 
       <div className={styles.inlineInputContainer}>
         <p className={styles.descritptor}>Tipo de separador: </p>
