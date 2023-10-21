@@ -7,6 +7,8 @@ import { UserBar } from '../../components/UserBar';
 import Input from '../../components/Input';
 import TextArea from '../../components/TextArea';
 
+import { userName } from '../../settings';
+
 import styles from './styles.module.css';
 
 export function NewProject() {
@@ -21,7 +23,7 @@ export function NewProject() {
 
   return(
     <DefaultPage>
-      <UserBar name={"Daniel Alencar"}/>
+      <UserBar name={userName}/>
       
       <div className={styles.container}>
         <div className={styles.contentContainer}>

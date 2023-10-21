@@ -8,13 +8,23 @@ import { CheckboxInput } from '../../components/CheckboxInput';
 
 import styles from './styles.module.css';
 
+import { useNavigate } from 'react-router-dom'; 
+import { userName } from '../../settings';
+
 export function Project() {
+
+  const progress = 1;
 
   const [transpose, setTranspose] = useState(false);
 
+  const navigate = useNavigate();
+  const handleTo = (URL) => {
+    navigate(URL);
+  }
+
   return(
     <DefaultPage>
-      <UserBar name={"Daniel Alencar"}/>
+      <UserBar name={userName}/>
       <ProgressBar progress={0}/>
 
       <div className={styles.inlineInputContainer}>
@@ -36,7 +46,10 @@ export function Project() {
 
       <DataTable vertical={transpose}/>
 
-      <button className={styles.button}>
+      <button 
+        className={styles.button}
+        onClick={() => handleTo('/pre')}
+      >
         Próximo
       </button>
     </DefaultPage>

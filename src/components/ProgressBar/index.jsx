@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CaretRight } from '@phosphor-icons/react';
 
 import styles from './styles.module.css';
+import { useNavigate } from 'react-router-dom';
 
 export function ProgressBar() {
 
@@ -11,7 +12,8 @@ export function ProgressBar() {
     {
       index: 0,
       name: "Base de Dados",
-      childs: []
+      childs: [],
+      href: '/project',
     },
     {
       index: 1,
@@ -20,19 +22,22 @@ export function ProgressBar() {
         {
           index: 1.1,
           name: "Estatística descritiva",
-          childs: []
+          childs: [],
+          href: '/pre',
         },
         {
           index: 1.2,
           name: "Normalização dos dados",
-          childs: []
+          childs: [],
+          href: '/pre',
         },
       ]
     },
     {
       index: 2,
       name: "Seleção de Variáveis",
-      childs: []
+      childs: [],
+      href: '/project',
     },
     {
       index: 3,
@@ -41,12 +46,14 @@ export function ProgressBar() {
         {
           index: 3.1,
           name: "Algoritmo",
-          childs: []
+          childs: [],
+          href: '/project',
         },
         {
           index: 3.2,
           name: "Hiperparâmetros",
-          childs: []
+          childs: [],
+          href: '/project',
         },
       ]
     },
@@ -57,40 +64,49 @@ export function ProgressBar() {
         {
           index: 4.1,
           name: "Importância das variáveis",
-          childs: []
+          childs: [],
+          href: '/project',
         },
         {
           index: 4.2,
           name: "Leave One Out",
-          childs: []
+          childs: [],
+          href: '/project',
         },
         {
           index: 4.3,
           name: "K-Fold Cross Validation",
-          childs: []
+          childs: [],
+          href: '/project',
         },
         {
           index: 4.4,
           name: "Y-Scrambling",
-          childs: []
+          childs: [],
+          href: '/project',
         },
         {
           index: 4.5,
           name: "Bootstrap",
-          childs: []
+          childs: [],
+          href: '/project',
         },
       ]
     },
     {
       index: 5,
       name: "Outliers",
-      childs: []
+      childs: [],
+      href: '/project',
     },
   ];
   const [progress, setProgress] = useState(0);
 
+  const navigate = useNavigate();
+
   const activateState = (state) => {
     setProgress(state.index);
+    navigate(state.href);
   }
 
   const block = (state, useImage) => {
