@@ -1,0 +1,14 @@
+
+.container {
+  border: 0px solid red;
+
+  height: 100%;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.graphsContainer {
+  display: flex;
+  gap: 10px;
+}

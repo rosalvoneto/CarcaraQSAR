@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 
-export function DataTable({ vertical }) {
+export function DataTable({ vertical, onlyTitles }) {
 
   const variablesNames = [
     "Variável 1",
@@ -22,7 +22,12 @@ export function DataTable({ vertical }) {
     [1,2,3,4,5,6,7,8,9,10],
   ];
 
-  let dataTable = [variablesNames, ...registers];
+  let dataTable;
+  if(onlyTitles) {
+    dataTable = [variablesNames]
+  } else {
+    dataTable = [variablesNames, ...registers];
+  }
 
   if(vertical) {
     dataTable = transporMatriz(dataTable);

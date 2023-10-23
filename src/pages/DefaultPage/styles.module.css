@@ -6,7 +6,7 @@
 }
 
 .pageContentContainer {
-  border: 1px solid green;
+  border: 0px solid green;
   padding: 15px;
 
   display: flex;
