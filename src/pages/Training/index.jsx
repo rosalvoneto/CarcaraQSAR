@@ -6,6 +6,7 @@ import styles from './styles.module.css';
 import { userName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
 import { useEffect, useState } from 'react';
+import { InlineInput } from '../../components/InlineInput';
 
 export const bioAlgorithms = [
   "Random Forest",
@@ -32,25 +33,41 @@ export default function Training() {
     console.log(option)
   }, [option]);
 
-  return(
-    <>
-      <UserBar name={userName}/>
-      <ProgressBar progressNumber={progress}/>
+  if(false) {
+    return(
+      <>
+        <UserBar name={userName}/>
+        <ProgressBar progressNumber={progress}/>
 
-      <div className={styles.container}>
+        <div className={styles.container}>
 
-        <RadionInput 
-          name={"Aplicar algoritmo BioInspirado"}
-          options={bioAlgorithms}
-          setOption={setOption}
-        />
-        <div className={styles.informationContainer}>
-          <p className={styles.information}>
-            {bioAlgorithmsDescriptions[bioAlgorithms.indexOf(option)]}
-          </p>
+          <RadionInput 
+            name={"Aplicar algoritmo BioInspirado"}
+            options={bioAlgorithms}
+            setOption={setOption}
+          />
+          <div className={styles.informationContainer}>
+            <p className={styles.information}>
+              {bioAlgorithmsDescriptions[bioAlgorithms.indexOf(option)]}
+            </p>
+          </div>
+
         </div>
+      </>
+    )
+  } else {
+    return(
+      <>
+        <UserBar name={userName}/>
+        <ProgressBar progressNumber={progress}/>
 
-      </div>
-    </>
-  )
+        <div className={styles.parametersContainer}>
+
+          <InlineInput name={"Quantidade de árvores: "}/>
+          <InlineInput name={"Número de atributos por árvore: "}/>
+
+        </div>
+      </>
+    )
+  }
 }

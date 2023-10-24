@@ -29,3 +29,9 @@
   color: var(--white-color-1);
   background-color: var(--primary-color-1);
 }
+
+
+
+.parametersContainer {
+  border: 0px solid red;
+}

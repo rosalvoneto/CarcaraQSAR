@@ -10,6 +10,7 @@ import styles from './styles.module.css';
 
 import { useNavigate } from 'react-router-dom'; 
 import { userName } from '../../settings';
+import { InlineInput } from '../../components/InlineInput';
 
 export function Database() {
 
@@ -28,10 +29,7 @@ export function Database() {
       <UserBar name={userName}/>
       <ProgressBar progressNumber={progress}/>
 
-      <div className={styles.inlineInputContainer}>
-        <p className={styles.descritptor}>Tipo de separador: </p>
-        <input type="text" className={styles.input} />
-      </div>
+      <InlineInput name={"Tipo de separador"}/>
       <div className={styles.uploadContainer}>
         <p className={styles.uploadDescription}>
           Upload (CSV, TXT)

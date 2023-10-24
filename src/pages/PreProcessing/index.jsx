@@ -49,6 +49,25 @@ export function PreProcessing({ index }) {
         <ProgressBar progressNumber={progress}/>
 
         <div className={styles.container}>
+          <DataTable vertical={true} onlyTitles/>
+
+          <div className={styles.graphsContainer}>
+
+            <Graph name={"Histograma"} image={Histograma}/>
+            <Graph name={"Box-Plot"} image={BoxPlot}/>
+
+          </div>
+
+        </div>
+      </>
+    )  
+  } else {
+    return(
+      <>
+        <UserBar name={userName} />
+        <ProgressBar progressNumber={progress}/>
+
+        <div className={styles.container}>
 
           <RadionInput 
             name={"Normalização dos dados"}
@@ -59,25 +78,6 @@ export function PreProcessing({ index }) {
             <p className={styles.information}>
               {optionsDescriptions[options.indexOf(option)]}
             </p>
-          </div>
-
-        </div>
-      </>
-    )
-  } else {
-    return(
-      <>
-        <UserBar name={userName} />
-        <ProgressBar progressNumber={progress}/>
-
-        <div className={styles.container}>
-          <DataTable vertical={true} onlyTitles/>
-
-          <div className={styles.graphsContainer}>
-
-            <Graph name={"Histograma"} image={Histograma}/>
-            <Graph name={"Box-Plot"} image={BoxPlot}/>
-
           </div>
 
         </div>

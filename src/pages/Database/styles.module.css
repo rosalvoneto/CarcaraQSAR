@@ -1,24 +1,4 @@
 
-.inlineInputContainer {
-  display: flex;
-  align-items: center;
-
-  gap: 5px;
-
-  padding: 10px 0;
-}
-
-.input {
-  width: 25px;
-  height: 25px;
-
-  border-radius: 5px;
-
-  background-color: var(--white-color-2);
-
-  text-align: center;
-}
-
 .uploadContainer {
   height: 70px;
   max-height: 70px;
