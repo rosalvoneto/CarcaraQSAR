@@ -36,7 +36,7 @@ export default function NavigationBar() {
         <a className={styles.link}
           onClick={() => handleTo('/home')}
         >
-          Projetos escolhidos
+          Projetos excluídos
         </a>
         <a className={styles.link}
           onClick={() => handleTo('/home')}

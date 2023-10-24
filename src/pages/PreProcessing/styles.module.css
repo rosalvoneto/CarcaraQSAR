@@ -5,10 +5,21 @@
   height: 100%;
 
   display: flex;
-  justify-content: space-between;
+  gap: 50px;
 }
 
 .graphsContainer {
   display: flex;
   gap: 10px;
+}
+
+.informationContainer {
+  width: 500px;
+  height: fit-content;
+
+  padding: 10px;
+
+  border-radius: 10px;
+  color: var(--white-color-1);
+  background-color: var(--primary-color-1);
 }
