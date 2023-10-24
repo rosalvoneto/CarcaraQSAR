@@ -1,3 +1,11 @@
+.container {
+  border: 0px solid red;
+}
+
+.name {
+  border: 0px solid red;
+  width: 500px;
+}
 
 .contentContainer {
   display: flex;

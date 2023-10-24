@@ -14,6 +14,17 @@
 }
 
 .informationContainer {
+  border: 0px solid red;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: fit-content;
+}
+
+.information {
   width: 500px;
   height: fit-content;
 

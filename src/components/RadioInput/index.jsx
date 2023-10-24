@@ -15,7 +15,7 @@ export function RadionInput({ name, options, setOption }) {
   return(
     <div className={styles.container}>
 
-      <p className="name">
+      <p className={styles.name}>
         <strong>{ name }</strong>
       </p>
       
@@ -23,7 +23,7 @@ export function RadionInput({ name, options, setOption }) {
         {
           options.map((option, index) => {
             return(
-              <label className={styles.label}>
+              <label key={index} className={styles.label}>
                 <input
                   className={styles.input}
                   type="radio"

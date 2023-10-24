@@ -42,42 +42,46 @@ export function PreProcessing({ index }) {
 
   const [option, setOption] = useState(options[0]);
 
-  return(
-    <>
-      <UserBar name={userName} />
-      <ProgressBar progressNumber={progress}/>
+  if(true) {
+    return(
+      <>
+        <UserBar name={userName} />
+        <ProgressBar progressNumber={progress}/>
 
-      <div className={styles.container}>
+        <div className={styles.container}>
 
-        <RadionInput 
-          name={"Normalização dos dados"}
-          options={options} 
-          setOption={setOption}
-        />
-        <p className={styles.informationContainer}>
-          {optionsDescriptions[options.indexOf(option)]}
-        </p>
-
-      </div>
-    </>
-  )
-
-  return(
-    <>
-      <UserBar name={userName} />
-      <ProgressBar progressNumber={progress}/>
-
-      <div className={styles.container}>
-        <DataTable vertical={true} onlyTitles/>
-
-        <div className={styles.graphsContainer}>
-
-          <Graph name={"Histograma"} image={Histograma}/>
-          <Graph name={"Box-Plot"} image={BoxPlot}/>
+          <RadionInput 
+            name={"Normalização dos dados"}
+            options={options} 
+            setOption={setOption}
+          />
+          <div className={styles.informationContainer}>
+            <p className={styles.information}>
+              {optionsDescriptions[options.indexOf(option)]}
+            </p>
+          </div>
 
         </div>
+      </>
+    )
+  } else {
+    return(
+      <>
+        <UserBar name={userName} />
+        <ProgressBar progressNumber={progress}/>
 
-      </div>
-    </>
-  )
+        <div className={styles.container}>
+          <DataTable vertical={true} onlyTitles/>
+
+          <div className={styles.graphsContainer}>
+
+            <Graph name={"Histograma"} image={Histograma}/>
+            <Graph name={"Box-Plot"} image={BoxPlot}/>
+
+          </div>
+
+        </div>
+      </>
+    )
+  }
 }
