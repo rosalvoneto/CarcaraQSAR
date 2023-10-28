@@ -29,7 +29,7 @@ export default function Results() {
 
         <button 
           className={styles.button}
-          onClick={() => handleTo('/results')}
+          onClick={() => handleTo('/outliers')}
         >
           Próximo
         </button>

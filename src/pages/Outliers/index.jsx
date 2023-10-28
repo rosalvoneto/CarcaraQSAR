@@ -4,6 +4,7 @@ import { ProgressBar } from '../../components/ProgressBar';
 import styles from './styles.module.css';
 
 import { userName } from '../../settings';
+import Button from '../../components/Button';
 
 export default function Outliers() {
 
@@ -14,6 +15,8 @@ export default function Outliers() {
     <>
       <UserBar name={userName}/>
       <ProgressBar progressNumber={progress}/>
+
+      <Button name={'Finalizar'} URL={'/home'} />
     </>
   )
 }

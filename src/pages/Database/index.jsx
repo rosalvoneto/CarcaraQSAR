@@ -8,9 +8,9 @@ import { CheckboxInput } from '../../components/CheckboxInput';
 
 import styles from './styles.module.css';
 
-import { useNavigate } from 'react-router-dom'; 
 import { userName } from '../../settings';
 import { InlineInput } from '../../components/InlineInput';
+import Button from '../../components/Button';
 
 export function Database() {
 
@@ -18,11 +18,6 @@ export function Database() {
   const progress = 0;
 
   const [transpose, setTranspose] = useState(false);
-
-  const navigate = useNavigate();
-  const handleTo = (URL) => {
-    navigate(URL);
-  }
 
   return(
     <>
@@ -45,12 +40,7 @@ export function Database() {
 
       <DataTable vertical={transpose}/>
 
-      <button 
-        className={styles.button}
-        onClick={() => handleTo('/pre-processing')}
-      >
-        Próximo
-      </button>
+      <Button name={'Próximo'} URL={'/pre-processing'} />
     </>
   )
 }

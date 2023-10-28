@@ -7,6 +7,7 @@ import { userName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
 import { useEffect, useState } from 'react';
 import { InlineInput } from '../../components/InlineInput';
+import Button from '../../components/Button';
 
 export const bioAlgorithms = [
   "Random Forest",
@@ -33,7 +34,7 @@ export default function Training() {
     console.log(option)
   }, [option]);
 
-  if(false) {
+  if(true) {
     return(
       <>
         <UserBar name={userName}/>
@@ -53,6 +54,8 @@ export default function Training() {
           </div>
 
         </div>
+
+        <Button name={'Próximo'} URL={'/results'} />
       </>
     )
   } else {

@@ -15,6 +15,8 @@ import { RadionInput } from '../../components/RadioInput';
 
 import styles from './styles.module.css';
 
+import Button from '../../components/Button';
+
 export const options = [
   "MinMaxScaler",
   "StandardScaler",
@@ -59,6 +61,8 @@ export function PreProcessing({ index }) {
           </div>
 
         </div>
+
+        <Button name={'Próximo'} URL={'/variables-selection'} />
       </>
     )  
   } else {

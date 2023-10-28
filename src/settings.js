@@ -13,13 +13,13 @@ export const statesProgressBar = [
     name: "Pré-processamento",
     childs: [
       {
-        index: 1.1,
+        index: 0,
         name: "Estatística descritiva",
         childs: [],
         href: '/pre-processing',
       },
       {
-        index: 1.2,
+        index: 1,
         name: "Normalização dos dados",
         childs: [],
         href: '/pre-processing',
@@ -37,13 +37,13 @@ export const statesProgressBar = [
     name: "Treinamento",
     childs: [
       {
-        index: 3.1,
+        index: 0,
         name: "Algoritmo",
         childs: [],
         href: '/training',
       },
       {
-        index: 3.2,
+        index: 1,
         name: "Hiperparâmetros",
         childs: [],
         href: '/training',
@@ -55,31 +55,31 @@ export const statesProgressBar = [
     name: "Resultados",
     childs: [
       {
-        index: 4.1,
+        index: 0,
         name: "Importância das variáveis",
         childs: [],
         href: '/results',
       },
       {
-        index: 4.2,
+        index: 1,
         name: "Leave One Out",
         childs: [],
         href: '/results',
       },
       {
-        index: 4.3,
+        index: 2,
         name: "K-Fold Cross Validation",
         childs: [],
         href: '/results',
       },
       {
-        index: 4.4,
+        index: 3,
         name: "Y-Scrambling",
         childs: [],
         href: '/results',
       },
       {
-        index: 4.5,
+        index: 4,
         name: "Bootstrap",
         childs: [],
         href: '/results',

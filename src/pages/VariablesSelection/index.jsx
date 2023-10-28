@@ -5,12 +5,14 @@ import styles from './styles.module.css';
 
 import { userName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
+import Button from '../../components/Button';
 
 export const algorithms = [
   "Colônia de formigas",
   "Algoritmo genético",
   "Colônia de abelhas",
   "Cardume de peixes",
+  "Não aplicar"
 ]
 
 export default function VariablesSelection() {
@@ -32,6 +34,8 @@ export default function VariablesSelection() {
           options={["Sim", "Não"]}
         />
       </div>
+
+      <Button name={'Próximo'} URL={'/training'} />
     </>
   )
 }
