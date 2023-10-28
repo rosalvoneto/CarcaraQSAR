@@ -16,13 +16,17 @@ export function Database() {
 
   const href = '/database';
   const progress = 0;
+  const subProgress = 0;
 
   const [transpose, setTranspose] = useState(false);
 
   return(
     <>
       <UserBar name={userName}/>
-      <ProgressBar progressNumber={progress}/>
+      <ProgressBar 
+        progressNumber={progress}
+        subProgressNumber={subProgress}
+      />
 
       <InlineInput name={"Tipo de separador"}/>
       <div className={styles.uploadContainer}>
@@ -40,7 +44,13 @@ export function Database() {
 
       <DataTable vertical={transpose}/>
 
-      <Button name={'Próximo'} URL={'/pre-processing'} />
+      <Button 
+        name={'Próximo'} 
+        URL={'/pre-processing'} 
+        stateToPass={{
+          pageNumber: 0
+        }}
+      />
     </>
   )
 }

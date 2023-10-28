@@ -16,6 +16,7 @@ import { RadionInput } from '../../components/RadioInput';
 import styles from './styles.module.css';
 
 import Button from '../../components/Button';
+import { useLocation } from 'react-router-dom';
 
 export const options = [
   "MinMaxScaler",
@@ -42,13 +43,26 @@ export function PreProcessing({ index }) {
   const href = '/pre-processing';
   const progress = 1;
 
+  const location = useLocation();
+  const state = location.state;
+
+  let pageNumber = 0;
+  if(state) {
+    if(state.pageNumber) {
+      pageNumber = state.pageNumber;
+    }
+  }
+
   const [option, setOption] = useState(options[0]);
 
-  if(true) {
+  if(pageNumber == 0) {
     return(
       <>
         <UserBar name={userName} />
-        <ProgressBar progressNumber={progress}/>
+        <ProgressBar 
+          progressNumber={progress}
+          subProgressNumber={pageNumber}
+        />
 
         <div className={styles.container}>
           <DataTable vertical={true} onlyTitles/>
@@ -62,14 +76,24 @@ export function PreProcessing({ index }) {
 
         </div>
 
-        <Button name={'Próximo'} URL={'/variables-selection'} />
+        <Button 
+          name={'Próximo'} 
+          URL={'/pre-processing'} 
+          stateToPass={{
+            pageNumber: 1
+          }}
+        />
       </>
-    )  
-  } else {
+    )
+
+  } else if(pageNumber == 1) {
     return(
       <>
-        <UserBar name={userName} />
-        <ProgressBar progressNumber={progress}/>
+        <UserBar name={"userName"} />
+        <ProgressBar 
+          progressNumber={progress}
+          subProgressNumber={pageNumber}
+        />
 
         <div className={styles.container}>
 
@@ -85,6 +109,11 @@ export function PreProcessing({ index }) {
           </div>
 
         </div>
+
+        <Button 
+          name={'Próximo'} 
+          URL={'/variables-selection'} 
+        />
       </>
     )
   }

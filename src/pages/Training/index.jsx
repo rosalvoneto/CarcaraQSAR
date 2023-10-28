@@ -8,6 +8,7 @@ import { RadionInput } from '../../components/RadioInput';
 import { useEffect, useState } from 'react';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
+import { useLocation } from 'react-router-dom';
 
 export const bioAlgorithms = [
   "Random Forest",
@@ -28,17 +29,30 @@ export default function Training() {
   const href = '/training';
   const progress = 3;
 
+  const location = useLocation();
+  const state = location.state;
+
+  let pageNumber = 0;
+  if(state) {
+    if(state.pageNumber) {
+      pageNumber = state.pageNumber;
+    }
+  }
+
   const [option, setOption] = useState(bioAlgorithms[0]);
 
   useEffect(() => {
     console.log(option)
   }, [option]);
 
-  if(true) {
+  if(pageNumber == 0) {
     return(
       <>
         <UserBar name={userName}/>
-        <ProgressBar progressNumber={progress}/>
+        <ProgressBar 
+          progressNumber={progress}
+          subProgressNumber={pageNumber}
+        />
 
         <div className={styles.container}>
 
@@ -55,14 +69,24 @@ export default function Training() {
 
         </div>
 
-        <Button name={'Próximo'} URL={'/results'} />
+        <Button 
+          name={'Próximo'} 
+          URL={'/training'}
+          stateToPass={{
+            pageNumber: 1
+          }}
+        />
       </>
     )
-  } else {
+
+  } else if(pageNumber == 1) {
     return(
       <>
         <UserBar name={userName}/>
-        <ProgressBar progressNumber={progress}/>
+        <ProgressBar 
+          progressNumber={progress}
+          subProgressNumber={pageNumber}
+        />
 
         <div className={styles.parametersContainer}>
 
@@ -70,6 +94,11 @@ export default function Training() {
           <InlineInput name={"Número de atributos por árvore: "}/>
 
         </div>
+
+        <Button 
+          name={'Próximo'}
+          URL={'/results'}
+        />
       </>
     )
   }

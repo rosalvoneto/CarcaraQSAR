@@ -35,7 +35,13 @@ export default function VariablesSelection() {
         />
       </div>
 
-      <Button name={'Próximo'} URL={'/training'} />
+      <Button 
+        name={'Próximo'} 
+        URL={'/training'} 
+        stateToPass={{
+          pageNumber: 0
+        }}
+      />
     </>
   )
 }

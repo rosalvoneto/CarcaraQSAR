@@ -10,11 +10,15 @@ export default function Outliers() {
 
   const href = '/outliers';
   const progress = 5;
+  const subProgress = 0;
 
   return(
     <>
       <UserBar name={userName}/>
-      <ProgressBar progressNumber={progress}/>
+      <ProgressBar 
+        progressNumber={progress}
+        subProgressNumber={subProgress}
+      />
 
       <Button name={'Finalizar'} URL={'/home'} />
     </>

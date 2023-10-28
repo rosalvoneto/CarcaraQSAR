@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { statesProgressBar } from '../../settings';
 
@@ -8,10 +8,14 @@ import { Block } from './Block';
 
 import styles from './styles.module.css';
 
-export function ProgressBar({ progressNumber }) {
+export function ProgressBar({ progressNumber, subProgressNumber }) {
 
   const [progress, setProgress] = useState(progressNumber);
-  const navigate = useNavigate();
+  const [subProgress, setSubProgress] = useState(subProgressNumber);
+
+  useEffect(() => {
+    console.log(`progress: ${progressNumber} e subProgress: ${subProgressNumber}`);
+  }, []);
 
   return(
     <div className={styles.container}>
@@ -26,31 +30,32 @@ export function ProgressBar({ progressNumber }) {
                 key={index} 
                 state={state} 
                 useImage={useImage}
-                progress={progress}
+                progress={progressNumber}
               />
             );
 
           })
         }
       </div>
-      {
-      /* 
       <div className={styles.barContainer}>
         {
-          statesProgressBar[Math.floor(progress)].childs.length != 0 &&
-          statesProgressBar[Math.floor(progress)].childs.map((state, index) => {
+          statesProgressBar[progressNumber].childs.map((state, index) => {
           
-            const childLength = statesProgressBar[Math.floor(progress)].childs.length;
+            const childLength = statesProgressBar[progressNumber].childs.length;
             const useImage = index != (childLength - 1);
+
             return(
-              <Block key={index} state={state} useImage={useImage}/>
+              <Block 
+                key={index} 
+                state={state} 
+                useImage={useImage}
+                progress={subProgressNumber}
+              />
             );
   
           })
         }
       </div> 
-      */
-      }
     </div>
   )
 }

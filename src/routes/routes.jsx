@@ -16,22 +16,19 @@ import Outliers from "../pages/Outliers";
 export const Routes = () => {
   return (
     <BrowserRouter >
-      {
-        <Switch>
-          <Route path="/" Component={Login} />
-        </Switch>
-      }
       <DefaultPage>
         <Switch>
-          <Route path="/home" Component={Home} />
-          <Route path="/new" Component={NewProject} />
+          <Route path="/" element={<Login />} />
 
-          <Route path="/database" Component={Database} />
-          <Route path="/pre-processing" Component={PreProcessing} />
-          <Route path="/variables-selection" Component={VariablesSelection} />
-          <Route path="/training" Component={Training} />
-          <Route path="/results" Component={Results} />
-          <Route path="/outliers" Component={Outliers} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/new" element={<NewProject />} />
+
+          <Route path="/database" element={<Database />} />
+          <Route path="/pre-processing" element={<PreProcessing />} />
+          <Route path="/variables-selection" element={<VariablesSelection />} />
+          <Route path="/training" element={<Training />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/outliers" element={<Outliers />} />
 
         </Switch>
       </DefaultPage>
