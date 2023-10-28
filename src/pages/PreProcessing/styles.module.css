@@ -1,6 +1,6 @@
 
 .firstContainer {
-  border: 1px solid red;
+  border: 0px solid red;
 
   height: 100%;
 
@@ -14,7 +14,7 @@
 
 
 .secondContainer {
-  border: 1px solid red;
+  border: 0px solid red;
 
   height: 100%;
 
@@ -34,7 +34,7 @@
 }
 
 .informationContainer {
-  border: 1px solid red;
+  border: 0px solid red;
 
   display: flex;
   justify-content: center;

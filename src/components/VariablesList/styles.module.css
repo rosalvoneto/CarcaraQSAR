@@ -3,11 +3,11 @@
   height: 100%;
   overflow: auto;
 
-  border: 1px solid red;
+  border: 0px solid red;
 }
 
 .list {
-  border: 1px solid green;
+  border: 0px solid green;
   border-radius: 5px;
 }
 

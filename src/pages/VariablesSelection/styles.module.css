@@ -2,3 +2,29 @@
 .container {
   margin-top: 15px;
 }
+
+.algorithmContainer {
+  display: flex;
+}
+
+.informationContainer {
+  border: 0px solid red;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: fit-content;
+}
+
+.information {
+  width: 500px;
+  height: fit-content;
+
+  padding: 10px;
+
+  border-radius: 10px;
+  color: var(--white-color-1);
+  background-color: var(--primary-color-1);
+}
