@@ -9,13 +9,15 @@
   gap: 10px;
 }
 
-.button {
+.graphContainer {
+  border: 1px solid red;
+
+  display: flex;
+  gap: 5px;
+}
+
+.downloadButton {
   width: fit-content;
-  padding: 15px;
-
-  border-radius: 5px;
-
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
+  padding: 5px;
+  background-color: var(--transparent-color-1);
 }

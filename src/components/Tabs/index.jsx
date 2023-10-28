@@ -2,9 +2,7 @@ import { useState } from 'react';
 
 import styles from './styles.module.css';
 
-export function Tabs({ tabs }) {
-
-  const [selectedTab, setSelectedTab] = useState(0);
+export function Tabs({ tabs, selectedTab, setSelectedTab }) {
 
   return(
     <div className={styles.container}>

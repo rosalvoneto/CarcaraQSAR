@@ -11,11 +11,13 @@ export default function Button({ name, URL, stateToPass }) {
   }
 
   return(
-    <button 
-      className={styles.button}
-      onClick={() => handleTo(URL)}
-    >
-      { name }
-    </button>
+    <div className={styles.container}>
+      <button 
+        className={styles.button}
+        onClick={() => handleTo(URL)}
+      >
+        { name }
+      </button>
+    </div>
   )
 }
