@@ -96,8 +96,8 @@ export default function Training() {
 
         <div className={styles.parametersContainer}>
 
-          <InlineInput name={"Quantidade de árvores: "}/>
-          <InlineInput name={"Número de atributos por árvore: "}/>
+          <InlineInput name={"Quantidade de árvores: "} type={'number'}/>
+          <InlineInput name={"Número de atributos por árvore: "} type={'number'}/>
 
         </div>
 

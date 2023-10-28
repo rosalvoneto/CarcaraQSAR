@@ -4,12 +4,12 @@
   align-items: center;
 
   gap: 5px;
-
   padding: 5px 0;
 }
 
 .input {
-  width: 25px;
+  min-width: 25px;
+  width: 75px;
   height: 25px;
 
   border-radius: 5px;

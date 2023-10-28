@@ -5,13 +5,12 @@
   height: 100%;
 
   display: flex;
-  gap: 50px;
 
   margin-top: 15px;
 }
 
 .informationContainer {
-  border: 0px solid red;
+  border: 1px solid red;
 
   display: flex;
   justify-content: center;

@@ -1,0 +1,20 @@
+
+.container {
+  border: 0px solid red;
+
+  display: flex;
+  width: fit-content;
+}
+
+.tab {
+  font-size: 14px;
+
+  padding: 2px 15px;
+  border-radius: 20px;
+
+  cursor: pointer;
+}
+
+.tabSelected {
+  background-color: var(--white-color-2);
+}
