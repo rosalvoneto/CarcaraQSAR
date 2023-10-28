@@ -1,0 +1,14 @@
+
+.text {
+  padding: 5px 10px;
+
+  font-size: 14px;
+
+  border-radius: 12px;
+  background-color: var(--white-color-2);
+}
+
+.textSelected {
+  color: var(--white-color-1);
+  background-color: var(--primary-color-2);
+}

@@ -1,0 +1,28 @@
+
+.container {
+  border: 0px solid red;
+
+  margin-bottom: 10px;
+}
+
+.name {
+  border: 0px solid red;
+  width: 500px;
+}
+
+.input {
+  width: 300px;
+  border-radius: 10px 10px 0 0;
+}
+
+.optionsContainer {
+  border-radius: 0 0 10px 10px;
+  border: 1px solid var(--black-color-1);
+  width: 300px;
+
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+
+  padding: 5px;
+}

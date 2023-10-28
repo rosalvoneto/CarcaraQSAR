@@ -1,6 +1,8 @@
 
 .container {
   margin-top: 15px;
+
+  overflow: auto;
 }
 
 .algorithmContainer {
@@ -27,4 +29,15 @@
   border-radius: 10px;
   color: var(--white-color-1);
   background-color: var(--primary-color-1);
+}
+
+.selectedVariablesContainer {
+  border: 0px solid red;
+  padding: 10px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  width: 60%;
 }

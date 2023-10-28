@@ -7,6 +7,8 @@ import styles from './styles.module.css';
 import { projectName, userName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
 import Button from '../../components/Button';
+import { Selector } from '../../components/Selector';
+import { Option } from '../../components/Selector/Option';
 
 export const algorithms = [
   "Colônia de formigas",
@@ -30,6 +32,7 @@ export default function VariablesSelection() {
   const progress = 2;
 
   const [option, setOption] = useState(algorithms[0]);
+  const [selectedVariables, setSelectedVariables] = useState([]);
 
   return(
     <>
@@ -56,6 +59,17 @@ export default function VariablesSelection() {
           name={"Remover automaticamente variáveis constantes"}
           options={["Sim", "Não"]}
         />
+
+        <Selector />
+        <div className={styles.selectedVariablesContainer}>
+          {
+            selectedVariables.map(selectedVariable => {
+              return(
+                <Option text={selectedVariable} />
+              )
+            })
+          }
+        </div>
       </div>
 
       <Button 
