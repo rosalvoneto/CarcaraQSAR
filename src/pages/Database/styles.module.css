@@ -1,7 +1,15 @@
 
+.container {
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid red;
+}
+
 .uploadContainer {
   height: 70px;
-  max-height: 70px;
 
   background-color: var(--primary-color-2);
   
@@ -12,6 +20,8 @@
   border-radius: 5px;
 
   margin-bottom: 20px;
+
+  cursor: pointer;
 }
 
 .uploadDescription {

@@ -18,6 +18,9 @@ export function Database() {
   const progress = 0;
   const subProgress = 0;
 
+  const tableColumns = 30;
+  const tableLines = 4000;
+
   const [transpose, setTranspose] = useState(false);
 
   return(
@@ -31,29 +34,33 @@ export function Database() {
         subProgressNumber={subProgress}
       />
 
-      <InlineInput name={"Tipo de separador"}/>
-      <div className={styles.uploadContainer}>
-        <p className={styles.uploadDescription}>
-          Upload (CSV, TXT)
-        </p>
+      <div className={styles.container}>
+
+        <InlineInput name={"Tipo de separador"}/>
+
+        <div className={styles.uploadContainer}>
+          <p className={styles.uploadDescription}>
+            Upload (CSV, TXT)
+          </p>
+        </div>
+
+        <div className={styles.tableInfomation}>
+          <CheckboxInput value={transpose} setValue={setTranspose}/>
+          <p className={styles.tableDescription}>
+            {`${tableLines} linhas x ${tableColumns} colunas`}
+          </p>
+        </div>
+
+        <DataTable vertical={transpose}/>
+
+        <Button 
+          name={'Próximo'} 
+          URL={'/pre-processing'} 
+          stateToPass={{
+            pageNumber: 0
+          }}
+        />
       </div>
-
-      <div className={styles.tableInfomation}>
-        <CheckboxInput value={transpose} setValue={setTranspose}/>
-        <p className={styles.tableDescription}>
-          4000 linhas x 30 colunas
-        </p>
-      </div>
-
-      <DataTable vertical={transpose}/>
-
-      <Button 
-        name={'Próximo'} 
-        URL={'/pre-processing'} 
-        stateToPass={{
-          pageNumber: 0
-        }}
-      />
     </>
   )
 }
