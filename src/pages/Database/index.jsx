@@ -36,7 +36,7 @@ export function Database() {
 
       <div className={styles.container}>
 
-        <InlineInput name={"Tipo de separador"} type={'text'}/>
+        <InlineInput name={"Tipo de separador"} type={'text'} width={26}/>
 
         <div className={styles.uploadContainer}>
           <p className={styles.uploadDescription}>

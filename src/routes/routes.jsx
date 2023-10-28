@@ -16,22 +16,74 @@ import Outliers from "../pages/Outliers";
 export const Routes = () => {
   return (
     <BrowserRouter >
-      <DefaultPage>
+      
         <Switch>
-          <Route path="/" element={<Login />} />
 
-          <Route path="/home" element={<Home />} />
-          <Route path="/new" element={<NewProject />} />
-
-          <Route path="/database" element={<Database />} />
-          <Route path="/pre-processing" element={<PreProcessing />} />
-          <Route path="/variables-selection" element={<VariablesSelection />} />
-          <Route path="/training" element={<Training />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/outliers" element={<Outliers />} />
+          <Route path="/" 
+            element={
+              <Login />
+            } 
+          />
+          
+          <Route path="/home" 
+            element={
+              <DefaultPage>
+                <Home />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/new" 
+            element={
+              <DefaultPage>
+                <NewProject />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/database" 
+            element={
+              <DefaultPage>
+                <Database />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/pre-processing" 
+            element={
+              <DefaultPage>
+                <PreProcessing />
+              </DefaultPage>
+            }
+          />
+          <Route path="/variables-selection" 
+            element={
+              <DefaultPage>
+                <VariablesSelection />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/training" 
+            element={
+              <DefaultPage>
+                <Training />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/results" 
+            element={
+              <DefaultPage>
+                <Results />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/outliers" 
+            element={
+              <DefaultPage>
+                <Outliers />
+              </DefaultPage>
+            } 
+          />
 
         </Switch>
-      </DefaultPage>
+        
     </BrowserRouter>
   );
 };
