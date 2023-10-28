@@ -1,12 +1,41 @@
 
 .container {
+  height: 100%;
+  overflow: auto;
 
+  border: 1px solid red;
 }
 
 .list {
-
+  border: 1px solid green;
+  border-radius: 5px;
 }
 
 .listItem {
+  padding: 5px 20px;
+  
+  font-size: 15px;
+  font-weight: 500;
+  width: auto;
+  
+  border: 1px solid var(--black-color-4);
+  color: var(--white-color-1);
+  background-color: var(--black-color-3);
 
+  text-align: center;
+  /* Impede que o texto quebre em várias linhas */
+  white-space: nowrap; 
+  /* Oculta o conteúdo que não cabe na célula */
+  overflow: hidden;
+  /* Adiciona reticências ao texto que não cabe */
+  text-overflow: ellipsis;
+
+  cursor: pointer;
+}
+
+.litsItemSelected {
+  font-weight: 700;
+
+  color: var(--primary-color-1);
+  background-color: var(--black-color-4);
 }

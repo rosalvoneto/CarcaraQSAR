@@ -12,7 +12,7 @@ export const algorithms = [
   "Algoritmo genético",
   "Colônia de abelhas",
   "Cardume de peixes",
-  "Não aplicar"
+  "NÃO APLICAR"
 ]
 
 export default function VariablesSelection() {

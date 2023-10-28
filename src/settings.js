@@ -5,7 +5,7 @@ export const projectName = "Novo Projeto"
 export const statesProgressBar = [
   {
     index: 0,
-    name: "Resultados",
+    name: "Base de dados",
     childs: [],
     href: '/database',
   },

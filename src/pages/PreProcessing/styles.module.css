@@ -1,21 +1,40 @@
 
-.container {
-  border: 0px solid red;
+.firstContainer {
+  border: 1px solid red;
 
   height: 100%;
 
   display: flex;
   gap: 50px;
+
+  overflow: hidden;
+
+  margin-top: 15px;
+}
+
+
+.secondContainer {
+  border: 1px solid red;
+
+  height: 100%;
+
+  display: flex;
+
+  overflow: hidden;
+
+  margin-top: 15px;
 }
 
 .graphsContainer {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  overflow: auto;
 }
 
 .informationContainer {
-  border: 0px solid red;
+  border: 1px solid red;
 
   display: flex;
   justify-content: center;

@@ -17,6 +17,7 @@ import styles from './styles.module.css';
 
 import Button from '../../components/Button';
 import { useLocation } from 'react-router-dom';
+import { VariablesList } from '../../components/VariablesList';
 
 export const options = [
   "MinMaxScaler",
@@ -67,8 +68,8 @@ export function PreProcessing({ index }) {
           subProgressNumber={pageNumber}
         />
 
-        <div className={styles.container}>
-          <DataTable vertical={true} onlyTitles/>
+        <div className={styles.firstContainer}>
+          <VariablesList />
 
           <div className={styles.graphsContainer}>
 
@@ -101,7 +102,7 @@ export function PreProcessing({ index }) {
           subProgressNumber={pageNumber}
         />
 
-        <div className={styles.container}>
+        <div className={styles.secondContainer}>
 
           <RadionInput 
             name={"Normalização dos dados"}

@@ -1,11 +1,13 @@
 
 .container {
-  border: 0px solid red;
+  border: 1px solid red;
 
   height: 100%;
 
   display: flex;
   gap: 50px;
+
+  margin-top: 15px;
 }
 
 .informationContainer {
@@ -30,8 +32,8 @@
   background-color: var(--primary-color-1);
 }
 
-
-
 .parametersContainer {
+  margin-top: 15px;
+
   border: 0px solid red;
 }
