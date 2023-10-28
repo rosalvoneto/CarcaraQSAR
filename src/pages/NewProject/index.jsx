@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DefaultPage } from '../DefaultPage';
-import { UserBar } from '../../components/UserBar';
+import { Header } from '../../components/Header';
 
 import Input from '../../components/Input';
 import TextArea from '../../components/TextArea';
@@ -23,7 +23,9 @@ export function NewProject() {
 
   return(
     <>
-      <UserBar name={userName}/>
+      <Header 
+        userName={userName}
+      />
       
       <div className={styles.container}>
         <div className={styles.contentContainer}>

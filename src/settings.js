@@ -1,10 +1,11 @@
 
 export const NavigationBarWidth = 250;
 export const userName = "Daniel Alencar";
+export const projectName = "Novo Projeto"
 export const statesProgressBar = [
   {
     index: 0,
-    name: "Base de Dados",
+    name: "Resultados",
     childs: [],
     href: '/database',
   },
@@ -91,5 +92,58 @@ export const statesProgressBar = [
     name: "Outliers",
     childs: [],
     href: '/outliers',
+  },
+];
+
+// Registros da tabela
+export const projects = [
+  { 
+    id: 1, 
+    nome: 'Projeto de Descoberta', 
+    status: 'Resultados', 
+    selecionado: false, 
+    date: '10/10/2023' 
+  },
+  { 
+    id: 2, 
+    nome: 'Projeto de Avaliação Ambiental', 
+    status: 'Resultados', 
+    selecionado: false, 
+    date: '10/10/2023' 
+  },
+  { 
+    id: 3, 
+    nome: 'Projeto de Desenvolvimento de Produtos Cosméticos', 
+    status: 'Resultados', 
+    selecionado: false, 
+    date: '10/10/2023' 
+  },
+  { 
+    id: 4, 
+    nome: 'Projeto de Análise de Alimentos', 
+    status: 'Resultados', 
+    selecionado: false, 
+    date: '10/10/2023' 
+  },
+  { 
+    id: 5, 
+    nome: 'Projeto de Desenvolvimento de Materiais Poliméricos', 
+    status: 'Resultados', 
+    selecionado: false, 
+    date: '10/10/2023' 
+  },
+  { 
+    id: 6, 
+    nome: 'Projeto de Segurança de Produtos Químicos Domésticos', 
+    status: 'Resultados', 
+    selecionado: false, 
+    date: '10/10/2023' 
+  },
+  { 
+    id: 7, 
+    nome: 'Projeto de Avaliação Ambiental', 
+    status: 'Resultados', 
+    selecionado: false, 
+    date: '10/10/2023' 
   },
 ];

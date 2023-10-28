@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { DefaultPage } from '../DefaultPage';
-import { UserBar } from '../../components/UserBar';
+import { Header } from '../../components/Header';
 
 import { ProgressBar } from '../../components/ProgressBar';
-import { statesProgressBar, userName } from '../../settings';
+import { projectName, statesProgressBar, userName } from '../../settings';
 
 import { DataTable } from '../../components/DataTable';
 
@@ -58,7 +58,10 @@ export function PreProcessing({ index }) {
   if(pageNumber == 0) {
     return(
       <>
-        <UserBar name={userName} />
+        <Header 
+          title={projectName}
+          userName={userName}
+        />
         <ProgressBar 
           progressNumber={progress}
           subProgressNumber={pageNumber}
@@ -89,7 +92,10 @@ export function PreProcessing({ index }) {
   } else if(pageNumber == 1) {
     return(
       <>
-        <UserBar name={"userName"} />
+        <Header 
+          title={projectName}
+          userName={userName}
+        />
         <ProgressBar 
           progressNumber={progress}
           subProgressNumber={pageNumber}

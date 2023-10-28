@@ -1,9 +1,9 @@
-import { UserBar } from '../../components/UserBar';
+import { Header } from '../../components/Header';
 import { ProgressBar } from '../../components/ProgressBar';
 
 import styles from './styles.module.css';
 
-import { userName, statesProgressBar } from '../../settings';
+import { userName, statesProgressBar, projectName } from '../../settings';
 import { Graph } from '../../components/Graph';
 
 import GraphImage from '../../assets/results/importancia_das_variaveis.png';
@@ -27,7 +27,10 @@ export default function Results() {
 
   return(
     <>
-      <UserBar name={userName}/>
+      <Header 
+        title={projectName}
+        userName={userName}
+      />
       <ProgressBar 
         progressNumber={progress}
         subProgressNumber={pageNumber}

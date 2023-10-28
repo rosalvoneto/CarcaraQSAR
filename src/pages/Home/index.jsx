@@ -1,6 +1,6 @@
 
 import { DefaultPage } from '../DefaultPage';
-import { UserBar } from '../../components/UserBar';
+import { Header } from '../../components/Header';
 import Input from '../../components/Input';
 import { ProjectsTable } from './ProjectsTable';
 
@@ -12,7 +12,9 @@ export function Home() {
 
   return(
     <>
-      <UserBar name={userName}/>
+      <Header 
+        userName={userName}
+      />
       <div className={styles.inputContainer}>
         <Input name={"Todos os projetos"}/>
       </div>

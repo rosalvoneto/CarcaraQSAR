@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 
 import { DataTable } from '../../components/DataTable';
 import { ProgressBar } from '../../components/ProgressBar';
-import { UserBar } from '../../components/UserBar';
+import { Header } from '../../components/Header';
 import { DefaultPage } from '../DefaultPage';
 import { CheckboxInput } from '../../components/CheckboxInput';
 
 import styles from './styles.module.css';
 
-import { userName } from '../../settings';
+import { projectName, userName } from '../../settings';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 
@@ -22,7 +22,10 @@ export function Database() {
 
   return(
     <>
-      <UserBar name={userName}/>
+      <Header 
+        title={projectName}
+        userName={userName}
+      />
       <ProgressBar 
         progressNumber={progress}
         subProgressNumber={subProgress}

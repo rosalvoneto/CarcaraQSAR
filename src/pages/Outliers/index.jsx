@@ -1,9 +1,9 @@
-import { UserBar } from '../../components/UserBar';
+import { Header } from '../../components/Header';
 import { ProgressBar } from '../../components/ProgressBar';
 
 import styles from './styles.module.css';
 
-import { userName } from '../../settings';
+import { projectName, userName } from '../../settings';
 import Button from '../../components/Button';
 
 export default function Outliers() {
@@ -14,7 +14,10 @@ export default function Outliers() {
 
   return(
     <>
-      <UserBar name={userName}/>
+      <Header 
+        title={projectName}
+        userName={userName}
+      />
       <ProgressBar 
         progressNumber={progress}
         subProgressNumber={subProgress}

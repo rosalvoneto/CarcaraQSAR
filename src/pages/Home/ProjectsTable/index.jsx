@@ -1,64 +1,20 @@
 import { useEffect, useState } from 'react';
+
 import styles from './styles.module.css';
 
 import { TrashSimple } from "@phosphor-icons/react";
-import PopUp from '../../../components/PopUp';
+import { useNavigate } from 'react-router-dom';
+
+import { projects } from '../../../settings';
 
 export function ProjectsTable() {
 
-  // Registros da tabela
-  const [data, setData] = useState([
-    { 
-      id: 1, 
-      nome: 'Projeto de Descoberta', 
-      status: 'Base de dados', 
-      selecionado: false, 
-      date: '10/10/2023' 
-    },
-    { 
-      id: 2, 
-      nome: 'Projeto de Avaliação Ambiental', 
-      status: 'Base de dados', 
-      selecionado: false, 
-      date: '10/10/2023' 
-    },
-    { 
-      id: 3, 
-      nome: 'Projeto de Desenvolvimento de Produtos Cosméticos', 
-      status: 'Base de dados', 
-      selecionado: false, 
-      date: '10/10/2023' 
-    },
-    { 
-      id: 4, 
-      nome: 'Projeto de Análise de Alimentos', 
-      status: 'Base de dados', 
-      selecionado: false, 
-      date: '10/10/2023' 
-    },
-    { 
-      id: 5, 
-      nome: 'Projeto de Desenvolvimento de Materiais Poliméricos', 
-      status: 'Base de dados', 
-      selecionado: false, 
-      date: '10/10/2023' 
-    },
-    { 
-      id: 6, 
-      nome: 'Projeto de Segurança de Produtos Químicos Domésticos', 
-      status: 'Base de dados', 
-      selecionado: false, 
-      date: '10/10/2023' 
-    },
-    { 
-      id: 7, 
-      nome: 'Projeto de Avaliação Ambiental', 
-      status: 'Base de dados', 
-      selecionado: false, 
-      date: '10/10/2023' 
-    },
+  const [data, setData] = useState(projects);
 
-  ]);
+  const navigate = useNavigate();
+  const handleTo = (URL) => {
+    navigate(URL);
+  };
 
   // Estado do checkbox geral da tabela
   const [isCheked, setIsChecked] = useState(false);
@@ -146,7 +102,12 @@ export function ProjectsTable() {
                     onChange={() => toggleSelected(item.id)}
                   />
                 </td>
-                <td className={`${styles.item} ${styles.name}`}>{item.nome}</td>
+                <td 
+                  className={`${styles.item} ${styles.name}`}
+                  onClick={() => handleTo('/database')}
+                >
+                  {item.nome}
+                </td>
                 <td className={styles.item}>{item.status}</td>
                 <td className={styles.item}>{item.date}</td>
                 <td className={styles.item}>

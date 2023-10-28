@@ -1,9 +1,9 @@
 import { ProgressBar } from '../../components/ProgressBar';
-import { UserBar } from '../../components/UserBar';
+import { Header } from '../../components/Header';
 
 import styles from './styles.module.css';
 
-import { userName } from '../../settings';
+import { projectName, userName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
 import { useEffect, useState } from 'react';
 import { InlineInput } from '../../components/InlineInput';
@@ -48,7 +48,10 @@ export default function Training() {
   if(pageNumber == 0) {
     return(
       <>
-        <UserBar name={userName}/>
+        <Header 
+          title={projectName}
+          userName={userName}
+        />
         <ProgressBar 
           progressNumber={progress}
           subProgressNumber={pageNumber}
@@ -82,7 +85,10 @@ export default function Training() {
   } else if(pageNumber == 1) {
     return(
       <>
-        <UserBar name={userName}/>
+        <Header
+          title={projectName} 
+          userName={userName}
+        />
         <ProgressBar 
           progressNumber={progress}
           subProgressNumber={pageNumber}
