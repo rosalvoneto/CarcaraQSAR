@@ -6,6 +6,8 @@
 
   border-radius: 12px;
   background-color: var(--white-color-2);
+
+  cursor: alias;
 }
 
 .textSelected {

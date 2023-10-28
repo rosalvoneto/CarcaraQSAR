@@ -78,12 +78,12 @@ export default function Results() {
             width={550}
             image={graphs[selectedTab][pageNumber]}
           />
-          <button 
+          <a
             className={styles.downloadButton}
             onClick={downloadGraph}
           >
             <DownloadSimple size={30} color='var(--black-color-1)' />
-          </button>
+          </a>
         </div>
 
       </div>

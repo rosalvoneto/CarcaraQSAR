@@ -12,7 +12,7 @@
   padding: 2px 15px;
   border-radius: 20px;
 
-  cursor: pointer;
+  cursor: alias;
 }
 
 .tabSelected {

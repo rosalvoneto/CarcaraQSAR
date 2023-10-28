@@ -33,7 +33,7 @@
 
 .selectedVariablesContainer {
   border: 0px solid red;
-  padding: 10px;
+  padding: 5px 0;
 
   display: flex;
   flex-wrap: wrap;
