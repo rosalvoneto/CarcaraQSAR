@@ -22,7 +22,7 @@ Para construir um modelo QSAR, você normalmente segue estes passos:
 
 Os modelos QSAR são extremamente úteis na triagem virtual de compostos químicos, economizando tempo e recursos na pesquisa de novos medicamentos e produtos químicos. Eles também desempenham um papel importante na avaliação de riscos de substâncias químicas e na regulamentação de produtos químicos em relação à segurança ambiental e humana.
 
-## Aplicação
+## Layout da Aplicação
 
 Página de Login
 
@@ -40,9 +40,9 @@ Página de Base de dados do Projeto
 
 <img alt="Base de dados" title="#Database" src="./assets/project/Base de dados.png" />
 
-Além dessas, o projeto tem outras páginas para treinamento de modelo QSAR e páginas auxiliares para a aplicação.
+Além dessas, o projeto tem outras páginas para treinamento de modelo QSAR e páginas auxiliares.
 
-## Execução do projeto
+## Execução do Projeto
 
 Pré-requisitos para a execução do projeto:
 - Docker
