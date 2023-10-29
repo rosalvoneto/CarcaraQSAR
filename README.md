@@ -39,3 +39,36 @@ Página de criação de novo projeto
 Página de Base de dados do Projeto
 
 <img alt="SearchScreen" title="#SearchScreen" src="./assets/project/Base de dados.png" />
+
+
+### Rodando o app
+
+Requisitos:
+- Docker
+- Docker compose
+
+Execute os seguintes comandos no terminal:
+
+```bash
+# Clone este repositório
+$ git clone https://github.com/rosalvoneto/CarcaraQSAR
+
+# Acesse a pasta do projeto no terminal/cmd
+$ cd CarcaraQSAR
+```
+
+Você deve visualizar o arquivo ‘docker-compose.yaml’ na raíz do projeto. Este é um arquivo que especifica como configurar a imagem do projeto CarcaraQSAR e especifica também a execução de um container dessa imagem. Para executá-lo, digite no terminal:
+
+```bash
+$ docker-compose up
+```
+
+Depois de terminar a execução, no terminal deve aparecer os seguintes links da aplicação:
+- Local: http://localhost:5173/
+- Network: http://172.26.0.2:5173/
+
+OBS.: O link "Network" pode ser diferente da URL acima.
+
+Execute o link "Network" em seu navegador. Se tudo correr bem, no navegador você deve visualizar a seguinte página.
+
+<img alt="SearchScreen" title="#SearchScreen" src="./assets/project/Login.png" />
