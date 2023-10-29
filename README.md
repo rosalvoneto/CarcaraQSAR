@@ -26,16 +26,16 @@ Os modelos QSAR são extremamente úteis na triagem virtual de compostos químic
 
 Página de Login
 
-<img width="400" alt="ArtistScreen" title="#ArtistScreen" src="./assets/project/Login.png" />
+<img alt="ArtistScreen" title="#ArtistScreen" src="./assets/project/Login.png" />
 
 Página principal
 
-<img width="400" alt="PlaylistScreen" title="#PlaylistScreen" src="./assets/project/Página principal.png" />
+<img alt="PlaylistScreen" title="#PlaylistScreen" src="./assets/project/Página principal.png" />
 
 Página de criação de novo projeto
 
-<img width="400" alt="MusicScreen" title="#MusicScreen" src="./assets/project/Projeto.png" />
+<img alt="MusicScreen" title="#MusicScreen" src="./assets/project/Projeto.png" />
 
 Página de Base de dados do Projeto
 
-<img width="400" alt="SearchScreen" title="#SearchScreen" src="./assets/project/Base de dados.png" />
+<img alt="SearchScreen" title="#SearchScreen" src="./assets/project/Base de dados.png" />
