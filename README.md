@@ -26,24 +26,25 @@ Os modelos QSAR são extremamente úteis na triagem virtual de compostos químic
 
 Página de Login
 
-<img alt="ArtistScreen" title="#ArtistScreen" src="./assets/project/Login.png" />
+<img alt="Login" title="#Login" src="./assets/project/Login.png" />
 
 Página principal
 
-<img alt="PlaylistScreen" title="#PlaylistScreen" src="./assets/project/Página principal.png" />
+<img alt="Página principal" title="#MainPage" src="./assets/project/Página principal.png" />
 
 Página de criação de novo projeto
 
-<img alt="MusicScreen" title="#MusicScreen" src="./assets/project/Projeto.png" />
+<img alt="Projeto" title="#Project" src="./assets/project/Projeto.png" />
 
 Página de Base de dados do Projeto
 
-<img alt="SearchScreen" title="#SearchScreen" src="./assets/project/Base de dados.png" />
+<img alt="Base de dados" title="#Database" src="./assets/project/Base de dados.png" />
 
+Além dessas, o projeto tem outras páginas para treinamento de modelo QSAR e páginas auxiliares para a aplicação.
 
-### Rodando o app
+## Execução do projeto
 
-Requisitos:
+Pré-requisitos para a execução do projeto:
 - Docker
 - Docker compose
 
@@ -69,6 +70,6 @@ Depois de terminar a execução, no terminal deve aparecer os seguintes links da
 
 OBS.: O link "Network" pode ser diferente da URL acima.
 
-Execute o link "Network" em seu navegador. Se tudo correr bem, no navegador você deve visualizar a seguinte página.
+Execute o link "Network" em seu navegador. Se tudo correr bem, no navegador você deve visualizar a página de Login da aplicação.
 
-<img alt="SearchScreen" title="#SearchScreen" src="./assets/project/Login.png" />
+<img alt="Login" title="#Login" src="./assets/project/Login.png" />
