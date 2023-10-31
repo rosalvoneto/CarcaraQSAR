@@ -1,4 +1,4 @@
-<img alt="Logo" title="#Logo" src="./assets/logo.svg" />
+<img alt="Logo" title="#Logo" src="./assets/logo.png" />
 
 # CarcaraQSAR - Computational Algorithms to Relate Chemical Attributes with Respective Activities.
 
