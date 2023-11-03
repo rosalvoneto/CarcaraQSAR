@@ -2,6 +2,7 @@
 import { CaretRight } from '@phosphor-icons/react';
 
 import styles from './styles.module.css';
+import { useNavigate } from 'react-router-dom';
 
 export function Block({ state, useImage, progress }) {
 
@@ -23,11 +24,19 @@ export function Block({ state, useImage, progress }) {
   const colorCaretRight = activeImage ? 
     'var(--white-color-1)' : 'var(--black-color-1)';
 
+  const navigate = useNavigate();
+  const handleTo = (state) => {
+    console.log(state);
+    
+    navigate(state.href, { state: state.stateToPass });
+  }
+
   return(
     <div key={state.index} style={{ display: 'flex' }}>
       <p 
         className={classNamesText}
         style={Math.floor(state.index) != state.index ? { fontSize: 12 } : {}}
+        onClick={() =>  handleTo(state)}
       >
         {state.name}
       </p>

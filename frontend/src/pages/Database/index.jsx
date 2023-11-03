@@ -11,6 +11,7 @@ import styles from './styles.module.css';
 import { projectName, userName } from '../../settings';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
+import { BarButtons } from '../../components/BarButtons';
 
 export function Database() {
 
@@ -60,6 +61,14 @@ export function Database() {
             pageNumber: 0
           }}
         />
+        <Button 
+          name={'Voltar'} 
+          URL={'/pre-processing'} 
+          stateToPass={{
+            pageNumber: 0
+          }}
+        />
+        {/* <BarButtons /> */}
       </div>
     </>
   )

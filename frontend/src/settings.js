@@ -8,6 +8,7 @@ export const statesProgressBar = [
     name: "Base de dados",
     childs: [],
     href: '/database',
+    stateToPass: {},
   },
   {
     index: 1,
@@ -18,20 +19,25 @@ export const statesProgressBar = [
         name: "Estatística descritiva",
         childs: [],
         href: '/pre-processing',
+        stateToPass: { pageNumber: 0 },
       },
       {
         index: 1,
         name: "Normalização dos dados",
         childs: [],
         href: '/pre-processing',
+        stateToPass: { pageNumber: 1 },
       },
-    ]
+    ],
+    href: '/pre-processing',
+    stateToPass: { pageNumber: 0 },
   },
   {
     index: 2,
     name: "Seleção de Variáveis",
     childs: [],
     href: '/variables-selection',
+    stateToPass: {},
   },
   {
     index: 3,
@@ -42,14 +48,18 @@ export const statesProgressBar = [
         name: "Algoritmo",
         childs: [],
         href: '/training',
+        stateToPass: { pageNumber: 0 },
       },
       {
         index: 1,
         name: "Hiperparâmetros",
         childs: [],
         href: '/training',
+        stateToPass: { pageNumber: 1 },
       },
-    ]
+    ],
+    href: '/training',
+    stateToPass: { pageNumber: 0 },
   },
   {
     index: 4,
@@ -60,38 +70,46 @@ export const statesProgressBar = [
         name: "Importância das variáveis",
         childs: [],
         href: '/results',
+        stateToPass: { pageNumber: 0 },
       },
       {
         index: 1,
         name: "Leave One Out",
         childs: [],
         href: '/results',
+        stateToPass: { pageNumber: 1 },
       },
       {
         index: 2,
         name: "K-Fold Cross Validation",
         childs: [],
         href: '/results',
+        stateToPass: { pageNumber: 2 },
       },
       {
         index: 3,
         name: "Y-Scrambling",
         childs: [],
         href: '/results',
+        stateToPass: { pageNumber: 3 },
       },
       {
         index: 4,
         name: "Bootstrap",
         childs: [],
         href: '/results',
+        stateToPass: { pageNumber: 4 },
       },
-    ]
+    ],
+    href: '/results',
+    stateToPass: { pageNumber: 0 },
   },
   {
     index: 5,
     name: "Outliers",
     childs: [],
     href: '/outliers',
+    stateToPass: {},
   },
 ];
 
