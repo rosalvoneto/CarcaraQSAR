@@ -79,13 +79,19 @@ export function PreProcessing({ index }) {
           </div>
 
         </div>
-
+        
+        <Button 
+          name={'Voltar'} 
+          URL={'/database'}
+          side={'left'}
+        />
         <Button 
           name={'Próximo'} 
           URL={'/pre-processing'} 
           stateToPass={{
             pageNumber: 1
           }}
+          side={'right'}
         />
       </>
     )
@@ -118,8 +124,17 @@ export function PreProcessing({ index }) {
         </div>
 
         <Button 
+          name={'Voltar'} 
+          URL={'/pre-processing'}
+          stateToPass={{
+            pageNumber: 0
+          }}
+          side={'left'}
+        />
+        <Button 
           name={'Próximo'} 
-          URL={'/variables-selection'} 
+          URL={'/variables-selection'}
+          side={'right'}
         />
       </>
     )

@@ -74,13 +74,22 @@ export default function VariablesSelection() {
           }
         </div>
       </div>
-
+      
+      <Button 
+        name={'Voltar'} 
+        URL={'/pre-processing'}
+        stateToPass={{
+          pageNumber: 1
+        }}
+        side={'left'}
+      />
       <Button 
         name={'Próximo'} 
         URL={'/training'} 
         stateToPass={{
           pageNumber: 0
         }}
+        side={'right'}
       />
     </>
   )

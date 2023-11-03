@@ -73,11 +73,17 @@ export default function Training() {
         </div>
 
         <Button 
+          name={'Voltar'} 
+          URL={'/variables-selection'}
+          side={'left'}
+        />
+        <Button 
           name={'Próximo'} 
           URL={'/training'}
           stateToPass={{
             pageNumber: 1
           }}
+          side={'right'}
         />
       </>
     )
@@ -102,8 +108,17 @@ export default function Training() {
         </div>
 
         <Button 
+          name={'Voltar'} 
+          URL={'/training'}
+          stateToPass={{
+            pageNumber: 0
+          }}
+          side={'left'}
+        />
+        <Button 
           name={'Próximo'}
           URL={'/results'}
+          side={'right'}
         />
       </>
     )

@@ -23,7 +23,19 @@ export default function Outliers() {
         subProgressNumber={subProgress}
       />
 
-      <Button name={'Finalizar'} URL={'/home'} />
+      <Button 
+        name={'Voltar'} 
+        URL={'/results'}
+        stateToPass={{
+          pageNumber: 4
+        }}
+        side={'left'}
+      />
+      <Button 
+        name={'Finalizar'} 
+        URL={'/home'}
+        side={'right'}
+      />
     </>
   )
 }

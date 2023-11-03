@@ -60,15 +60,8 @@ export function Database() {
           stateToPass={{
             pageNumber: 0
           }}
+          side={'right'}
         />
-        <Button 
-          name={'Voltar'} 
-          URL={'/pre-processing'} 
-          stateToPass={{
-            pageNumber: 0
-          }}
-        />
-        {/* <BarButtons /> */}
       </div>
     </>
   )

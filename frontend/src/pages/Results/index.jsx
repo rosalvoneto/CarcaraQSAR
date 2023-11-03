@@ -91,18 +91,50 @@ export default function Results() {
       {
         statesProgressBar[progress].childs.length > (pageNumber + 1)
         ?
-          <Button 
-            name={'Próximo'} 
-            URL={'/results'}
-            stateToPass={{
-              pageNumber: pageNumber + 1
-            }}
-          />
+          <>
+            <Button 
+              name={'Voltar'} 
+              URL={
+                pageNumber
+                ?
+                  '/results'
+                :
+                  '/training'
+              }
+              stateToPass={
+                pageNumber
+                ?
+                  { pageNumber: pageNumber - 1 }
+                :
+                  { pageNumber: 1 }
+              }
+              side={'left'}
+            />
+            <Button 
+              name={'Próximo'} 
+              URL={'/results'}
+              stateToPass={{
+                pageNumber: pageNumber + 1
+              }}
+              side={'right'}
+            />
+          </>
         :
-          <Button 
-            name={'Próximo'} 
-            URL={'/outliers'}
-          />
+          <>
+            <Button 
+              name={'Voltar'} 
+              URL={'/results'}
+              stateToPass={{
+                pageNumber: pageNumber - 1
+              }}
+              side={'left'}
+            />
+            <Button 
+              name={'Próximo'} 
+              URL={'/outliers'}
+              side={'right'}
+            />
+          </>
       }
     </>
   )
