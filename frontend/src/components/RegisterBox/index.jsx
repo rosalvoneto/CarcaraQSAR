@@ -14,24 +14,24 @@ export default function RegisterBox({ setRegisterBoxAppears }) {
   }
 
   return(
-    <div className={styles.container}>
+    <form method='GET' className={styles.container}>
       <h4 className={styles.title}>Cadastro</h4>
 
       <div className={styles.inputsContainer}>
-        <Input name={"Nome"}/>
-        <Input name={"Email"}/>
-        <Input name={"Senha"}/>
-        <Input name={"País"}/>
-        <Input name={"Instituição/Departamento"}/>
+        <Input name={"Nome"} type={'text'}/>
+        <Input name={"Email"} type={'email'}/>
+        <Input name={"Senha"} type={'password'}/>
+        <Input name={"País"} type={'text'}/>
+        <Input name={"Instituição/Departamento"} type={'text'}/>
       </div>
 
       <div className={styles.buttonContainer}>
-        <button 
+        <input
+          type='submit'
           className={styles.button}
           onClick={handleToHomePage}
-        >
-          Registrar
-        </button>
+          value={'Registrar'}
+        />
         <a 
           className={styles.centerLink}
           onClick={handleAutenticBox}
@@ -39,6 +39,6 @@ export default function RegisterBox({ setRegisterBoxAppears }) {
           Já tem uma conta? Se autentique
         </a>
       </div>
-    </div>
+    </form>
   )
 }

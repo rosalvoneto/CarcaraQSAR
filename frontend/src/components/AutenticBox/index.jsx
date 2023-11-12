@@ -14,7 +14,7 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
   }
 
   return(
-    <div className={styles.container}>
+    <form method='GET' className={styles.container}>
       <h4 className={styles.title}>Auntenticação</h4>
 
       <div className={styles.inputsContainer}>
@@ -26,12 +26,12 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
       </div>
 
       <div className={styles.buttonContainer}>
-        <button 
+        <input 
+          type='submit'
           className={styles.button}
           onClick={handleToHomePage}
-        >
-          Entrar
-        </button>
+          value={'Entrar'}
+        />
         <a 
           className={styles.centerLink}
           onClick={handleRegisterBox}
@@ -39,6 +39,6 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
           Novo por aqui? Crie um conta
         </a>
       </div>
-    </div>
+    </form>
   )
 }

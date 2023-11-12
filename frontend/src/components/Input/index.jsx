@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
 
-export default function Input({ name, setValue }) {
+export default function Input({ name, setValue, type }) {
 
   const [text, setText] = useState("");
 
@@ -15,9 +15,11 @@ export default function Input({ name, setValue }) {
       <p className={styles.description}>{name}</p>
       <input 
         className={`${styles.inputType}`} 
-        type="text"
         value={text}
         onChange={changeText}
+
+        type={type ? type : 'text'}
+        name={name}
       />
     </div>
   )
