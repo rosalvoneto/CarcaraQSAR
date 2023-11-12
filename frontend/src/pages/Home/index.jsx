@@ -8,8 +8,22 @@ import { userName } from '../../settings';
 
 import styles from './styles.module.css';
 
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 export function Home() {
 
+  const navigate = useNavigate();
+
+  const authenticated = false;
+
+  useEffect(() => {
+    if(!authenticated) {
+      console.log('Redirecionando para a tela de login')
+      navigate('/');
+    }
+  }, [])
+  
   return(
     <>
       <Header 

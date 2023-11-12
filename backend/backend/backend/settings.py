@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'base',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders'
+    'corsheaders',
 
     'django.contrib.admin',
     'django.contrib.auth',

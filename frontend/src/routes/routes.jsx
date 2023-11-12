@@ -13,77 +13,83 @@ import Training from "../pages/Training";
 import Results from "../pages/Results";
 import Outliers from "../pages/Outliers";
 
+import { PrivateRoute } from "../utils/PrivateRoute";
+import { AuthProvider } from "../context/AuthContext";
+
 export const Routes = () => {
   return (
-    <BrowserRouter >
-      
-        <Switch>
-
-          <Route path="/" 
-            element={
-              <Login />
-            } 
-          />
-          
-          <Route path="/home" 
-            element={
-              <DefaultPage>
-                <Home />
-              </DefaultPage>
-            } 
-          />
-          <Route path="/new" 
-            element={
-              <DefaultPage>
-                <NewProject />
-              </DefaultPage>
-            } 
-          />
-          <Route path="/database" 
-            element={
-              <DefaultPage>
-                <Database />
-              </DefaultPage>
-            } 
-          />
-          <Route path="/pre-processing" 
-            element={
-              <DefaultPage>
-                <PreProcessing />
-              </DefaultPage>
-            }
-          />
-          <Route path="/variables-selection" 
-            element={
-              <DefaultPage>
-                <VariablesSelection />
-              </DefaultPage>
-            } 
-          />
-          <Route path="/training" 
-            element={
-              <DefaultPage>
-                <Training />
-              </DefaultPage>
-            } 
-          />
-          <Route path="/results" 
-            element={
-              <DefaultPage>
-                <Results />
-              </DefaultPage>
-            } 
-          />
-          <Route path="/outliers" 
-            element={
-              <DefaultPage>
-                <Outliers />
-              </DefaultPage>
-            } 
-          />
-
-        </Switch>
+    <AuthProvider>
+      <BrowserRouter >
         
-    </BrowserRouter>
+          <Switch>
+
+            <Route path="/" 
+              element={
+                <Login />
+              } 
+            />
+            
+            <Route path="/home" 
+              element={
+                <DefaultPage>
+                  <Home />
+                </DefaultPage>
+              }
+            />
+
+            <Route path="/new" 
+              element={
+                <DefaultPage>
+                  <NewProject />
+                </DefaultPage>
+              } 
+            />
+            <Route path="/database" 
+              element={
+                <DefaultPage>
+                  <Database />
+                </DefaultPage>
+              } 
+            />
+            <Route path="/pre-processing" 
+              element={
+                <DefaultPage>
+                  <PreProcessing />
+                </DefaultPage>
+              }
+            />
+            <Route path="/variables-selection" 
+              element={
+                <DefaultPage>
+                  <VariablesSelection />
+                </DefaultPage>
+              } 
+            />
+            <Route path="/training" 
+              element={
+                <DefaultPage>
+                  <Training />
+                </DefaultPage>
+              } 
+            />
+            <Route path="/results" 
+              element={
+                <DefaultPage>
+                  <Results />
+                </DefaultPage>
+              } 
+            />
+            <Route path="/outliers" 
+              element={
+                <DefaultPage>
+                  <Outliers />
+                </DefaultPage>
+              } 
+            />
+
+          </Switch>
+          
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
