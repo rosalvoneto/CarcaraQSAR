@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import Input from '../Input';
 import styles from './styles.module.css';
+import { useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
 
 export default function RegisterBox({ setRegisterBoxAppears }) {
 
@@ -13,23 +15,28 @@ export default function RegisterBox({ setRegisterBoxAppears }) {
     navigate('/home');
   }
 
+  const { loginUser } = useContext(AuthContext);
+
   return(
-    <form method='GET' className={styles.container}>
+    <form method='POST' onSubmit={() => {}} className={styles.container}>
       <h4 className={styles.title}>Cadastro</h4>
 
       <div className={styles.inputsContainer}>
-        <Input name={"Nome"} type={'text'}/>
-        <Input name={"Email"} type={'email'}/>
-        <Input name={"Senha"} type={'password'}/>
-        <Input name={"País"} type={'text'}/>
-        <Input name={"Instituição/Departamento"} type={'text'}/>
+        <Input inputName={'username'} name={"Nome"} type={'text'}/>
+        <Input inputName={'email'} name={"Email"} type={'email'}/>
+        <Input inputName={'password'} name={"Senha"} type={'password'}/>
+        <Input inputName={'country'} name={"País"} type={'text'}/>
+        <Input 
+          inputName={'departament'} 
+          name={"Instituição/Departamento"} 
+          type={'text'}
+        />
       </div>
 
       <div className={styles.buttonContainer}>
         <input
           type='submit'
           className={styles.button}
-          onClick={handleToHomePage}
           value={'Registrar'}
         />
         <a 

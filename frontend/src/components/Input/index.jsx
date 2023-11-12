@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
 
-export default function Input({ name, setValue, type }) {
+export default function Input({ inputName, name, setValue, type }) {
 
   const [text, setText] = useState("");
 
   const changeText = (e) => {
     setText(e.target.value);
-    setValue(text);
+    if(setValue) {
+      setValue(text);
+    }
   };
 
   return(
@@ -19,7 +21,7 @@ export default function Input({ name, setValue, type }) {
         onChange={changeText}
 
         type={type ? type : 'text'}
-        name={name}
+        name={inputName ? inputName : name}
       />
     </div>
   )

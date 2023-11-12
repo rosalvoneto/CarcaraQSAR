@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import Input from '../Input';
 import styles from './styles.module.css';
+import { useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
 
 export default function AuntenticBox({ setRegisterBoxAppears }) {
 
@@ -13,14 +15,16 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
     navigate('/home');
   }
 
+  const { loginUser } = useContext(AuthContext);
+
   return(
-    <form method='GET' className={styles.container}>
+    <form onSubmit={loginUser} className={styles.container}>
       <h4 className={styles.title}>Auntenticação</h4>
 
       <div className={styles.inputsContainer}>
-        <Input name={"Email"}/>
+        <Input inputName={'username'} name={"Nome"} type={'text'}/>
         <div className={styles.inputContainer}>
-          <Input name={"Senha"}/>
+          <Input inputName={'password'} name={"Senha"} type={'password'}/>
           <a className={styles.link}>Esqueci a senha</a>
         </div>
       </div>
@@ -29,7 +33,6 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
         <input 
           type='submit'
           className={styles.button}
-          onClick={handleToHomePage}
           value={'Entrar'}
         />
         <a 
