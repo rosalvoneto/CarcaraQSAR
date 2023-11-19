@@ -12,11 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [authTokens, setAuthTokens] = useState(null);
 
   const loginUser = async (e) => {
-
     e.preventDefault();
-    console.log('Form submitted');
-    console.log('username:', e.target.username.value);
-    console.log('password:', e.target.password.value);
 
     let response = await fetch('http://localhost:8000/api/token/', {
       method: 'POST',
@@ -31,13 +27,15 @@ export const AuthProvider = ({ children }) => {
 
     let data = await response.json();
     if(response.status == 200) {
+
       setAuthTokens(data);
       setUser(jwtDecode(data.access));
+      console.log('data.access', jwtDecode(data.access));
+
     } else {
       alert('Nome de usuário ou senha incorretas!');
     }
 
-    console.log('data', data);
   }
 
   let contextData = {
