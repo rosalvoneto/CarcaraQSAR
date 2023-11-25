@@ -29,8 +29,11 @@ export const AuthProvider = ({ children }) => {
     if(response.status == 200) {
 
       setAuthTokens(data);
-      setUser(jwtDecode(data.access));
-      console.log('data.access', jwtDecode(data.access));
+
+      let decodified = jwtDecode(data.access);
+      setUser(decodified);
+
+      console.log(user.username);
 
     } else {
       alert('Nome de usuário ou senha incorretas!');
