@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-m139&@m^3l-5-w54teh))^e=ow*-12m2%n&tixzvw*jebn28gh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',    
+    'corsheaders',
+    'project_management',
 
     'django.contrib.admin',
     'django.contrib.auth',
