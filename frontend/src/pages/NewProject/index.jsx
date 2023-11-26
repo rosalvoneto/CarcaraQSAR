@@ -21,13 +21,44 @@ export function NewProject() {
     navigate(url);
   };
 
+  const createProject = async (e, name, description) => {
+
+    e.preventDefault();
+
+    let response = await fetch('http://localhost:8000/project/new', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        description: description,
+      })
+    })
+
+    console.log(response);
+
+    let data = await response.json();
+    if(response.status == 200) {
+
+      console.log(data);
+
+    } else {
+      alert('Preencha as informações corretamente!');
+    }
+  }
+
   return(
     <>
       <Header 
         userName={userName}
       />
       
-      <div className={styles.container}>
+      <form 
+        className={styles.container}
+        onSubmit={(e) => createProject(e, name, description)} 
+        method='POST'
+      >
         <div className={styles.contentContainer}>
           <Input 
             tipo={"input"} name={"Nome do Projeto"}
@@ -39,14 +70,14 @@ export function NewProject() {
             setValue={setDescription}
             value={description}
           />
-          <button 
+
+          <input 
+            type='submit'
             className={styles.button}
-            onClick={() => handleTo('/database')}
-          >
-            Criar projeto
-          </button>
+            value={'Criar Projeto'}
+          />
         </div>
-      </div>
+      </form>
 
     </>
   )
