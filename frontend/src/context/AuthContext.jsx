@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import {jwtDecode} from 'jwt-decode';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -32,8 +33,7 @@ export const AuthProvider = ({ children }) => {
 
       let decodified = jwtDecode(data.access);
       setUser(decodified);
-
-      console.log(user.username);
+      console.log(user);
 
     } else {
       alert('Nome de usuário ou senha incorretas!');

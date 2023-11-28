@@ -9,7 +9,32 @@ import { projects } from '../../../settings';
 
 export function ProjectsTable() {
 
-  const [data, setData] = useState(projects);
+  const [data, setData] = useState([]);
+
+  const searchProjects = async () => {
+
+    let response = await fetch('http://localhost:8000/project/all_projects/', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({})
+    })
+
+    let data = await response.json();
+    if(response.status == 200) {
+
+      console.log(data);
+      setData(data);
+
+    } else {
+      alert('Erro interno do servidor!');
+    }
+  }
+
+  useEffect(() => {
+    searchProjects();
+  }, []);
 
   const navigate = useNavigate();
   const handleTo = (URL) => {

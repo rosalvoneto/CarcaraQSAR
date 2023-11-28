@@ -21,30 +21,35 @@ export function NewProject() {
     navigate(url);
   };
 
-  const createProject = async (e, name, description) => {
+  const createProject = async (e) => {
 
     e.preventDefault();
 
-    let response = await fetch('http://localhost:8000/project/new', {
+    const name = e.target.name.value;
+    const description = e.target.description.value;
+
+    if(name == "" || description == "") {
+      return alert("Preencha os campos corretamente!")
+    }
+
+    let response = await fetch('http://localhost:8000/project/new/', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
       body: JSON.stringify({
-        name: name,
-        description: description,
+        project_name: name,
+        project_description: description,
       })
     })
 
-    console.log(response);
-
     let data = await response.json();
     if(response.status == 200) {
-
       console.log(data);
 
+      navigate('/home');
     } else {
-      alert('Preencha as informações corretamente!');
+      alert('Erro interno do servidor!');
     }
   }
 
@@ -56,17 +61,20 @@ export function NewProject() {
       
       <form 
         className={styles.container}
-        onSubmit={(e) => createProject(e, name, description)} 
+        onSubmit={(e) => createProject(e)} 
         method='POST'
       >
         <div className={styles.contentContainer}>
           <Input 
             tipo={"input"} name={"Nome do Projeto"}
+            inputName={"name"}
+            type={"text"}
             setValue={setName}
             value={name}
           />
           <TextArea 
             tipo={"textarea"} name={"Descrição"}
+            inputName={"description"}
             setValue={setDescription}
             value={description}
           />

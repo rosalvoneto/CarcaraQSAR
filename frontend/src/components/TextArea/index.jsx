@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
 
-export default function TextArea({ name, setValue }) {
+export default function TextArea({ name, setValue, inputName }) {
 
   const [text, setText] = useState("");
 
@@ -18,6 +18,8 @@ export default function TextArea({ name, setValue }) {
         rows={5}
         value={text}
         onChange={changeText}
+
+        name={inputName}
       >
       </textarea>
     </div>

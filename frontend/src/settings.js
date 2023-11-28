@@ -195,3 +195,30 @@ export const registers = [
   [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
   [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
 ];
+
+// Salvar dados no Local Storage
+export const salvarDados = (token) => {
+  const dados = {
+    token: token
+  };
+
+  // Converte os dados para uma string JSON antes de salvar
+  const dadosString = JSON.stringify(dados);
+
+  // Salva no Local Storage
+  localStorage.setItem('meusDados', dadosString);
+};
+
+// Recuperar dados do Local Storage
+export const recuperarDados = () => {
+  // Recupera a string JSON do Local Storage
+  const dadosString = localStorage.getItem('meusDados');
+
+  // Converte a string JSON de volta para um objeto
+  const dados = JSON.parse(dadosString);
+
+  // Use os dados recuperados
+  console.log(dados);
+
+  return dados;
+};

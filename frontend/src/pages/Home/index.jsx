@@ -1,28 +1,35 @@
 
 import { DefaultPage } from '../DefaultPage';
 import { Header } from '../../components/Header';
-import Input from '../../components/Input';
 import { ProjectsTable } from './ProjectsTable';
 
-import { userName } from '../../settings';
+import Input from '../../components/Input';
+
+import { userName, recuperarDados } from '../../settings';
 
 import styles from './styles.module.css';
 
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate, redirect, Navigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+
+import AuthContext from '../../context/AuthContext';
 
 export function Home() {
 
   const navigate = useNavigate();
+  let { user } = useContext(AuthContext);
 
-  const authenticated = false;
+  user = "Daniel"
 
-  useEffect(() => {
-    if(!authenticated) {
-      console.log('Redirecionando para a tela de login')
-      navigate('/');
-    }
-  }, [])
+  if (!user) {
+    console.log(user);
+    
+    return (
+      <Navigate to={'/'}/>
+    );
+  } else {
+    console.log(user);  
+  }
   
   return(
     <>
