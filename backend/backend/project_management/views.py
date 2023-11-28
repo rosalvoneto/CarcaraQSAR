@@ -54,3 +54,24 @@ def getRoutes(request):
   ]
 
   return JsonResponse(routes)
+
+@api_view(['GET', 'POST'])
+def allProjects_view(request):
+
+  if request.method == 'POST':
+
+    projects = Project.objects.all()
+    print(projects)
+
+    dictionary_results = []
+    for index, project in enumerate(projects):
+      item = {
+        'id': index + 1, 
+        'nome': project.name, 
+        'status': project.status, 
+        'selecionado': False,
+        'date': project.modification_date.strftime("%d-%m-%Y %H:%M:%S")
+      }
+      dictionary_results.append(item)
+
+    return Response(dictionary_results, status=200)
