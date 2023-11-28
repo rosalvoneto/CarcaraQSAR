@@ -13,14 +13,33 @@ from .models import Project
 @api_view(['GET', 'POST'])
 def createProject_view(request):
   if request.method == 'POST':
-    return JsonResponse({
-      'message': 'Projeto criado!'
-    })
+
+    # Recupere os dados do corpo da requisição
+    data = request.data
+
+    # Faça algo com os dados
+    name = data.get('project_name')
+    description = data.get('project_description')
+
+    print(name)
+    print(description)
+
+    # Realize as operações desejadas com os dados
+    project = Project()
+    project.name = name
+    project.description = description
+    project.save()
+
+    # Retorne uma resposta, por exemplo, um JSON
+    resposta = {
+      'message': 'Projeto criado com sucesso',
+      'name': name,
+      'description': description
+    }
+    return Response(resposta, status=200)
   
   else:
-    return JsonResponse({
-      'message': 'Projeto não criado!'
-    })
+    return Response({'mensagem': 'Método não permitido'}, status=405)
 
 @api_view(['GET'])
 def database_view(request):
