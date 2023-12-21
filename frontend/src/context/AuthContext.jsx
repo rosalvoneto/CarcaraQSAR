@@ -15,14 +15,17 @@ export const AuthProvider = ({ children }) => {
   const loginUser = async (e) => {
     e.preventDefault();
 
-    let response = await fetch('http://localhost:8000/api/token/', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: e.target.username.value,
-        password: e.target.password.value
+    console.log(process.env.REACT_APP_BACKEND_LINK)
+
+    let response = await fetch(
+      `http://localhost:8000/api/token/`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: e.target.username.value,
+          password: e.target.password.value
       })
     })
 

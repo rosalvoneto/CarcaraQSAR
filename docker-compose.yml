@@ -2,7 +2,7 @@ version: "3.8"
 services:
   frontend:
     build: ./frontend
-    container_name: frontend_container
+    container_name: front_container
     ports:
       - '5173:5173'
     volumes:
@@ -12,7 +12,7 @@ services:
     tty: true
   backend:
     build: ./backend/backend
-    container_name: backend_container
+    container_name: back_container
     ports:
       - '8000:8000'
     volumes:
