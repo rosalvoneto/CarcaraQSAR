@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 *.pyc
+*.pot
+__pycache__
+db.sqlite3
+media
+staticfiles
