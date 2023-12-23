@@ -15,10 +15,10 @@ export const AuthProvider = ({ children }) => {
   const loginUser = async (e) => {
     e.preventDefault();
 
-    console.log(process.env.REACT_APP_BACKEND_LINK)
+    console.log(import.meta.env.VITE_REACT_APP_BACKEND_LINK)
 
     let response = await fetch(
-      `http://localhost:8000/api/token/`, {
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/api/token/`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',

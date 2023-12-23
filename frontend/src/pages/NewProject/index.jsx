@@ -32,15 +32,16 @@ export function NewProject() {
       return alert("Preencha os campos corretamente!")
     }
 
-    let response = await fetch('http://localhost:8000/project/new/', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        project_name: name,
-        project_description: description,
-      })
+    let response = await fetch(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/new/`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          project_name: name,
+          project_description: description,
+        })
     })
 
     let data = await response.json();

@@ -13,12 +13,13 @@ export function ProjectsTable() {
 
   const searchProjects = async () => {
 
-    let response = await fetch('http://localhost:8000/project/all_projects/', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({})
+    let response = await fetch(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/all_projects/`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({})
     })
 
     let data = await response.json();
