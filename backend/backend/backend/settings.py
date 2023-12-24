@@ -92,46 +92,69 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+
+
 # Definir uma variável de ambiente no código?
+environ['DATABASE_SECRET'] = '{ "DATABASE_URL": "postgres://django:postgres@django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432/django" }'
 
-# environ['DATABASE_SECRET'] = '{ "DATABASE_URL": "postgres://django:postgres@django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432/django" }'
 
-# if "DATABASE_SECRET" in environ:
-#     database_secret = environ.get("DATABASE_SECRET")
-#     if database_secret != None:
-#         db_url = json.loads(database_secret)["DATABASE_URL"]
-#         DATABASES = {
-#             'default': {
-#                 'ENGINE': 'django.db.backends.postgresql',
-#                 'NAME': 'postgres',
-#                 'USER': 'django',
-#                 'PASSWORD': 'postgres',
-#                 'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432',
-#                 'PORT': '5432',
-#             }
-#         }
-# else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
 
-# if "DATABASE_SECRET" in environ:
-#     database_secret = environ.get("DATABASE_SECRET")
-#     if database_secret != None:
-#         db_url = json.loads(database_secret)["DATABASE_URL"]
-#         DATABASES = {"default": dj_database_url.config(default="postgres://django:postgres@django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432/django")}
-# else:
-#     DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
 
-DATABASES = {
+if "DATABASE_SECRET" in environ:
+    database_secret = environ.get("DATABASE_SECRET")
+    if database_secret != None:
+        db_url = json.loads(database_secret)["DATABASE_URL"]
+        DATABASES = {"default": dj_database_url.parse(db_url)}
+    
+    print("DATABASE POSTGRES!")
+else:
+    DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
+
+
+
+
+
+configuration_postgres = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'django',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432',
+        'PORT': '5432',
+    }
+}
+
+configuration_sqlite = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+if "DATABASE_SECRET" in environ:
+    database_secret = environ.get("DATABASE_SECRET")
+    if database_secret != None:
+        db_url = json.loads(database_secret)["DATABASE_URL"]
+        DATABASES = configuration_postgres
+else:
+    DATABASES = configuration_sqlite
+
+
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
+
+
 
 
 # Password validation
