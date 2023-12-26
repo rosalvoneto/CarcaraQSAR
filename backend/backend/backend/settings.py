@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 
 # Definir uma variável de ambiente no código?
-environ['DATABASE_SECRET'] = '{ "DATABASE_URL": "postgres://django:postgres@django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432/django" }'
+# environ['DATABASE_SECRET'] = '{ "DATABASE_URL": "postgres://django:postgres@django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432/django" }'
 
 
 
@@ -126,23 +126,35 @@ configuration_postgres = {
     }
 }
 
-configuration_sqlite = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-if "DATABASE_SECRET" in environ:
-    database_secret = environ.get("DATABASE_SECRET")
-    if database_secret != None:
-        db_url = json.loads(database_secret)["DATABASE_URL"]
-        DATABASES = configuration_postgres
-else:
-    DATABASES = configuration_sqlite
+# configuration_postgres = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'condominio',
+#         'USER': 'user',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
+# configuration_sqlite = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+# if "DATABASE_SECRET" in environ:
+#     database_secret = environ.get("DATABASE_SECRET")
+#     if database_secret != None:
+#         db_url = json.loads(database_secret)["DATABASE_URL"]
+#         DATABASES = configuration_postgres
+# else:
+#     DATABASES = configuration_sqlite
+
+
+DATABASES = configuration_postgres
 
 
 # DATABASES = {
