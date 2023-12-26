@@ -32,3 +32,7 @@
 
   cursor: pointer;
 }
+
+.logout {
+  margin: 10px;
+}

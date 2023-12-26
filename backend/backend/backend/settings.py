@@ -101,15 +101,15 @@ environ['DATABASE_SECRET'] = '{ "DATABASE_URL": "postgres://django:postgres@djan
 
 
 
-if "DATABASE_SECRET" in environ:
-    database_secret = environ.get("DATABASE_SECRET")
-    if database_secret != None:
-        db_url = json.loads(database_secret)["DATABASE_URL"]
-        DATABASES = {"default": dj_database_url.parse(db_url)}
+# if "DATABASE_SECRET" in environ:
+#     database_secret = environ.get("DATABASE_SECRET")
+#     if database_secret != None:
+#         db_url = json.loads(database_secret)["DATABASE_URL"]
+#         DATABASES = {"default": dj_database_url.parse(db_url)}
     
-    print("DATABASE POSTGRES!")
-else:
-    DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
+#     print("DATABASE POSTGRES!")
+# else:
+#     DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
 
 
 
@@ -121,7 +121,7 @@ configuration_postgres = {
         'NAME': 'django',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432',
+        'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com',
         'PORT': '5432',
     }
 }

@@ -10,36 +10,53 @@ import { userName, recuperarDados } from '../../settings';
 import styles from './styles.module.css';
 
 import { useNavigate, redirect, Navigate } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 
 import AuthContext from '../../context/AuthContext';
 
+import Cookies from 'js-cookie';
+
 export function Home() {
 
-  const navigate = useNavigate();
-  let { user } = useContext(AuthContext);
+  const [authenticated, setAuthenticated] = useState(false);
 
-  user = "Daniel"
+  useEffect(() => {
+    // Função para verificar a autenticação
+    const checkAuthentication = () => {
+      // Obtém o token do cookie
+      const token = Cookies.get('jwt_token');
+      console.log('TOKEN:', token);
 
-  if (!user) {
-    console.log(user);
-    
-    return (
-      <Navigate to={'/'}/>
-    );
-  } else {
-    console.log(user);  
-  }
+      // Verifica se o token existe e não está expirado
+      if(token) {
+        // Atualiza o estado para indicar que o usuário está autenticado
+        setAuthenticated(true);
+      } else {
+        // Atualiza o estado para indicar que o usuário não está autenticado
+        setAuthenticated(false);
+        window.location.href = '/';
+      }
+    };
+
+    // Chama a função de verificação ao carregar a página
+    checkAuthentication();
+  }, []);
+  
   
   return(
     <>
-      <Header 
-        userName={userName}
-      />
-      <div className={styles.inputContainer}>
-        <Input name={"Todos os projetos"}/>
-      </div>
-      <ProjectsTable />
+      {
+        authenticated
+        && <>
+            <Header 
+              userName={userName}
+            />
+            <div className={styles.inputContainer}>
+              <Input name={"Todos os projetos"}/>
+            </div>
+            <ProjectsTable />
+          </>
+      }
     </>
   )
 }

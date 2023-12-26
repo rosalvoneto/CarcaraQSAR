@@ -1,15 +1,16 @@
 import { createContext, useState, useEffect } from 'react';
-import {jwtDecode} from 'jwt-decode';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
-
 export default AuthContext;
 
 
 export const AuthProvider = ({ children }) => {
 
-  const [user, setUser] = useState(null);
+  const [decodifiedToken, setDecodifiedToken] = useState(null);
   const [authTokens, setAuthTokens] = useState(null);
 
   const loginUser = async (e) => {
@@ -32,20 +33,24 @@ export const AuthProvider = ({ children }) => {
     let data = await response.json();
     if(response.status == 200) {
 
-      setAuthTokens(data);
+      Cookies.set('jwt_token', data.access, { 
+        secure: true,
+        sameSite: 'strict' 
+      });
 
-      let decodified = jwtDecode(data.access);
-      setUser(decodified);
-      console.log(user);
+      setAuthTokens(data.access);
+      setDecodifiedToken(jwtDecode(data.access));
+      console.log(decodifiedToken);
+
+      window.location.href = '/home';
 
     } else {
       alert('Nome de usuário ou senha incorretas!');
     }
-
   }
 
   let contextData = {
-    user: user,
+    decodifiedToken: decodifiedToken,
     loginUser: loginUser
   }
   
