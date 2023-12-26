@@ -262,3 +262,6 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# settings.py
+X_FRAME_OPTIONS = 'ALLOW-FROM https://kpjnpgrg5q.us-east-2.awsapprunner.com'
