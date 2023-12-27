@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-m139&@m^3l-5-w54teh))^e=ow*-12m2%n&tixzvw*jebn28gh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".awsapprunner.com", '*']
+ALLOWED_HOSTS = [".awsapprunner.com", "*"]
 
 
 # Application definition
@@ -261,7 +261,8 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
 
-# settings.py
+# Permissões de acesso
+CORS_ALLOW_ALL_ORIGINS = True
 X_FRAME_OPTIONS = 'ALLOW-FROM https://kpjnpgrg5q.us-east-2.awsapprunner.com'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
