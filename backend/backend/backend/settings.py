@@ -97,6 +97,8 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Definir uma variável de ambiente no código?
 
+environ['DATABASE_SECRET'] = '{ "DATABASE_URL": "postgres://postgres:postgres@django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com:5432/django" }'
+
 if "DATABASE_SECRET" in environ:
     database_secret = environ.get("DATABASE_SECRET")
     if database_secret != None:
