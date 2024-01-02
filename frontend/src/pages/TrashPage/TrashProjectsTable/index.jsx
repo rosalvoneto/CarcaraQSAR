@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { projects } from '../../../settings';
 
-export function ProjectsTable() {
+export function TrashProjectsTable() {
 
   const [data, setData] = useState([]);
 
   const searchProjects = async () => {
 
     let response = await fetch(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/projects/`, {
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivated_projects/`, {
         method: 'GET',
         headers: {
           'Content-type': 'application/json',
@@ -65,8 +65,8 @@ export function ProjectsTable() {
     setData([...data]);
 
     let response = await fetch(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivate_project/${projectID}`, {
-        method: 'PUT',
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/delete_project/${projectID}`, {
+        method: 'DELETE',
         headers: {
           'Content-type': 'application/json',
         },

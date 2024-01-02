@@ -10,5 +10,6 @@ class Project(models.Model):
   # Quando estiver na lixeira é preciso alterar o valor
   isActive = models.BooleanField(default=True)
 
-  def __str__(self) -> str:
-    return f"{self.name}: {self.description}"
+  def __str__(self):
+    return f"{self.id}: {self.name}: {self.description}"
+

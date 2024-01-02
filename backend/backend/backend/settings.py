@@ -105,16 +105,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # else:
 #     DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
 
-configuration_postgres = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com',
-        'PORT': '5432',
-    }
-}
+# configuration_postgres = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'django',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 # configuration_postgres = {
 #     'default': {
@@ -127,14 +127,14 @@ configuration_postgres = {
 #     }
 # }
 
-# configuration_sqlite = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+configuration_sqlite = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
-DATABASES = configuration_postgres
+DATABASES = configuration_sqlite
 
 
 # Password validation

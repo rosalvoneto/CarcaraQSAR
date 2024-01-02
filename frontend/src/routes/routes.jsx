@@ -12,6 +12,7 @@ import VariablesSelection from "../pages/VariablesSelection";
 import Training from "../pages/Training";
 import Results from "../pages/Results";
 import Outliers from "../pages/Outliers";
+import { TrashPage } from "../pages/TrashPage";
 
 import { PrivateRoute } from "../utils/PrivateRoute";
 import { AuthProvider } from "../context/AuthContext";
@@ -35,6 +36,14 @@ export const Routes = () => {
                   <Home />
                 </DefaultPage>
               }
+            />
+
+            <Route path="/trash" 
+              element={
+                <DefaultPage>
+                  <TrashPage />
+                </DefaultPage>
+              } 
             />
 
             <Route path="/new" 

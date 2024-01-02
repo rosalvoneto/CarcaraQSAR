@@ -34,14 +34,9 @@ export default function NavigationBar() {
           Compartilhados
         </a>
         <a className={styles.link}
-          onClick={() => handleTo('/home')}
+          onClick={() => handleTo('/trash')}
         >
           Projetos excluídos
-        </a>
-        <a className={styles.link}
-          onClick={() => handleTo('/home')}
-        >
-          Modelos disponíveis
         </a>
 
         <button 
