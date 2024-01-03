@@ -6,7 +6,16 @@ urlpatterns = [
 
   path('new/', views.createProject_view, name="create_project"),
   path('database/', views.database_view, name="database"),
-  path('projects/', views.projects_view, name="projects"),
+  path(
+    'projects/', 
+    views.projects_view, 
+    name="projects"
+  ),
+  path(
+    'shared_projects', 
+    views.sharedProjects_view, 
+    name="shared_projects"
+  ),
   path(
     'deactivated_projects/', 
     views.deactivatedProjects_view, 
@@ -21,6 +30,16 @@ urlpatterns = [
     'deactivate_project/<int:project_id>', 
     views.deactivateProject_view, 
     name="deactivate_project"
+  ),
+  path(
+    'share_project/<int:project_id>', 
+    views.shareProject_view, 
+    name="share_project"
+  ),
+  path(
+    'deshare_project/<int:project_id>', 
+    views.deshareProject_view, 
+    name="deshare_project"
   ),
   path(
     'delete_project/<int:project_id>', 

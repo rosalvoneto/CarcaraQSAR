@@ -69,7 +69,35 @@ def projects_view(request):
       'id': project.id,
       'nome': project.name, 
       'status': project.status,
-      'isActive': True,
+      'isActive': project.isActive,
+      'shared': project.shared,
+      'selecionado': False,
+      'date': project.modification_date.strftime("%d-%m-%Y %H:%M:%S")
+    }
+    dictionary_results.append(item)
+
+  return Response(dictionary_results, status=200)
+
+@api_view(['GET', 'POST'])
+def sharedProjects_view(request):
+  
+  search_value = request.GET.get('query', '')
+  print(search_value)
+
+  projects = Project.objects.filter(
+    isActive=True, 
+    name__icontains=search_value,
+    shared=True
+  )
+
+  dictionary_results = []
+  for index, project in enumerate(projects):
+    item = {
+      'id': project.id,
+      'nome': project.name,
+      'status': project.status,
+      'isActive': project.isActive,
+      'shared': project.shared,
       'selecionado': False,
       'date': project.modification_date.strftime("%d-%m-%Y %H:%M:%S")
     }
@@ -91,7 +119,8 @@ def deactivatedProjects_view(request):
       'id': project.id,
       'nome': project.name,
       'status': project.status,
-      'isActive': False,
+      'isActive': project.isActive,
+      'shared': project.shared,
       'selecionado': False,
       'date': project.modification_date.strftime("%d-%m-%Y %H:%M:%S")
     }
@@ -116,6 +145,24 @@ def deactivateProject_view(request, project_id):
   project.save()
 
   return JsonResponse({'message': 'Projeto movido para a lixeira!'})
+
+@api_view(['PUT'])
+def shareProject_view(request, project_id):
+
+  project = get_object_or_404(Project, pk=project_id)
+  project.shared = True
+  project.save()
+
+  return JsonResponse({'message': 'Projeto compartilhado!'})
+
+@api_view(['PUT'])
+def deshareProject_view(request, project_id):
+
+  project = get_object_or_404(Project, pk=project_id)
+  project.shared = False
+  project.save()
+
+  return JsonResponse({'message': 'Projeto privado!'})
 
 @api_view(['DELETE'])
 def deleteProject_view(request, project_id):
