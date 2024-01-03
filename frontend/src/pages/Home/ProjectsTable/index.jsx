@@ -24,7 +24,7 @@ export function ProjectsTable({ searchValue }) {
     .catch((error) => {
       console.log(error)
     })
-  }, [searchValue]);
+  }, [searchValue, data]);
 
   const navigate = useNavigate();
   const handleTo = (URL) => {
