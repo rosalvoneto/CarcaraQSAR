@@ -5,34 +5,20 @@ import styles from './styles.module.css';
 import { TrashSimple } from "@phosphor-icons/react";
 import { useNavigate } from 'react-router-dom';
 
-import { projects } from '../../../settings';
+import { deactivateProject, searchProjects } from '../../../api';
 
 export function ProjectsTable() {
 
+  // Projetos
   const [data, setData] = useState([]);
-
-  const searchProjects = async () => {
-
-    let response = await fetch(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/projects/`, {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json',
-        }
-    })
-
-    let data = await response.json();
-    if(response.status == 200) {
-
-      console.log(data);
-      setData(data);
-
-    } else {
-      alert('Erro interno do servidor!');
-    }
-  }
   useEffect(() => {
-    searchProjects();
+    searchProjects()
+    .then((data) => {
+      setData(data);
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }, []);
 
   const navigate = useNavigate();
@@ -56,47 +42,6 @@ export function ProjectsTable() {
     );
   };
 
-  const deactivateProject = async (projectID) => {
-    let response = await fetch(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivate_project/${projectID}`, {
-        method: 'PUT',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({})
-    })
-
-    let dataResponse = await response.json();
-    if(response.status == 200) {
-      console.log(dataResponse);
-    } else {
-      console.log(`Status: ${response.status}`);
-    }
-  }
-
-  const removeItem = async (index) => {
-    
-    const projectID = data[index].id;
-    
-    data.splice(index, 1);
-    setData([...data]);
-
-    deactivateProject(projectID);
-  };
-
-  const removeSelectedItens = async () => {
-    let newData = data.filter((dado) => {
-      return !dado.selecionado;
-    });
-    setData(newData);
-
-    const dataToDeactivate = data.filter(project => !newData.includes(project));
-
-    dataToDeactivate.forEach(project => {
-      deactivateProject(project.id);
-    });
-  };
-
   const selectAllData = () => {
     let newData = [];
 
@@ -113,6 +58,29 @@ export function ProjectsTable() {
     }
 
     setData(newData);
+  };
+
+  const deactivateItem = async (index) => {
+    
+    const projectID = data[index].id;
+    
+    data.splice(index, 1);
+    setData([...data]);
+
+    deactivateProject(projectID);
+  };
+
+  const deactivateSelectedItens = async () => {
+    let newData = data.filter((dado) => {
+      return !dado.selecionado;
+    });
+    setData(newData);
+
+    const dataToDeactivate = data.filter(project => !newData.includes(project));
+
+    dataToDeactivate.forEach(project => {
+      deactivateProject(project.id);
+    });
   };
 
   return (
@@ -135,7 +103,7 @@ export function ProjectsTable() {
             <th className={`${styles.descriptionItem} ${styles.item5}`}>
               <a 
                 className={styles.removeButton}
-                onClick={() => removeSelectedItens()}
+                onClick={() => deactivateSelectedItens()}
               >
                 <TrashSimple size={20} />
               </a>  
@@ -165,7 +133,7 @@ export function ProjectsTable() {
                 <td className={styles.item}>
                   <a 
                     className={styles.removeButton}
-                    onClick={() => removeItem(index)}
+                    onClick={() => deactivateItem(index)}
                   >
                     <TrashSimple size={20} />
                   </a>  

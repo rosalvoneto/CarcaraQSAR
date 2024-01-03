@@ -2,38 +2,23 @@ import { useEffect, useState } from 'react';
 
 import styles from './styles.module.css';
 
-import { TrashSimple } from "@phosphor-icons/react";
+import { TrashSimple, ArrowUUpLeft } from "@phosphor-icons/react";
 import { useNavigate } from 'react-router-dom';
 
-import { projects } from '../../../settings';
+import { activateProject, removeProject, searchDeactivatedProjects } from '../../../api';
 
 export function TrashProjectsTable() {
 
   const [data, setData] = useState([]);
 
-  const searchProjects = async () => {
-
-    let response = await fetch(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivated_projects/`, {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json',
-        }
-    })
-
-    let data = await response.json();
-    if(response.status == 200) {
-
-      console.log(data);
-      setData(data);
-
-    } else {
-      alert('Erro interno do servidor!');
-    }
-  }
-
   useEffect(() => {
-    searchProjects();
+    searchDeactivatedProjects()
+    .then((data) => {
+      setData(data);
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }, []);
 
   const navigate = useNavigate();
@@ -57,38 +42,6 @@ export function TrashProjectsTable() {
     );
   };
 
-  const removeItem = async (index) => {
-    
-    const projectID = data[index].id;
-    
-    data.splice(index, 1);
-    setData([...data]);
-
-    let response = await fetch(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/delete_project/${projectID}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({})
-    })
-
-    let dataResponse = await response.json();
-    if(response.status == 200) {
-      console.log(dataResponse);
-    } else {
-      console.log(`Status: ${response.status}`);
-    }
-  };
-
-  const removeSelectedItens = async () => {
-    let newData = data.filter((dado) => {
-      return !dado.selecionado;
-    });
-
-    setData(newData)
-  };
-
   const selectAllData = () => {
     let newData = [];
 
@@ -107,6 +60,50 @@ export function TrashProjectsTable() {
     setData(newData);
   };
 
+  const removeItem = async (index) => {
+    const projectID = data[index].id;
+    
+    data.splice(index, 1);
+    setData([...data]);
+
+    removeProject(projectID);
+  };
+
+  const removeSelectedItens = async () => {
+    let newData = data.filter((dado) => {
+      return !dado.selecionado;
+    });
+    setData(newData);
+
+    const dataToRemove = data.filter(project => !newData.includes(project));
+
+    dataToRemove.forEach(project => {
+      removeProject(project.id);
+    });
+  };
+
+  const restoreItem = (index) => {
+    const projectID = data[index].id;
+    
+    data.splice(index, 1);
+    setData([...data]);
+
+    activateProject(projectID);
+  }
+
+  const restoreSelectedItens = () => {
+    let newData = data.filter((dado) => {
+      return !dado.selecionado;
+    });
+    setData(newData);
+
+    const dataToRestore = data.filter(project => !newData.includes(project));
+
+    dataToRestore.forEach(project => {
+      activateProject(project.id);
+    });
+  }
+
   return (
     <>
       <table className={styles.table}>
@@ -123,6 +120,14 @@ export function TrashProjectsTable() {
             <th className={`${styles.descriptionItem} ${styles.item3}`}>Status</th>
             <th className={`${styles.descriptionItem} ${styles.item4}`}>
               Data de modificação
+            </th>
+            <th className={`${styles.descriptionItem} ${styles.item5}`}>
+              <a 
+                className={styles.removeButton}
+                onClick={() => restoreSelectedItens()}
+              >
+                <ArrowUUpLeft size={20} />
+              </a>  
             </th>
             <th className={`${styles.descriptionItem} ${styles.item5}`}>
               <a 
@@ -154,6 +159,14 @@ export function TrashProjectsTable() {
                 </td>
                 <td className={styles.item}>{item.status}</td>
                 <td className={styles.item}>{item.date}</td>
+                <td className={styles.item}>
+                  <a 
+                    className={styles.removeButton}
+                    onClick={() => restoreItem(index)}
+                  >
+                    <ArrowUUpLeft size={20} />
+                  </a>  
+                </td>
                 <td className={styles.item}>
                   <a 
                     className={styles.removeButton}

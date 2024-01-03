@@ -13,6 +13,11 @@ urlpatterns = [
     name="deactivated_projects"
   ),
   path(
+    'activate_project/<int:project_id>', 
+    views.activateProject_view, 
+    name="activate_project"
+  ),
+  path(
     'deactivate_project/<int:project_id>', 
     views.deactivateProject_view, 
     name="deactivate_project"

@@ -93,6 +93,15 @@ def deactivatedProjects_view(request):
   return Response(dictionary_results, status=200)
 
 @api_view(['PUT'])
+def activateProject_view(request, project_id):
+
+  project = get_object_or_404(Project, pk=project_id)
+  project.isActive = True
+  project.save()
+
+  return JsonResponse({'message': 'Projeto restaurado!'})
+
+@api_view(['PUT'])
 def deactivateProject_view(request, project_id):
 
   project = get_object_or_404(Project, pk=project_id)
