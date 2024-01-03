@@ -31,7 +31,6 @@ export function ProjectsTable() {
       alert('Erro interno do servidor!');
     }
   }
-
   useEffect(() => {
     searchProjects();
   }, []);
@@ -57,13 +56,7 @@ export function ProjectsTable() {
     );
   };
 
-  const removeItem = async (index) => {
-    
-    const projectID = data[index].id;
-    
-    data.splice(index, 1);
-    setData([...data]);
-
+  const deactivateProject = async (projectID) => {
     let response = await fetch(
       `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivate_project/${projectID}`, {
         method: 'PUT',
@@ -79,14 +72,29 @@ export function ProjectsTable() {
     } else {
       console.log(`Status: ${response.status}`);
     }
+  }
+
+  const removeItem = async (index) => {
+    
+    const projectID = data[index].id;
+    
+    data.splice(index, 1);
+    setData([...data]);
+
+    deactivateProject(projectID);
   };
 
   const removeSelectedItens = async () => {
     let newData = data.filter((dado) => {
       return !dado.selecionado;
     });
+    setData(newData);
 
-    setData(newData)
+    const dataToDeactivate = data.filter(project => !newData.includes(project));
+
+    dataToDeactivate.forEach(project => {
+      deactivateProject(project.id);
+    });
   };
 
   const selectAllData = () => {

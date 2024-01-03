@@ -47,15 +47,15 @@ export function Home() {
     <>
       {
         authenticated
-        && <>
-            <Header 
-              userName={userName}
-            />
-            <div className={styles.inputContainer}>
-              <Input name={"Todos os projetos"}/>
-            </div>
-            <ProjectsTable />
-          </>
+        &&  <>
+              <Header 
+                userName={userName}
+              />
+              <div className={styles.inputContainer}>
+                <Input name={"Todos os projetos"}/>
+              </div>
+              <ProjectsTable />
+            </>
       }
     </>
   )
