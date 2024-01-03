@@ -123,15 +123,15 @@ export function TrashProjectsTable({ searchValue }) {
             </th>
             <th className={`${styles.descriptionItem} ${styles.item5}`}>
               <a 
-                className={styles.removeButton}
+                className={styles.button}
                 onClick={() => restoreSelectedItens()}
               >
                 <ArrowUUpLeft size={20} />
               </a>  
             </th>
-            <th className={`${styles.descriptionItem} ${styles.item5}`}>
+            <th className={`${styles.descriptionItem} ${styles.item6}`}>
               <a 
-                className={styles.removeButton}
+                className={styles.button}
                 onClick={() => removeSelectedItens()}
               >
                 <TrashSimple size={20} />
@@ -161,7 +161,7 @@ export function TrashProjectsTable({ searchValue }) {
                 <td className={styles.item}>{item.date}</td>
                 <td className={styles.item}>
                   <a 
-                    className={styles.removeButton}
+                    className={styles.button}
                     onClick={() => restoreItem(index)}
                   >
                     <ArrowUUpLeft size={20} />
@@ -169,7 +169,7 @@ export function TrashProjectsTable({ searchValue }) {
                 </td>
                 <td className={styles.item}>
                   <a 
-                    className={styles.removeButton}
+                    className={styles.button}
                     onClick={() => removeItem(index)}
                   >
                     <TrashSimple size={20} />

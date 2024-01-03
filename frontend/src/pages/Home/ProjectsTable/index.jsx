@@ -102,7 +102,7 @@ export function ProjectsTable({ searchValue }) {
             </th>
             <th className={`${styles.descriptionItem} ${styles.item5}`}>
               <a 
-                className={styles.removeButton}
+                className={styles.button}
                 onClick={() => deactivateSelectedItens()}
               >
                 <TrashSimple size={20} />
@@ -132,7 +132,7 @@ export function ProjectsTable({ searchValue }) {
                 <td className={styles.item}>{item.date}</td>
                 <td className={styles.item}>
                   <a 
-                    className={styles.removeButton}
+                    className={styles.button}
                     onClick={() => deactivateItem(index)}
                   >
                     <TrashSimple size={20} />
