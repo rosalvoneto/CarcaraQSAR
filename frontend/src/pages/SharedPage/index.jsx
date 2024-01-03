@@ -1,6 +1,6 @@
 
 import { Header } from '../../components/Header';
-import { TrashProjectsTable } from './TrashProjectsTable';
+import { SharedProjectsTable } from './SharedProjectsTable';
 
 import Input from '../../components/Input';
 
@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 
 import Cookies from 'js-cookie';
 
-export function TrashPage() {
+export function SharedPage() {
 
   const [authenticated, setAuthenticated] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -51,15 +51,15 @@ export function TrashPage() {
     <>
       {
         authenticated
-        && <>
-            <Header 
-              userName={userName}
-            />
-            <div className={styles.inputContainer}>
-              <Input name={"Lixeira"} setValue={setNewSearchValue}/>
-            </div>
-            <TrashProjectsTable searchValue={searchValue}/>
-          </>
+        &&  <>
+              <Header 
+                userName={userName}
+              />
+              <div className={styles.inputContainer}>
+                <Input name={"Compartilhados"} setValue={setNewSearchValue}/>
+              </div>
+              <SharedProjectsTable searchValue={searchValue}/>
+            </>
       }
     </>
   )

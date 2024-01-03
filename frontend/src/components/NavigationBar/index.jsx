@@ -29,7 +29,7 @@ export default function NavigationBar() {
           Todos os projetos
         </a>
         <a className={styles.link}
-          onClick={() => handleTo('/home')}
+          onClick={() => handleTo('/shared')}
         >
           Compartilhados
         </a>

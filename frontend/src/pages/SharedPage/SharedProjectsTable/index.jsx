@@ -2,22 +2,21 @@ import { useEffect, useState } from 'react';
 
 import styles from './styles.module.css';
 
-import { LockKey, ShareFat, TrashSimple } from "@phosphor-icons/react";
+import { TrashSimple, ArrowUUpLeft } from "@phosphor-icons/react";
 import { useNavigate } from 'react-router-dom';
 
 import { 
-  deactivateProject, 
-  deshareProject, 
-  searchProjects, 
-  shareProject 
+  searchSharedProjects, 
+  deactivateProject,
+  deshareProject,
 } from '../../../api';
 
-export function ProjectsTable({ searchValue }) {
+export function SharedProjectsTable({ searchValue }) {
 
-  // Projetos
   const [data, setData] = useState([]);
+
   useEffect(() => {
-    searchProjects(searchValue)
+    searchSharedProjects(searchValue)
     .then((data) => {
       setData(data);
     })
@@ -87,11 +86,6 @@ export function ProjectsTable({ searchValue }) {
     });
   };
 
-  const shareItem = (index) => {
-    const projectID = data[index].id;
-    shareProject(projectID);
-  }
-
   const deshareItem = (index) => {
     const projectID = data[index].id;
     
@@ -101,14 +95,16 @@ export function ProjectsTable({ searchValue }) {
     deshareProject(projectID);
   }
 
-  const shareSelectedItens = () => {
+  const deshareSelectedItens = () => {
     let newData = data.filter((dado) => {
       return !dado.selecionado;
     });
+    setData(newData);
+
     const dataToRestore = data.filter(project => !newData.includes(project));
 
     dataToRestore.forEach(project => {
-      shareProject(project.id);
+      deshareProject(project.id);
     });
   }
 
@@ -130,16 +126,12 @@ export function ProjectsTable({ searchValue }) {
               Data de modificação
             </th>
             <th className={`${styles.descriptionItem} ${styles.item5}`}>
-              {
-              /*
-                <a 
-                  className={styles.button}
-                  onClick={() => shareSelectedItens()}
-                >
-                  <ShareFat size={20} />
-                </a> 
-              */
-              }
+              <a 
+                className={styles.button}
+                onClick={() => deshareSelectedItens()}
+              >
+                <ArrowUUpLeft size={20} />
+              </a>  
             </th>
             <th className={`${styles.descriptionItem} ${styles.item6}`}>
               <a 
@@ -171,23 +163,13 @@ export function ProjectsTable({ searchValue }) {
                 </td>
                 <td className={styles.item}>{item.status}</td>
                 <td className={styles.item}>{item.date}</td>
-              
                 <td className={styles.item}>
-                  {
-                    item.shared
-                    ? <a 
-                        className={styles.button}
-                        onClick={() => deshareItem(index)}
-                      >
-                        <ShareFat size={20} />
-                      </a>  
-                    : <a 
-                        className={styles.button}
-                        onClick={() => shareItem(index)}
-                      >
-                        <LockKey size={20} />
-                      </a>
-                  }
+                  <a 
+                    className={styles.button}
+                    onClick={() => deshareItem(index)}
+                  >
+                    <ArrowUUpLeft size={20} />
+                  </a>  
                 </td>
                 <td className={styles.item}>
                   <a 
