@@ -7,19 +7,19 @@ import { useNavigate } from 'react-router-dom';
 
 import { activateProject, removeProject, searchDeactivatedProjects } from '../../../api';
 
-export function TrashProjectsTable() {
+export function TrashProjectsTable({ searchValue }) {
 
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    searchDeactivatedProjects()
+    searchDeactivatedProjects(searchValue)
     .then((data) => {
       setData(data);
     })
     .catch((error) => {
       console.log(error)
     })
-  }, []);
+  }, [searchValue]);
 
   const navigate = useNavigate();
   const handleTo = (URL) => {

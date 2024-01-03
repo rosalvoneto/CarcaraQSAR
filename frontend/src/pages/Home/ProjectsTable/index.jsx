@@ -7,19 +7,19 @@ import { useNavigate } from 'react-router-dom';
 
 import { deactivateProject, searchProjects } from '../../../api';
 
-export function ProjectsTable() {
+export function ProjectsTable({ searchValue }) {
 
   // Projetos
   const [data, setData] = useState([]);
   useEffect(() => {
-    searchProjects()
+    searchProjects(searchValue)
     .then((data) => {
       setData(data);
     })
     .catch((error) => {
       console.log(error)
     })
-  }, []);
+  }, [searchValue]);
 
   const navigate = useNavigate();
   const handleTo = (URL) => {

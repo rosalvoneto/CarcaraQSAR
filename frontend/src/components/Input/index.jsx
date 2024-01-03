@@ -8,7 +8,7 @@ export default function Input({ inputName, name, setValue, type }) {
   const changeText = (e) => {
     setText(e.target.value);
     if(setValue) {
-      setValue(text);
+      setValue(e.target.value);
     }
   };
 

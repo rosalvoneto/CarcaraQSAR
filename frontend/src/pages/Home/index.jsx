@@ -19,6 +19,14 @@ import Cookies from 'js-cookie';
 export function Home() {
 
   const [authenticated, setAuthenticated] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  // Função para atualizar o estado
+  const setNewSearchValue = (newSearchValue) => {
+    setSearchValue(newSearchValue);
+
+    console.log(newSearchValue);
+  };
 
   useEffect(() => {
     // Função para verificar a autenticação
@@ -52,9 +60,9 @@ export function Home() {
                 userName={userName}
               />
               <div className={styles.inputContainer}>
-                <Input name={"Todos os projetos"}/>
+                <Input name={"Todos os projetos"} setValue={setNewSearchValue}/>
               </div>
-              <ProjectsTable />
+              <ProjectsTable searchValue={searchValue}/>
             </>
       }
     </>

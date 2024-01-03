@@ -56,9 +56,12 @@ def getRoutes(request):
   return JsonResponse(routes)
 
 @api_view(['GET', 'POST'])
-def allProjects_view(request):
+def projects_view(request):
 
-  projects = Project.objects.filter(isActive=True)
+  search_value = request.GET.get('query', '')
+  print(search_value)
+
+  projects = Project.objects.filter(isActive=True, name__icontains=search_value)
 
   dictionary_results = []
   for index, project in enumerate(projects):
@@ -76,7 +79,11 @@ def allProjects_view(request):
 
 @api_view(['GET', 'POST'])
 def deactivatedProjects_view(request):
-  projects = Project.objects.filter(isActive=False)
+
+  search_value = request.GET.get('query', '')
+  print(search_value)
+
+  projects = Project.objects.filter(isActive=False, name__icontains=search_value)
 
   dictionary_results = []
   for index, project in enumerate(projects):

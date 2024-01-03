@@ -1,8 +1,8 @@
 
 // Retorna projetos ativados
-export const searchProjects = async () => {
+export const searchProjects = async (searchValue) => {
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/projects/`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/projects?query=${searchValue}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
@@ -20,10 +20,10 @@ export const searchProjects = async () => {
 }
 
 // Retorna projetos desativados
-export const searchDeactivatedProjects = async () => {
+export const searchDeactivatedProjects = async (searchValue) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivated_projects/`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivated_projects?query=${searchValue}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',

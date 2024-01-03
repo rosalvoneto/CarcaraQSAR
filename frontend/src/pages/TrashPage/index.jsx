@@ -15,6 +15,14 @@ import Cookies from 'js-cookie';
 export function TrashPage() {
 
   const [authenticated, setAuthenticated] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  // Função para atualizar o estado
+  const setNewSearchValue = (newSearchValue) => {
+    setSearchValue(newSearchValue);
+
+    console.log(newSearchValue);
+  };
 
   useEffect(() => {
     // Função para verificar a autenticação
@@ -48,9 +56,9 @@ export function TrashPage() {
               userName={userName}
             />
             <div className={styles.inputContainer}>
-              <Input name={"Todos os projetos"}/>
+              <Input name={"Todos os projetos"} setValue={setNewSearchValue}/>
             </div>
-            <TrashProjectsTable />
+            <TrashProjectsTable searchValue={searchValue}/>
           </>
       }
     </>

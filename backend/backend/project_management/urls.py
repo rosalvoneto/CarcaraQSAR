@@ -6,7 +6,7 @@ urlpatterns = [
 
   path('new/', views.createProject_view, name="create_project"),
   path('database/', views.database_view, name="database"),
-  path('projects/', views.allProjects_view, name="projects"),
+  path('projects/', views.projects_view, name="projects"),
   path(
     'deactivated_projects/', 
     views.deactivatedProjects_view, 
