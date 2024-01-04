@@ -6,7 +6,7 @@ build:
       - ls
       - pip3 install -r requirements.txt
 run:
-  runtime-version: 3.8.16
+  runtime-version: 3.9.10
   command: sh startup.sh
   network:
     port: 8000
