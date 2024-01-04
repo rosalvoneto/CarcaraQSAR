@@ -1,12 +1,12 @@
 version: 1.0
-runtime: python3
+runtime: python3.10
 build:
   commands:
     build:
       - ls
       - pip3 install -r requirements.txt
 run:
-  runtime-version: 3.9.10
+  runtime-version: 3.10
   command: sh startup.sh
   network:
     port: 8000
