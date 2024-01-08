@@ -97,13 +97,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Definir uma variável de ambiente no código?
 
-# if "DATABASE_SECRET" in environ:
-#     database_secret = environ.get("DATABASE_SECRET")
-#     if database_secret != None:
-#         db_url = json.loads(database_secret)["DATABASE_URL"]
-#         DATABASES = {"default": dj_database_url.parse(db_url)}
-# else:
-#     DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
+if "DATABASE_SECRET" in environ:
+    print("DATABASE_SECRET is on ENVIRON")
+    # database_secret = environ.get("DATABASE_SECRET")
+    # if database_secret != None:
+    #     db_url = json.loads(database_secret)["DATABASE_URL"]
+    #     DATABASES = {"default": dj_database_url.parse(db_url)}
+else:
+    print("DATABASE_SECRET is not on ENVIRON")
+    # DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
 
 configuration_postgres = {
     'default': {
@@ -129,13 +131,12 @@ configuration_postgres = {
 
 DATABASES = configuration_postgres
 
-configuration_sqlite = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
+# configuration_sqlite = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 # DATABASES = configuration_sqlite
 
 
