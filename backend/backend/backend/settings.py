@@ -99,24 +99,24 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 if "DATABASE_SECRET" in environ:
     print("DATABASE_SECRET is on ENVIRON")
-    # database_secret = environ.get("DATABASE_SECRET")
-    # if database_secret != None:
-    #     db_url = json.loads(database_secret)["DATABASE_URL"]
-    #     DATABASES = {"default": dj_database_url.parse(db_url)}
+    database_secret = environ.get("DATABASE_SECRET")
+    if database_secret != None:
+        db_url = json.loads(database_secret)["DATABASE_URL"]
+        DATABASES = {"default": dj_database_url.parse(db_url)}
 else:
     print("DATABASE_SECRET is not on ENVIRON")
-    # DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
+    DATABASES = {"default": dj_database_url.parse("sqlite:///db.sqlite3")}
 
-configuration_postgres = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com',
-        'PORT': '5432',
-    }
-}
+# configuration_postgres = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'django',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'django-builder-db.c18m40gqukp8.us-east-2.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 # configuration_postgres = {
 #     'default': {
@@ -129,7 +129,7 @@ configuration_postgres = {
 #     }
 # }
 
-DATABASES = configuration_postgres
+# DATABASES = configuration_postgres
 
 # configuration_sqlite = {
 #     'default': {
