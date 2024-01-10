@@ -11,12 +11,9 @@ export default AuthContext;
 export const AuthProvider = ({ children }) => {
 
   const [decodifiedToken, setDecodifiedToken] = useState(null);
-  const [authTokens, setAuthTokens] = useState(null);
 
   const loginUser = async (e) => {
     e.preventDefault();
-
-    console.log(import.meta.env.VITE_REACT_APP_BACKEND_LINK)
 
     let response = await fetch(
       `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/api/token/`, {
@@ -25,7 +22,7 @@ export const AuthProvider = ({ children }) => {
           'Content-type': 'application/json',
         },
         body: JSON.stringify({
-          username: e.target.username.value,
+          email: e.target.email.value,
           password: e.target.password.value
       })
     })
@@ -38,14 +35,13 @@ export const AuthProvider = ({ children }) => {
         sameSite: 'strict' 
       });
 
-      setAuthTokens(data.access);
       setDecodifiedToken(jwtDecode(data.access));
       console.log(decodifiedToken);
 
       window.location.href = '/home';
 
     } else {
-      alert('Nome de usuário ou senha incorretas!');
+      alert('Email ou senha incorretas!');
     }
   }
 

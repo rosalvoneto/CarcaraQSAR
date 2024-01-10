@@ -22,7 +22,7 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
       <h4 className={styles.title}>Auntenticação</h4>
 
       <div className={styles.inputsContainer}>
-        <Input inputName={'username'} name={"Nome"} type={'text'}/>
+        <Input inputName={'email'} name={"Email"} type={'email'}/>
         <div className={styles.inputContainer}>
           <Input inputName={'password'} name={"Senha"} type={'password'}/>
           <a className={styles.link}>Esqueci a senha</a>

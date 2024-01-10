@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [".awsapprunner.com", "*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'user',
     'api',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
@@ -232,6 +233,8 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
+# Mudança de usuário principal
+AUTH_USER_MODEL = 'user.User'
 
 # Permissões de acesso
 CORS_ALLOW_ALL_ORIGINS = True
