@@ -17,7 +17,7 @@ export function ProjectsTable({ searchValue }) {
   // Projetos
   const [data, setData] = useState([]);
   useEffect(() => {
-    searchProjects(searchValue)
+    searchProjects(searchValue, "danielalencar746@gmail.com")
     .then((data) => {
       setData(data);
     })

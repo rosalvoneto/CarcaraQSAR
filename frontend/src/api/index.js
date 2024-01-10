@@ -1,8 +1,8 @@
 
 // Retorna projetos ativados
-export const searchProjects = async (searchValue) => {
+export const searchProjects = async (searchValue, email) => {
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/projects?query=${searchValue}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/projects?query=${searchValue}&email=${email}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',

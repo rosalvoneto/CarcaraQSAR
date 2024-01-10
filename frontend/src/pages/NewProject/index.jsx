@@ -41,6 +41,7 @@ export function NewProject() {
         body: JSON.stringify({
           project_name: name,
           project_description: description,
+          project_user_email: "danielalencar746@gmail.com"
         })
     })
 

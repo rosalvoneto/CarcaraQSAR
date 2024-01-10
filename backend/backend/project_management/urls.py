@@ -5,7 +5,6 @@ urlpatterns = [
   path('', views.getRoutes, name="get_routes"),
 
   path('new/', views.createProject_view, name="create_project"),
-  path('database/', views.database_view, name="database"),
   path(
     'projects/', 
     views.projects_view, 

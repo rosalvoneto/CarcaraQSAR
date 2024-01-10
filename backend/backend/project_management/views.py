@@ -1,4 +1,3 @@
-import datetime
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -6,6 +5,7 @@ from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from user.models import User
 from .models import Project
 
 # Create your views here.
@@ -20,14 +20,19 @@ def createProject_view(request):
     # Faça algo com os dados
     name = data.get('project_name')
     description = data.get('project_description')
+    email = data.get('project_user_email')
 
     print(name)
     print(description)
+    print(email)
+
+    user = User.objects.filter(email=email)[0]
 
     # Realize as operações desejadas com os dados
     project = Project()
     project.name = name
     project.description = description
+    project.user = user
     project.save()
 
     # Retorne uma resposta, por exemplo, um JSON
@@ -40,10 +45,6 @@ def createProject_view(request):
   
   else:
     return Response({'mensagem': 'Método não permitido'}, status=405)
-
-@api_view(['GET'])
-def database_view(request):
-  return JsonResponse({ 'message': 'database_view' })
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -59,9 +60,14 @@ def getRoutes(request):
 def projects_view(request):
 
   search_value = request.GET.get('query', '')
+  email_value = request.GET.get('email', '')
   print(search_value)
+  print(email_value)
 
-  projects = Project.objects.filter(isActive=True, name__icontains=search_value)
+  user = User.objects.filter(email=email_value)[0]
+
+  projects = Project.objects.filter(isActive=True, user=user)
+  projects = projects.filter(name__icontains=search_value)
 
   dictionary_results = []
   for index, project in enumerate(projects):
