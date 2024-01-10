@@ -15,6 +15,7 @@ import { useState, useContext, useEffect } from 'react';
 import AuthContext from '../../context/AuthContext';
 
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 export function Home() {
 
@@ -34,6 +35,7 @@ export function Home() {
       // Obtém o token do cookie
       const token = Cookies.get('jwt_token');
       console.log('TOKEN:', token);
+      jwtDecode(token)
 
       // Verifica se o token existe e não está expirado
       if(token) {
@@ -57,7 +59,7 @@ export function Home() {
         authenticated
         &&  <>
               <Header 
-                userName={userName}
+                userName={jwtDecode(Cookies.get('jwt_token')).username}
               />
               <div className={styles.inputContainer}>
                 <Input name={"Todos os projetos"} setValue={setNewSearchValue}/>

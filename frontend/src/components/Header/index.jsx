@@ -19,13 +19,15 @@ export function Header({ title, userName }) {
       </p>
 
       <div className={styles.userContainer}>
-        <p className={styles.userName}>{ userName }</p>
+        <div className={styles.div}>
+          <p className={styles.username}>{ userName }</p>
+          <a className={styles.logout} onClick={logout}>Logout</a>
+        </div>
         <img 
           src={defaultUserImage} 
           alt="image" 
           className={styles.userImage} 
         />
-        <a className={styles.logout} onClick={logout}>Logout</a>
       </div>
 
     </div>

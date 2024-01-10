@@ -16,13 +16,29 @@
 
 .userContainer {
   border: 0px solid red;
-
+  
   display: flex;
   align-items: center;
 }
 
-.userName {
+.div {
+  border: 0px solid red;
   margin-right: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.username {
+  font-size: 20px;
+  line-height: normal;
+}
+
+.logout {
+  font-size: 10px;
+  line-height: normal;
 }
 
 .userImage {
@@ -31,8 +47,4 @@
   height: 50px;
 
   cursor: pointer;
-}
-
-.logout {
-  margin: 10px;
 }
