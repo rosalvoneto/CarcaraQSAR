@@ -2,8 +2,6 @@
 export const NavigationBarWidth = 250;
 export const projectName = "Novo Projeto";
 
-export const userName = "USERNAME";
-
 export const statesProgressBar = [
   {
     index: 0,

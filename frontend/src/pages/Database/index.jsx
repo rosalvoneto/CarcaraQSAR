@@ -8,7 +8,7 @@ import { CheckboxInput } from '../../components/CheckboxInput';
 
 import styles from './styles.module.css';
 
-import { projectName, userName } from '../../settings';
+import { projectName } from '../../settings';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import { BarButtons } from '../../components/BarButtons';
@@ -28,7 +28,6 @@ export function Database() {
     <>
       <Header 
         title={projectName}
-        userName={userName}
       />
       <ProgressBar 
         progressNumber={progress}

@@ -8,7 +8,7 @@ import { Tabs } from '../../components/Tabs';
 
 import styles from './styles.module.css';
 
-import { userName, statesProgressBar, projectName } from '../../settings';
+import { statesProgressBar, projectName } from '../../settings';
 
 import Graph1 from '../../assets/results/graph1.png';
 import Graph2 from '../../assets/results/graph2.png';
@@ -58,7 +58,6 @@ export default function Results() {
     <>
       <Header 
         title={projectName}
-        userName={userName}
       />
       <ProgressBar 
         progressNumber={progress}

@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import { DefaultPage } from '../DefaultPage';
 import { Header } from '../../components/Header';
 
 import { ProgressBar } from '../../components/ProgressBar';
-import { projectName, statesProgressBar, userName } from '../../settings';
-
-import { DataTable } from '../../components/DataTable';
+import { projectName } from '../../settings';
 
 import Histograma from '../../assets/histograma.png';
 import BoxPlot from '../../assets/box-plot.png';
@@ -61,7 +58,6 @@ export function PreProcessing({ index }) {
       <>
         <Header 
           title={projectName}
-          userName={userName}
         />
         <ProgressBar 
           progressNumber={progress}
@@ -101,7 +97,6 @@ export function PreProcessing({ index }) {
       <>
         <Header 
           title={projectName}
-          userName={userName}
         />
         <ProgressBar 
           progressNumber={progress}

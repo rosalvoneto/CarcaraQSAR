@@ -3,7 +3,7 @@ import { Header } from '../../components/Header';
 
 import styles from './styles.module.css';
 
-import { projectName, userName } from '../../settings';
+import { projectName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
 import { useEffect, useState } from 'react';
 import { InlineInput } from '../../components/InlineInput';
@@ -50,7 +50,6 @@ export default function Training() {
       <>
         <Header 
           title={projectName}
-          userName={userName}
         />
         <ProgressBar 
           progressNumber={progress}
@@ -93,7 +92,6 @@ export default function Training() {
       <>
         <Header
           title={projectName} 
-          userName={userName}
         />
         <ProgressBar 
           progressNumber={progress}
