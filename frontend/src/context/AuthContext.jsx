@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 import Cookies from 'js-cookie';
@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
         null
       )
   );
+  const [loading, setLoading] = useState(true);
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -70,6 +71,49 @@ export const AuthProvider = ({ children }) => {
 
     window.location.href = '/';
   }
+
+  const uptateToken = async () => {
+    console.log('Update Token!');
+
+    let response = await fetch(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/api/token/refresh/`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          refresh: authTokens.refresh
+      })
+    })
+
+    let dataResponse = await response.json();
+    if(response.status == 200) {
+
+      Cookies.set('jwt_tokens', JSON.stringify(dataResponse), { 
+        secure: true,
+        sameSite: 'strict' 
+      });
+      
+      setAuthTokens(dataResponse);
+      setDecodifiedAccessToken(jwtDecode(dataResponse.access));
+
+    } else {
+      logoutUser();
+    }
+  }
+
+  useEffect(() => {
+
+    const timeInterval = 1000 * 60 * 4;
+    let interval = setInterval(() => {
+      if(authTokens) {
+        uptateToken();
+      }
+    }, timeInterval)
+
+    return () => clearInterval(interval)
+
+  }, [authTokens, loading]);
 
   let contextData = {
     decodifiedAccessToken: decodifiedAccessToken,
