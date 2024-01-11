@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { Header } from '../../components/Header';
 
@@ -8,8 +8,11 @@ import TextArea from '../../components/TextArea';
 import styles from './styles.module.css';
 
 import { createProject } from '../../api/project';
+import AuthContext from '../../context/AuthContext';
 
 export function NewProject() {
+
+  const { authTokens } = useContext(AuthContext);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -20,7 +23,7 @@ export function NewProject() {
       
       <form 
         className={styles.container}
-        onSubmit={(e) => createProject(e)} 
+        onSubmit={(e) => createProject(e, authTokens.access)} 
       >
         <div className={styles.contentContainer}>
           <Input 

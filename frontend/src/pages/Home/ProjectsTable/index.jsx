@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import styles from './styles.module.css';
 
@@ -12,12 +12,16 @@ import {
   shareProject 
 } from '../../../api/project';
 
+import AuthContext from '../../../context/AuthContext';
+
 export function ProjectsTable({ searchValue }) {
+
+  const { authTokens } = useContext(AuthContext)
 
   // Projetos
   const [data, setData] = useState([]);
   useEffect(() => {
-    searchProjects(searchValue, "danielalencar746@gmail.com")
+    searchProjects(searchValue, authTokens.access)
     .then((data) => {
       setData(data);
     })

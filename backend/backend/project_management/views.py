@@ -1,6 +1,7 @@
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,9 +11,12 @@ from .models import Project
 
 # Create your views here.
 
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def createProject_view(request):
   if request.method == 'POST':
+
+    user = request.user
 
     # Recupere os dados do corpo da requisição
     data = request.data
@@ -20,13 +24,9 @@ def createProject_view(request):
     # Faça algo com os dados
     name = data.get('project_name')
     description = data.get('project_description')
-    email = data.get('project_user_email')
 
     print(name)
     print(description)
-    print(email)
-
-    user = User.objects.filter(email=email)[0]
 
     # Realize as operações desejadas com os dados
     project = Project()
@@ -57,14 +57,13 @@ def getRoutes(request):
   return JsonResponse(routes)
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def projects_view(request):
 
+  user = request.user
   search_value = request.GET.get('query', '')
-  email_value = request.GET.get('email', '')
+  print(user)
   print(search_value)
-  print(email_value)
-
-  user = User.objects.filter(email=email_value)[0]
 
   projects = Project.objects.filter(isActive=True, user=user)
   projects = projects.filter(name__icontains=search_value)
