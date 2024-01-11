@@ -4,8 +4,6 @@ import { SharedProjectsTable } from './SharedProjectsTable';
 
 import Input from '../../components/Input';
 
-import { userName } from '../../settings';
-
 import styles from './styles.module.css';
 
 import { useState, useEffect } from 'react';
@@ -52,9 +50,7 @@ export function SharedPage() {
       {
         authenticated
         &&  <>
-              <Header 
-                userName={userName}
-              />
+              <Header />
               <div className={styles.inputContainer}>
                 <Input name={"Compartilhados"} setValue={setNewSearchValue}/>
               </div>

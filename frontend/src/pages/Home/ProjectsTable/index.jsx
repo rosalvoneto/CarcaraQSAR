@@ -10,7 +10,7 @@ import {
   deshareProject, 
   searchProjects, 
   shareProject 
-} from '../../../api';
+} from '../../../api/project';
 
 export function ProjectsTable({ searchValue }) {
 
@@ -24,7 +24,7 @@ export function ProjectsTable({ searchValue }) {
     .catch((error) => {
       console.log(error)
     })
-  }, [searchValue, data]);
+  }, [searchValue]);
 
   const navigate = useNavigate();
   const handleTo = (URL) => {

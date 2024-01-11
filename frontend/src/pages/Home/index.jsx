@@ -1,21 +1,14 @@
 
-import { DefaultPage } from '../DefaultPage';
 import { Header } from '../../components/Header';
 import { ProjectsTable } from './ProjectsTable';
 
 import Input from '../../components/Input';
 
-import { userName, recuperarDados } from '../../settings';
-
 import styles from './styles.module.css';
 
-import { useNavigate, redirect, Navigate } from 'react-router-dom';
-import { useState, useContext, useEffect } from 'react';
-
-import AuthContext from '../../context/AuthContext';
+import { useState, useEffect } from 'react';
 
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
 
 export function Home() {
 
@@ -35,7 +28,6 @@ export function Home() {
       // Obtém o token do cookie
       const token = Cookies.get('jwt_token');
       console.log('TOKEN:', token);
-      jwtDecode(token)
 
       // Verifica se o token existe e não está expirado
       if(token) {
@@ -58,9 +50,7 @@ export function Home() {
       {
         authenticated
         &&  <>
-              <Header 
-                userName={jwtDecode(Cookies.get('jwt_token')).username}
-              />
+              <Header />
               <div className={styles.inputContainer}>
                 <Input name={"Todos os projetos"} setValue={setNewSearchValue}/>
               </div>

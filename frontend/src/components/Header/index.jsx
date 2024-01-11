@@ -4,12 +4,17 @@ import defaultUserImage from '../../assets/defaultUserImage.svg';
 import { Navigate, redirect } from 'react-router-dom';
 
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
-export function Header({ title, userName }) {
+import { logoutUser } from '../../api/user';
 
-  const logout = () => {
-    Cookies.remove('jwt_token');
-    window.location.href = '/';
+export function Header({ title }) {
+
+  const jwt_token = Cookies.get('jwt_token');
+  let userName = "";
+
+  if(jwt_token) {
+    userName = jwtDecode(Cookies.get('jwt_token')).username;
   }
 
   return(
@@ -21,7 +26,7 @@ export function Header({ title, userName }) {
       <div className={styles.userContainer}>
         <div className={styles.div}>
           <p className={styles.username}>{ userName }</p>
-          <a className={styles.logout} onClick={logout}>Logout</a>
+          <a className={styles.logout} onClick={logoutUser}>Sair</a>
         </div>
         <img 
           src={defaultUserImage} 

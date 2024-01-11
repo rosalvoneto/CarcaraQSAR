@@ -160,3 +160,41 @@ export const removeProject = async (projectID) => {
     console.log('Erro interno do servidor!');
   }
 }
+
+// cria projeto
+export const createProject = async (e) => {
+
+  e.preventDefault();
+
+  const name = e.target.name.value;
+  const description = e.target.description.value;
+  const email = "danielalencar746@gmail.com";
+
+  if(name == "" || description == "") {
+    return alert("Preencha os campos corretamente!")
+  }
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/new/`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        project_name: name,
+        project_description: description,
+        project_user_email: email
+      })
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    window.location.href = '/home';
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    alert('Erro interno do servidor!');
+  }
+}

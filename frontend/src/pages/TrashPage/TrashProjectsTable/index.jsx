@@ -5,7 +5,11 @@ import styles from './styles.module.css';
 import { TrashSimple, ArrowUUpLeft } from "@phosphor-icons/react";
 import { useNavigate } from 'react-router-dom';
 
-import { activateProject, removeProject, searchDeactivatedProjects } from '../../../api';
+import { 
+  activateProject, 
+  removeProject, 
+  searchDeactivatedProjects 
+} from '../../../api/project';
 
 export function TrashProjectsTable({ searchValue }) {
 

@@ -9,7 +9,7 @@ import {
   searchSharedProjects, 
   deactivateProject,
   deshareProject,
-} from '../../../api';
+} from '../../../api/project';
 
 export function SharedProjectsTable({ searchValue }) {
 

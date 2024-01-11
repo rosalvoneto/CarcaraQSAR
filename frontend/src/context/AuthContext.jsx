@@ -1,5 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { createContext, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 import Cookies from 'js-cookie';
@@ -27,20 +26,21 @@ export const AuthProvider = ({ children }) => {
       })
     })
 
-    let data = await response.json();
+    let dataResponse = await response.json();
     if(response.status == 200) {
 
-      Cookies.set('jwt_token', data.access, { 
+      console.log(dataResponse)
+      Cookies.set('jwt_token', dataResponse.access, { 
         secure: true,
         sameSite: 'strict' 
       });
 
-      setDecodifiedToken(jwtDecode(data.access));
-      console.log(decodifiedToken);
+      setDecodifiedToken(jwtDecode(dataResponse.access));
 
       window.location.href = '/home';
 
     } else {
+      console.log(`Status: ${response.status}`);
       alert('Email ou senha incorretas!');
     }
   }
