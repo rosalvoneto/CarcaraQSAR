@@ -23,7 +23,7 @@ export const createUser = async (e) => {
   if(response.status == 200) {
     
     console.log(dataResponse);
-    Cookies.set('jwt_token', dataResponse.access, { 
+    Cookies.set('jwt_tokens', JSON.stringify(dataResponse), { 
       secure: true,
       sameSite: 'strict' 
     });
@@ -55,7 +55,7 @@ export const loginUser = async (e) => {
   if(response.status == 200) {
 
     console.log(responseData);
-    Cookies.set('jwt_token', responseData.access, { 
+    Cookies.set('jwt_tokens', JSON.stringify(responseData), { 
       secure: true,
       sameSite: 'strict' 
     });
@@ -73,6 +73,6 @@ export const loginUser = async (e) => {
 
 // logout user
 export const logoutUser = () => {
-  Cookies.remove('jwt_token');
+  Cookies.remove('jwt_tokens');
   window.location.href = '/';
 }

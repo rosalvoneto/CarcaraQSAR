@@ -1,18 +1,15 @@
-import { useNavigate } from 'react-router-dom';
-import Input from '../Input';
-import styles from './styles.module.css';
 import { useContext } from 'react';
+
+import styles from './styles.module.css';
+
 import AuthContext from '../../context/AuthContext';
+
+import Input from '../Input';
 
 export default function AuntenticBox({ setRegisterBoxAppears }) {
 
   const handleRegisterBox = () => {
     setRegisterBoxAppears(true);
-  }
-
-  const navigate = useNavigate();
-  const handleToHomePage = () => {
-    navigate('/home');
   }
 
   const { loginUser } = useContext(AuthContext);

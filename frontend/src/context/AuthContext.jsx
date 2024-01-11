@@ -9,7 +9,22 @@ export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
 
-  const [decodifiedToken, setDecodifiedToken] = useState(null);
+  const [decodifiedAccessToken, setDecodifiedAccessToken] = useState(
+    () =>
+      Cookies.get('jwt_tokens') ? (
+        jwtDecode(JSON.parse(Cookies.get('jwt_tokens')).access)
+      ) : (
+        null
+      )
+  );
+  const [authTokens, setAuthTokens] = useState(
+    () =>
+      Cookies.get('jwt_tokens') ? (
+        JSON.parse(Cookies.get('jwt_tokens'))
+      ) : (
+        null
+      )
+  );
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -29,13 +44,15 @@ export const AuthProvider = ({ children }) => {
     let dataResponse = await response.json();
     if(response.status == 200) {
 
-      console.log(dataResponse)
-      Cookies.set('jwt_token', dataResponse.access, { 
+      Cookies.set('jwt_tokens', JSON.stringify(dataResponse), { 
         secure: true,
         sameSite: 'strict' 
       });
-
-      setDecodifiedToken(jwtDecode(dataResponse.access));
+      
+      setAuthTokens(dataResponse);
+      console.log(authTokens);
+      setDecodifiedAccessToken(jwtDecode(dataResponse.access));
+      console.log(decodifiedAccessToken);
 
       window.location.href = '/home';
 
@@ -45,9 +62,20 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  const logoutUser = () => {
+    setAuthTokens(null);
+    setDecodifiedAccessToken(null);
+
+    Cookies.remove('jwt_tokens');
+
+    window.location.href = '/';
+  }
+
   let contextData = {
-    decodifiedToken: decodifiedToken,
-    loginUser: loginUser
+    decodifiedAccessToken: decodifiedAccessToken,
+    authTokens: authTokens,
+    loginUser: loginUser,
+    logoutUser, logoutUser,
   }
   
   return(

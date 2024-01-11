@@ -26,7 +26,7 @@ export function Home() {
     // Função para verificar a autenticação
     const checkAuthentication = () => {
       // Obtém o token do cookie
-      const token = Cookies.get('jwt_token');
+      const token = Cookies.get('jwt_tokens');
       console.log('TOKEN:', token);
 
       // Verifica se o token existe e não está expirado

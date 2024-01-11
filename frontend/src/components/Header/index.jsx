@@ -1,21 +1,13 @@
 import styles from './styles.module.css';
 
 import defaultUserImage from '../../assets/defaultUserImage.svg';
-import { Navigate, redirect } from 'react-router-dom';
 
-import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-
-import { logoutUser } from '../../api/user';
+import AuthContext from '../../context/AuthContext';
+import { useContext } from 'react';
 
 export function Header({ title }) {
 
-  const jwt_token = Cookies.get('jwt_token');
-  let userName = "";
-
-  if(jwt_token) {
-    userName = jwtDecode(Cookies.get('jwt_token')).username;
-  }
+  const { decodifiedAccessToken, logoutUser } = useContext(AuthContext)
 
   return(
     <div className={styles.container}>
@@ -25,7 +17,11 @@ export function Header({ title }) {
 
       <div className={styles.userContainer}>
         <div className={styles.div}>
-          <p className={styles.username}>{ userName }</p>
+          <p className={styles.username}>
+            {
+              decodifiedAccessToken.username
+            }
+          </p>
           <a className={styles.logout} onClick={logoutUser}>Sair</a>
         </div>
         <img 
