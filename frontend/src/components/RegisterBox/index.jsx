@@ -2,9 +2,12 @@ import styles from './styles.module.css';
 
 import Input from '../Input';
 
-import { createUser } from '../../api/user';
+import { useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
 
 export default function RegisterBox({ setRegisterBoxAppears }) {
+
+  const { createUser } = useContext(AuthContext);
 
   const handleAutenticBox = () => {
     setRegisterBoxAppears(false);
