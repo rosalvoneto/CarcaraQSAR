@@ -57,14 +57,15 @@ export const searchProjects = async (searchValue, accessToken) => {
   return dataResponse;
 }
 
-// Retorna projetos desativados
-export const searchDeactivatedProjects = async (searchValue) => {
+// Retorna projetos compartilhados
+export const searchSharedProjects = async (searchValue, accessToken) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivated_projects?query=${searchValue}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/shared_projects?query=${searchValue}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + String(accessToken)
       }
   })
 
@@ -78,11 +79,11 @@ export const searchDeactivatedProjects = async (searchValue) => {
   return dataResponse;
 }
 
-// Retorna projetos compartilhados
-export const searchSharedProjects = async (searchValue) => {
+// Retorna projetos desativados
+export const searchDeactivatedProjects = async (searchValue) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/shared_projects?query=${searchValue}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivated_projects?query=${searchValue}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',

@@ -14,49 +14,35 @@ from .models import Project
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createProject_view(request):
-  if request.method == 'POST':
 
-    user = request.user
+  user = request.user
 
-    # Recupere os dados do corpo da requisição
-    data = request.data
+  # Recupere os dados do corpo da requisição
+  data = request.data
 
-    # Faça algo com os dados
-    name = data.get('project_name')
-    description = data.get('project_description')
+  # Faça algo com os dados
+  name = data.get('project_name')
+  description = data.get('project_description')
 
-    print(name)
-    print(description)
+  print(name)
+  print(description)
 
-    # Realize as operações desejadas com os dados
-    project = Project()
-    project.name = name
-    project.description = description
-    project.user = user
-    project.save()
+  # Realize as operações desejadas com os dados
+  project = Project()
+  project.name = name
+  project.description = description
+  project.user = user
+  project.save()
 
-    # Retorne uma resposta, por exemplo, um JSON
-    resposta = {
-      'message': 'Projeto criado com sucesso',
-      'name': name,
-      'description': description
-    }
-    return Response(resposta, status=200)
-  
-  else:
-    return Response({'mensagem': 'Método não permitido'}, status=405)
+  # Retorne uma resposta, por exemplo, um JSON
+  resposta = {
+    'message': 'Projeto criado com sucesso',
+    'name': name,
+    'description': description
+  }
+  return Response(resposta, status=200)
 
 @api_view(['GET'])
-def getRoutes(request):
-
-  routes = [
-    '/project/new',
-    '/project/database'
-  ]
-
-  return JsonResponse(routes)
-
-@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def projects_view(request):
 
@@ -83,7 +69,8 @@ def projects_view(request):
 
   return Response(dictionary_results, status=200)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def sharedProjects_view(request):
   
   search_value = request.GET.get('query', '')
@@ -110,7 +97,7 @@ def sharedProjects_view(request):
 
   return Response(dictionary_results, status=200)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def deactivatedProjects_view(request):
 
   search_value = request.GET.get('query', '')

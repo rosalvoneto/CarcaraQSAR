@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+
+import AuthContext from '../../../context/AuthContext';
 
 import styles from './styles.module.css';
 
@@ -14,9 +16,10 @@ import {
 export function SharedProjectsTable({ searchValue }) {
 
   const [data, setData] = useState([]);
+  const { authTokens } = useContext(AuthContext);
 
   useEffect(() => {
-    searchSharedProjects(searchValue)
+    searchSharedProjects(searchValue, authTokens.access)
     .then((data) => {
       setData(data);
     })
