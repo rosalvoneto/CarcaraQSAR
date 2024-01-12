@@ -1,5 +1,5 @@
 
-// cria projeto
+// Cria projeto
 export const createProject = async (e, accessToken) => {
   e.preventDefault();
   console.log(accessToken)
