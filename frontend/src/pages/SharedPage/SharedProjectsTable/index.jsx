@@ -73,7 +73,7 @@ export function SharedProjectsTable({ searchValue }) {
     data.splice(index, 1);
     setData([...data]);
 
-    deactivateProject(projectID);
+    deactivateProject(projectID, authTokens.access);
   };
 
   const deactivateSelectedItens = async () => {
@@ -85,7 +85,7 @@ export function SharedProjectsTable({ searchValue }) {
     const dataToDeactivate = data.filter(project => !newData.includes(project));
 
     dataToDeactivate.forEach(project => {
-      deactivateProject(project.id);
+      deactivateProject(project.id, authTokens.access);
     });
   };
 
@@ -95,7 +95,7 @@ export function SharedProjectsTable({ searchValue }) {
     data.splice(index, 1);
     setData([...data]);
 
-    deshareProject(projectID);
+    deshareProject(projectID, authTokens.access);
   }
 
   const deshareSelectedItens = () => {
@@ -107,7 +107,7 @@ export function SharedProjectsTable({ searchValue }) {
     const dataToRestore = data.filter(project => !newData.includes(project));
 
     dataToRestore.forEach(project => {
-      deshareProject(project.id);
+      deshareProject(project.id, authTokens.access);
     });
   }
 

@@ -80,13 +80,14 @@ export const searchSharedProjects = async (searchValue, accessToken) => {
 }
 
 // Retorna projetos desativados
-export const searchDeactivatedProjects = async (searchValue) => {
+export const searchDeactivatedProjects = async (searchValue, accessToken) => {
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivated_projects?query=${searchValue}`, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + String(accessToken)
       }
   })
 
@@ -101,12 +102,13 @@ export const searchDeactivatedProjects = async (searchValue) => {
 }
 
 // Ativa projeto
-export const activateProject = async (projectID) => {
+export const activateProject = async (projectID, accessToken) => {
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/activate_project/${projectID}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + String(accessToken)
       },
       body: JSON.stringify({})
   })
@@ -121,12 +123,13 @@ export const activateProject = async (projectID) => {
 }
 
 // Desativa projeto
-export const deactivateProject = async (projectID) => {
+export const deactivateProject = async (projectID, accessToken) => {
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deactivate_project/${projectID}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + String(accessToken)
       },
       body: JSON.stringify({})
   })
@@ -141,12 +144,13 @@ export const deactivateProject = async (projectID) => {
 }
 
 // Compartilha projeto
-export const shareProject = async (projectID) => {
+export const shareProject = async (projectID, accessToken) => {
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/share_project/${projectID}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + String(accessToken)
       },
       body: JSON.stringify({})
   })
@@ -161,12 +165,13 @@ export const shareProject = async (projectID) => {
 }
 
 // Descompartilha projeto
-export const deshareProject = async (projectID) => {
+export const deshareProject = async (projectID, accessToken) => {
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/deshare_project/${projectID}`, {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + String(accessToken)
       },
       body: JSON.stringify({})
   })
@@ -181,12 +186,13 @@ export const deshareProject = async (projectID) => {
 }
 
 // Remove projeto
-export const removeProject = async (projectID) => {
+export const removeProject = async (projectID, accessToken) => {
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/delete_project/${projectID}`, {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': 'Bearer ' + String(accessToken)
       },
       body: JSON.stringify({})
   })

@@ -75,7 +75,7 @@ export function ProjectsTable({ searchValue }) {
     data.splice(index, 1);
     setData([...data]);
 
-    deactivateProject(projectID);
+    deactivateProject(projectID, authTokens.access);
   };
 
   const deactivateSelectedItens = async () => {
@@ -87,13 +87,13 @@ export function ProjectsTable({ searchValue }) {
     const dataToDeactivate = data.filter(project => !newData.includes(project));
 
     dataToDeactivate.forEach(project => {
-      deactivateProject(project.id);
+      deactivateProject(project.id, authTokens.access);
     });
   };
 
   const shareItem = (index) => {
     const projectID = data[index].id;
-    shareProject(projectID);
+    shareProject(projectID, authTokens.access);
   }
 
   const deshareItem = (index) => {
@@ -102,7 +102,7 @@ export function ProjectsTable({ searchValue }) {
     data.splice(index, 1);
     setData([...data]);
 
-    deshareProject(projectID);
+    deshareProject(projectID, authTokens.access);
   }
 
   const shareSelectedItens = () => {
@@ -112,7 +112,7 @@ export function ProjectsTable({ searchValue }) {
     const dataToRestore = data.filter(project => !newData.includes(project));
 
     dataToRestore.forEach(project => {
-      shareProject(project.id);
+      shareProject(project.id, authTokens.access);
     });
   }
 

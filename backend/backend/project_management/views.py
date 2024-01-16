@@ -72,15 +72,14 @@ def projects_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def sharedProjects_view(request):
-  
+
+  user = request.user
   search_value = request.GET.get('query', '')
+  print(user)
   print(search_value)
 
-  projects = Project.objects.filter(
-    isActive=True, 
-    name__icontains=search_value,
-    shared=True
-  )
+  projects = Project.objects.filter(isActive=True, shared=True, user=user)
+  projects = projects.filter(name__icontains=search_value)
 
   dictionary_results = []
   for index, project in enumerate(projects):
@@ -98,12 +97,16 @@ def sharedProjects_view(request):
   return Response(dictionary_results, status=200)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def deactivatedProjects_view(request):
 
+  user = request.user
   search_value = request.GET.get('query', '')
+  print(user)
   print(search_value)
 
-  projects = Project.objects.filter(isActive=False, name__icontains=search_value)
+  projects = Project.objects.filter(isActive=False, user=user)
+  projects = projects.filter(name__icontains=search_value)
 
   dictionary_results = []
   for index, project in enumerate(projects):
@@ -121,6 +124,7 @@ def deactivatedProjects_view(request):
   return Response(dictionary_results, status=200)
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def activateProject_view(request, project_id):
 
   project = get_object_or_404(Project, pk=project_id)
@@ -130,6 +134,7 @@ def activateProject_view(request, project_id):
   return JsonResponse({'message': 'Projeto restaurado!'})
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def deactivateProject_view(request, project_id):
 
   project = get_object_or_404(Project, pk=project_id)
@@ -139,6 +144,7 @@ def deactivateProject_view(request, project_id):
   return JsonResponse({'message': 'Projeto movido para a lixeira!'})
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def shareProject_view(request, project_id):
 
   project = get_object_or_404(Project, pk=project_id)
@@ -148,6 +154,7 @@ def shareProject_view(request, project_id):
   return JsonResponse({'message': 'Projeto compartilhado!'})
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def deshareProject_view(request, project_id):
 
   project = get_object_or_404(Project, pk=project_id)
@@ -157,6 +164,7 @@ def deshareProject_view(request, project_id):
   return JsonResponse({'message': 'Projeto privado!'})
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def deleteProject_view(request, project_id):
 
   object = get_object_or_404(Project, pk=project_id)

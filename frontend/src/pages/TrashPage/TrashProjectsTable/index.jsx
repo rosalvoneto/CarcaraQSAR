@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import styles from './styles.module.css';
 
@@ -11,12 +11,15 @@ import {
   searchDeactivatedProjects 
 } from '../../../api/project';
 
+import AuthContext from '../../../context/AuthContext';
+
 export function TrashProjectsTable({ searchValue }) {
 
+  const { authTokens } = useContext(AuthContext);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    searchDeactivatedProjects(searchValue)
+    searchDeactivatedProjects(searchValue, authTokens.access)
     .then((data) => {
       setData(data);
     })
@@ -70,7 +73,7 @@ export function TrashProjectsTable({ searchValue }) {
     data.splice(index, 1);
     setData([...data]);
 
-    removeProject(projectID);
+    removeProject(projectID, authTokens.access);
   };
 
   const removeSelectedItens = async () => {
@@ -82,7 +85,7 @@ export function TrashProjectsTable({ searchValue }) {
     const dataToRemove = data.filter(project => !newData.includes(project));
 
     dataToRemove.forEach(project => {
-      removeProject(project.id);
+      removeProject(project.id, authTokens.access);
     });
   };
 
@@ -92,7 +95,7 @@ export function TrashProjectsTable({ searchValue }) {
     data.splice(index, 1);
     setData([...data]);
 
-    activateProject(projectID);
+    activateProject(projectID, authTokens.access);
   }
 
   const restoreSelectedItens = () => {
@@ -104,7 +107,7 @@ export function TrashProjectsTable({ searchValue }) {
     const dataToRestore = data.filter(project => !newData.includes(project));
 
     dataToRestore.forEach(project => {
-      activateProject(project.id);
+      activateProject(project.id, authTokens.access);
     });
   }
 
