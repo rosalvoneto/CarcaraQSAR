@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { DataTable } from '../../components/DataTable';
 import { ProgressBar } from '../../components/ProgressBar';
 import { Header } from '../../components/Header';
-import { DefaultPage } from '../DefaultPage';
 import { CheckboxInput } from '../../components/CheckboxInput';
 
 import styles from './styles.module.css';
@@ -11,20 +10,19 @@ import styles from './styles.module.css';
 import { projectName } from '../../settings';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
-import { BarButtons } from '../../components/BarButtons';
 import UploadComponent from '../../components/UploadComponent';
 
 export function Database() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileMatrix, setFileMatrix] = useState([]);
+  const [separator, setSeparator] = useState(',');
+
+  useEffect(() => console.log(separator), [separator])
 
   const href = '/database';
   const progress = 0;
   const subProgress = 0;
-
-  const tableColumns = 30;
-  const tableLines = 4000;
 
   const [transpose, setTranspose] = useState(false);
 
@@ -43,9 +41,9 @@ export function Database() {
     });
   };
 
-  const convertStringToCSVMatrix = (CSVString) => {
+  const convertStringToCSVMatrix = (CSVString, separator) => {
     const rows = CSVString.split('\n');
-    let csvData = rows.map(row => row.split(','));
+    let csvData = rows.map(row => row.split(separator));
     csvData.pop();
 
     while(csvData[csvData.length - 1][0] == '') {
@@ -58,7 +56,7 @@ export function Database() {
   useEffect(() => {
     convertFileToString(selectedFile)
     .then((response) => {
-      const matrix = convertStringToCSVMatrix(response);
+      const matrix = convertStringToCSVMatrix(response, separator);
       setFileMatrix(matrix);
     })
     .catch((error) => {
@@ -78,7 +76,10 @@ export function Database() {
 
       <div className={styles.container}>
 
-        <InlineInput name={"Tipo de separador"} type={'text'} width={26}/>
+        <InlineInput 
+          name={"Tipo de separador"} type={'text'} width={26}
+          separator={separator} setSeparator={setSeparator}
+        />
 
         <UploadComponent
           setSelectedFile={setSelectedFile}
@@ -102,7 +103,7 @@ export function Database() {
 
         <Button 
           name={'Próximo'} 
-          URL={'/pre-processing'} 
+          URL={'/pre-processing'}
           stateToPass={{
             pageNumber: 0
           }}
