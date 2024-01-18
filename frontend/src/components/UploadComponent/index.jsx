@@ -18,6 +18,7 @@ const UploadComponent = ({ selectedFile, setSelectedFile }) => {
 
   useEffect(() => {
     console.log("Mudança em selectedFile");
+    console.log("Enviando arquivo para o backend!");
     sendDatabase(selectedFile, authTokens.access);
 
   }, [selectedFile]);

@@ -1,9 +1,27 @@
 import { useEffect, useState } from 'react';
-import { registers, variablesNames } from '../../settings';
 
 import styles from './styles.module.css';
 
-export function DataTable({ vertical, onlyTitles }) {
+export function DataTable({ vertical, onlyTitles, Matrix }) {
+
+  const [variablesNames, setvariablesNames] = useState([]);
+  const [registers, setRegisters] = useState([]);
+
+  const adjustMatrix = () => {
+    const variablesNames = Matrix[0];
+    setvariablesNames(variablesNames);
+    
+    const registers = Matrix.slice(1);
+    setRegisters(registers);
+
+    console.log(registers);
+  }
+
+  useEffect(() => {
+    if(Matrix.length > 0)
+      adjustMatrix();  
+  }, [Matrix])
+
 
   let dataTable;
   if(onlyTitles) {
