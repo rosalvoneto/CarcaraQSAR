@@ -16,6 +16,8 @@ import UploadComponent from '../../components/UploadComponent';
 
 export function Database() {
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const href = '/database';
   const progress = 0;
   const subProgress = 0;
@@ -39,7 +41,10 @@ export function Database() {
 
         <InlineInput name={"Tipo de separador"} type={'text'} width={26}/>
 
-        <UploadComponent/>
+        <UploadComponent
+          setSelectedFile={setSelectedFile}
+          selectedFile={selectedFile}
+        />
 
         <div className={styles.tableInfomation}>
           <CheckboxInput value={transpose} setValue={setTranspose}/>
@@ -48,7 +53,7 @@ export function Database() {
           </p>
         </div>
 
-        <DataTable vertical={transpose}/>
+        <DataTable vertical={transpose} file={selectedFile}/>
 
         <Button 
           name={'Próximo'} 

@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import styles from './styles.module.css';
 
-const UploadComponent = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
+import AuthContext from '../../context/AuthContext';
+
+import { sendDatabase } from '../../api/database';
+
+const UploadComponent = ({ selectedFile, setSelectedFile }) => {
+
+  const { authTokens } = useContext(AuthContext);
 
   const handleFileChange = (event) => {
     // Atualiza o estado com o arquivo selecionado
@@ -11,14 +16,30 @@ const UploadComponent = () => {
     console.log("Arquivo selecionado!");
   };
 
+  useEffect(() => {
+    console.log("Mudança em selectedFile");
+    sendDatabase(selectedFile, authTokens.access);
+
+  }, [selectedFile]);
+
   const handleUpload = () => {
-    // Aqui você pode implementar a lógica para fazer o upload do arquivo
-    // por exemplo, usando uma API para enviar o arquivo para o servidor
     if (selectedFile) {
-      console.log("Arquivo selecionado:", selectedFile);
-      // Adicione a lógica de upload aqui
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        // Conteúdo do arquivo de texto
+        const fileContent = e.target.result;
+        console.log("Conteúdo:");
+        console.log(fileContent);
+
+        // Aqui você pode adicionar lógica adicional para enviar o conteúdo do arquivo para o servidor
+        // por meio de uma chamada de API, por exemplo.
+      };
+
+      // Lê o conteúdo do arquivo como texto
+      reader.readAsText(selectedFile);
     } else {
-      console.log("Nenhum arquivo selecionado.");
+      alert('Por favor, selecione um arquivo de texto antes de fazer o upload.');
     }
   };
 
@@ -44,8 +65,6 @@ const UploadComponent = () => {
       >
         Escolher arquivo (CSV, TXT)
       </button>
-
-      {/* <button onClick={handleUpload}>Upload de Texto</button> */}
     </>
   );
 };
