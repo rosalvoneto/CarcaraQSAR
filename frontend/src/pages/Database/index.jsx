@@ -12,6 +12,7 @@ import { projectName } from '../../settings';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import { BarButtons } from '../../components/BarButtons';
+import UploadComponent from '../../components/UploadComponent';
 
 export function Database() {
 
@@ -38,11 +39,7 @@ export function Database() {
 
         <InlineInput name={"Tipo de separador"} type={'text'} width={26}/>
 
-        <div className={styles.uploadContainer}>
-          <p className={styles.uploadDescription}>
-            Upload (CSV, TXT)
-          </p>
-        </div>
+        <UploadComponent/>
 
         <div className={styles.tableInfomation}>
           <CheckboxInput value={transpose} setValue={setTranspose}/>

@@ -1,0 +1,20 @@
+
+.uploadContainer {
+  height: 70px;
+
+  background-color: var(--primary-color-2);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 5px;
+
+  margin-bottom: 20px;
+
+  cursor: pointer;
+}
+
+.uploadDescription {
+  color: var(--white-color-1);
+}
