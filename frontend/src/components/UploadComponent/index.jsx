@@ -8,6 +8,7 @@ const UploadComponent = () => {
   const handleFileChange = (event) => {
     // Atualiza o estado com o arquivo selecionado
     setSelectedFile(event.target.files[0]);
+    console.log("Arquivo selecionado!");
   };
 
   const handleUpload = () => {
@@ -22,16 +23,30 @@ const UploadComponent = () => {
   };
 
   return (
-    <div className={styles.uploadContainer}>
-      {/* <input 
-        className={styles.uploadContainer} 
-        type="file" 
-        onChange={handleFileChange} 
-      /> */}
-      <p className={styles.uploadDescription}>
-        Upload (CSV, TXT)
-      </p>
-    </div>
+    <>
+      <label htmlFor="fileUpload">
+        {
+          selectedFile 
+          ? `Base de dados: ${selectedFile.name}`
+          : "Escolha sua base de dados"
+        }
+      </label>
+      <input 
+        id='fileUpload'
+        type="file"
+        accept=".txt"
+        onChange={handleFileChange}
+        className={styles.fileInput} 
+      />
+      <button 
+        onClick={() => document.getElementById('fileUpload').click()}
+        className={styles.uploadContainer}
+      >
+        Escolher arquivo (CSV, TXT)
+      </button>
+
+      {/* <button onClick={handleUpload}>Upload de Texto</button> */}
+    </>
   );
 };
 
