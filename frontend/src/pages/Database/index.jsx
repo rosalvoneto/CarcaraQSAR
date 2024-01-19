@@ -12,7 +12,7 @@ import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
 
-import { sendDatabase } from '../../api/database';
+import { getDatabase, sendDatabase } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 
@@ -20,18 +20,44 @@ import { useParams } from 'react-router-dom';
 
 export function Database() {
 
-  const { projectID } = useParams();
-
   const href = '/database';
   const progress = 0;
   const subProgress = 0;
+
+  const { projectID } = useParams()
+  const { authTokens } = useContext(AuthContext);
+
+  const convertStringToFile = (stringFile, fileName) => { 
+    const blob = new Blob([stringFile], { 
+      type: 'application/octet-stream' 
+    });
+    const file = new File([blob], fileName, {
+      type: 'application/octet-stream' 
+    });
+
+    console.log(file);
+    return file;
+  };
+
+  useEffect(() => {
+    getDatabase(projectID, authTokens.access)
+    .then((response) => {
+      const stringFile = response.content;
+      const fileName = response.fileName;
+      const file = convertStringToFile(stringFile, fileName);
+
+      setSelectedFile(file);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }, [])
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileMatrix, setFileMatrix] = useState([]);
   const [separator, setSeparator] = useState(',');
   const [transpose, setTranspose] = useState(false);
 
-  const { authTokens } = useContext(AuthContext);
 
   const convertFileToString = (file) => {
     return new Promise((resolve, reject) => {

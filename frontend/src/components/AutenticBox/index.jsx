@@ -16,7 +16,7 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
 
   return(
     <form onSubmit={loginUser} className={styles.container}>
-      <h4 className={styles.title}>Auntenticação</h4>
+      <h4 className={styles.title}>Autenticação</h4>
 
       <div className={styles.inputsContainer}>
         <Input inputName={'email'} name={"Email"} type={'email'}/>
