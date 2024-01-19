@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { DataTable } from '../../components/DataTable';
 import { ProgressBar } from '../../components/ProgressBar';
@@ -12,19 +12,22 @@ import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
 
+import { sendDatabase } from '../../api/database';
+
+import AuthContext from '../../context/AuthContext';
+
 export function Database() {
-
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [fileMatrix, setFileMatrix] = useState([]);
-  const [separator, setSeparator] = useState(',');
-
-  useEffect(() => console.log(separator), [separator])
 
   const href = '/database';
   const progress = 0;
   const subProgress = 0;
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileMatrix, setFileMatrix] = useState([]);
+  const [separator, setSeparator] = useState(',');
   const [transpose, setTranspose] = useState(false);
+
+  const { authTokens } = useContext(AuthContext);
 
   const convertFileToString = (file) => {
     return new Promise((resolve, reject) => {
@@ -63,6 +66,11 @@ export function Database() {
       console.log(error);
     })
   }, [selectedFile])
+
+  const saveData = () => {
+    // Enviar arquivo para o backend
+    sendDatabase(selectedFile, authTokens.access);
+  }
 
   return(
     <>
@@ -108,6 +116,7 @@ export function Database() {
             pageNumber: 0
           }}
           side={'right'}
+          action={saveData}
         />
       </div>
     </>

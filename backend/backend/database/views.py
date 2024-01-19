@@ -8,6 +8,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from backend.backend.project_management.models import Project
+
 # Create your views here.
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -15,6 +17,10 @@ def sendDatabase_view(request):
 
   if 'file' in request.FILES:
     uploaded_file = request.FILES['file']
+
+    # Fazer o vinculo do arquivo ao projeto do usuário
+    user = request.user
+    # Salvar arquivo no backend
 
     # Lê o conteúdo do arquivo
     file_content = uploaded_file.read().decode('utf-8')

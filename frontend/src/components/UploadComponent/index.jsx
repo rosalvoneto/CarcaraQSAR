@@ -26,7 +26,7 @@ const UploadComponent = ({ selectedFile, setSelectedFile }) => {
       <input 
         id='fileUpload'
         type="file"
-        accept=".txt"
+        accept=".txt, .csv"
         onChange={handleFileChange}
         className={styles.fileInput} 
       />

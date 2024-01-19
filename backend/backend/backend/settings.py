@@ -242,3 +242,6 @@ AUTH_USER_MODEL = 'user.User'
 CORS_ALLOW_ALL_ORIGINS = True
 X_FRAME_OPTIONS = 'ALLOW-FROM https://kpjnpgrg5q.us-east-2.awsapprunner.com'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
