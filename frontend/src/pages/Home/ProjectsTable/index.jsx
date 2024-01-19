@@ -169,7 +169,7 @@ export function ProjectsTable({ searchValue }) {
                 </td>
                 <td 
                   className={`${styles.item} ${styles.name}`}
-                  onClick={() => handleTo('/database')}
+                  onClick={() => handleTo(`/${item.id}/database`)}
                 >
                   {item.nome}
                 </td>

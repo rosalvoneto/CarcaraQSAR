@@ -16,7 +16,11 @@ import { sendDatabase } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 
+import { useParams } from 'react-router-dom';
+
 export function Database() {
+
+  const { projectID } = useParams();
 
   const href = '/database';
   const progress = 0;

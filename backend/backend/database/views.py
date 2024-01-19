@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from backend.backend.project_management.models import Project
+from project_management.models import Project
 
 # Create your views here.
 @api_view(['POST'])

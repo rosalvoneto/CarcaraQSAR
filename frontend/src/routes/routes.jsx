@@ -62,7 +62,7 @@ export const Routes = () => {
                 </DefaultPage>
               } 
             />
-            <Route path="/database" 
+            <Route path="/:projectID/database" 
               element={
                 <DefaultPage>
                   <Database />
