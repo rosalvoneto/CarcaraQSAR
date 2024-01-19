@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from project_management.serializers import ProjectSerializer
 from project_management.models import Project
 
 # Create your views here.
@@ -77,3 +78,24 @@ def getProjectName_view(request):
   name = project.name
 
   return Response({ 'projectName': name })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProject_view(request):
+
+  project_id = request.GET.get('project_id')
+  print(f"ID DO PROJETO: {project_id}")
+
+  project = get_object_or_404(Project, id=project_id)
+  serializer = ProjectSerializer(project)
+
+  # Abre o arquivo para leitura binária
+  with project.database.open(mode='rb') as file:
+    content = file.read()
+    database = content.decode('utf-8')
+
+
+  return Response({ 
+    'projectData': serializer.data,
+    'databaseFile': database
+  }, status=200)

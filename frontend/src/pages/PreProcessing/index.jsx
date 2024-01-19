@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Header } from '../../components/Header';
 
 import { ProgressBar } from '../../components/ProgressBar';
@@ -16,6 +16,9 @@ import Button from '../../components/Button';
 import { VariablesList } from '../../components/VariablesList';
 
 import { useLocation, useParams } from 'react-router-dom';
+import { getProject } from '../../api/database';
+
+import AuthContext from '../../context/AuthContext';
 
 export const options = [
   "MinMaxScaler",
@@ -39,11 +42,8 @@ export const optionsDescriptions = [
 
 export function PreProcessing({ index }) {
 
+  const { authTokens } = useContext(AuthContext);
   const { projectID } = useParams();
-
-  useEffect(() => {
-    console.log(`Projeto: ${projectID}`);
-  }, [])
 
   const href = '/pre-processing';
   const progress = 1;
@@ -59,6 +59,18 @@ export function PreProcessing({ index }) {
   }
 
   const [option, setOption] = useState(options[0]);
+  const [project, setProject] = useState(null);
+
+  useEffect(() => {
+    getProject(projectID, authTokens.access)
+    .then((response) => {
+      console.log(response);
+      setProject(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }, [])
 
   if(pageNumber == 0) {
     return(
