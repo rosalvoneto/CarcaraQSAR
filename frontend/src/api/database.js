@@ -49,3 +49,27 @@ export const getDatabase = async (projectID, accessToken) => {
 
   return dataResponse;
 }
+
+// Retorna nome do projeto
+export const getProjectName = async (projectID, accessToken) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/project_name?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    alert('Erro interno do servidor!');
+  }
+
+  return dataResponse;
+}

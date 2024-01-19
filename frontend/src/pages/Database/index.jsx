@@ -12,7 +12,7 @@ import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
 
-import { getDatabase, sendDatabase } from '../../api/database';
+import { getDatabase, getProjectName, sendDatabase } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 
@@ -39,24 +39,36 @@ export function Database() {
     return file;
   };
 
+  const [projectName, setProjectName] = useState("");
+
   useEffect(() => {
     getDatabase(projectID, authTokens.access)
     .then((response) => {
       const stringFile = response.content;
       const fileName = response.fileName;
       const file = convertStringToFile(stringFile, fileName);
-
       setSelectedFile(file);
     })
     .catch((error) => {
       console.log(error);
     })
+    
+
+    getProjectName(projectID, authTokens.access)
+    .then((response) => {
+      setProjectName(response.projectName);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+
   }, [])
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileMatrix, setFileMatrix] = useState([]);
   const [separator, setSeparator] = useState(',');
   const [transpose, setTranspose] = useState(false);
+
 
 
   const convertFileToString = (file) => {

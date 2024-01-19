@@ -65,3 +65,15 @@ def getDatabase_view(request):
       'content': content.decode('utf-8'),
       'fileName': novo_nome_do_arquivo
     })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProjectName_view(request):
+
+  project_id = request.GET.get('project_id')
+  print(f"ID DO PROJETO: {project_id}")
+  project = get_object_or_404(Project, id=project_id)
+
+  name = project.name
+
+  return Response({ 'projectName': name })
