@@ -18,6 +18,10 @@ import AuthContext from '../../context/AuthContext';
 
 import { useParams } from 'react-router-dom';
 
+import {
+  convertFileToString, convertStringToCSVMatrix, convertStringToFile
+} from '../../utils';
+
 export function Database() {
 
   const href = '/database';
@@ -26,18 +30,6 @@ export function Database() {
 
   const { projectID } = useParams();
   const { authTokens } = useContext(AuthContext);
-
-  const convertStringToFile = (stringFile, fileName) => { 
-    const blob = new Blob([stringFile], { 
-      type: 'application/octet-stream' 
-    });
-    const file = new File([blob], fileName, {
-      type: 'application/octet-stream' 
-    });
-
-    console.log(file);
-    return file;
-  };
 
   const [projectName, setProjectName] = useState("");
 
@@ -68,35 +60,6 @@ export function Database() {
   const [fileMatrix, setFileMatrix] = useState([]);
   const [separator, setSeparator] = useState(',');
   const [transpose, setTranspose] = useState(false);
-
-
-
-  const convertFileToString = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        resolve(e.target.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-
-      reader.readAsText(file);
-    });
-  };
-
-  const convertStringToCSVMatrix = (CSVString, separator) => {
-    const rows = CSVString.split('\n');
-    let csvData = rows.map(row => row.split(separator));
-    csvData.pop();
-
-    while(csvData[csvData.length - 1][0] == '') {
-      csvData.splice(csvData.length - 1, 1);
-    }
-
-    return csvData;
-  };
 
   useEffect(() => {
     convertFileToString(selectedFile)

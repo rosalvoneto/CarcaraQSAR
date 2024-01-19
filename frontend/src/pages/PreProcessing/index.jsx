@@ -19,6 +19,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { getProject } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
+import { convertStringToCSVMatrix } from '../../utils';
 
 export const options = [
   "MinMaxScaler",
@@ -60,6 +61,7 @@ export function PreProcessing({ index }) {
 
   const [option, setOption] = useState(options[0]);
   const [project, setProject] = useState(null);
+  const [variablesNames, setVariablesNames] = useState([]);
 
   useEffect(() => {
     getProject(projectID, authTokens.access)
@@ -72,11 +74,20 @@ export function PreProcessing({ index }) {
     })
   }, [])
 
+  useEffect(() => {
+    if(project) {
+      const matrix = convertStringToCSVMatrix(project.databaseFile, ',');
+      setVariablesNames(matrix[0]);
+    }
+  }, [project])
+
   if(pageNumber == 0) {
     return(
       <>
         <Header 
-          title={projectName}
+          title={
+            project && project.projectData.name
+          }
         />
         <ProgressBar 
           progressNumber={progress}
@@ -84,7 +95,7 @@ export function PreProcessing({ index }) {
         />
 
         <div className={styles.firstContainer}>
-          <VariablesList />
+          <VariablesList variablesNames={variablesNames}/>
 
           <div className={styles.graphsContainer}>
 

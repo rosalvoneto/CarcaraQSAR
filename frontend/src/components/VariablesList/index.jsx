@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { variablesNames } from '../../settings';
 
 import styles from './styles.module.css';
 
-export function VariablesList() {
+export function VariablesList({ variablesNames }) {
 
   const [selectedVariable, setSelectedVariable] = useState(0);
 
