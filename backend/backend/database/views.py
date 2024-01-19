@@ -16,17 +16,20 @@ from project_management.models import Project
 def sendDatabase_view(request):
 
   if 'file' in request.FILES:
-    uploaded_file = request.FILES['file']
-
-    # Fazer o vinculo do arquivo ao projeto do usuário
-    user = request.user
-    # Salvar arquivo no backend
-
+    uploaded_file = request.FILES.get('file')
     # Lê o conteúdo do arquivo
     file_content = uploaded_file.read().decode('utf-8')
+    print('Conteúdo do arquivo:\n', file_content)
 
-    # Exemplo: Imprime o conteúdo do arquivo no console do Django
-    print('Conteúdo do arquivo:', file_content)
+    # Fazer o vinculo do arquivo ao projeto do usuário
+    project_id = request.POST.get('project_id')
+    print(f"NÚMERO DO PROJETO: {project_id}")
+
+    project = get_object_or_404(Project, id=project_id)
+    project.database = uploaded_file
+    
+    # Salvar arquivo no backend
+    project.save()
 
     # Cria um DataFrame do Pandas com o conteúdo do arquivo
     df = pd.read_csv(StringIO(file_content))

@@ -73,7 +73,7 @@ export function Database() {
 
   const saveData = () => {
     // Enviar arquivo para o backend
-    sendDatabase(selectedFile, authTokens.access);
+    sendDatabase(projectID, selectedFile, authTokens.access);
   }
 
   return(
