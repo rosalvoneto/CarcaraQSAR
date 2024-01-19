@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '../../components/Header';
 
 import { ProgressBar } from '../../components/ProgressBar';
@@ -13,8 +13,9 @@ import { RadionInput } from '../../components/RadioInput';
 import styles from './styles.module.css';
 
 import Button from '../../components/Button';
-import { useLocation } from 'react-router-dom';
 import { VariablesList } from '../../components/VariablesList';
+
+import { useLocation, useParams } from 'react-router-dom';
 
 export const options = [
   "MinMaxScaler",
@@ -37,6 +38,12 @@ export const optionsDescriptions = [
 ];
 
 export function PreProcessing({ index }) {
+
+  const { projectID } = useParams();
+
+  useEffect(() => {
+    console.log(`Projeto: ${projectID}`);
+  }, [])
 
   const href = '/pre-processing';
   const progress = 1;
@@ -78,12 +85,12 @@ export function PreProcessing({ index }) {
         
         <Button 
           name={'Voltar'} 
-          URL={'/database'}
+          URL={`/${projectID}/database`}
           side={'left'}
         />
         <Button 
           name={'Próximo'} 
-          URL={'/pre-processing'} 
+          URL={`/${projectID}/pre-processing`} 
           stateToPass={{
             pageNumber: 1
           }}
@@ -120,7 +127,7 @@ export function PreProcessing({ index }) {
 
         <Button 
           name={'Voltar'} 
-          URL={'/pre-processing'}
+          URL={`/${projectID}/pre-processing`}
           stateToPass={{
             pageNumber: 0
           }}
@@ -128,7 +135,7 @@ export function PreProcessing({ index }) {
         />
         <Button 
           name={'Próximo'} 
-          URL={'/variables-selection'}
+          URL={`/variables-selection`}
           side={'right'}
         />
       </>

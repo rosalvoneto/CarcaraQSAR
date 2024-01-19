@@ -24,7 +24,7 @@ export function Database() {
   const progress = 0;
   const subProgress = 0;
 
-  const { projectID } = useParams()
+  const { projectID } = useParams();
   const { authTokens } = useContext(AuthContext);
 
   const convertStringToFile = (stringFile, fileName) => { 
@@ -153,7 +153,7 @@ export function Database() {
 
         <Button 
           name={'Próximo'} 
-          URL={'/pre-processing'}
+          URL={`/${projectID}/pre-processing`}
           stateToPass={{
             pageNumber: 0
           }}

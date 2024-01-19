@@ -6,8 +6,11 @@ import styles from './styles.module.css';
 export default function Button({ name, URL, stateToPass, side, action }) {
 
   const navigate = useNavigate();
+  console.log(URL);
   const actions = () => {
-    action();
+    if(action) {
+      action();
+    }
     navigate(URL, { state: stateToPass });
   }
 

@@ -69,7 +69,7 @@ export const Routes = () => {
                 </DefaultPage>
               } 
             />
-            <Route path="/pre-processing" 
+            <Route path="/:projectID/pre-processing" 
               element={
                 <DefaultPage>
                   <PreProcessing />
