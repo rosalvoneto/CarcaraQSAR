@@ -97,3 +97,51 @@ export const getProject = async (projectID, accessToken) => {
 
   return dataResponse;
 }
+
+// Retorna Histograma de uma variável específica
+export const getHistogram = async (projectID, variable, accessToken) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/project?project_id=${projectID}&variable=${variable}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    alert('Erro interno do servidor!');
+  }
+
+  return dataResponse;
+}
+
+// Retorna BoxPlot de uma variável específica
+export const getBoxPlot = async (projectID, variable, accessToken) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/project?project_id=${projectID}&variable=${variable}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    alert('Erro interno do servidor!');
+  }
+
+  return dataResponse;
+}

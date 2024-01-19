@@ -76,8 +76,9 @@ export function PreProcessing({ index }) {
 
   useEffect(() => {
     if(project) {
-      const matrix = convertStringToCSVMatrix(project.databaseFile, ',');
+      let matrix = convertStringToCSVMatrix(project.databaseFile, ',');
       setVariablesNames(matrix[0]);
+
     }
   }, [project])
 

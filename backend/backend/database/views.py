@@ -99,3 +99,29 @@ def getProject_view(request):
     'projectData': serializer.data,
     'databaseFile': database
   }, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getHistogram_view(request):
+
+  project_id = request.GET.get('project_id')
+  variable = request.GET.get('variable')
+
+  project = get_object_or_404(Project, id=project_id)
+
+  # Fazer cálculo de Histograma e retornar a imagem
+
+  return Response({}, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getBoxPlot_view(request):
+  
+  project_id = request.GET.get('project_id')
+  variable = request.GET.get('variable')
+
+  project = get_object_or_404(Project, id=project_id)
+
+  # Fazer cálculo de BoxPlot e retornar a imagem
+
+  return Response({}, status=200)
