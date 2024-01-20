@@ -99,10 +99,10 @@ export const getProject = async (projectID, accessToken) => {
 }
 
 // Retorna Histograma de uma variável específica
-export const getHistogram = async (projectID, variable, accessToken, values) => {
+export const getHistogram = async (projectID, variable, accessToken, values, divisions) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/histogram?project_id=${projectID}&variable=${variable}&values=${values}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/histogram?project_id=${projectID}&variable=${variable}&values=${values}&divisions=${divisions}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)

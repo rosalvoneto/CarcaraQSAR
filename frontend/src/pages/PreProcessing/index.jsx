@@ -16,6 +16,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { getBoxPlot, getHistogram, getProject } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
+import { InlineInput } from '../../components/InlineInput';
 
 import { convertStringToCSVMatrix, transporMatriz } from '../../utils';
 
@@ -63,10 +64,12 @@ export function PreProcessing({ index }) {
   const [matrix, setMatrix] = useState([]);
   
   const [histogram, setHistogram] = useState(null);
+  const [divisions, setDivisions] = useState(20);
   const [boxPlot, setBoxPlot] = useState(null);
+  const [indexChoosenVariable, setIndexChoosenVariable] = useState(0);
 
   const getGraphs = (indexOfMatrix) => {
-    getHistogram(projectID, 'name', authTokens.access, matrix[indexOfMatrix])
+    getHistogram(projectID, 'name', authTokens.access, matrix[indexOfMatrix], divisions)
     .then((response) => {
 
       const imagemBase64 = response.imageInBase64;
@@ -117,7 +120,14 @@ export function PreProcessing({ index }) {
 
   const onChangeVariable = (index) => {
     getGraphs(index);
+    setIndexChoosenVariable(index);
   }
+
+  useEffect(() => {
+    getGraphs(indexChoosenVariable);
+  }, [divisions])
+
+
 
   if(pageNumber == 0) {
     return(
@@ -139,7 +149,6 @@ export function PreProcessing({ index }) {
           />
 
           <div className={styles.graphsContainer}>
-
             {
               histogram &&
               <Graph name={"Histograma"} image={histogram}/>
@@ -148,7 +157,14 @@ export function PreProcessing({ index }) {
               boxPlot &&
               <Graph name={"Box-Plot"} image={boxPlot}/>
             }
+          </div>
 
+          <div>
+            <InlineInput 
+              name={"Divisões para o Histograma: "} type={'number'}
+              separator={divisions}
+              setSeparator={setDivisions}
+            />
           </div>
 
         </div>

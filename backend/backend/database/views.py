@@ -114,6 +114,7 @@ def getHistogram_view(request):
 
   project_id = request.GET.get('project_id')
   values = request.GET.get('values').split(',')
+  divisions_bins = request.GET.get('divisions')
 
   int_values = [int(value) for value in values]
   print(int_values)
@@ -121,7 +122,7 @@ def getHistogram_view(request):
   # Fazer cálculo de Histograma
   array = np.array(int_values)
   # Escolha o número de intervalos (bins)
-  num_bins = 10
+  num_bins = int(divisions_bins)
   # Calcule o histograma
   hist, bins = np.histogram(array, bins=num_bins)
   # Calcule a amplitude dos intervalos
