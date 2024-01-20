@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 import styles from './styles.module.css';
 
-export function VariablesList({ variablesNames }) {
+export function VariablesList({ variablesNames, onChange }) {
 
   const [selectedVariable, setSelectedVariable] = useState(0);
 
   const updateSelectedVariable = (index) => {
-    console.log(index);
     setSelectedVariable(index);
+    onChange(index);
   }
 
   return(

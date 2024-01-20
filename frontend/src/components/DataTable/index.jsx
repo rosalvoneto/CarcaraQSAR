@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 
 import styles from './styles.module.css';
 
+import { transporMatriz } from '../../utils';
+
 export function DataTable({ vertical, onlyTitles, Matrix }) {
 
   const [variablesNames, setvariablesNames] = useState([]);
@@ -32,22 +34,6 @@ export function DataTable({ vertical, onlyTitles, Matrix }) {
 
   if(vertical) {
     dataTable = transporMatriz(dataTable);
-  }
-
-  function transporMatriz(matriz) {
-    const linhas = matriz.length;
-    const colunas = matriz[0].length;
-  
-    // Crie uma nova matriz transposta
-    const matrizTransposta = [];
-    for (let i = 0; i < colunas; i++) {
-      matrizTransposta[i] = [];
-      for (let j = 0; j < linhas; j++) {
-        matrizTransposta[i][j] = matriz[j][i];
-      }
-    }
-  
-    return matrizTransposta;
   }
   
   return(

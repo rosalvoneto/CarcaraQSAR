@@ -18,7 +18,8 @@ import { useLocation, useParams } from 'react-router-dom';
 import { getHistogram, getProject } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
-import { convertStringToCSVMatrix } from '../../utils';
+
+import { convertStringToCSVMatrix, transporMatriz } from '../../utils';
 
 export const options = [
   "MinMaxScaler",
@@ -65,6 +66,20 @@ export function PreProcessing({ index }) {
   
   const [histogram, setHistogram] = useState(null);
 
+  const getGraphs = (indexOfMatrix) => {
+    getHistogram(projectID, 'name', authTokens.access, matrix[indexOfMatrix])
+    .then((response) => {
+
+      const imagemBase64 = response.imageInBase64;
+      // Cria a URL da imagem a partir da string Base64
+      const urlImagem = `data:image/png;base64,${imagemBase64}`;
+      setHistogram(urlImagem);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
   useEffect(() => {
     getProject(projectID, authTokens.access)
     .then((response) => {
@@ -80,21 +95,18 @@ export function PreProcessing({ index }) {
     if(project) {
       let matrix = convertStringToCSVMatrix(project.databaseFile, ',');
       setVariablesNames(matrix[0]);
-      setMatrix(matrix);
 
-      getHistogram(projectID, 'name', authTokens.access, matrix[1])
-      .then((response) => {
+      matrix.splice(0, 1);      
+      const tMatrix = transporMatriz(matrix);
+      setMatrix(tMatrix);
 
-        const imagemBase64 = response.imageInBase64;
-        // Cria a URL da imagem a partir da string Base64
-        const urlImagem = `data:image/png;base64,${imagemBase64}`;
-        setHistogram(urlImagem);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+      getGraphs(0);
     }
   }, [project])
+
+  const onChangeVariable = (index) => {
+    getGraphs(index);
+  }
 
   if(pageNumber == 0) {
     return(
@@ -110,7 +122,8 @@ export function PreProcessing({ index }) {
         />
 
         <div className={styles.firstContainer}>
-          <VariablesList 
+          <VariablesList
+            onChange={(index) => onChangeVariable(index)}
             variablesNames={variablesNames}
           />
 

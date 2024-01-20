@@ -37,3 +37,19 @@ export const convertStringToCSVMatrix = (CSVString, separator) => {
 
   return csvData;
 };
+
+export function transporMatriz(matriz) {
+  const linhas = matriz.length;
+  const colunas = matriz[0].length;
+
+  // Crie uma nova matriz transposta
+  const matrizTransposta = [];
+  for (let i = 0; i < colunas; i++) {
+    matrizTransposta[i] = [];
+    for (let j = 0; j < linhas; j++) {
+      matrizTransposta[i][j] = matriz[j][i];
+    }
+  }
+
+  return matrizTransposta;
+}
