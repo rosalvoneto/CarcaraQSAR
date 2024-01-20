@@ -4,8 +4,6 @@ import { Header } from '../../components/Header';
 import { ProgressBar } from '../../components/ProgressBar';
 import { projectName } from '../../settings';
 
-import BoxPlot from '../../assets/box-plot.png';
-
 import { Graph } from '../../components/Graph';
 import { RadionInput } from '../../components/RadioInput';
 
@@ -15,7 +13,7 @@ import Button from '../../components/Button';
 import { VariablesList } from '../../components/VariablesList';
 
 import { useLocation, useParams } from 'react-router-dom';
-import { getHistogram, getProject } from '../../api/database';
+import { getBoxPlot, getHistogram, getProject } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 
@@ -65,6 +63,7 @@ export function PreProcessing({ index }) {
   const [matrix, setMatrix] = useState([]);
   
   const [histogram, setHistogram] = useState(null);
+  const [boxPlot, setBoxPlot] = useState(null);
 
   const getGraphs = (indexOfMatrix) => {
     getHistogram(projectID, 'name', authTokens.access, matrix[indexOfMatrix])
@@ -74,6 +73,18 @@ export function PreProcessing({ index }) {
       // Cria a URL da imagem a partir da string Base64
       const urlImagem = `data:image/png;base64,${imagemBase64}`;
       setHistogram(urlImagem);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+
+    getBoxPlot(projectID, 'name', authTokens.access, matrix[indexOfMatrix])
+    .then((response) => {
+
+      const imagemBase64 = response.imageInBase64;
+      // Cria a URL da imagem a partir da string Base64
+      const urlImagem = `data:image/png;base64,${imagemBase64}`;
+      setBoxPlot(urlImagem);
     })
     .catch((error) => {
       console.log(error);
@@ -133,7 +144,10 @@ export function PreProcessing({ index }) {
               histogram &&
               <Graph name={"Histograma"} image={histogram}/>
             }
-            <Graph name={"Box-Plot"} image={BoxPlot}/>
+            {
+              boxPlot &&
+              <Graph name={"Box-Plot"} image={boxPlot}/>
+            }
 
           </div>
 

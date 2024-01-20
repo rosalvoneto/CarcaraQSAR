@@ -155,10 +155,35 @@ def getHistogram_view(request):
 def getBoxPlot_view(request):
   
   project_id = request.GET.get('project_id')
-  variable = request.GET.get('variable')
+  values = request.GET.get('values').split(',')
 
-  project = get_object_or_404(Project, id=project_id)
+  int_values = [int(value) for value in values]
+  print(int_values)
 
   # Fazer cálculo de BoxPlot e retornar a imagem
+  # Dados de exemplo (substitua isso pelos seus dados)
+  array = np.array(int_values)
 
-  return Response({}, status=200)
+  # Crie o box plot
+  fig, ax = plt.subplots()
+  ax.boxplot(array)
+  ax.set_title('Box Plot')
+  ax.set_xlabel('Valores')
+
+  # Renderize a figura usando FigureCanvasAgg
+  canvas = FigureCanvasAgg(fig)
+  canvas.draw()
+
+  # Obtenha os bytes da imagem
+  buffer = BytesIO()
+  canvas.print_png(buffer)
+  buffer.seek(0)
+
+  # Converta a imagem para base64
+  image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+
+  # Limpeza da figura
+  plt.clf()
+
+  # Retorne a resposta como JSON
+  return Response({'imageInBase64': image_base64})

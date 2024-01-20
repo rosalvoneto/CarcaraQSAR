@@ -123,10 +123,10 @@ export const getHistogram = async (projectID, variable, accessToken, values) => 
 }
 
 // Retorna BoxPlot de uma variável específica
-export const getBoxPlot = async (projectID, variable, accessToken) => {
+export const getBoxPlot = async (projectID, variable, accessToken, values) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/box_plot?project_id=${projectID}&variable=${variable}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/box_plot?project_id=${projectID}&variable=${variable}&values=${values}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
