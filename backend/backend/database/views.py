@@ -116,11 +116,11 @@ def getHistogram_view(request):
   values = request.GET.get('values').split(',')
   divisions_bins = request.GET.get('divisions')
 
-  int_values = [int(value) for value in values]
-  print(int_values)
+  float_values = [float(value) for value in values]
+  print(float_values)
 
   # Fazer cálculo de Histograma
-  array = np.array(int_values)
+  array = np.array(float_values)
   # Escolha o número de intervalos (bins)
   num_bins = int(divisions_bins)
   # Calcule o histograma
@@ -161,12 +161,12 @@ def getBoxPlot_view(request):
   project_id = request.GET.get('project_id')
   values = request.GET.get('values').split(',')
 
-  int_values = [int(value) for value in values]
-  print(int_values)
+  float_values = [float(value) for value in values]
+  print(float_values)
 
   # Fazer cálculo de BoxPlot e retornar a imagem
   # Dados de exemplo (substitua isso pelos seus dados)
-  array = np.array(int_values)
+  array = np.array(float_values)
 
   # Crie o box plot
   fig, ax = plt.subplots()
