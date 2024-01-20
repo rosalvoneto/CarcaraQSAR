@@ -4,7 +4,6 @@ import { Header } from '../../components/Header';
 import { ProgressBar } from '../../components/ProgressBar';
 import { projectName } from '../../settings';
 
-import Histograma from '../../assets/histograma.png';
 import BoxPlot from '../../assets/box-plot.png';
 
 import { Graph } from '../../components/Graph';
@@ -62,6 +61,7 @@ export function PreProcessing({ index }) {
   const [option, setOption] = useState(options[0]);
   const [project, setProject] = useState(null);
   const [variablesNames, setVariablesNames] = useState([]);
+  const [matrix, setMatrix] = useState([]);
   
   const [histogram, setHistogram] = useState(null);
 
@@ -80,12 +80,12 @@ export function PreProcessing({ index }) {
     if(project) {
       let matrix = convertStringToCSVMatrix(project.databaseFile, ',');
       setVariablesNames(matrix[0]);
+      setMatrix(matrix);
 
-      getHistogram(projectID, 'name', authTokens.access)
+      getHistogram(projectID, 'name', authTokens.access, matrix[1])
       .then((response) => {
 
         const imagemBase64 = response.imageInBase64;
-
         // Cria a URL da imagem a partir da string Base64
         const urlImagem = `data:image/png;base64,${imagemBase64}`;
         setHistogram(urlImagem);

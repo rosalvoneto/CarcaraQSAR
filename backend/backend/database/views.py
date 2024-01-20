@@ -51,7 +51,7 @@ def sendDatabase_view(request):
 def getDatabase_view(request):
 
   project_id = request.GET.get('project_id')
-  print(f"ID DO PROJETO: {project_id}")
+
   project = get_object_or_404(Project, id=project_id)
 
   databaseFile = project.database
@@ -109,10 +109,16 @@ def getProject_view(request):
 @permission_classes([IsAuthenticated])
 def getHistogram_view(request):
 
+  project_id = request.GET.get('project_id')
+  values = request.GET.get('values').split(',')
+
+  int_values = [int(value) for value in values]
+  print(int_values)
+
   # Fazer cálculo de Histograma
-  array = np.array([1,2,3,4,5,6])
+  array = np.array(int_values)
   # Escolha o número de intervalos (bins)
-  num_bins = 3
+  num_bins = 10
   # Calcule o histograma
   hist, bins = np.histogram(array, bins=num_bins)
   # Calcule a amplitude dos intervalos
