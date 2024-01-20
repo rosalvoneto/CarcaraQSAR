@@ -8,10 +8,13 @@ export default function Button({ name, URL, stateToPass, side, action }) {
   const navigate = useNavigate();
   console.log(URL);
   const actions = () => {
+    let toNavigate = true;
     if(action) {
-      action();
+      toNavigate = action();
     }
-    navigate(URL, { state: stateToPass });
+    if(toNavigate) {
+      navigate(URL, { state: stateToPass });
+    }
   }
 
 

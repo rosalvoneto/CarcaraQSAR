@@ -36,10 +36,12 @@ export function Database() {
   useEffect(() => {
     getDatabase(projectID, authTokens.access)
     .then((response) => {
-      const stringFile = response.content;
-      const fileName = response.fileName;
-      const file = convertStringToFile(stringFile, fileName);
-      setSelectedFile(file);
+      if(response.content) {
+        const stringFile = response.content;
+        const fileName = response.fileName;
+        const file = convertStringToFile(stringFile, fileName);
+        setSelectedFile(file);
+      }
     })
     .catch((error) => {
       console.log(error);
@@ -73,8 +75,14 @@ export function Database() {
   }, [selectedFile])
 
   const saveData = () => {
-    // Enviar arquivo para o backend
-    sendDatabase(projectID, selectedFile, authTokens.access);
+    if(selectedFile) {
+      // Enviar arquivo para o backend
+      sendDatabase(projectID, selectedFile, authTokens.access);
+      return true;
+    } else {
+      alert('Você não escolheu nenhum arquivo TXT ou CSV');
+      return false;
+    }
   }
 
   return(

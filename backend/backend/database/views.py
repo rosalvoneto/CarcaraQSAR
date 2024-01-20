@@ -56,21 +56,24 @@ def getDatabase_view(request):
 
   databaseFile = project.database
 
-  # Recuperar nome original do arquivo
-  # Divide a string usando o caractere '_'
-  name = databaseFile.name.split('/')[1]
-  partes = name.split('_')
-  # Combina a primeira parte (antes do '_') com a extensão
-  novo_nome_do_arquivo = f"{partes[0]}.{partes[-1].split('.')[-1]}"
-  print(novo_nome_do_arquivo)
+  if(databaseFile):
+    # Recuperar nome original do arquivo
+    # Divide a string usando o caractere '_'
+    name = databaseFile.name.split('/')[1]
+    partes = name.split('_')
+    # Combina a primeira parte (antes do '_') com a extensão
+    novo_nome_do_arquivo = f"{partes[0]}.{partes[-1].split('.')[-1]}"
 
-  # Abre o arquivo para leitura binária
-  with databaseFile.open(mode='rb') as file:
-    content = file.read()
-    return JsonResponse({
-      'content': content.decode('utf-8'),
-      'fileName': novo_nome_do_arquivo
-    })
+    # Abre o arquivo para leitura binária
+    with databaseFile.open(mode='rb') as file:
+      content = file.read()
+      return JsonResponse({
+        'content': content.decode('utf-8'),
+        'fileName': novo_nome_do_arquivo
+      })
+  return JsonResponse({
+    'message': 'Nenhum arquivo foi Upload',
+  })
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
