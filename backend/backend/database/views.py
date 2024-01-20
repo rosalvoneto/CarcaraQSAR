@@ -1,5 +1,6 @@
 import pandas as pd
-from io import StringIO
+from io import StringIO, BytesIO
+import base64
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -10,6 +11,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from project_management.serializers import ProjectSerializer
 from project_management.models import Project
+
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+import numpy as np
 
 # Create your views here.
 @api_view(['POST'])
@@ -104,14 +109,40 @@ def getProject_view(request):
 @permission_classes([IsAuthenticated])
 def getHistogram_view(request):
 
-  project_id = request.GET.get('project_id')
-  variable = request.GET.get('variable')
+  # Fazer cálculo de Histograma
+  array = np.array([1,2,3,4,5,6])
+  # Escolha o número de intervalos (bins)
+  num_bins = 3
+  # Calcule o histograma
+  hist, bins = np.histogram(array, bins=num_bins)
+  # Calcule a amplitude dos intervalos
+  amplitude_intervals = bins[1] - bins[0]
 
-  project = get_object_or_404(Project, id=project_id)
+  # Crie o histograma usando Matplotlib
+  fig, ax = plt.subplots()
+  ax.bar(bins[:-1], hist, width=amplitude_intervals, edgecolor='black')
 
-  # Fazer cálculo de Histograma e retornar a imagem
+  ax.set_title('Histograma')
+  ax.set_xlabel('Valores')
+  ax.set_ylabel('Frequência')
 
-  return Response({}, status=200)
+  # Renderize a figura
+  canvas = FigureCanvasAgg(fig)
+  canvas.draw()
+
+  # Obtenha os bytes da imagem
+  buffer = BytesIO()
+  canvas.print_png(buffer)
+  buffer.seek(0)
+
+  # Leia os bytes da imagem
+  image_bytes = buffer.read()
+  image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+
+  # Limpeza da exibição
+  plt.clf()
+
+  return Response({ 'imageInBase64': image_base64}, status=200)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

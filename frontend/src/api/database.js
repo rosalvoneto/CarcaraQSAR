@@ -102,7 +102,7 @@ export const getProject = async (projectID, accessToken) => {
 export const getHistogram = async (projectID, variable, accessToken) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/project?project_id=${projectID}&variable=${variable}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/histogram?project_id=${projectID}&variable=${variable}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
@@ -126,7 +126,7 @@ export const getHistogram = async (projectID, variable, accessToken) => {
 export const getBoxPlot = async (projectID, variable, accessToken) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/project?project_id=${projectID}&variable=${variable}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/box_plot?project_id=${projectID}&variable=${variable}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)

@@ -16,7 +16,7 @@ import Button from '../../components/Button';
 import { VariablesList } from '../../components/VariablesList';
 
 import { useLocation, useParams } from 'react-router-dom';
-import { getProject } from '../../api/database';
+import { getHistogram, getProject } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 import { convertStringToCSVMatrix } from '../../utils';
@@ -62,6 +62,8 @@ export function PreProcessing({ index }) {
   const [option, setOption] = useState(options[0]);
   const [project, setProject] = useState(null);
   const [variablesNames, setVariablesNames] = useState([]);
+  
+  const [histogram, setHistogram] = useState(null);
 
   useEffect(() => {
     getProject(projectID, authTokens.access)
@@ -79,6 +81,18 @@ export function PreProcessing({ index }) {
       let matrix = convertStringToCSVMatrix(project.databaseFile, ',');
       setVariablesNames(matrix[0]);
 
+      getHistogram(projectID, 'name', authTokens.access)
+      .then((response) => {
+
+        const imagemBase64 = response.imageInBase64;
+
+        // Cria a URL da imagem a partir da string Base64
+        const urlImagem = `data:image/png;base64,${imagemBase64}`;
+        setHistogram(urlImagem);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
     }
   }, [project])
 
@@ -96,11 +110,16 @@ export function PreProcessing({ index }) {
         />
 
         <div className={styles.firstContainer}>
-          <VariablesList variablesNames={variablesNames}/>
+          <VariablesList 
+            variablesNames={variablesNames}
+          />
 
           <div className={styles.graphsContainer}>
 
-            <Graph name={"Histograma"} image={Histograma}/>
+            {
+              histogram &&
+              <Graph name={"Histograma"} image={histogram}/>
+            }
             <Graph name={"Box-Plot"} image={BoxPlot}/>
 
           </div>
