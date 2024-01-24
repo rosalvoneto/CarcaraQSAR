@@ -18,6 +18,7 @@ class Project(models.Model):
 
   # Atributos avançados
   database =  models.FileField(upload_to='databases/', null=True, blank=True)
+  database_separator = models.CharField(max_length=1, default=',')
 
   def __str__(self):
     return f"{self.id}: {self.name}: {self.description}"

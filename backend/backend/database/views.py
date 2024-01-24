@@ -1,6 +1,7 @@
 import pandas as pd
 from io import StringIO, BytesIO
 import base64
+import json
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -32,16 +33,10 @@ def sendDatabase_view(request):
 
     project = get_object_or_404(Project, id=project_id)
     project.database = uploaded_file
+    project.database_separator = ','
     
     # Salvar arquivo no backend
     project.save()
-
-    # Cria um DataFrame do Pandas com o conteúdo do arquivo
-    df = pd.read_csv(StringIO(file_content))
-
-    # Faça o que desejar com o DataFrame aqui
-    # Exemplo: Imprime as primeiras linhas do DataFrame no console
-    print(df.head())
 
     return JsonResponse({ "message": f"{uploaded_file.name} enviado!"})
   return JsonResponse({ "message": "Arquivo não enviado!" })
@@ -57,22 +52,32 @@ def getDatabase_view(request):
   databaseFile = project.database
 
   if(databaseFile):
+
+    # Cria um DataFrame do Pandas com o conteúdo do arquivo
+    file_content = databaseFile.read().decode('utf-8')
+    data_dataframe = pd.read_csv(StringIO(file_content), sep=project.database_separator)
+
+    data_string = data_dataframe.head().to_json(orient='records')
+    data_dictionary = json.loads(data_string)
+
     # Recuperar nome original do arquivo
     # Divide a string usando o caractere '_'
     name = databaseFile.name.split('/')[1]
-    partes = name.split('_')
+    parts = name.split('_')
     # Combina a primeira parte (antes do '_') com a extensão
-    novo_nome_do_arquivo = f"{partes[0]}.{partes[-1].split('.')[-1]}"
+    newFileName = f"{parts[0]}.{parts[-1].split('.')[-1]}"
 
     # Abre o arquivo para leitura binária
     with databaseFile.open(mode='rb') as file:
       content = file.read()
+
       return JsonResponse({
         'content': content.decode('utf-8'),
-        'fileName': novo_nome_do_arquivo
+        'database': data_dictionary,
+        'fileName': newFileName
       })
   return JsonResponse({
-    'message': 'Nenhum arquivo foi Upload',
+    'message': 'Nenhum arquivo no projeto!',
   })
 
 @api_view(['GET'])

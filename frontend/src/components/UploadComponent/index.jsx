@@ -1,12 +1,6 @@
-import React, { useContext } from 'react';
-
 import styles from './styles.module.css';
 
-import AuthContext from '../../context/AuthContext';
-
 const UploadComponent = ({ selectedFile, setSelectedFile }) => {
-
-  const { authTokens } = useContext(AuthContext);
 
   const handleFileChange = (event) => {
     // Atualiza o estado com o arquivo selecionado

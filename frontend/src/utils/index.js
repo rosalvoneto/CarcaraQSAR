@@ -27,7 +27,10 @@ export const convertFileToString = (file) => {
 };
 
 export const convertStringToCSVMatrix = (CSVString, separator) => {
-  const rows = CSVString.split('\n');
+  let rows = CSVString.split('\n');
+  const startIndexToRemove = 6;
+  rows.splice(startIndexToRemove);
+
   let csvData = rows.map(row => row.split(separator));
   csvData.pop();
 
@@ -52,4 +55,21 @@ export function transporMatriz(matriz) {
   }
 
   return matrizTransposta;
+}
+
+export function convertJsonObjectInMatrix(jsonData) {
+  // Obter todas as chaves dos objetos
+  let allKeys = Array.from(jsonData.reduce((keys, entry) => {
+    Object.keys(entry).forEach(key => keys.add(key));
+    return keys;
+  }, new Set()));
+
+  // Criar uma matriz a partir dos objetos, incluindo apenas as chaves conhecidas
+  let matrix = jsonData.map(function(entry) {
+    return allKeys.map(key => entry[key]);
+  });
+
+  matrix.splice(0, 0, allKeys);
+
+  return matrix;
 }
