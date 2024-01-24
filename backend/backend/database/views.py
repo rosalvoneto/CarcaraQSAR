@@ -25,15 +25,17 @@ def sendDatabase_view(request):
   if 'file' in request.FILES:
     uploaded_file = request.FILES.get('file')
     print(uploaded_file.name)
-    # Lê o conteúdo do arquivo
-    file_content = uploaded_file.read().decode('utf-8')
+
+    # # Ler o conteúdo do arquivo
+    # file_content = uploaded_file.read().decode('utf-8')
 
     # Fazer o vinculo do arquivo ao projeto do usuário
     project_id = request.POST.get('project_id')
+    separator = request.POST.get('separator')
 
     project = get_object_or_404(Project, id=project_id)
     project.database = uploaded_file
-    project.database_separator = ','
+    project.database_separator = separator
     
     # Salvar arquivo no backend
     project.save()
@@ -46,9 +48,13 @@ def sendDatabase_view(request):
 def getDatabase_view(request):
 
   project_id = request.GET.get('project_id')
+  transposed = request.GET.get('transposed')
+  if transposed == "true":
+    transposed = True
+  else:
+    transposed = False
 
   project = get_object_or_404(Project, id=project_id)
-
   databaseFile = project.database
 
   if(databaseFile):
@@ -56,8 +62,14 @@ def getDatabase_view(request):
     # Cria um DataFrame do Pandas com o conteúdo do arquivo
     file_content = databaseFile.read().decode('utf-8')
     data_dataframe = pd.read_csv(StringIO(file_content), sep=project.database_separator)
+    data_dataframe = data_dataframe.head()
 
-    data_string = data_dataframe.head().to_json(orient='records')
+    if transposed:
+      data_dataframe = data_dataframe.T
+    
+    print(data_dataframe)
+    
+    data_string = data_dataframe.to_json(orient='records')
     data_dictionary = json.loads(data_string)
 
     # Recuperar nome original do arquivo
@@ -67,17 +79,14 @@ def getDatabase_view(request):
     # Combina a primeira parte (antes do '_') com a extensão
     newFileName = f"{parts[0]}.{parts[-1].split('.')[-1]}"
 
-    # Abre o arquivo para leitura binária
-    with databaseFile.open(mode='rb') as file:
-      content = file.read()
-
-      return JsonResponse({
-        'content': content.decode('utf-8'),
-        'database': data_dictionary,
-        'fileName': newFileName
-      })
+    return JsonResponse({
+      'database': data_dictionary,
+      'fileName': newFileName
+    })
+  
   return JsonResponse({
     'message': 'Nenhum arquivo no projeto!',
+    'database': None,
   })
 
 @api_view(['GET'])

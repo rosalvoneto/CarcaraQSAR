@@ -17,11 +17,6 @@ import AuthContext from '../../context/AuthContext';
 
 import { useParams } from 'react-router-dom';
 
-import {
-  convertFileToString, convertJsonObjectInMatrix, 
-  convertStringToCSVMatrix, convertStringToFile
-} from '../../utils';
-
 export function Database() {
 
   const href = '/database';
@@ -32,27 +27,25 @@ export function Database() {
   const { authTokens } = useContext(AuthContext);
 
   const [selectedFile, setSelectedFile] = useState(null);
-  
-  const [projectName, setProjectName] = useState("");
-  const [fileMatrix, setFileMatrix] = useState([]);
   const [separator, setSeparator] = useState(',');
   const [transpose, setTranspose] = useState(false);
 
-  useEffect(() => {
-    // Resgatar database
-    getDatabase(projectID, authTokens.access)
-    .then((response) => {
-      if(response.database) {
-        const jsonData = response.database;
-        const matrix = convertJsonObjectInMatrix(jsonData);
+  const [projectName, setProjectName] = useState("");
+  const [showMatrixOfNewFile, setShowMatrixOfNewFile] = useState(false);
 
-        setFileMatrix(matrix);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    
+  const saveDatabase = () => {
+    if(selectedFile) {
+      // Enviar arquivo para o backend
+      sendDatabase(projectID, selectedFile, separator, authTokens.access);
+      return true;
+
+    } else {
+      alert('Você não escolheu nenhum arquivo TXT ou CSV');
+      return false;
+    }
+  }
+
+  useEffect(() => {
     // Resgatar nome do projeto
     getProjectName(projectID, authTokens.access)
     .then((response) => {
@@ -65,31 +58,11 @@ export function Database() {
   }, [])
 
   useEffect(() => {
-    convertFileToString(selectedFile)
-    .then((response) => {
-      const fileString = response;
-      const matrix = convertStringToCSVMatrix(fileString, ',');
-      setFileMatrix(matrix);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-
-  }, [selectedFile]);
-
-  const saveData = () => {
     if(selectedFile) {
-      // Enviar arquivo para o backend
-      sendDatabase(projectID, selectedFile, authTokens.access);
-      // Retorno de sucesso (ou seja, pode ir para a próxima página)
-      return true;
-
-    } else {
-      alert('Você não escolheu nenhum arquivo TXT ou CSV');
-      // Retorno de falha
-      return false;
+      const isSaved = saveDatabase();
+      setShowMatrixOfNewFile(isSaved);
     }
-  }
+  }, [selectedFile]);
 
   return(
     <>
@@ -117,16 +90,17 @@ export function Database() {
           <CheckboxInput value={transpose} setValue={setTranspose}/>
           <p className={styles.tableDescription}>
             {
-              `${fileMatrix.length} linhas x ${
-                fileMatrix.length == 0 
-                ? 0 
-                : fileMatrix[0].length
-              } colunas`
+              `0 linhas x 0 colunas`
             }
           </p>
         </div>
 
-        <DataTable vertical={transpose} Matrix={fileMatrix}/>
+        <DataTable 
+          showMatrixOfNewFile={showMatrixOfNewFile}
+          setShowMatrixOfNewFile={setShowMatrixOfNewFile}
+          
+          vertical={transpose}
+        />
 
         <Button 
           name={'Próximo'} 
@@ -135,7 +109,7 @@ export function Database() {
             pageNumber: 0
           }}
           side={'right'}
-          action={saveData}
+          action={saveDatabase}
         />
       </div>
     </>

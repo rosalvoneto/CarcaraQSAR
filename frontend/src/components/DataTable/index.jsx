@@ -1,40 +1,40 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import AuthContext from '../../context/AuthContext';
 
 import styles from './styles.module.css';
 
-import { transporMatriz } from '../../utils';
+import { getDatabase } from '../../api/database';
 
-export function DataTable({ vertical, onlyTitles, Matrix }) {
+import { convertJsonObjectInMatrix } from '../../utils';
 
-  const [variablesNames, setvariablesNames] = useState([]);
-  const [registers, setRegisters] = useState([]);
+export function DataTable({ vertical, setShowMatrixOfNewFile, showMatrixOfNewFile }) {
 
-  const adjustMatrix = () => {
-    const variablesNames = Matrix[0];
-    setvariablesNames(variablesNames);
-    
-    const registers = Matrix.slice(1);
-    setRegisters(registers);
+  const { projectID } = useParams();
+  const { authTokens } = useContext(AuthContext);
 
-    console.log(registers);
-  }
+  const [matrix, setMatrix] = useState([]);
 
   useEffect(() => {
-    if(Matrix.length > 0)
-      adjustMatrix();  
-  }, [Matrix])
+    // Resgatar database
+    getDatabase(projectID, authTokens.access, vertical)
+    .then((response) => {
+      if(response.database) {
+        const jsonData = response.database;
+        const matrix = convertJsonObjectInMatrix(jsonData);
 
+        setMatrix(matrix);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
 
-  let dataTable;
-  if(onlyTitles) {
-    dataTable = [variablesNames]
-  } else {
-    dataTable = [variablesNames, ...registers];
-  }
+    // Sinal de que não precisa resgatar novamente o database
+    setShowMatrixOfNewFile(false);
 
-  if(vertical) {
-    dataTable = transporMatriz(dataTable);
-  }
+  }, [vertical, showMatrixOfNewFile]);
   
   return(
     <div 
@@ -43,29 +43,9 @@ export function DataTable({ vertical, onlyTitles, Matrix }) {
     >
       <div className={styles.contentContainer}>
         <table className={styles.table}>
-          {
-            /* 
-            <thead className={styles.header}>
-              <tr className={styles.headerRegister}>
-                {
-                  dataTable[0].map((variableName, index) => {
-                    return(
-                      <th 
-                        className={styles.itemHeaderRegister}
-                        key={index}
-                      >
-                        { variableName }
-                      </th>
-                    )
-                  })
-                }
-              </tr>
-            </thead> 
-            */
-          }
           <tbody className={styles.body}>
             {
-              dataTable.map((register, index) => {
+              matrix.map((register, index) => {
                 return(
                   <tr 
                     className={styles.bodyRegister}

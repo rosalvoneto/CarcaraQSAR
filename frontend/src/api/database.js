@@ -1,10 +1,11 @@
 
 // Envia Base de dados para o backend
-export const sendDatabase = async (projectID, selectedFile, accessToken) => {
+export const sendDatabase = async (projectID, selectedFile, separator, accessToken) => {
 
   const formData = new FormData();
   formData.append('file', selectedFile);
   formData.append('project_id', projectID);
+  formData.append('separator', separator);
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/send`, {
@@ -27,10 +28,10 @@ export const sendDatabase = async (projectID, selectedFile, accessToken) => {
 }
 
 // Recebe Base de dados do backend
-export const getDatabase = async (projectID, accessToken) => {
+export const getDatabase = async (projectID, accessToken, transposed) => {
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/receive?project_id=${projectID}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/receive?project_id=${projectID}&transposed=${transposed}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
