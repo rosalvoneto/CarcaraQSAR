@@ -13,8 +13,12 @@ const UploadComponent = ({ selectedFile, setSelectedFile }) => {
       <label htmlFor="fileUpload">
         {
           selectedFile 
-          ? `Base de dados: ${selectedFile.name}`
-          : "Escolha sua base de dados"
+          ? (
+            `Base de dados: ${selectedFile.name}`
+          )
+          : (
+            "Escolha sua base de dados"
+          )
         }
       </label>
       <input 

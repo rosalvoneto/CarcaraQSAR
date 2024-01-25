@@ -9,7 +9,10 @@ import { getDatabase } from '../../api/database';
 
 import { convertJsonObjectInMatrix } from '../../utils';
 
-export function DataTable({ vertical, setShowMatrixOfNewFile, showMatrixOfNewFile }) {
+export function DataTable({ 
+  transpose, 
+  jsonDatabase
+}) {
 
   const { projectID } = useParams();
   const { authTokens } = useContext(AuthContext);
@@ -17,13 +20,21 @@ export function DataTable({ vertical, setShowMatrixOfNewFile, showMatrixOfNewFil
   const [matrix, setMatrix] = useState([]);
 
   useEffect(() => {
-    // Resgatar database
-    getDatabase(projectID, authTokens.access, vertical)
+    // Transformar em matriz toda vez que tiver um novo Database no backend
+    if(jsonDatabase) {
+      const matrix = convertJsonObjectInMatrix(jsonDatabase);
+      setMatrix(matrix);
+    }
+
+  }, [jsonDatabase])
+
+  useEffect(() => {
+    // Resgatar Database de acordo com a mudança na transposição da matriz
+    getDatabase(projectID, authTokens.access, transpose)
     .then((response) => {
       if(response.database) {
         const jsonData = response.database;
         const matrix = convertJsonObjectInMatrix(jsonData);
-
         setMatrix(matrix);
       }
     })
@@ -31,15 +42,12 @@ export function DataTable({ vertical, setShowMatrixOfNewFile, showMatrixOfNewFil
       console.log(error);
     })
 
-    // Sinal de que não precisa resgatar novamente o database
-    setShowMatrixOfNewFile(false);
-
-  }, [vertical, showMatrixOfNewFile]);
+  }, [transpose]);
   
   return(
     <div 
       className={styles.container}
-      style={vertical ? { width: 'fit-content' } : {}}
+      style={transpose ? { width: 'fit-content' } : {}}
     >
       <div className={styles.contentContainer}>
         <table className={styles.table}>

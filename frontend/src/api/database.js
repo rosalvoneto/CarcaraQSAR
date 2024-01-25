@@ -20,10 +20,11 @@ export const sendDatabase = async (projectID, selectedFile, separator, accessTok
   if(response.status == 200) {
 
     console.log(dataResponse);
+    return true;
     
   } else {
     console.log(`Status: ${response.status}`);
-    alert('Erro interno do servidor!');
+    return false;
   }
 }
 

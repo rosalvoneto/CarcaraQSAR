@@ -26,18 +26,22 @@ export function Database() {
   const { projectID } = useParams();
   const { authTokens } = useContext(AuthContext);
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [separator, setSeparator] = useState(',');
-  const [transpose, setTranspose] = useState(false);
-
   const [projectName, setProjectName] = useState("");
-  const [showMatrixOfNewFile, setShowMatrixOfNewFile] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [transpose, setTranspose] = useState(false);
+  const [separator, setSeparator] = useState(',');
+  const [database, setDatabase] = useState({
+    database: null,
+    name: null,
+    lines: 0,
+    columns: 0
+  });
 
-  const saveDatabase = () => {
+  const saveDatabase = async () => {
     if(selectedFile) {
-      // Enviar arquivo para o backend
-      sendDatabase(projectID, selectedFile, separator, authTokens.access);
-      return true;
+      // Enviar Database para o backend
+      const isSaved = await sendDatabase(projectID, selectedFile, separator, authTokens.access);
+      return isSaved;
 
     } else {
       alert('Você não escolheu nenhum arquivo TXT ou CSV');
@@ -46,7 +50,7 @@ export function Database() {
   }
 
   useEffect(() => {
-    // Resgatar nome do projeto
+    // Resgatar nome do projeto após a página carregar
     getProjectName(projectID, authTokens.access)
     .then((response) => {
       setProjectName(response.projectName);
@@ -55,12 +59,40 @@ export function Database() {
       console.log(error);
     })
 
+    // Resgatar informações do database após a página carregar
+    getDatabase(projectID, authTokens.access, transpose)
+    .then((response) => {
+      if(response.database) {
+        // Salvar Database
+        setDatabase(response);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+
   }, [])
+  
 
   useEffect(() => {
     if(selectedFile) {
-      const isSaved = saveDatabase();
-      setShowMatrixOfNewFile(isSaved);
+      saveDatabase()
+      .then((isSaved) => {
+        if(isSaved) {
+          // Resgatar informações do novo Database
+          getDatabase(projectID, authTokens.access, transpose)
+          .then((response) => {
+            if(response.database) {
+              // Salvar Database
+              setDatabase(response);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+        }
+      })
+
     }
   }, [selectedFile]);
 
@@ -78,7 +110,7 @@ export function Database() {
 
         <InlineInput 
           name={"Tipo de separador"} type={'text'} width={26}
-          separator={separator} setSeparator={setSeparator}
+          value={separator} setValue={setSeparator}
         />
 
         <UploadComponent
@@ -90,16 +122,14 @@ export function Database() {
           <CheckboxInput value={transpose} setValue={setTranspose}/>
           <p className={styles.tableDescription}>
             {
-              `0 linhas x 0 colunas`
+              `${database.lines} linhas x ${database.columns} colunas`
             }
           </p>
         </div>
 
-        <DataTable 
-          showMatrixOfNewFile={showMatrixOfNewFile}
-          setShowMatrixOfNewFile={setShowMatrixOfNewFile}
-          
-          vertical={transpose}
+        <DataTable
+          transpose={transpose}
+          jsonDatabase={database.database}
         />
 
         <Button 
@@ -109,7 +139,7 @@ export function Database() {
             pageNumber: 0
           }}
           side={'right'}
-          action={saveDatabase}
+          action={() => true}
         />
       </div>
     </>

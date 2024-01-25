@@ -1,7 +1,7 @@
 
 import styles from './styles.module.css';
 
-export function InlineInput({ name, type, width, separator, setSeparator }) {
+export function InlineInput({ name, type, width, value, setValue }) {
   return(
     <div className={styles.inlineInputContainer}>
       <p className={styles.descritptor}>{ name }</p>
@@ -9,8 +9,8 @@ export function InlineInput({ name, type, width, separator, setSeparator }) {
         type={type}
         className={styles.input} 
         style={ width ? { width: width } : {}}
-        value={separator}
-        onChange={(e) => setSeparator(e.target.value)}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
       />
     </div>
   )
