@@ -118,12 +118,12 @@ export function Database() {
             }
           </p>
         </div>
-
+        
         <DataTable
           transpose={transpose}
           jsonDatabase={database.database}
         />
-
+        
         <Button 
           name={'Próximo'} 
           URL={`/${projectID}/pre-processing`}
