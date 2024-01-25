@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   const uptateToken = async () => {
-
     let response = await fetch(
       `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/api/token/refresh/`, {
         method: 'POST',
@@ -80,7 +79,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   useEffect(() => {
-
     const timeInterval = 1000 * 60 * 4;
     let interval = setInterval(() => {
       if(authTokens) {

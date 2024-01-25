@@ -118,24 +118,11 @@ def getProjectName_view(request):
 def getProject_view(request):
 
   project_id = request.GET.get('project_id')
-  print(f"ID DO PROJETO: {project_id}")
-
   project = get_object_or_404(Project, id=project_id)
   serializer = ProjectSerializer(project)
 
-  # Abre o arquivo para leitura binária
-  if(project.database):
-    with project.database.file.open(mode='rb') as file:
-      content = file.read()
-      database = content.decode('utf-8')
-
-    return Response({ 
-      'projectData': serializer.data,
-      'databaseFile': database
-    }, status=200)
-  
   return Response({ 
-    'message': "Nenhum arquivo de Database encontrado"
+    'projectData': serializer.data
   }, status=200)
 
 @api_view(['GET'])

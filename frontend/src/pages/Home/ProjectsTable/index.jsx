@@ -13,10 +13,12 @@ import {
 } from '../../../api/project';
 
 import AuthContext from '../../../context/AuthContext';
+import ProjectContext from '../../../context/ProjectContext';
 
 export function ProjectsTable({ searchValue }) {
 
-  const { authTokens } = useContext(AuthContext)
+  const { authTokens } = useContext(AuthContext);
+  const { setProjectInfomation } = useContext(ProjectContext);
 
   // Projetos
   const [data, setData] = useState([]);
@@ -169,7 +171,10 @@ export function ProjectsTable({ searchValue }) {
                 </td>
                 <td 
                   className={`${styles.item} ${styles.name}`}
-                  onClick={() => handleTo(`/${item.id}/database`)}
+                  onClick={() => {
+                    setProjectInfomation(item.id);
+                    handleTo(`/${item.id}/database`);
+                  }}
                 >
                   {item.nome}
                 </td>

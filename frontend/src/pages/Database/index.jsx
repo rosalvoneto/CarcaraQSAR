@@ -14,6 +14,7 @@ import UploadComponent from '../../components/UploadComponent';
 import { getDatabase, getProjectName, sendDatabase } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
+import ProjectContext from '../../context/ProjectContext';
 
 import { useParams } from 'react-router-dom';
 
@@ -25,8 +26,8 @@ export function Database() {
 
   const { projectID } = useParams();
   const { authTokens } = useContext(AuthContext);
+  const { projectDetails } = useContext(ProjectContext);
 
-  const [projectName, setProjectName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [transpose, setTranspose] = useState(false);
   const [separator, setSeparator] = useState(',');
@@ -50,15 +51,6 @@ export function Database() {
   }
 
   useEffect(() => {
-    // Resgatar nome do projeto após a página carregar
-    getProjectName(projectID, authTokens.access)
-    .then((response) => {
-      setProjectName(response.projectName);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-
     // Resgatar informações do database após a página carregar
     getDatabase(projectID, authTokens.access, transpose)
     .then((response) => {
@@ -99,7 +91,7 @@ export function Database() {
   return(
     <>
       <Header 
-        title={projectName}
+        title={projectDetails.name}
       />
       <ProgressBar 
         progressNumber={progress}
