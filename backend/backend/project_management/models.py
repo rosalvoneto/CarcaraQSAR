@@ -1,6 +1,7 @@
 from email.policy import default
 from django.db import models
 
+from database.models import Database
 from user.models import User
 
 # Create your models here.
@@ -17,9 +18,8 @@ class Project(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
 
   # Atributos avançados
-  database =  models.FileField(upload_to='databases/', null=True, blank=True)
-  database_separator = models.CharField(max_length=1, default=',')
+  database = models.ForeignKey(Database, on_delete=models.CASCADE, null=True, blank=True)
 
   def __str__(self):
-    return f"{self.id}: {self.name}: {self.description}"
+    return f"{self.name}: {self.description}"
 

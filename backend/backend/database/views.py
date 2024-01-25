@@ -11,7 +11,9 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from project_management.serializers import ProjectSerializer
+
 from project_management.models import Project
+from database.models import Database
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -24,20 +26,29 @@ def sendDatabase_view(request):
 
   if 'file' in request.FILES:
     uploaded_file = request.FILES.get('file')
-    print(uploaded_file.name)
-
-    # # Ler o conteúdo do arquivo
-    # file_content = uploaded_file.read().decode('utf-8')
-
-    # Fazer o vinculo do arquivo ao projeto do usuário
     project_id = request.POST.get('project_id')
     separator = request.POST.get('separator')
 
     project = get_object_or_404(Project, id=project_id)
-    project.database = uploaded_file
-    project.database_separator = separator
+
+    # Cria um DataFrame do Pandas com o conteúdo do arquivo
+    file_content = uploaded_file.read().decode('utf-8')
+    data_dataframe = pd.read_csv(
+      StringIO(file_content), 
+      sep=separator
+    )
+    rows, columns = data_dataframe.shape
+
+    database = Database().create(
+      name=uploaded_file.name,
+      file=uploaded_file,
+      file_separator=separator,
+      lines=rows,
+      columns=columns
+    )
+    project.database = database
     
-    # Salvar arquivo no backend
+    # Salvar no backend
     project.save()
 
     return JsonResponse({ "message": f"{uploaded_file.name} enviado!"})
@@ -46,7 +57,6 @@ def sendDatabase_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getDatabase_view(request):
-
   project_id = request.GET.get('project_id')
   transposed = request.GET.get('transposed')
   if transposed == "true":
@@ -55,34 +65,36 @@ def getDatabase_view(request):
     transposed = False
 
   project = get_object_or_404(Project, id=project_id)
-  databaseFile = project.database
+  database = project.database
 
-  if(databaseFile):
+  if(database):
+    if(database.file):
 
-    # Cria um DataFrame do Pandas com o conteúdo do arquivo
-    file_content = databaseFile.read().decode('utf-8')
-    data_dataframe = pd.read_csv(StringIO(file_content), sep=project.database_separator)
-    data_dataframe = data_dataframe.head()
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      file_content = database.file.read().decode('utf-8')
+      data_dataframe = pd.read_csv(
+        StringIO(file_content), 
+        sep=database.file_separator
+      )
 
-    if transposed:
-      data_dataframe = data_dataframe.T
-    
-    print(data_dataframe)
-    
-    data_string = data_dataframe.to_json(orient='records')
-    data_dictionary = json.loads(data_string)
+      # Pega somente as primeiras linhas do database
+      data_dataframe = data_dataframe.head()
 
-    # Recuperar nome original do arquivo
-    # Divide a string usando o caractere '_'
-    name = databaseFile.name.split('/')[1]
-    parts = name.split('_')
-    # Combina a primeira parte (antes do '_') com a extensão
-    newFileName = f"{parts[0]}.{parts[-1].split('.')[-1]}"
+      # Faz a transposição se necessário
+      if transposed:
+        data_dataframe = data_dataframe.T
+      
+      # Transforma para o formato Json
+      data_string = data_dataframe.to_json(orient='records')
+      data_dictionary = json.loads(data_string)
 
-    return JsonResponse({
-      'database': data_dictionary,
-      'fileName': newFileName
-    })
+      return JsonResponse({
+        'database': data_dictionary,
+        'fileSeparator': database.file_separator,
+        'name': database.name,
+        'lines': database.lines,
+        'columns': database.columns
+      })
   
   return JsonResponse({
     'message': 'Nenhum arquivo no projeto!',
@@ -112,14 +124,18 @@ def getProject_view(request):
   serializer = ProjectSerializer(project)
 
   # Abre o arquivo para leitura binária
-  with project.database.open(mode='rb') as file:
-    content = file.read()
-    database = content.decode('utf-8')
+  if(project.database):
+    with project.database.file.open(mode='rb') as file:
+      content = file.read()
+      database = content.decode('utf-8')
 
-
+    return Response({ 
+      'projectData': serializer.data,
+      'databaseFile': database
+    }, status=200)
+  
   return Response({ 
-    'projectData': serializer.data,
-    'databaseFile': database
+    'message': "Nenhum arquivo de Database encontrado"
   }, status=200)
 
 @api_view(['GET'])

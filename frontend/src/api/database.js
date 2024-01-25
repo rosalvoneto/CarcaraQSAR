@@ -3,8 +3,8 @@
 export const sendDatabase = async (projectID, selectedFile, separator, accessToken) => {
 
   const formData = new FormData();
-  formData.append('file', selectedFile);
   formData.append('project_id', projectID);
+  formData.append('file', selectedFile);
   formData.append('separator', separator);
 
   let response = await fetch(
