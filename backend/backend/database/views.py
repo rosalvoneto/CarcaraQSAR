@@ -1,6 +1,5 @@
+from io import StringIO
 import pandas as pd
-from io import StringIO, BytesIO
-import base64
 import json
 
 from rest_framework.response import Response
@@ -8,9 +7,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404
 
-from project_management.serializers import ProjectSerializer
+from .utils import getBoxPlotImage, getHistogramImage
 
 from project_management.models import Project
 from database.models import Database
@@ -103,108 +102,94 @@ def getDatabase_view(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getProjectName_view(request):
-
+def getVariables_view(request):
   project_id = request.GET.get('project_id')
-  print(f"ID DO PROJETO: {project_id}")
+
   project = get_object_or_404(Project, id=project_id)
+  database = project.database
 
-  name = project.name
+  if(database):
+    if(database.file):
 
-  return Response({ 'projectName': name })
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      file_content = database.file.read().decode('utf-8')
+      data_dataframe = pd.read_csv(
+        StringIO(file_content), 
+        sep=database.file_separator
+      )
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getProject_view(request):
+      variables = data_dataframe.columns.tolist()
 
-  project_id = request.GET.get('project_id')
-  project = get_object_or_404(Project, id=project_id)
-  serializer = ProjectSerializer(project)
-
-  return Response({ 
-    'projectData': serializer.data
-  }, status=200)
+      return JsonResponse({
+        'variables': variables
+      })
+  
+  return JsonResponse({
+    'message': 'Database não encontrado!',
+  })
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getHistogram_view(request):
 
   project_id = request.GET.get('project_id')
-  values = request.GET.get('values').split(',')
+  variable = request.GET.get('variable')
   divisions_bins = request.GET.get('divisions')
-
-  float_values = [float(value) for value in values]
-  print(float_values)
-
-  # Fazer cálculo de Histograma
-  array = np.array(float_values)
-  # Escolha o número de intervalos (bins)
   num_bins = int(divisions_bins)
-  # Calcule o histograma
-  hist, bins = np.histogram(array, bins=num_bins)
-  # Calcule a amplitude dos intervalos
-  amplitude_intervals = bins[1] - bins[0]
 
-  # Crie o histograma usando Matplotlib
-  fig, ax = plt.subplots()
-  ax.bar(bins[:-1], hist, width=amplitude_intervals, edgecolor='black')
+  project = get_object_or_404(Project, id=project_id)
+  database = project.database
 
-  ax.set_title('Histograma')
-  ax.set_xlabel('Valores')
-  ax.set_ylabel('Frequência')
+  if(database):
+    if(database.file):
 
-  # Renderize a figura
-  canvas = FigureCanvasAgg(fig)
-  canvas.draw()
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      file_content = database.file.read().decode('utf-8')
+      data_dataframe = pd.read_csv(
+        StringIO(file_content), 
+        sep=database.file_separator
+      )
 
-  # Obtenha os bytes da imagem
-  buffer = BytesIO()
-  canvas.print_png(buffer)
-  buffer.seek(0)
+      # Faz o filtro de acordo com a variável
+      variable_data = data_dataframe[variable].values
+      variable_array = np.array(variable_data)
 
-  # Leia os bytes da imagem
-  image_bytes = buffer.read()
-  image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+      histogram_image = getHistogramImage(variable_array, num_bins)
 
-  # Limpeza da exibição
-  plt.clf()
-
-  return Response({ 'imageInBase64': image_base64}, status=200)
+      return Response({ 'imageInBase64': histogram_image }, status=200)
+  return Response({ 
+    'message': 'Database não encontrado!',
+  })
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getBoxPlot_view(request):
   
   project_id = request.GET.get('project_id')
-  values = request.GET.get('values').split(',')
+  variable = request.GET.get('variable')
 
-  float_values = [float(value) for value in values]
-  print(float_values)
+  project = get_object_or_404(Project, id=project_id)
+  database = project.database
 
-  # Fazer cálculo de BoxPlot e retornar a imagem
-  # Dados de exemplo (substitua isso pelos seus dados)
-  array = np.array(float_values)
+  if(database):
+    if(database.file):
 
-  # Crie o box plot
-  fig, ax = plt.subplots()
-  ax.boxplot(array)
-  ax.set_title('Box Plot')
-  ax.set_xlabel('Valores')
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      file_content = database.file.read().decode('utf-8')
+      data_dataframe = pd.read_csv(
+        StringIO(file_content), 
+        sep=database.file_separator
+      )
 
-  # Renderize a figura usando FigureCanvasAgg
-  canvas = FigureCanvasAgg(fig)
-  canvas.draw()
+      # Faz o filtro de acordo com a variável
+      variable_data = data_dataframe[variable].values
+      variable_array = np.array(variable_data)
 
-  # Obtenha os bytes da imagem
-  buffer = BytesIO()
-  canvas.print_png(buffer)
-  buffer.seek(0)
+      boxPlot_image = getBoxPlotImage(variable_array)
 
-  # Converta a imagem para base64
-  image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+      return Response({ 'imageInBase64': boxPlot_image }, status=200)
 
-  # Limpeza da figura
-  plt.clf()
+  return Response({ 
+    'message': 'Database não encontrado!',
+  }, status=200)
 
-  # Retorne a resposta como JSON
-  return Response({'imageInBase64': image_base64})

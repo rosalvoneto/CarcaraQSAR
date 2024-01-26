@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from .serializers import ProjectSerializer
 
 from user.models import User
 from .models import Project
@@ -171,3 +172,15 @@ def deleteProject_view(request, project_id):
   object.delete()
 
   return JsonResponse({'message': 'Projeto excluído com sucesso!'})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getProject_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  serializer = ProjectSerializer(project)
+
+  return Response({ 
+    'projectData': serializer.data
+  }, status=200)

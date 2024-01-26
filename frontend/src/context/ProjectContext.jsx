@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import AuthContext from './AuthContext';
 
-import { getProject } from '../api/database';
+import { getProject } from '../api/project';
 
 const ProjectContext = createContext();
 export default ProjectContext;

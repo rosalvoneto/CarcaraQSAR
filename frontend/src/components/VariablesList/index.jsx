@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './styles.module.css';
 
-export function VariablesList({ variablesNames, onChange }) {
+export function VariablesList({ variablesNames, onChangeVariable }) {
 
   const [selectedVariable, setSelectedVariable] = useState(0);
 
-  const updateSelectedVariable = (index) => {
+  const updateSelectedVariable = (index, variableName) => {
     setSelectedVariable(index);
-    onChange(index);
+    onChangeVariable(variableName);
   }
 
   return(
@@ -27,7 +27,7 @@ export function VariablesList({ variablesNames, onChange }) {
               <li 
                 key={index}
                 className={classNames}
-                onClick={() => updateSelectedVariable(index)}
+                onClick={() => updateSelectedVariable(index, variableName)}
               >
                 { variableName }
               </li>

@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 import { Header } from '../../components/Header';
 
 import { ProgressBar } from '../../components/ProgressBar';
-import { projectName } from '../../settings';
 
 import { Graph } from '../../components/Graph';
 import { RadionInput } from '../../components/RadioInput';
@@ -13,12 +12,12 @@ import Button from '../../components/Button';
 import { VariablesList } from '../../components/VariablesList';
 
 import { useLocation, useParams } from 'react-router-dom';
-import { getBoxPlot, getHistogram, getProject } from '../../api/database';
+import { getBoxPlot, getHistogram, getVariables } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
-import { InlineInput } from '../../components/InlineInput';
+import ProjectContext from '../../context/ProjectContext';
 
-import { convertStringToCSVMatrix, transporMatriz } from '../../utils';
+import { InlineInput } from '../../components/InlineInput';
 
 export const options = [
   "MinMaxScaler",
@@ -43,6 +42,7 @@ export const optionsDescriptions = [
 export function PreProcessing({ index }) {
 
   const { authTokens } = useContext(AuthContext);
+  const { projectDetails } = useContext(ProjectContext);
   const { projectID } = useParams();
 
   const href = '/pre-processing';
@@ -58,84 +58,85 @@ export function PreProcessing({ index }) {
     }
   }
 
-  const [option, setOption] = useState(options[0]);
-  const [project, setProject] = useState(null);
+  // Primeira página do Pré-processing
   const [variablesNames, setVariablesNames] = useState([]);
-  const [matrix, setMatrix] = useState([]);
-  
+  const [variable, setVariable] = useState("");
+
   const [histogram, setHistogram] = useState(null);
   const [divisions, setDivisions] = useState(20);
   const [boxPlot, setBoxPlot] = useState(null);
-  const [indexChoosenVariable, setIndexChoosenVariable] = useState(0);
 
-  const getGraphs = (indexOfMatrix) => {
-    getHistogram(projectID, 'name', authTokens.access, matrix[indexOfMatrix], divisions)
+  // Segunda página do Pré-processing
+  const [option, setOption] = useState(options[0]);
+
+  const getGraphs = () => {
+    // Resgata o Histograma
+    getHistogram(projectID, variable, divisions, authTokens.access)
     .then((response) => {
-
-      const imagemBase64 = response.imageInBase64;
+      const histogram = response.imageInBase64;
       // Cria a URL da imagem a partir da string Base64
-      const urlImagem = `data:image/png;base64,${imagemBase64}`;
-      setHistogram(urlImagem);
+      const histogramImage = `data:image/png;base64,${histogram}`;
+      setHistogram(histogramImage);
     })
     .catch((error) => {
       console.log(error);
     })
 
-    getBoxPlot(projectID, 'name', authTokens.access, matrix[indexOfMatrix])
+    // Resgata o BoxPlot
+    getBoxPlot(projectID, variable, authTokens.access)
     .then((response) => {
-
-      const imagemBase64 = response.imageInBase64;
+      const boxPlot = response.imageInBase64;
       // Cria a URL da imagem a partir da string Base64
-      const urlImagem = `data:image/png;base64,${imagemBase64}`;
-      setBoxPlot(urlImagem);
+      const boxPlotImage = `data:image/png;base64,${boxPlot}`;
+      setBoxPlot(boxPlotImage);
     })
     .catch((error) => {
       console.log(error);
     })
   }
 
+  const clearGraphs = () => {
+    setHistogram(null);
+    setBoxPlot(null);
+  } 
+
+  const onChangeVariable = (index, variableName) => {
+    clearGraphs();
+    // Setar variável escolhida
+    setVariable(variableName);
+    // Recuperar os gráficos
+    getGraphs();
+  }
+
   useEffect(() => {
-    getProject(projectID, authTokens.access)
+    // Recuperar Database
+    getVariables(projectID, authTokens.access)
     .then((response) => {
-      console.log(response);
-      setProject(response);
+      if(response.variables) {
+        // Salvar nomes das variáveis
+        setVariablesNames(response.variables);
+      }
     })
     .catch((error) => {
       console.log(error);
-    })
+    })  
   }, [])
 
   useEffect(() => {
-    if(project) {
-      let matrix = convertStringToCSVMatrix(project.databaseFile, ',');
-      setVariablesNames(matrix[0]);
-
-      matrix.splice(0, 1);      
-      const tMatrix = transporMatriz(matrix);
-      setMatrix(tMatrix);
-
-      getGraphs(0);
-    }
-  }, [project])
-
-  const onChangeVariable = (index) => {
-    getGraphs(index);
-    setIndexChoosenVariable(index);
-  }
+    // Setar variável escolhida
+    setVariable(variablesNames[0]);
+  }, [variablesNames])
 
   useEffect(() => {
-    getGraphs(indexChoosenVariable);
-  }, [divisions])
-
-
+    // Recuperar os gráficos
+    getGraphs();
+  }, [variable])
 
   if(pageNumber == 0) {
     return(
       <>
         <Header 
-          title={
-            project && project.projectData.name
-          }
+          title={projectDetails.name}
         />
         <ProgressBar 
           progressNumber={progress}
@@ -144,8 +145,8 @@ export function PreProcessing({ index }) {
 
         <div className={styles.firstContainer}>
           <VariablesList
-            onChange={(index) => onChangeVariable(index)}
             variablesNames={variablesNames}
+            onChangeVariable={onChangeVariable}
           />
 
           <div className={styles.graphsContainer}>
@@ -162,8 +163,9 @@ export function PreProcessing({ index }) {
           <div>
             <InlineInput 
               name={"Divisões para o Histograma: "} type={'number'}
-              separator={divisions}
-              setSeparator={setDivisions}
+              value={divisions}
+              setValue={setDivisions}
+              width={65}
             />
           </div>
 
@@ -189,7 +191,7 @@ export function PreProcessing({ index }) {
     return(
       <>
         <Header 
-          title={projectName}
+          title={projectDetails.name}
         />
         <ProgressBar 
           progressNumber={progress}

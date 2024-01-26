@@ -11,7 +11,7 @@ import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
 
-import { getDatabase, getProjectName, sendDatabase } from '../../api/database';
+import { getDatabase, sendDatabase } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -131,7 +131,6 @@ export function Database() {
             pageNumber: 0
           }}
           side={'right'}
-          action={() => true}
         />
       </div>
     </>

@@ -42,5 +42,10 @@ urlpatterns = [
     'delete_project/<int:project_id>', 
     views.deleteProject_view, 
     name="delete_project"
+  ),
+  path(
+    '', 
+    views.getProject_view, 
+    name="get_project"
   )
 ]
