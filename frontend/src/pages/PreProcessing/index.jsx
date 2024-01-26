@@ -60,7 +60,7 @@ export function PreProcessing({ index }) {
 
   // Primeira página do Pré-processing
   const [variablesNames, setVariablesNames] = useState([]);
-  const [variable, setVariable] = useState("");
+  const [variable, setVariable] = useState(null);
 
   const [histogram, setHistogram] = useState(null);
   const [divisions, setDivisions] = useState(20);
@@ -69,43 +69,40 @@ export function PreProcessing({ index }) {
   // Segunda página do Pré-processing
   const [option, setOption] = useState(options[0]);
 
-  const getGraphs = () => {
+  const pullHistogram = async () => {
+    setHistogram(null);
     // Resgata o Histograma
-    getHistogram(projectID, variable, divisions, authTokens.access)
-    .then((response) => {
-      const histogram = response.imageInBase64;
-      // Cria a URL da imagem a partir da string Base64
-      const histogramImage = `data:image/png;base64,${histogram}`;
-      setHistogram(histogramImage);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+    const response = await getHistogram(
+      projectID, variable, divisions, authTokens.access
+    );
+    const histogram = response.imageInBase64;
+    // Cria a URL da imagem a partir da string Base64
+    const histogramImage = `data:image/png;base64,${histogram}`;
 
-    // Resgata o BoxPlot
-    getBoxPlot(projectID, variable, authTokens.access)
-    .then((response) => {
-      const boxPlot = response.imageInBase64;
-      // Cria a URL da imagem a partir da string Base64
-      const boxPlotImage = `data:image/png;base64,${boxPlot}`;
-      setBoxPlot(boxPlotImage);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+    return histogramImage;
   }
 
-  const clearGraphs = () => {
-    setHistogram(null);
+  const pullBoxPlot = async () => {
     setBoxPlot(null);
-  } 
+    // Resgata o BoxPlot
+    const response = await getBoxPlot(projectID, variable, authTokens.access);
+    const boxPlot = response.imageInBase64;
+    // Cria a URL da imagem a partir da string Base64
+    const boxPlotImage = `data:image/png;base64,${boxPlot}`;
+
+    return boxPlotImage;
+  }
+  
+  const getGraphs = async () => {
+    const histogramImage = await pullHistogram();
+    setHistogram(histogramImage)
+    const boxPlotImage = await pullBoxPlot();
+    setBoxPlot(boxPlotImage);
+  }
 
   const onChangeVariable = (index, variableName) => {
-    clearGraphs();
     // Setar variável escolhida
     setVariable(variableName);
-    // Recuperar os gráficos
-    getGraphs();
   }
 
   useEffect(() => {
@@ -128,8 +125,10 @@ export function PreProcessing({ index }) {
   }, [variablesNames])
 
   useEffect(() => {
-    // Recuperar os gráficos
-    getGraphs();
+    if(variable) {
+      // Recuperar os gráficos
+      getGraphs();
+    }
   }, [variable])
 
   if(pageNumber == 0) {
@@ -150,21 +149,14 @@ export function PreProcessing({ index }) {
           />
 
           <div className={styles.graphsContainer}>
-            {
-              histogram &&
-              <Graph name={"Histograma"} image={histogram}/>
-            }
-            {
-              boxPlot &&
-              <Graph name={"Box-Plot"} image={boxPlot}/>
-            }
+            <Graph name={"Histograma"} image={histogram}/>
+            <Graph name={"Box-Plot"} image={boxPlot}/>
           </div>
 
           <div>
             <InlineInput 
               name={"Divisões para o Histograma: "} type={'number'}
               value={divisions}
-              setValue={setDivisions}
               width={65}
             />
           </div>
