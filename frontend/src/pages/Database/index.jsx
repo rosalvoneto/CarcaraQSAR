@@ -184,7 +184,7 @@ export function Database() {
         
         <Button 
           name={'Próximo'} 
-          URL={`/${projectID}/pre-processing`}
+          URL={`/pre-processing`}
           stateToPass={{
             pageNumber: 0
           }}

@@ -165,12 +165,12 @@ export function PreProcessing({ index }) {
         
         <Button 
           name={'Voltar'} 
-          URL={`/${projectID}/database`}
+          URL={`/database`}
           side={'left'}
         />
         <Button 
           name={'Próximo'} 
-          URL={`/${projectID}/pre-processing`} 
+          URL={`/pre-processing`} 
           stateToPass={{
             pageNumber: 1
           }}
@@ -207,7 +207,7 @@ export function PreProcessing({ index }) {
 
         <Button 
           name={'Voltar'} 
-          URL={`/${projectID}/pre-processing`}
+          URL={`/pre-processing`}
           stateToPass={{
             pageNumber: 0
           }}

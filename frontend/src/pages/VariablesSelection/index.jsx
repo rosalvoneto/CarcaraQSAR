@@ -76,7 +76,7 @@ export default function VariablesSelection() {
       
       <Button 
         name={'Voltar'} 
-        URL={'/pre-processing'}
+        URL={`/pre-processing`}
         stateToPass={{
           pageNumber: 1
         }}
@@ -84,7 +84,7 @@ export default function VariablesSelection() {
       />
       <Button 
         name={'Próximo'} 
-        URL={'/training'} 
+        URL={`/training`} 
         stateToPass={{
           pageNumber: 0
         }}

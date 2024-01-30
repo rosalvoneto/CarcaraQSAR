@@ -1,19 +1,23 @@
 
 import { useNavigate } from 'react-router-dom';
 
+import { useContext } from 'react';
 import styles from './styles.module.css';
+
+import ProjectContext from '../../context/ProjectContext';
 
 export default function Button({ name, URL, stateToPass, side, action }) {
 
+  const { projectDetails } = useContext(ProjectContext);
   const navigate = useNavigate();
-  console.log(URL);
+
   const actions = () => {
     let toNavigate = true;
     if(action) {
       toNavigate = action();
     }
     if(toNavigate) {
-      navigate(URL, { state: stateToPass });
+      navigate(`/${projectDetails.id}${URL}`, { state: stateToPass });
     }
   }
 
