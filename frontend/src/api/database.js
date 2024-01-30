@@ -127,13 +127,14 @@ export const getBoxPlot = async (projectID, variable, accessToken) => {
 }
 
 // Converte Base de dados de SMILES para CSV
-export const convertDatabase = async (selectedFile, accessToken) => {
+export const convertDatabase = async (projectID, selectedFile, accessToken) => {
 
   const formData = new FormData();
+  formData.append('project_id', projectID);
   formData.append('file', selectedFile);
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/send`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/convert`, {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)

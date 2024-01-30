@@ -1,6 +1,8 @@
 import styles from './styles.module.css';
 
-const UploadComponent = ({ selectedFile, setSelectedFile }) => {
+const UploadComponent = ({ 
+  name, description, accept, selectedFile, setSelectedFile 
+}) => {
 
   const handleFileChange = (event) => {
     // Atualiza o estado com o arquivo selecionado
@@ -22,17 +24,17 @@ const UploadComponent = ({ selectedFile, setSelectedFile }) => {
         }
       </label>
       <input 
-        id='fileUpload'
+        id={name}
         type="file"
-        accept=".txt, .csv"
+        accept={accept}
         onChange={handleFileChange}
         className={styles.fileInput} 
       />
       <button 
-        onClick={() => document.getElementById('fileUpload').click()}
+        onClick={() => document.getElementById(name).click()}
         className={styles.uploadContainer}
       >
-        Escolher arquivo (CSV, TXT)
+        {description}
       </button>
     </>
   );

@@ -29,8 +29,11 @@ export function Database() {
   const { projectDetails } = useContext(ProjectContext);
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedSmilesFile, setSelectedSmilesFile] = useState(null);
+  
   const [transpose, setTranspose] = useState(false);
   const [separator, setSeparator] = useState(',');
+
   const [database, setDatabase] = useState({
     database: null,
     name: null,
@@ -38,20 +41,15 @@ export function Database() {
     columns: 0
   });
 
+  // Enviar Database para o backend
   const saveDatabase = async () => {
     if(selectedFile) {
-      // Enviar Database para o backend
-
-      // Se o arquivo for SMILES
-      if(true) {
-        convertDatabase(selectedFile, authTokens.access);
-      }
+      console.log("ARQUIVO CSV OU TXT!");
 
       const isSaved = await sendDatabase(
         projectID, selectedFile, separator, authTokens.access
       );
       return isSaved;
-
     } else {
       return false;
     }
@@ -61,7 +59,7 @@ export function Database() {
     if(database.database) {
       return true;
     } else {
-      alert('Você não escolheu nenhum arquivo TXT ou CSV');
+      alert('Você não escolheu nenhum arquivo');
       return false;
     }
   }
@@ -104,6 +102,27 @@ export function Database() {
     }
   }, [selectedFile]);
 
+  useEffect(() => {
+    if(selectedSmilesFile) {
+      console.log("ARQUIVO SMILES!");
+      convertDatabase(projectID, selectedSmilesFile, authTokens.access)
+      .then((response) => {
+        console.log(response.data);
+
+        // Salvar Database
+        setDatabase({
+          database: response.data,
+          name: null,
+          lines: 0,
+          columns: 0
+        });
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
+  }, [selectedSmilesFile])
+
   return(
     <>
       <Header 
@@ -122,8 +141,18 @@ export function Database() {
         />
 
         <UploadComponent
+          name={'uploadTXTorCSV'}
+          description={'Escolher arquivo (CSV, TXT)'}
+          accept={".txt, .csv"}
           setSelectedFile={setSelectedFile}
           selectedFile={selectedFile}
+          />
+        <UploadComponent
+          name={'uploadSmiles'}
+          description={'Escolher arquivo SMILES'}
+          accept={".txt, .csv, .smi"}
+          setSelectedFile={setSelectedSmilesFile}
+          selectedFile={selectedSmilesFile}
         />
 
         <div className={styles.tableInfomation}>

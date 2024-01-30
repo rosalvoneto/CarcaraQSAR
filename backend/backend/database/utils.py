@@ -4,8 +4,6 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from io import StringIO, BytesIO
 import base64
 
-from padelpy import from_smiles
-
 def getHistogramImage(array, num_bins):
   # Fazer cálculo de Histograma
   # Calcule o histograma
@@ -65,19 +63,10 @@ def getBoxPlotImage(array):
   return boxPlot_base64
 
 def get_line_descriptors(akeys, adescriptors):
-  l = ''
-  for k in akeys:
-    if len(l) == 0:
-      l = adescriptors[k]
+  list_descriptors = ''
+  for key in akeys:
+    if len(list_descriptors) == 0:
+      list_descriptors = adescriptors[key]
     else:
-      l = l + ';' + adescriptors[k]
-  return l
-
-def convertSmilesToCSV():
-  smiles = "N1(C(=O)c2c(C1=O)cccc2)CC1N(C(=O)N(CC)CC)CCc2c1cccc2"
-  descriptors = from_smiles(smiles, 'output.csv')
-  print(descriptors)
-  keys = descriptors.keys()
-  print(keys)
-
-convertSmilesToCSV()
+      list_descriptors = list_descriptors + ',' + adescriptors[key]
+  return list_descriptors
