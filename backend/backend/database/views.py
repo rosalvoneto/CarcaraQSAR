@@ -27,8 +27,7 @@ import numpy as np
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def convertDatabase_view(request):
-
+def convertAndSendDatabase_view(request):
   print("Convertendo o SMILES")
 
   if 'file' in request.FILES:
@@ -55,14 +54,16 @@ def convertDatabase_view(request):
         keys = keys & new_keys
     print("KEYS:", keys)
 
+    file_name = 'output.csv'
+
     # Cria arquivo CSV
-    with open('output.csv', 'w', newline='') as csv_file:
+    with open(file_name, 'w', newline='') as csv_file:
       csv_writer = csv.writer(csv_file)
       
       # Escreve o cabeçalho
       csv_writer.writerow(keys)
       
-      # Escreve os dados
+      # Escreve os dados do CSV
       for line_smiles in list_file_content:
         print("Analisando valores:", line_smiles)
 
@@ -73,36 +74,35 @@ def convertDatabase_view(request):
     
 
       # Cria um DataFrame do Pandas com o conteúdo do arquivo
-      data_dataframe = pd.read_csv('output.csv')
-      
-      # Transforma para o formato Json
-      data_string = data_dataframe.to_json(orient='records')
-      data_dictionary = json.loads(data_string)
-
+      data_dataframe = pd.read_csv(file_name)
       rows, columns = data_dataframe.shape
+      
+      # # Transforma para o formato Json
+      # data_string = data_dataframe.to_json(orient='records')
+      # data_dictionary = json.loads(data_string)
 
       # Ler o arquivo.csv e o atribui a uma variável (para salvar no Database)
-      with open('output.csv', 'rb') as arquivo:
-        conteudo_arquivo = arquivo.read()
+      with open(file_name, 'rb') as arquivo:
+        file_content = arquivo.read()
 
+      # Salvar database com as informações
       database = Database().create(
-        name='output.csv',
+        name=file_name,
         file=None,
         file_separator=',',
         lines=rows,
         columns=columns
       )
-      database.file.save('output.csv', ContentFile(conteudo_arquivo))
+      database.file.save(file_name, ContentFile(file_content))
       project.database = database
 
       # Salvar no backend
       project.save()
 
       return JsonResponse({
-        'message': f"{'output.csv'} enviado!",
-        'data': data_dictionary,
+        'message': f"Arquivo convertido e salvo no Database!"
       })
-  return JsonResponse({ "message": "ERROR!" })
+  return JsonResponse({ "message": "Nenhum arquivo encontrado!" })
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

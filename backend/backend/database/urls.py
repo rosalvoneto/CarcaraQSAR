@@ -7,5 +7,9 @@ urlpatterns = [
   path('variables', views.getVariables_view, name="get_variables"),
   path('histogram', views.getHistogram_view, name="histogram"),
   path('box_plot', views.getBoxPlot_view, name="box_plot"),
-  path('convert', views.convertDatabase_view, name="convert_database"),
+  path(
+    'convert_and_send', 
+    views.convertAndSendDatabase_view, 
+    name="convert_and_send_database"
+  ),
 ]

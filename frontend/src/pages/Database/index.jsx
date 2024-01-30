@@ -11,7 +11,7 @@ import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
 
-import { convertDatabase, getDatabase, sendDatabase } from '../../api/database';
+import { convertAndSendDatabase, getDatabase, sendDatabase } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -44,8 +44,6 @@ export function Database() {
   // Enviar Database para o backend
   const saveDatabase = async () => {
     if(selectedFile) {
-      console.log("ARQUIVO CSV OU TXT!");
-
       const isSaved = await sendDatabase(
         projectID, selectedFile, separator, authTokens.access
       );
@@ -82,6 +80,13 @@ export function Database() {
 
   useEffect(() => {
     if(selectedFile) {
+      setDatabase({
+        database: null,
+        name: null,
+        lines: 0,
+        columns: 0
+      });
+
       saveDatabase()
       .then((isSaved) => {
         if(isSaved) {
@@ -104,18 +109,26 @@ export function Database() {
 
   useEffect(() => {
     if(selectedSmilesFile) {
-      console.log("ARQUIVO SMILES!");
-      convertDatabase(projectID, selectedSmilesFile, authTokens.access)
+      setDatabase({
+        database: null,
+        name: null,
+        lines: 0,
+        columns: 0
+      });
+      
+      convertAndSendDatabase(projectID, selectedSmilesFile, authTokens.access)
       .then((response) => {
-        console.log(response.data);
-
-        // Salvar Database
-        setDatabase({
-          database: response.data,
-          name: null,
-          lines: 0,
-          columns: 0
-        });
+        // Resgatar informações do novo Database
+        getDatabase(projectID, authTokens.access, transpose)
+        .then((response) => {
+          if(response.database) {
+            // Salvar Database
+            setDatabase(response);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
       })
       .catch((error) => {
         console.log(error)
