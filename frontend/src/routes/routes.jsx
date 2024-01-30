@@ -76,28 +76,28 @@ export const Routes = () => {
                   </DefaultPage>
                 }
               />
-              <Route path="/variables-selection" 
+              <Route path="/:projectID/variables-selection" 
                 element={
                   <DefaultPage>
                     <VariablesSelection />
                   </DefaultPage>
                 } 
               />
-              <Route path="/training" 
+              <Route path="/:projectID/training" 
                 element={
                   <DefaultPage>
                     <Training />
                   </DefaultPage>
                 } 
               />
-              <Route path="/results" 
+              <Route path="/:projectID/results" 
                 element={
                   <DefaultPage>
                     <Results />
                   </DefaultPage>
                 } 
               />
-              <Route path="/outliers" 
+              <Route path="/:projectID/outliers" 
                 element={
                   <DefaultPage>
                     <Outliers />

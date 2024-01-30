@@ -2,9 +2,15 @@
 import { CaretRight } from '@phosphor-icons/react';
 
 import styles from './styles.module.css';
+
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+
+import ProjectContext from '../../../context/ProjectContext'; 
 
 export function Block({ state, useImage, progress }) {
+
+  const { projectDetails } = useContext(ProjectContext);
 
   const activeText = state.index <= progress;
   const activeImage = state.index < progress;
@@ -28,7 +34,10 @@ export function Block({ state, useImage, progress }) {
   const handleTo = (state) => {
     console.log(state);
     
-    navigate(state.href, { state: state.stateToPass });
+    navigate(
+      `/${projectDetails.id}${state.href}`, 
+      { state: state.stateToPass }
+    );
   }
 
   return(
