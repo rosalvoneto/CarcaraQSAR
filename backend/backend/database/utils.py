@@ -74,7 +74,7 @@ def get_line_descriptors(akeys, adescriptors):
   return l
 
 def convertSmilesToCSV():
-  smiles = "N1(C(=O)c2c(C1=O)cccc2)CC1N(C(=O)N(CC)CC)CCc2c1cccc2\nC1COCC2=C1C(=C(S2)NC(=O)C3=CC=CC=C3C(F)(F)F)C(=O)N4CCC(CC4)(F)F,474.10"
+  smiles = "N1(C(=O)c2c(C1=O)cccc2)CC1N(C(=O)N(CC)CC)CCc2c1cccc2"
   descriptors = from_smiles(smiles, 'output.csv')
   print(descriptors)
   keys = descriptors.keys()
