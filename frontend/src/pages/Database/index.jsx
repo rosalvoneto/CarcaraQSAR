@@ -11,7 +11,7 @@ import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
 
-import { getDatabase, sendDatabase } from '../../api/database';
+import { convertDatabase, getDatabase, sendDatabase } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -41,9 +41,25 @@ export function Database() {
   const saveDatabase = async () => {
     if(selectedFile) {
       // Enviar Database para o backend
-      const isSaved = await sendDatabase(projectID, selectedFile, separator, authTokens.access);
+
+      // Se o arquivo for SMILES
+      if(true) {
+        convertDatabase(selectedFile, authTokens.access);
+      }
+
+      const isSaved = await sendDatabase(
+        projectID, selectedFile, separator, authTokens.access
+      );
       return isSaved;
 
+    } else {
+      return false;
+    }
+  }
+
+  const nextButtonAction = () => {
+    if(database.database) {
+      return true;
     } else {
       alert('Você não escolheu nenhum arquivo TXT ou CSV');
       return false;
@@ -131,6 +147,7 @@ export function Database() {
             pageNumber: 0
           }}
           side={'right'}
+          action={nextButtonAction}
         />
       </div>
     </>

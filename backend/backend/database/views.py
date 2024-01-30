@@ -193,3 +193,16 @@ def getBoxPlot_view(request):
     'message': 'Database não encontrado!',
   }, status=200)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def convertDatabase_view(request):
+
+  if 'file' in request.FILES:
+    uploaded_file = request.FILES.get('file')
+
+    # Cria uma lista das linhas do arquivo
+    file_content = uploaded_file.read().decode('utf-8')
+    list_file_content = file_content.split('\n')
+
+    return JsonResponse({ "message": f"{uploaded_file.name} enviado!"})
+  return JsonResponse({ "message": "Arquivo não enviado!" })
