@@ -144,7 +144,7 @@ export const convertAndSendDatabase = async (
       body: formData,
   })
 
-  let dataResponse = await response.json();
+  let dataResponse = await response.text();
   if(response.status == 200) {
 
     console.log(dataResponse);

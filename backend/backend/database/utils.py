@@ -64,9 +64,10 @@ def getBoxPlotImage(array):
 
 def get_line_descriptors(akeys, adescriptors):
   list_descriptors = ''
-  for key in akeys:
+  len_keys = len(akeys)
+  for i in range(len_keys):
     if len(list_descriptors) == 0:
-      list_descriptors = adescriptors[key]
+      list_descriptors = adescriptors[akeys[i]]
     else:
-      list_descriptors = list_descriptors + ',' + adescriptors[key]
+      list_descriptors = list_descriptors + ',' + adescriptors[akeys[i]]
   return list_descriptors

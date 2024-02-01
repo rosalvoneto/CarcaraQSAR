@@ -53,6 +53,22 @@ export function Database() {
     }
   }
 
+  // Fazer download automático do CSV que vem do Backend
+  const handleDownload = async (response) => {
+    try {
+      // Crie um link temporário e clique nele para iniciar o download
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'output.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error);
+    }
+  };
+
   const nextButtonAction = () => {
     if(database.database) {
       return true;
@@ -118,17 +134,18 @@ export function Database() {
       
       convertAndSendDatabase(projectID, selectedSmilesFile, authTokens.access)
       .then((response) => {
+        // Fazer o download do arquivo CSV
+        return handleDownload(response);
+      })
+      .then((response) => {
         // Resgatar informações do novo Database
-        getDatabase(projectID, authTokens.access, transpose)
-        .then((response) => {
-          if(response.database) {
-            // Salvar Database
-            setDatabase(response);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
+        return getDatabase(projectID, authTokens.access, transpose)
+      })
+      .then((response) => {
+        if(response.database) {
+          // Salvar Database
+          setDatabase(response);
+        }
       })
       .catch((error) => {
         console.log(error)

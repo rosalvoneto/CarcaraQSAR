@@ -3,6 +3,10 @@ import pandas as pd
 import json
 import csv
 
+from django.http import FileResponse
+import os
+
+from django.utils.encoding import smart_str
 from django.core.files.base import ContentFile
 
 from padelpy import from_smiles
@@ -11,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 
 from .utils import get_line_descriptors, getBoxPlotImage, getHistogramImage
@@ -52,7 +56,10 @@ def convertAndSendDatabase_view(request):
       else:
         new_keys = set(descriptors.keys())
         keys = keys & new_keys
-    print("KEYS:", keys)
+
+    keys = list(keys)
+    keys.append('ALVO')
+    print("Quantidade de chaves em comum:", len(keys))
 
     file_name = 'output.csv'
 
@@ -67,24 +74,24 @@ def convertAndSendDatabase_view(request):
       for line_smiles in list_file_content:
         print("Analisando valores:", line_smiles)
 
-        descriptors = from_smiles(line_smiles.split(',')[0])
+        line_smiles_split = line_smiles.split(',')
+
+        descriptors = from_smiles(line_smiles_split[0])
+        descriptors["ALVO"] = line_smiles_split[1]
+
         line_descriptors = get_line_descriptors(keys, descriptors)
 
-        csv_writer.writerow(line_descriptors.split(','))
-    
+        line_descriptors_split =line_descriptors.split(',')
+        print("Quantidade de descritores:", len(line_descriptors_split))
 
+        csv_writer.writerow(line_descriptors_split)
+    
       # Cria um DataFrame do Pandas com o conteúdo do arquivo
       data_dataframe = pd.read_csv(file_name)
       rows, columns = data_dataframe.shape
-      
-      # # Transforma para o formato Json
-      # data_string = data_dataframe.to_json(orient='records')
-      # data_dictionary = json.loads(data_string)
-
       # Ler o arquivo.csv e o atribui a uma variável (para salvar no Database)
       with open(file_name, 'rb') as arquivo:
         file_content = arquivo.read()
-
       # Salvar database com as informações
       database = Database().create(
         name=file_name,
@@ -95,13 +102,16 @@ def convertAndSendDatabase_view(request):
       )
       database.file.save(file_name, ContentFile(file_content))
       project.database = database
-
-      # Salvar no backend
+      # Salvar modificações no backend
       project.save()
 
-      return JsonResponse({
-        'message': f"Arquivo convertido e salvo no Database!"
-      })
+      # Abra o arquivo e retorne como uma resposta de arquivo
+      print("Antes de abrir")
+      with open(file_name, 'rb') as file:
+        response = HttpResponse(file.read(), content_type='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename="output.csv"'
+        return response
+
   return JsonResponse({ "message": "Nenhum arquivo encontrado!" })
 
 @api_view(['POST'])
@@ -172,6 +182,8 @@ def getDatabase_view(request):
       # Faz a transposição se necessário
       if transposed:
         data_dataframe = data_dataframe.T
+      
+      print(data_dataframe)
       
       # Transforma para o formato Json
       data_string = data_dataframe.to_json(orient='records')
