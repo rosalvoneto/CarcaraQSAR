@@ -64,6 +64,11 @@ export function DataTable({
             <tbody className={styles.body}>
               {
                 matrix.map((register, index) => {
+                  
+                  if(index == 0 && transpose) {
+                    return undefined;
+                  }
+
                   return(
                     <tr 
                       className={styles.bodyRegister}

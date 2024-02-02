@@ -5,6 +5,7 @@ import csv
 
 from django.http import FileResponse
 import os
+from collections import OrderedDict
 
 from django.utils.encoding import smart_str
 from django.core.files.base import ContentFile
@@ -180,14 +181,20 @@ def getDatabase_view(request):
       data_dataframe = data_dataframe.head()
 
       # Faz a transposição se necessário
+      columns = data_dataframe.columns
       if transposed:
         data_dataframe = data_dataframe.T
-      
+        data_dataframe.insert(0, 'columns', columns)
+
+        # Gerar nomes de coluna com a lógica 'a1', 'a2', 'a3', ...
+        columns_names = ['a' + str(i) for i in range(1, len(data_dataframe.columns) + 1)]
+        data_dataframe.columns = columns_names
+
       print(data_dataframe)
-      
+
       # Transforma para o formato Json
-      data_string = data_dataframe.to_json(orient='records')
-      data_dictionary = json.loads(data_string)
+      data_dictionary = data_dataframe.to_dict(orient='records')
+      print(data_dictionary)
 
       return JsonResponse({
         'database': data_dictionary,
