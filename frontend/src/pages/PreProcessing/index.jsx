@@ -12,7 +12,10 @@ import Button from '../../components/Button';
 import { VariablesList } from '../../components/VariablesList';
 
 import { useLocation, useParams } from 'react-router-dom';
-import { getBoxPlot, getHistogram, getVariables } from '../../api/database';
+import { 
+  getBoxPlot, getHistogram, getVariables, 
+  setNormalization 
+} from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -22,6 +25,7 @@ import { InlineInput } from '../../components/InlineInput';
 import HelpContainer from '../../components/HelpContainer';
 
 export const options = [
+  "NÃO APLICAR",
   "MinMaxScaler",
   "StandardScaler",
   "RobustScaler",
@@ -32,6 +36,7 @@ export const options = [
 ];
 
 export const optionsDescriptions = [
+  "Nenhuma mudança será aplicada no Database.",
   "O MinMaxScaler é um método de normalização que dimensiona os dados para um intervalo específico, geralmente entre 0 e 1. Isso é alcançado transformando os valores de tal forma que o valor mínimo se torna 0 e o valor máximo se torna 1, preservando a relação de proporção entre os dados originais.",
   "O StandardScaler é um método de normalização que transforma os dados de tal forma que eles tenham média zero e desvio padrão igual a 1. Isso é útil para dados que seguem uma distribuição normal e ajuda a eliminar o viés de escala nos algoritmos de aprendizado de máquina.",
   "O RobustScaler é uma técnica de normalização que é resistente a outliers. Ele dimensiona os dados, tornando-os robustos a valores discrepantes, usando estatísticas robustas, como a mediana e o intervalo interquartil.",
@@ -67,9 +72,6 @@ export function PreProcessing({ index }) {
   const [histogram, setHistogram] = useState(null);
   const [divisions, setDivisions] = useState(20);
   const [boxPlot, setBoxPlot] = useState(null);
-
-  // Segunda página do Pré-processing
-  const [option, setOption] = useState(options[0]);
 
   const pullHistogram = async () => {
     setHistogram(null);
@@ -133,6 +135,13 @@ export function PreProcessing({ index }) {
     }
   }, [variable])
 
+  // Segunda página do Pré-processing
+  const [option, setOption] = useState(options[0]);
+
+  const normalize = () => {
+    return setNormalization(projectID, option, authTokens.access);
+  }
+
   if(pageNumber == 0) {
     return(
       <>
@@ -195,11 +204,17 @@ export function PreProcessing({ index }) {
 
         <div className={styles.secondContainer}>
 
-          <RadionInput 
-            name={"Normalização dos dados"}
-            options={options} 
-            setOption={setOption}
-          />
+          <div>
+            <RadionInput 
+              name={"Normalização dos dados"}
+              options={options} 
+              setOption={setOption}
+            />
+            {
+              option != options[0] && 
+              <a onClick={normalize}>Normalizar</a>
+            }
+          </div>
           <div className={styles.informationContainer}>
             <p className={styles.information}>
               {optionsDescriptions[options.indexOf(option)]}
@@ -220,6 +235,7 @@ export function PreProcessing({ index }) {
           name={'Próximo'} 
           URL={`/variables-selection`}
           side={'right'}
+          action={normalize}
         />
       </>
     )

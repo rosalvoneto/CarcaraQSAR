@@ -12,4 +12,9 @@ urlpatterns = [
     views.convertAndSendDatabase_view, 
     name="convert_and_send_database"
   ),
+  path(
+    'set_normalization', 
+    views.setNormalization_view, 
+    name="set_normalization"
+  )
 ]

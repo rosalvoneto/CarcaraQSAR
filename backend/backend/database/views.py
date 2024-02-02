@@ -22,7 +22,7 @@ from django.shortcuts import get_object_or_404
 from .utils import get_line_descriptors, getBoxPlotImage, getHistogramImage
 
 from project_management.models import Project
-from database.models import Database
+from database.models import Database, Normalization
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -301,3 +301,24 @@ def getBoxPlot_view(request):
   return Response({ 
     'message': 'Database não encontrado!',
   }, status=200)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def setNormalization_view(request):
+
+  project_id = request.POST.get('project_id')
+  normalization_type = request.POST.get('normalization')
+
+  project = get_object_or_404(Project, id=project_id)
+
+  if(project.database):
+    if(project.database.normalization):
+      project.database.normalization.update(normalization_type, False)
+    else:
+      normalization = Normalization.objects.create(name=normalization_type)
+      project.database.normalization = normalization
+      project.save()
+
+    return Response({
+      'message': f'Normalização {normalization_type} salva!'
+    }, status=200)

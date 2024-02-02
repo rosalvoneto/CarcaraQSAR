@@ -154,3 +154,33 @@ export const convertAndSendDatabase = async (
   }
   return dataResponse;
 }
+
+// Salva tipo de normalização escolhida
+export const setNormalization = async (
+  projectID, normalization, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+  formData.append('normalization', normalization);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/set_normalization`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    return true;
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    return false;
+  }
+}
