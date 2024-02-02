@@ -19,6 +19,8 @@ import ProjectContext from '../../context/ProjectContext';
 
 import { InlineInput } from '../../components/InlineInput';
 
+import HelpContainer from '../../components/HelpContainer';
+
 export const options = [
   "MinMaxScaler",
   "StandardScaler",
@@ -159,6 +161,7 @@ export function PreProcessing({ index }) {
               value={divisions}
               width={65}
             />
+            <HelpContainer />
           </div>
 
         </div>
