@@ -140,7 +140,7 @@ export function PreProcessing({ index }) {
   // Segunda página do Pré-processing
   const [choosenNormalization, setChoosenNormalization] = useState();
 
-  const saveSettings = () => {
+  const nextButtonAction = () => {
     const response = setNormalizationSettings(
       projectID, choosenNormalization, authTokens.access
     );
@@ -252,7 +252,7 @@ export function PreProcessing({ index }) {
           name={'Próximo'} 
           URL={`/variables-selection`}
           side={'right'}
-          action={saveSettings}
+          action={nextButtonAction}
         />
       </>
     )

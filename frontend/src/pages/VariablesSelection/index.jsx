@@ -53,7 +53,7 @@ export default function VariablesSelection() {
     }
   }
 
-  const saveSettings = async() => {
+  const nextButtonAction = async() => {
     const response = await setTrainingSettings(
       projectID, choosenAlgorithm, removeVariablesConstants, authTokens.access
     );
@@ -136,7 +136,7 @@ export default function VariablesSelection() {
           pageNumber: 0
         }}
         side={'right'}
-        action={saveSettings}
+        action={nextButtonAction}
       />
     </>
   )
