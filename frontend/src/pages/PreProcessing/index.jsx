@@ -13,8 +13,10 @@ import { VariablesList } from '../../components/VariablesList';
 
 import { useLocation, useParams } from 'react-router-dom';
 import { 
-  getBoxPlot, getDatabase, getHistogram, getNormalization, getVariables, 
-  setNormalization 
+  getVariables, getBoxPlot, getHistogram,
+  getDatabase,
+  getNormalizationSettings,
+  setNormalizationSettings
 } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
@@ -24,7 +26,7 @@ import { InlineInput } from '../../components/InlineInput';
 
 import HelpContainer from '../../components/HelpContainer';
 
-export const options = [
+export const normalizations = [
   "NÃO APLICAR",
   "MinMaxScaler",
   "StandardScaler",
@@ -35,7 +37,7 @@ export const options = [
   "FunctionTransformer",
 ];
 
-export const optionsDescriptions = [
+export const normalizationsDescriptions = [
   "Nenhuma mudança será aplicada no Database.",
   "O MinMaxScaler é um método de normalização que dimensiona os dados para um intervalo específico, geralmente entre 0 e 1. Isso é alcançado transformando os valores de tal forma que o valor mínimo se torna 0 e o valor máximo se torna 1, preservando a relação de proporção entre os dados originais.",
   "O StandardScaler é um método de normalização que transforma os dados de tal forma que eles tenham média zero e desvio padrão igual a 1. Isso é útil para dados que seguem uma distribuição normal e ajuda a eliminar o viés de escala nos algoritmos de aprendizado de máquina.",
@@ -136,11 +138,25 @@ export function PreProcessing({ index }) {
   }, [variable])
 
   // Segunda página do Pré-processing
-  const [option, setOption] = useState(options[0]);
+  const [choosenNormalization, setChoosenNormalization] = useState();
 
-  const normalize = () => {
-    return setNormalization(projectID, option, authTokens.access);
+  const saveSettings = () => {
+    const response = setNormalizationSettings(
+      projectID, choosenNormalization, authTokens.access
+    );
+    return response;
   }
+
+  useEffect(() => {
+    getNormalizationSettings(projectID, authTokens.access)
+    .then(response => {
+      console.log(response.normalization);
+      setChoosenNormalization(response.normalization);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, [])
 
   if(pageNumber == 0) {
     return(
@@ -207,17 +223,18 @@ export function PreProcessing({ index }) {
           <div>
             <RadionInput 
               name={"Normalização dos dados"}
-              options={options} 
-              setOption={setOption}
+              options={normalizations} 
+              setOption={setChoosenNormalization}
+              firstOption={choosenNormalization}
             />
             {
-              option != options[0] && 
-              <a onClick={normalize}>Normalizar</a>
+              choosenNormalization != normalizations[0] && 
+              <a onClick={() => {}}>Normalizar</a>
             }
           </div>
           <div className={styles.informationContainer}>
             <p className={styles.information}>
-              {optionsDescriptions[options.indexOf(option)]}
+              {normalizationsDescriptions[normalizations.indexOf(choosenNormalization)]}
             </p>
           </div>
 
@@ -235,7 +252,7 @@ export function PreProcessing({ index }) {
           name={'Próximo'} 
           URL={`/variables-selection`}
           side={'right'}
-          action={normalize}
+          action={saveSettings}
         />
       </>
     )

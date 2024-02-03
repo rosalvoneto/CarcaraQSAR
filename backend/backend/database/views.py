@@ -302,42 +302,56 @@ def getBoxPlot_view(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def setNormalization_view(request):
+def setNormalizationSettings_view(request):
 
   project_id = request.POST.get('project_id')
-  normalization_type = request.POST.get('normalization')
+  normalization = request.POST.get('normalization')
 
   project = get_object_or_404(Project, id=project_id)
 
   if(project.database):
     if(project.database.normalization):
-      project.database.normalization.update(normalization_type, False)
+      project.database.normalization.update(normalization, False)
     else:
-      normalization = Normalization.objects.create(name=normalization_type)
-      project.database.normalization = normalization
+      normalization_instance = Normalization.objects.create(name=normalization)
+      project.database.normalization = normalization_instance
       project.database.save()
 
     return Response({
-      'message': f'Normalização {normalization_type} salva!'
+      'message': f'Normalização {normalization} salva!'
     }, status=200)
+  return Response({
+    'message': 'Não existe Database associado ao projeto!'
+  }, status=200)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getNormalization_view(request):
+def getNormalizationSettings_view(request):
 
   project_id = request.GET.get('project_id')
   project = get_object_or_404(Project, id=project_id)
 
   if(project.database):
     if(project.database.normalization):
+
       data = {
         'normalization': project.database.normalization.name,
         'applied': project.database.normalization.applied
       }
       return Response(data, status=200)
-    return Response({
-      'message': 'Esse Database não tem Normalização!'
-    }, status=200)
+
+    else:
+      
+      normalization = Normalization.objects.create(name="NÃO APLICAR")
+      project.database.normalization = normalization
+      project.database.save()
+
+      data = {
+        'normalization': project.database.normalization.name,
+        'applied': project.database.normalization.applied
+      }
+      return Response(data, status=200)
+
   return Response({
-    'message': 'Esse projeto não tem database!'
+    'message': 'Não existe Database associado ao projeto!'
   }, status=200)

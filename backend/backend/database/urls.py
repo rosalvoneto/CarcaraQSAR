@@ -13,13 +13,13 @@ urlpatterns = [
     name="convert_and_send_database"
   ),
   path(
-    'set_normalization', 
-    views.setNormalization_view, 
-    name="set_normalization"
+    'set_normalization_settings', 
+    views.setNormalizationSettings_view, 
+    name="set_normalization_settings"
   ),
   path(
-    'get_normalization', 
-    views.getNormalization_view, 
-    name="get_normalization"
+    'get_normalization_settings', 
+    views.getNormalizationSettings_view, 
+    name="get_normalization_settings"
   ),
 ]

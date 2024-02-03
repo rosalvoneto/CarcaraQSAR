@@ -156,7 +156,7 @@ export const convertAndSendDatabase = async (
 }
 
 // Salva tipo de normalização escolhida
-export const setNormalization = async (
+export const setNormalizationSettings = async (
   projectID, normalization, accessToken
 ) => {
 
@@ -165,7 +165,7 @@ export const setNormalization = async (
   formData.append('normalization', normalization);
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/set_normalization`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/set_normalization_settings`, {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
@@ -186,7 +186,7 @@ export const setNormalization = async (
 }
 
 // Resgata tipo de normalização escolhida
-export const getNormalization = async (
+export const getNormalizationSettings = async (
   projectID, accessToken
 ) => {
 
@@ -194,7 +194,7 @@ export const getNormalization = async (
   formData.append('project_id', projectID);
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/get_normalization?project_id=${projectID}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/get_normalization_settings?project_id=${projectID}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
