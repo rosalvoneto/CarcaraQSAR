@@ -16,5 +16,10 @@ urlpatterns = [
     'set_normalization', 
     views.setNormalization_view, 
     name="set_normalization"
-  )
+  ),
+  path(
+    'get_normalization', 
+    views.getNormalization_view, 
+    name="get_normalization"
+  ),
 ]

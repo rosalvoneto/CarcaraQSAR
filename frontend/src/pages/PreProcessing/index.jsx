@@ -13,7 +13,7 @@ import { VariablesList } from '../../components/VariablesList';
 
 import { useLocation, useParams } from 'react-router-dom';
 import { 
-  getBoxPlot, getHistogram, getVariables, 
+  getBoxPlot, getDatabase, getHistogram, getNormalization, getVariables, 
   setNormalization 
 } from '../../api/database';
 

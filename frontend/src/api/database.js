@@ -184,3 +184,30 @@ export const setNormalization = async (
     return false;
   }
 }
+
+// Resgata tipo de normalização escolhida
+export const getNormalization = async (
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/get_normalization?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}

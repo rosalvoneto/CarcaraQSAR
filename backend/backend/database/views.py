@@ -33,7 +33,7 @@ import numpy as np
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def convertAndSendDatabase_view(request):
-  print("Convertendo o SMILES")
+  print("Convertendo o arquivo SMILES")
 
   if 'file' in request.FILES:
     uploaded_file = request.FILES.get('file')
@@ -107,7 +107,6 @@ def convertAndSendDatabase_view(request):
       project.save()
 
       # Abra o arquivo e retorne como uma resposta de arquivo
-      print("Antes de abrir")
       with open(file_name, 'rb') as file:
         response = HttpResponse(file.read(), content_type='application/force-download')
         response['Content-Disposition'] = 'attachment; filename="output.csv"'
@@ -187,21 +186,20 @@ def getDatabase_view(request):
         data_dataframe.insert(0, 'columns', columns)
 
         # Gerar nomes de coluna com a lógica 'a1', 'a2', 'a3', ...
-        columns_names = ['a' + str(i) for i in range(1, len(data_dataframe.columns) + 1)]
+        columns_names = [
+          'a' + str(i) for i in range(1, len(data_dataframe.columns) + 1)
+        ]
         data_dataframe.columns = columns_names
-
-      print(data_dataframe)
 
       # Transforma para o formato Json
       data_dictionary = data_dataframe.to_dict(orient='records')
-      print(data_dictionary)
 
       return JsonResponse({
         'database': data_dictionary,
         'fileSeparator': database.file_separator,
         'name': database.name,
         'lines': database.lines,
-        'columns': database.columns
+        'columns': database.columns,
       })
   
   return JsonResponse({
@@ -317,8 +315,29 @@ def setNormalization_view(request):
     else:
       normalization = Normalization.objects.create(name=normalization_type)
       project.database.normalization = normalization
-      project.save()
+      project.database.save()
 
     return Response({
       'message': f'Normalização {normalization_type} salva!'
     }, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getNormalization_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  if(project.database):
+    if(project.database.normalization):
+      data = {
+        'normalization': project.database.normalization.name,
+        'applied': project.database.normalization.applied
+      }
+      return Response(data, status=200)
+    return Response({
+      'message': 'Esse Database não tem Normalização!'
+    }, status=200)
+  return Response({
+    'message': 'Esse projeto não tem database!'
+  }, status=200)

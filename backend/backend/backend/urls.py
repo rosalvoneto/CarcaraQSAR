@@ -7,4 +7,5 @@ urlpatterns = [
     path('project/', include('project_management.urls')),
     path('user/', include('user.urls')),
     path('database/', include('database.urls')),
+    path('training/', include('training.urls')),
 ]

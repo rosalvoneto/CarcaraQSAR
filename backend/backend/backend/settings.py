@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'project_management',
     'database',
+    'training',
 
     'django.contrib.admin',
     'django.contrib.auth',
