@@ -2,17 +2,39 @@ from django.db import models
 
 from project_management.models import Project
 
+
+
+
+
 class Algorithm(models.Model):
   # Campo de escolha para o algoritmo
   ALGORITHM_CHOICES = [
     ('random_forest', 'Random Forest'),
-    ('svm', 'Support Vector Machine (SVM)'),
-    ('linear_regression', 'Linear Regression'),
+    ('linear_regression', 'Regressão linear'),
+    ('logistic_regression', 'Regressão logística'),
+    ('svm', 'Support Vector Machines (SVM)'),
   ]
-  name = models.CharField(max_length=200, unique=True, choices=ALGORITHM_CHOICES)
+  name = models.CharField(max_length=200, choices=ALGORITHM_CHOICES)
+  parameters = models.JSONField(default=dict)
+
+  def create(self, name, parameters):
+    # Cria uma instância de Algorithm com base no nome fornecido e parâmetros
+    algorithm = Algorithm.objects.create(
+      name=name,
+      parameters=parameters
+    )
+    return algorithm
+  
+  def update(self, name, parameters):
+    self.name = name
+    self.parameters = parameters
+    self.save()
 
   def __str__(self):
     return self.name
+
+
+
 
 class RandomForest(Algorithm):
   num_trees = models.IntegerField()
@@ -24,6 +46,9 @@ class SVM(Algorithm):
 
 class LinearRegression(Algorithm):
   regularization = models.FloatField()
+
+
+
 
 class Training(models.Model):
   # Para o treinamento

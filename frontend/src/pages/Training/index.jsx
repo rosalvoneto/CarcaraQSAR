@@ -12,6 +12,8 @@ import { useLocation, useParams } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 
+import { getTrainingSettings, setTrainingSettings } from '../../api/training';
+
 export const bioAlgorithms = [
   "Random Forest",
   "Regressão linear",
@@ -47,16 +49,23 @@ export default function Training() {
 
   const [choosenBioAlgorithm, setChoosenBioAlgorithm] = useState();
 
-  // useEffect(() => {
-  //   getTrainingSettings(projectID, authTokens.access)
-  //   .then((response) => {
-  //     console.log(response.new_algorithm);
-  //     setChoosenBioAlgorithm(response.new_algorithm);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   })
-  // }, []);
+  const nextButtonAction = async() => {
+    const response = await setTrainingSettings(
+      projectID, choosenBioAlgorithm, authTokens.access
+    );
+    return response;
+  }
+
+  useEffect(() => {
+    getTrainingSettings(projectID, authTokens.access)
+    .then((response) => {
+      console.log(response.algorithm);
+      setChoosenBioAlgorithm(response.algorithm);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }, []);
 
   if(pageNumber == 0) {
     return(
@@ -97,6 +106,7 @@ export default function Training() {
             pageNumber: 1
           }}
           side={'right'}
+          action={nextButtonAction}
         />
       </>
     )

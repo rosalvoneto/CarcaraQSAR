@@ -21,7 +21,7 @@ from django.shortcuts import get_object_or_404
 
 from project_management.models import Project
 from database.models import Database, Normalization
-from .models import Training, VariablesSelection
+from .models import Algorithm, RandomForest, Training, VariablesSelection
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -89,4 +89,67 @@ def setVariablesSettings_view(request):
 
     return Response({
       'message': 'Seleção de variáveis criada!'
+    }, status=200)
+  
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getTrainingSettings_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  try:
+    training = project.training_set.get()
+
+    return Response({
+      'algorithm': training.algorithm.name,
+    }, status=200)
+
+  except Training.DoesNotExist:
+    algorithm = Algorithm.objects.create(
+      name="Random Forest",
+      parameters={}
+    )
+
+    training = Training.objects.create(
+      algorithm=algorithm,
+      project=project
+    )
+
+    return Response({
+      'algorithm': training.algorithm.name,
+    }, status=200)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def setTrainingSettings_view(request):
+
+  project_id = request.POST.get('project_id')
+  algorithm = request.POST.get('algorithm')
+
+  project = get_object_or_404(Project, id=project_id)
+  try:
+    training = project.training_set.get()
+    training.algorithm.update(
+      name=algorithm,
+      parameters={}
+    )
+
+    return Response({
+      'message': 'Treinamento alterado!'
+    }, status=200)
+
+  except Training.DoesNotExist:
+    algorithm = Algorithm.objects.create(
+      name=algorithm,
+      parameters={}
+    )
+
+    training = Training.objects.create(
+      algorithm=algorithm,
+      project=project
+    )
+
+    return Response({
+      'message': 'Treinamento criado!'
     }, status=200)
