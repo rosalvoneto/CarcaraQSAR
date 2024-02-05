@@ -18,6 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
+from .utils import random_forest
 
 from project_management.models import Project
 from database.models import Database, Normalization
@@ -155,4 +156,33 @@ def setTrainingSettings_view(request):
 
     return Response({
       'message': 'Treinamento criado!'
+    }, status=200)
+  
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def train_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  try:
+    if(project.database):
+      print("FILE:", project.database.file)
+
+      image_base64 = random_forest(project.database.file)
+      training = project.training_set.get()
+
+      return Response({
+        'message': 'Treinando!',
+        'imageInBase64': image_base64,
+      }, status=200)
+    
+    return Response({
+      'message': 'Não foi encontrado Database!',
+    }, status=200)
+
+  except Training.DoesNotExist:
+
+    return Response({
+      'message': 'Configurações de treinamento não foram encontradas!'
     }, status=200)

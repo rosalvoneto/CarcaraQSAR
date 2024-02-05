@@ -12,7 +12,11 @@ import { useLocation, useParams } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 
-import { getTrainingSettings, setTrainingSettings } from '../../api/training';
+import { 
+  getTrainingSettings, setTrainingSettings, train 
+} from '../../api/training';
+
+import { Graph } from '../../components/Graph'
 
 export const bioAlgorithms = [
   "Random Forest",
@@ -57,6 +61,8 @@ export default function Training() {
   const [choosenBioAlgorithm, setChoosenBioAlgorithm] = useState();
   const [algorithmParameters, setAlgorithmParameters] = useState({});
 
+  const [image, setImage] = useState(null)
+
   const changeParameters = (key, value) => {
     let values = algorithmParameters;
     values[key] = value;
@@ -72,11 +78,16 @@ export default function Training() {
     return response;
   }
 
-  const saveAndTraine = async() => {
+  const saveAndTrain = async() => {
     const response = await setTrainingSettings(
       projectID, choosenBioAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
     );
     if(response) {
+      const response = await train(projectID, authTokens.access)
+      const imageWithout = response.imageInBase64;
+      // Cria a URL da imagem a partir da string Base64
+      const image = `data:image/png;base64,${imageWithout}`;
+      setImage(image);
 
     }
     return false;
@@ -166,7 +177,9 @@ export default function Training() {
           }
         </div>
 
-        <a onClick={saveAndTraine}>Salvar e Treinar</a>
+        <a onClick={saveAndTrain}>Salvar e Treinar</a>
+
+        <Graph image={image} name={"Random"}/>
 
         <Button 
           name={'Voltar'} 

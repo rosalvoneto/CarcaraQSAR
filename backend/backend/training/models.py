@@ -56,9 +56,15 @@ class Training(models.Model):
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
+  def __str__(self):
+    return self.algorithm
+
 class VariablesSelection(models.Model):
   # Para seleção de variáveis
   algorithm = models.CharField(max_length=200)
   remove_constant_variables = models.BooleanField(default=False)
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+  def __str__(self):
+    return self.algorithm

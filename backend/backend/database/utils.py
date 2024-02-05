@@ -5,14 +5,14 @@ from io import StringIO, BytesIO
 import base64
 
 def getHistogramImage(array, num_bins):
-  # Fazer cálculo de Histograma
   # Calcule o histograma
   hist, bins = np.histogram(array, bins=num_bins)
   # Calcule a amplitude dos intervalos
   amplitude_intervals = bins[1] - bins[0]
 
-  # Crie o histograma usando Matplotlib
   fig, ax = plt.subplots()
+
+  # Crie o histograma usando Matplotlib
   ax.bar(bins[:-1], hist, width=amplitude_intervals, edgecolor='black')
 
   ax.set_title('Histograma')
@@ -38,9 +38,10 @@ def getHistogramImage(array, num_bins):
   return histogram_base64
 
 def getBoxPlotImage(array):
-  # Fazer cálculo de BoxPlot
-  # Crie o box plot
+  
   fig, ax = plt.subplots()
+
+  # Crie o box plot
   ax.boxplot(array)
   ax.set_title('Box Plot')
   ax.set_xlabel('Valores')
