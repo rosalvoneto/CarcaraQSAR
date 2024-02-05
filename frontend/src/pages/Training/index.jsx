@@ -28,6 +28,13 @@ export const bioAlgorithmsDescriptions = [
   "As Máquinas de Vetores de Suporte são algoritmos de aprendizado de máquina que são usados tanto em tarefas de classificação quanto de regressão. O SVM busca encontrar um hiperplano que melhor separa as classes em um espaço multidimensional, maximizando a margem entre as classes. Isso torna o SVM eficaz na classificação de dados não lineares e na manipulação de dados com dimensionalidade elevada. Além disso, os SVMs podem fazer uso de truques de kernel para transformar dados em espaços de características mais complexos e, assim, abordar problemas de classificação mais desafiadores."
 ]
 
+export const algorithmsParameters = [
+  ["numTrees", "maxDepth"],
+  ["regularization"],
+  [],
+  ["kernel", "CParameter"],
+]
+
 export default function Training() {
 
   const { authTokens } = useContext(AuthContext);
@@ -48,12 +55,31 @@ export default function Training() {
   }
 
   const [choosenBioAlgorithm, setChoosenBioAlgorithm] = useState();
+  const [algorithmParameters, setAlgorithmParameters] = useState({});
+
+  const changeParameters = (key, value) => {
+    let values = algorithmParameters;
+    values[key] = value;
+    setAlgorithmParameters(values);
+
+    console.log(algorithmParameters);
+  }
 
   const nextButtonAction = async() => {
     const response = await setTrainingSettings(
-      projectID, choosenBioAlgorithm, authTokens.access
+      projectID, choosenBioAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
     );
     return response;
+  }
+
+  const saveAndTraine = async() => {
+    const response = await setTrainingSettings(
+      projectID, choosenBioAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
+    );
+    if(response) {
+
+    }
+    return false;
   }
 
   useEffect(() => {
@@ -61,6 +87,9 @@ export default function Training() {
     .then((response) => {
       console.log(response.algorithm);
       setChoosenBioAlgorithm(response.algorithm);
+
+      console.log(response.parameters);
+      setAlgorithmParameters(response.parameters);
     })
     .catch(error => {
       console.log(error);
@@ -123,11 +152,21 @@ export default function Training() {
         />
 
         <div className={styles.parametersContainer}>
-
-          <InlineInput name={"Quantidade de árvores: "} type={'number'}/>
-          <InlineInput name={"Número de atributos por árvore: "} type={'number'}/>
-
+          {
+            algorithmsParameters[0].map(key => {
+              return(
+                <InlineInput 
+                  name={key} 
+                  type={'number'}
+                  setValue={(value) => changeParameters(key, value)}
+                  value={algorithmParameters[key]}
+                />
+              )
+            })
+          }
         </div>
+
+        <a onClick={saveAndTraine}>Salvar e Treinar</a>
 
         <Button 
           name={'Voltar'} 

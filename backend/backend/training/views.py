@@ -103,6 +103,7 @@ def getTrainingSettings_view(request):
 
     return Response({
       'algorithm': training.algorithm.name,
+      'parameters': training.algorithm.parameters
     }, status=200)
 
   except Training.DoesNotExist:
@@ -126,13 +127,15 @@ def setTrainingSettings_view(request):
 
   project_id = request.POST.get('project_id')
   algorithm = request.POST.get('algorithm')
+  parameters = request.POST.get('parameters')
+  parameters = json.loads(parameters)
 
   project = get_object_or_404(Project, id=project_id)
   try:
     training = project.training_set.get()
     training.algorithm.update(
       name=algorithm,
-      parameters={}
+      parameters=parameters
     )
 
     return Response({
@@ -142,7 +145,7 @@ def setTrainingSettings_view(request):
   except Training.DoesNotExist:
     algorithm = Algorithm.objects.create(
       name=algorithm,
-      parameters={}
+      parameters=parameters
     )
 
     training = Training.objects.create(
