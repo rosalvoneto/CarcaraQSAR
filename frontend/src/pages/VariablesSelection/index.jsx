@@ -9,7 +9,9 @@ import { RadionInput } from '../../components/RadioInput';
 import Button from '../../components/Button';
 import { Selector } from '../../components/Selector';
 import { Option } from '../../components/Selector/Option';
-import { getTrainingSettings, setTrainingSettings } from '../../api/training';
+
+import { getVariablesSettings, setVariablesSettings } from '../../api/training';
+
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 import { useParams } from 'react-router-dom';
@@ -42,32 +44,32 @@ export default function VariablesSelection() {
   const { projectID } = useParams();
 
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
-  const [removeVariablesConstants, setRemoveVariablesConstants] = useState();
+  const [removeConstantVariables, setRemoveConstantVariables] = useState();
   const [selectedVariables, setSelectedVariables] = useState([]);
 
-  const handleChangeRemoveVariablesConstants = (value) => {
+  const handleChangeRemoveConstantVariables = (value) => {
     if(value === optionsToRemoveVariables[0]) {
-      setRemoveVariablesConstants(true);
+      setRemoveConstantVariables(true);
     } else {
-      setRemoveVariablesConstants(false);
+      setRemoveConstantVariables(false);
     }
   }
 
   const nextButtonAction = async() => {
-    const response = await setTrainingSettings(
-      projectID, choosenAlgorithm, removeVariablesConstants, authTokens.access
+    const response = await setVariablesSettings(
+      projectID, choosenAlgorithm, removeConstantVariables, authTokens.access
     );
     return response;
   }
 
   useEffect(() => {
-    getTrainingSettings(projectID, authTokens.access)
+    getVariablesSettings(projectID, authTokens.access)
     .then(response => {
       console.log(response.algorithm);
       setChoosenAlgorithm(response.algorithm);
 
-      console.log(response.removeConstantsVariables);
-      setRemoveVariablesConstants(response.removeConstantsVariables);
+      console.log(response.removeConstantVariables);
+      setRemoveConstantVariables(response.removeConstantVariables);
     })
     .catch(error => {
       console.log(error);
@@ -98,9 +100,9 @@ export default function VariablesSelection() {
         <RadionInput 
           name={"Remover automaticamente variáveis constantes"}
           options={optionsToRemoveVariables}
-          setOption={handleChangeRemoveVariablesConstants}
+          setOption={handleChangeRemoveConstantVariables}
           firstOption={
-            removeVariablesConstants
+            removeConstantVariables
             ? optionsToRemoveVariables[0]
             : optionsToRemoveVariables[1]
           }

@@ -13,8 +13,7 @@ class Project(models.Model):
   modification_date = models.DateTimeField(auto_now=True)
   shared = models.BooleanField(default=False)
   isActive = models.BooleanField(default=True)
-
-  # Foreign Key
+  
   user = models.ForeignKey(User, on_delete=models.CASCADE)
 
   # Atributos avançados

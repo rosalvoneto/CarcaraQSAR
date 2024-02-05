@@ -5,10 +5,12 @@ import styles from './styles.module.css';
 
 import { projectName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import AuthContext from '../../context/AuthContext';
+import ProjectContext from '../../context/ProjectContext';
 
 export const bioAlgorithms = [
   "Random Forest",
@@ -26,6 +28,10 @@ export const bioAlgorithmsDescriptions = [
 
 export default function Training() {
 
+  const { authTokens } = useContext(AuthContext);
+  const { projectDetails } = useContext(ProjectContext);
+  const { projectID } = useParams();
+
   const href = '/training';
   const progress = 3;
 
@@ -39,11 +45,18 @@ export default function Training() {
     }
   }
 
-  const [option, setOption] = useState(bioAlgorithms[0]);
+  const [choosenBioAlgorithm, setChoosenBioAlgorithm] = useState();
 
-  useEffect(() => {
-    console.log(option)
-  }, [option]);
+  // useEffect(() => {
+  //   getTrainingSettings(projectID, authTokens.access)
+  //   .then((response) => {
+  //     console.log(response.new_algorithm);
+  //     setChoosenBioAlgorithm(response.new_algorithm);
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   })
+  // }, []);
 
   if(pageNumber == 0) {
     return(
@@ -61,11 +74,12 @@ export default function Training() {
           <RadionInput 
             name={"Aplicar algoritmo BioInspirado"}
             options={bioAlgorithms}
-            setOption={setOption}
+            setOption={setChoosenBioAlgorithm}
+            firstOption={choosenBioAlgorithm}
           />
           <div className={styles.informationContainer}>
             <p className={styles.information}>
-              {bioAlgorithmsDescriptions[bioAlgorithms.indexOf(option)]}
+              {bioAlgorithmsDescriptions[bioAlgorithms.indexOf(choosenBioAlgorithm)]}
             </p>
           </div>
 

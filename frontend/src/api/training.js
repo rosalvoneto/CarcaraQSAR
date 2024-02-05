@@ -1,13 +1,13 @@
 
-// Salva configurações de treinamento 
-export const setTrainingSettings = async (
-  projectID, algorithm, removeVariablesConstants, accessToken
+// Salva configurações da seleção de variáveis 
+export const setVariablesSettings = async (
+  projectID, algorithm, removeConstantVariables, accessToken
 ) => {
 
   const formData = new FormData();
   formData.append('project_id', projectID);
   formData.append('algorithm', algorithm);
-  formData.append('remove_variables_constants', removeVariablesConstants);
+  formData.append('remove_constant_variables', removeConstantVariables);
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/set_settings`, {
@@ -30,8 +30,8 @@ export const setTrainingSettings = async (
   }
 }
 
-// Resgata configurações de treinamento
-export const getTrainingSettings = async (
+// Resgata configurações da seleção de variáveis
+export const getVariablesSettings = async (
   projectID, accessToken
 ) => {
 
