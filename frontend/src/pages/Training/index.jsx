@@ -162,24 +162,34 @@ export default function Training() {
           subProgressNumber={pageNumber}
         />
 
-        <div className={styles.parametersContainer}>
-          {
-            algorithmsParameters[0].map(key => {
-              return(
-                <InlineInput 
-                  name={key} 
-                  type={'number'}
-                  setValue={(value) => changeParameters(key, value)}
-                  value={algorithmParameters[key]}
-                />
-              )
-            })
-          }
+        <div className={styles.contentContainer}>
+          <div className={styles.leftDiv}>
+            <div className={styles.parametersContainer}>
+              {
+                algorithmsParameters[0].map((key) => {
+                  return(
+                    <InlineInput 
+                      name={key} 
+                      type={'number'}
+                      setValue={(value) => changeParameters(key, value)}
+                      value={algorithmParameters[key]}
+                    />
+                  )
+                })
+              }
+            </div>
+            <a onClick={saveAndTrain}>Salvar e Treinar</a>
+          </div>
+          <div className={styles.rightDiv}>
+            <Graph 
+              image={image} 
+              name={
+                image && "Random Forest"
+              }
+            />
+          </div>
+
         </div>
-
-        <a onClick={saveAndTrain}>Salvar e Treinar</a>
-
-        <Graph image={image} name={"Random"}/>
 
         <Button 
           name={'Voltar'} 

@@ -162,6 +162,8 @@ def setTrainingSettings_view(request):
 @permission_classes([IsAuthenticated])
 def train_view(request):
 
+  print("Treinando...")
+
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
 

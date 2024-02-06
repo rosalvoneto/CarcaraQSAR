@@ -18,7 +18,9 @@ import base64
 
 def random_forest(csv_path):
 
-  data = pd.read_csv(csv_path)
+  data = pd.read_csv('Ant_KNN_BestFirst_28_65.csv')
+  print(data)
+
   loo = LeaveOneOut()
 
   # Normalizando
