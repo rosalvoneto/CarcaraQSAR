@@ -18,14 +18,14 @@ import {
 
 import { Graph } from '../../components/Graph'
 
-export const bioAlgorithms = [
+export const algorithms = [
   "Random Forest",
   "Regressão linear",
   "Regressão logística",
   "Support Vector Machines (SVM)",
 ];
 
-export const bioAlgorithmsDescriptions = [
+export const algorithmsDescriptions = [
   "O algoritmo Random Forest é um método de aprendizado de máquina que combina múltiplas árvores de decisão para tomar decisões mais precisas e estáveis. Ele funciona criando um conjunto de árvores de decisão, cada uma treinada em uma amostra aleatória dos dados e usando diferentes conjuntos de recursos. Ao fazer previsões, as árvores votam em conjunto, e a classe ou valor com mais votos é escolhido como a previsão final. Isso reduz a tendência de overfitting e melhora a robustez do modelo.",
   "A regressão linear é um algoritmo de aprendizado de máquina supervisionado usado para modelar a relação entre uma variável independente (ou mais) e uma variável dependente, geralmente de natureza contínua. Ele assume que a relação entre as variáveis pode ser representada por uma linha reta, daí o termo 'linear'. O objetivo é encontrar os coeficientes que melhor ajustam essa linha aos dados, de modo a minimizar a diferença entre as previsões do modelo e os valores reais.",
   "A regressão logística é um algoritmo de aprendizado de máquina usado para problemas de classificação, onde o objetivo é prever a probabilidade de uma instância pertencer a uma classe específica. Ele modela a relação entre variáveis independentes e a probabilidade de pertencer a uma classe usando uma função logística. A saída da regressão logística está no intervalo de 0 a 1 e pode ser interpretada como a probabilidade de pertencimento à classe.",
@@ -58,7 +58,7 @@ export default function Training() {
     }
   }
 
-  const [choosenBioAlgorithm, setChoosenBioAlgorithm] = useState();
+  const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [algorithmParameters, setAlgorithmParameters] = useState({});
 
   const [image, setImage] = useState(null)
@@ -73,14 +73,14 @@ export default function Training() {
 
   const nextButtonAction = async() => {
     const response = await setTrainingSettings(
-      projectID, choosenBioAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
+      projectID, choosenAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
     );
     return response;
   }
 
   const saveAndTrain = async() => {
     const response = await setTrainingSettings(
-      projectID, choosenBioAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
+      projectID, choosenAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
     );
     if(response) {
       const response = await train(projectID, authTokens.access)
@@ -97,7 +97,7 @@ export default function Training() {
     getTrainingSettings(projectID, authTokens.access)
     .then((response) => {
       console.log(response.algorithm);
-      setChoosenBioAlgorithm(response.algorithm);
+      setChoosenAlgorithm(response.algorithm);
 
       console.log(response.parameters);
       setAlgorithmParameters(response.parameters);
@@ -122,13 +122,13 @@ export default function Training() {
 
           <RadionInput 
             name={"Aplicar algoritmo"}
-            options={bioAlgorithms}
-            setOption={setChoosenBioAlgorithm}
-            firstOption={choosenBioAlgorithm}
+            options={algorithms}
+            setOption={setChoosenAlgorithm}
+            firstOption={choosenAlgorithm}
           />
           <div className={styles.informationContainer}>
             <p className={styles.information}>
-              {bioAlgorithmsDescriptions[bioAlgorithms.indexOf(choosenBioAlgorithm)]}
+              {algorithmsDescriptions[algorithms.indexOf(choosenAlgorithm)]}
             </p>
           </div>
 
