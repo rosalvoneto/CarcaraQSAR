@@ -59,7 +59,7 @@ def convertAndSendDatabase_view(request):
         keys = keys & new_keys
 
     keys = list(keys)
-    keys.append('ALVO')
+    keys.append('alvo')
     print("Quantidade de chaves em comum:", len(keys))
 
     file_name = 'output.csv'
@@ -78,7 +78,7 @@ def convertAndSendDatabase_view(request):
         line_smiles_split = line_smiles.split(',')
 
         descriptors = from_smiles(line_smiles_split[0])
-        descriptors["ALVO"] = line_smiles_split[1]
+        descriptors['alvo'] = line_smiles_split[1]
 
         line_descriptors = get_line_descriptors(keys, descriptors)
 

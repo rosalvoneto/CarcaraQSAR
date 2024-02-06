@@ -33,10 +33,10 @@ export const bioAlgorithmsDescriptions = [
 ]
 
 export const algorithmsParameters = [
-  ["numTrees", "maxDepth"],
-  ["regularization"],
+  [["numTrees", "Número de árvores"], ["maxDepth", "Profundidade"]],
+  [["regularization", "Regularização"]],
   [],
-  ["kernel", "CParameter"],
+  [["kernel", "Kernel"], ["CParameter", "Parâmetro C"]],
 ]
 
 export default function Training() {
@@ -169,10 +169,10 @@ export default function Training() {
                 algorithmsParameters[0].map((key) => {
                   return(
                     <InlineInput 
-                      name={key} 
+                      name={key[1]} 
                       type={'number'}
-                      setValue={(value) => changeParameters(key, value)}
-                      value={algorithmParameters[key]}
+                      setValue={(value) => changeParameters(key[0], value)}
+                      value={algorithmParameters[key[0]]}
                     />
                   )
                 })
