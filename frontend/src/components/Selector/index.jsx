@@ -1,19 +1,30 @@
 
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import styles from './styles.module.css';
 
 import { Option } from './Option';
 
-import { variablesNames } from '../../settings';
 import { CaretUp, CaretDown } from '@phosphor-icons/react';
 
+import { getVariables } from '../../api/database';
+
+import AuthContext from '../../context/AuthContext';
+import ProjectContext from '../../context/ProjectContext';
+
 export function Selector({ setSelectedVariables, selectedVariables }) {
+
+  const { authTokens } = useContext(AuthContext);
+  const { projectDetails } = useContext(ProjectContext);
+  const { projectID } = useParams();
 
   const width = 700;
 
   const [inputText, setInputText] = useState('');
   const [filteredOptions, setFilteredOptions] = useState([]);
+
+  const [variablesNames, setVariablesNames] = useState([]);
 
   const handleInputChange = (e) => {
     const searchText = e.target.value;
@@ -33,6 +44,20 @@ export function Selector({ setSelectedVariables, selectedVariables }) {
       }
     }
   }
+
+  useEffect(() => {
+    // Recuperar Database
+    getVariables(projectID, authTokens.access)
+    .then((response) => {
+      if(response.variables) {
+        // Salvar nomes das variáveis
+        setVariablesNames(response.variables);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })  
+  }, [])
 
   return (
     <div className={styles.container}>
