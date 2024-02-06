@@ -79,7 +79,7 @@ export default function VariablesSelection() {
   return(
     <>
       <Header 
-        title={projectName}
+        title={projectDetails.name}
       />
       <ProgressBar progressNumber={progress}/>
       <div className={styles.container}>

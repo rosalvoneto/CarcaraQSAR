@@ -1,4 +1,5 @@
-import { useLocation } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 
 import { Header } from '../../components/Header';
 import { ProgressBar } from '../../components/ProgressBar';
@@ -8,7 +9,7 @@ import { Tabs } from '../../components/Tabs';
 
 import styles from './styles.module.css';
 
-import { statesProgressBar, projectName } from '../../settings';
+import { statesProgressBar } from '../../settings';
 
 import Graph1 from '../../assets/results/graph1.png';
 import Graph2 from '../../assets/results/graph2.png';
@@ -23,7 +24,9 @@ import Graph9 from '../../assets/results/graph4.png';
 import Graph10 from '../../assets/results/graph5.png';
 
 import { DownloadSimple } from '@phosphor-icons/react';
-import { useState } from 'react';
+
+import AuthContext from '../../context/AuthContext';
+import ProjectContext from '../../context/ProjectContext';
 
 const graphsWithoutExternalSet = [Graph1, Graph2, Graph3, Graph4, Graph5];
 const graphsWithExternalSet = [Graph6, Graph7, Graph8, Graph9, Graph10];
@@ -34,6 +37,10 @@ const graphs = [
 ];
 
 export default function Results() {
+
+  const { authTokens } = useContext(AuthContext);
+  const { projectDetails } = useContext(ProjectContext);
+  const { projectID } = useParams();
 
   const href = '/results';
   const progress = 4;
@@ -57,7 +64,7 @@ export default function Results() {
   return(
     <>
       <Header 
-        title={projectName}
+        title={projectDetails.name}
       />
       <ProgressBar 
         progressNumber={progress}

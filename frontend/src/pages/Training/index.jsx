@@ -111,7 +111,7 @@ export default function Training() {
     return(
       <>
         <Header 
-          title={projectName}
+          title={projectDetails.name}
         />
         <ProgressBar 
           progressNumber={progress}
@@ -121,7 +121,7 @@ export default function Training() {
         <div className={styles.container}>
 
           <RadionInput 
-            name={"Aplicar algoritmo BioInspirado"}
+            name={"Aplicar algoritmo"}
             options={bioAlgorithms}
             setOption={setChoosenBioAlgorithm}
             firstOption={choosenBioAlgorithm}
@@ -155,7 +155,7 @@ export default function Training() {
     return(
       <>
         <Header
-          title={projectName} 
+          title={projectDetails.name} 
         />
         <ProgressBar 
           progressNumber={progress}

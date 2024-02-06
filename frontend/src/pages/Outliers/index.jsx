@@ -1,12 +1,20 @@
+import { useContext } from 'react';
+import { useParams } from 'react-router-dom';
+
 import { Header } from '../../components/Header';
 import { ProgressBar } from '../../components/ProgressBar';
+import Button from '../../components/Button';
 
 import styles from './styles.module.css';
 
-import { projectName } from '../../settings';
-import Button from '../../components/Button';
+import AuthContext from '../../context/AuthContext';
+import ProjectContext from '../../context/ProjectContext';
 
 export default function Outliers() {
+
+  const { authTokens } = useContext(AuthContext);
+  const { projectDetails } = useContext(ProjectContext);
+  const { projectID } = useParams();
 
   const href = '/outliers';
   const progress = 5;
@@ -15,7 +23,7 @@ export default function Outliers() {
   return(
     <>
       <Header 
-        title={projectName}
+        title={projectDetails.name}
       />
       <ProgressBar 
         progressNumber={progress}
