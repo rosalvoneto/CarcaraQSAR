@@ -48,9 +48,11 @@ def convertAndSendDatabase_view(request):
 
     # Retorna uma lista das características em comum de todas as moléculas
     keys = set()
+    list_descriptors = []
     for i in range(len(list_file_content)):
       print("Analisando características:", list_file_content[i])
       descriptors = from_smiles(list_file_content[i].split(',')[0])
+      list_descriptors.append(descriptors)
 
       if(i == 0):
         keys = set(descriptors.keys())

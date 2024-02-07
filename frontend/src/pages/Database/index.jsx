@@ -11,7 +11,9 @@ import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
 
-import { convertAndSendDatabase, getDatabase, sendDatabase } from '../../api/database';
+import { 
+  convertAndSendDatabase, getDatabase, sendDatabase 
+} from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -35,10 +37,10 @@ export function Database() {
   const [separator, setSeparator] = useState(',');
 
   const [database, setDatabase] = useState({
-    database: null,
+    database: undefined,
     name: null,
     lines: 0,
-    columns: 0
+    columns: 0,
   });
 
   // Enviar Database para o backend
@@ -124,14 +126,15 @@ export function Database() {
   }, [selectedFile]);
 
   useEffect(() => {
-    if(selectedSmilesFile) {
+    if(selectedSmilesFile !== null) {
+
       setDatabase({
         database: null,
         name: null,
         lines: 0,
         columns: 0
       });
-      
+
       convertAndSendDatabase(projectID, selectedSmilesFile, authTokens.access)
       .then((response) => {
         // Fazer o download do arquivo CSV

@@ -16,7 +16,7 @@ import {
   getTrainingSettings, setTrainingSettings, train 
 } from '../../api/training';
 
-import { Graph } from '../../components/Graph'
+import Loading from '../../components/Loading';
 
 export const algorithms = [
   "Random Forest",
@@ -61,7 +61,8 @@ export default function Training() {
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [algorithmParameters, setAlgorithmParameters] = useState({});
 
-  const [image, setImage] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
   const changeParameters = (key, value) => {
     let values = algorithmParameters;
@@ -79,8 +80,13 @@ export default function Training() {
   }
 
   const saveAndTrain = async() => {
+    setLoading(true);
+
     const response = await setTrainingSettings(
-      projectID, choosenAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
+      projectID, 
+      choosenAlgorithm, 
+      JSON.stringify(algorithmParameters), 
+      authTokens.access
     );
     if(response) {
       const response = await train(projectID, authTokens.access)
@@ -181,12 +187,9 @@ export default function Training() {
             <a onClick={saveAndTrain}>Salvar e Treinar</a>
           </div>
           <div className={styles.rightDiv}>
-            <Graph 
-              image={image} 
-              name={
-                image && "Random Forest"
-              }
-            />
+            {
+              loading && <Loading />
+            }
           </div>
 
         </div>

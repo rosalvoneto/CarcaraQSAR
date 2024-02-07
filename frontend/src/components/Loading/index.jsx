@@ -34,7 +34,7 @@ const Loading = () => {
         stroke='bold'
       />
       {
-        showTimer && <p>{seconds} segundos...</p>
+        showTimer && <p style={{ color: '#777777' }}>{seconds} segundos...</p>
       }
     </div>
   )

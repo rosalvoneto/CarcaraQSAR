@@ -17,11 +17,14 @@ export function DataTable({
   const { projectID } = useParams();
   const { authTokens } = useContext(AuthContext);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [matrix, setMatrix] = useState([]);
 
   useEffect(() => {
-    setLoading(true);
+
+    if(jsonDatabase === null) {
+      setLoading(true);
+    }
 
     // Transformar em matriz toda vez que tiver um novo Database no backend
     if(jsonDatabase) {
@@ -50,6 +53,8 @@ export function DataTable({
     })
 
   }, [transpose]);
+
+  useEffect(() => setLoading(false), []);
 
   if(loading) {
     return <Loading/>
