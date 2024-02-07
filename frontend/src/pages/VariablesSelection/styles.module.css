@@ -31,6 +31,19 @@
   background-color: var(--primary-color-1);
 }
 
+
+.selectorContainer {
+  display: flex;
+}
+
+.button {
+  padding: 5px;
+  border: 0px solid red;
+
+  margin-top: 26px;
+  height: 35px;
+}
+
 .selectedVariablesContainer {
   border: 0px solid red;
   padding: 5px 0;

@@ -4,7 +4,6 @@ import { ProgressBar } from '../../components/ProgressBar';
 
 import styles from './styles.module.css';
 
-import { projectName } from '../../settings';
 import { RadionInput } from '../../components/RadioInput';
 import Button from '../../components/Button';
 import { Selector } from '../../components/Selector';
@@ -15,6 +14,8 @@ import { getVariablesSettings, setVariablesSettings } from '../../api/training';
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 import { useParams } from 'react-router-dom';
+
+import { CaretUp, CaretDown } from '@phosphor-icons/react';
 
 export const algorithms = [
   "NÃO APLICAR",
@@ -45,7 +46,10 @@ export default function VariablesSelection() {
 
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [removeConstantVariables, setRemoveConstantVariables] = useState();
-  const [selectedVariables, setSelectedVariables] = useState([]);
+
+  const [listOfVariables, setListOfVariables] = useState([]);
+  const [temporaryListToRemove, setTemporaryListToRemove] = useState([]);
+  const [temporaryListToAdd, setTemporaryListToAdd] = useState([]);
 
   const handleChangeRemoveConstantVariables = (value) => {
     if(value === optionsToRemoveVariables[0]) {
@@ -60,6 +64,44 @@ export default function VariablesSelection() {
       projectID, choosenAlgorithm, removeConstantVariables, authTokens.access
     );
     return response;
+  }
+
+  const setValuesToTheListToRemove = (variableName, variableValue) => {
+    if(variableValue) {
+      // Adicionar a lista
+      if (!temporaryListToRemove.includes(variableName)) {
+        setTemporaryListToRemove(
+          [...temporaryListToRemove, variableName]
+        )
+      }
+    } else {
+      // Remover da lista
+      let newlist = temporaryListToRemove.filter(
+        item => item !== variableName
+      );
+      setTemporaryListToRemove(newlist);
+    }
+  }
+
+  const removeVariablesOfTheList = (variablesToRemove) => {
+    console.log("Variáveis para retirar:", variablesToRemove);
+
+    let newListOfVariables = listOfVariables.filter(variable => 
+      !variablesToRemove.includes(variable)
+    )
+    setListOfVariables(newListOfVariables);
+  }
+
+  const addVariablesToTheList = (variablesToAdd) => {
+    console.log("Variáveis para adicionar:", variablesToAdd);
+
+    let newListOfVariables = [...listOfVariables];
+    variablesToAdd.forEach(variableToAdd => {
+      if(!listOfVariables.includes(variableToAdd)) {
+        newListOfVariables.push(variableToAdd);
+      }
+    });
+    setListOfVariables(newListOfVariables);
   }
 
   useEffect(() => {
@@ -108,15 +150,37 @@ export default function VariablesSelection() {
           }
         />
 
-        <Selector 
-          selectedVariables={selectedVariables}
-          setSelectedVariables={setSelectedVariables}
-        />
+        <div className={styles.selectorContainer}>
+          <Selector 
+            selectedVariables={listOfVariables}
+            setSelectedVariables={setListOfVariables}
+
+            setTemporaryListToAdd={setTemporaryListToAdd}
+            temporaryListToAdd={temporaryListToAdd}
+          />
+          <a 
+            className={styles.button}
+            onClick={() => removeVariablesOfTheList(temporaryListToRemove)}
+          >
+            <CaretUp size={23}/>
+          </a>
+          <a 
+            className={styles.button}
+            onClick={() => addVariablesToTheList(temporaryListToAdd)}
+          >
+            <CaretDown size={23}/>
+          </a>
+        </div>
         <div className={styles.selectedVariablesContainer}>
           {
-            selectedVariables.map(selectedVariable => {
+            listOfVariables.map((variableName, index) => {
+              
               return(
-                <Option text={selectedVariable} />
+                <Option 
+                  key={index}
+                  name={variableName}
+                  onChangeState={setValuesToTheListToRemove}
+                />
               )
             })
           }

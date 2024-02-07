@@ -6,17 +6,18 @@ import styles from './styles.module.css';
 
 import { Option } from './Option';
 
-import { CaretUp, CaretDown } from '@phosphor-icons/react';
-
 import { getVariables } from '../../api/database';
 
 import AuthContext from '../../context/AuthContext';
-import ProjectContext from '../../context/ProjectContext';
 
-export function Selector({ setSelectedVariables, selectedVariables }) {
+export function Selector({ 
+  setSelectedVariables, 
+  selectedVariables, 
+  setTemporaryListToAdd,
+  temporaryListToAdd
+}) {
 
   const { authTokens } = useContext(AuthContext);
-  const { projectDetails } = useContext(ProjectContext);
   const { projectID } = useParams();
 
   const width = 700;
@@ -42,6 +43,23 @@ export function Selector({ setSelectedVariables, selectedVariables }) {
       if(selectedVariables.includes(filteredOptions[0]) == false) {
         setSelectedVariables([...selectedVariables, filteredOptions[0]]);
       }
+    }
+  }
+
+  const setValuesToTheListToAdd = (variableName, variableValue) => {
+    if(variableValue) {
+      // Adicionar a lista
+      if (!temporaryListToAdd.includes(variableName)) {
+        setTemporaryListToAdd(
+          [...temporaryListToAdd, variableName]
+        )
+      }
+    } else {
+      // Remover da lista
+      let newlist = temporaryListToAdd.filter(
+        item => item !== variableName
+      );
+      setTemporaryListToAdd(newlist);
     }
   }
 
@@ -76,12 +94,6 @@ export function Selector({ setSelectedVariables, selectedVariables }) {
 
           onKeyPress={handleKeyPress}
         />
-        <a className={styles.button}>
-          <CaretUp size={23}/>
-        </a>
-        <a className={styles.button}>
-          <CaretDown size={23}/>
-        </a>
       </div>
       
       {
@@ -93,7 +105,12 @@ export function Selector({ setSelectedVariables, selectedVariables }) {
           >
             {
               filteredOptions.map((option, index) => (
-                <Option text={option} active={index == 0 ? true : false}/>
+                <Option 
+                  key={index}
+                  name={option} 
+                  active={index == 0 ? true : false}
+                  onChangeState={setValuesToTheListToAdd}
+                />
               ))
             }
           </div>

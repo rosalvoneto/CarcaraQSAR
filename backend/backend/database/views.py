@@ -62,9 +62,9 @@ def convertAndSendDatabase_view(request):
 
     keys = list(keys)
     keys.append('alvo')
-    print("Quantidade de chaves em comum:", len(keys))
+    print("Quantidade de descritores:", len(keys))
 
-    file_name = 'output.csv'
+    file_name = uploaded_file.name
 
     # Cria arquivo CSV
     with open(file_name, 'w', newline='') as csv_file:
@@ -74,18 +74,13 @@ def convertAndSendDatabase_view(request):
       csv_writer.writerow(keys)
       
       # Escreve os dados do CSV
-      for line_smiles in list_file_content:
-        print("Analisando valores:", line_smiles)
+      for i, line_smiles in enumerate(list_file_content):
 
         line_smiles_split = line_smiles.split(',')
-
-        descriptors = from_smiles(line_smiles_split[0])
-        descriptors['alvo'] = line_smiles_split[1]
-
-        line_descriptors = get_line_descriptors(keys, descriptors)
+        list_descriptors[i]['alvo'] = line_smiles_split[1]
+        line_descriptors = get_line_descriptors(keys, list_descriptors[i])
 
         line_descriptors_split =line_descriptors.split(',')
-        print("Quantidade de descritores:", len(line_descriptors_split))
 
         csv_writer.writerow(line_descriptors_split)
     
