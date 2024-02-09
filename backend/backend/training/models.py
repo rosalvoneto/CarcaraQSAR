@@ -52,6 +52,7 @@ class LinearRegression(Algorithm):
 class Training(models.Model):
   # Para o treinamento
   algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
+  trained = models.BooleanField(default=False)
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 

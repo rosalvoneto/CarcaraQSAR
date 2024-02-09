@@ -110,7 +110,8 @@ def getTrainingSettings_view(request):
 
     return Response({
       'algorithm': training.algorithm.name,
-      'parameters': training.algorithm.parameters
+      'parameters': training.algorithm.parameters,
+      'trained': training.trained
     }, status=200)
 
   except Training.DoesNotExist:
@@ -121,12 +122,14 @@ def getTrainingSettings_view(request):
 
     training = Training.objects.create(
       algorithm=algorithm,
-      project=project
+      project=project,
+      trained=False
     )
 
     return Response({
       'algorithm': training.algorithm.name,
-      'parameters': training.algorithm.parameters
+      'parameters': training.algorithm.parameters,
+      'trained': training.trained
     }, status=200)
 
 @api_view(['POST'])
@@ -148,6 +151,9 @@ def setTrainingSettings_view(request):
       parameters=parameters
     )
 
+    training.trained = False
+    training.save()
+
     return Response({
       'message': 'Treinamento alterado!'
     }, status=200)
@@ -160,7 +166,8 @@ def setTrainingSettings_view(request):
 
     training = Training.objects.create(
       algorithm=algorithm,
-      project=project
+      project=project,
+      trained=False,
     )
 
     return Response({
@@ -181,7 +188,10 @@ def train_view(request):
       print("FILE:", project.database.file)
 
       image_base64 = random_forest(project.database.file)
+
       training = project.training_set.get()
+      training.trained = True
+      training.save()
 
       return Response({
         'message': 'O treinamento está finalizado!',

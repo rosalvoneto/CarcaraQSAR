@@ -58,11 +58,11 @@ export default function Training() {
     }
   }
 
-  const [choosenAlgorithm, setChoosenAlgorithm] = useState();
+  const [choosenAlgorithm, setChoosenAlgorithm] = useState("Random Forest");
   const [algorithmParameters, setAlgorithmParameters] = useState({});
+  const [trained, setTrained] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState(null);
 
   const changeParameters = (key, value) => {
     let values = algorithmParameters;
@@ -89,11 +89,9 @@ export default function Training() {
       authTokens.access
     );
     if(response) {
-      const response = await train(projectID, authTokens.access)
-      const imageWithout = response.imageInBase64;
-      // Cria a URL da imagem a partir da string Base64
-      const image = `data:image/png;base64,${imageWithout}`;
-      setImage(image);
+      const response = await train(projectID, authTokens.access);
+      setLoading(false);
+      setTrained(true);
 
       return true;
     }
@@ -108,6 +106,9 @@ export default function Training() {
 
       console.log(response.parameters);
       setAlgorithmParameters(response.parameters);
+
+      console.log(response.trained);
+      setTrained(response.trained);
     })
     .catch(error => {
       console.log(error);
@@ -173,9 +174,12 @@ export default function Training() {
           <div className={styles.leftDiv}>
             <div className={styles.parametersContainer}>
               {
-                algorithmsParameters[0].map((key) => {
+                algorithmsParameters[
+                  0
+                ].map((key, index) => {
                   return(
                     <InlineInput 
+                      key={index}
                       name={key[1]} 
                       type={'number'}
                       setValue={(value) => changeParameters(key[0], value)}
@@ -185,7 +189,12 @@ export default function Training() {
                 })
               }
             </div>
-            <a onClick={saveAndTrain}>Salvar e Treinar</a>
+            <button 
+              onClick={saveAndTrain}
+              className={styles.button}
+            >
+              Salvar e Treinar
+            </button>
           </div>
           <div className={styles.rightDiv}>
             {
@@ -203,6 +212,17 @@ export default function Training() {
           }}
           side={'left'}
         />
+        {
+          trained &&
+          <Button 
+            name={'Próximo'} 
+            URL={'/results'}
+            stateToPass={{
+              pageNumber: 0
+            }}
+            side={'right'}
+          />
+        }
       </>
     )
   }

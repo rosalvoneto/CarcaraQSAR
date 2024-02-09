@@ -14,7 +14,6 @@ import { VariablesList } from '../../components/VariablesList';
 import { useLocation, useParams } from 'react-router-dom';
 import { 
   getVariables, getBoxPlot, getHistogram,
-  getDatabase,
   getNormalizationSettings,
   setNormalizationSettings
 } from '../../api/database';
@@ -228,8 +227,8 @@ export function PreProcessing({ index }) {
               firstOption={choosenNormalization}
             />
             {
-              choosenNormalization != normalizations[0] && 
-              <a onClick={() => {}}>Normalizar</a>
+              choosenNormalization != normalizations[0] && undefined
+              /* <a onClick={() => {}}>Normalizar</a> */
             }
           </div>
           <div className={styles.informationContainer}>

@@ -53,3 +53,12 @@
 
   border: 0px solid red;
 }
+
+.button {
+  margin-top: 10px;
+
+  width: fit-content;
+  padding: 15px;
+
+  border-radius: 5px;
+}
