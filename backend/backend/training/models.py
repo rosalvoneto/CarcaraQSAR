@@ -63,6 +63,7 @@ class VariablesSelection(models.Model):
   # Para seleção de variáveis
   algorithm = models.CharField(max_length=200)
   remove_constant_variables = models.BooleanField(default=False)
+  variables_to_remove = models.JSONField(default=list)
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 

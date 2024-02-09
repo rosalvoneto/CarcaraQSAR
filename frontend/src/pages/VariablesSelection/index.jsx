@@ -61,7 +61,11 @@ export default function VariablesSelection() {
 
   const nextButtonAction = async() => {
     const response = await setVariablesSettings(
-      projectID, choosenAlgorithm, removeConstantVariables, authTokens.access
+      projectID,
+      choosenAlgorithm,
+      removeConstantVariables,
+      listOfVariables,
+      authTokens.access
     );
     return response;
   }
@@ -112,6 +116,9 @@ export default function VariablesSelection() {
 
       console.log(response.removeConstantVariables);
       setRemoveConstantVariables(response.removeConstantVariables);
+
+      console.log(response.variablesToRemove);
+      setListOfVariables(response.variablesToRemove);
     })
     .catch(error => {
       console.log(error);

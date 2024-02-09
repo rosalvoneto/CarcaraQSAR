@@ -74,7 +74,7 @@ export default function Training() {
 
   const nextButtonAction = async() => {
     const response = await setTrainingSettings(
-      projectID, choosenAlgorithm, JSON.stringify(algorithmParameters), authTokens.access
+      projectID, choosenAlgorithm, algorithmParameters, authTokens.access
     );
     return response;
   }
@@ -85,7 +85,7 @@ export default function Training() {
     const response = await setTrainingSettings(
       projectID, 
       choosenAlgorithm, 
-      JSON.stringify(algorithmParameters), 
+      algorithmParameters, 
       authTokens.access
     );
     if(response) {

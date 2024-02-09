@@ -41,6 +41,7 @@ def getVariablesSettings_view(request):
     return Response({
       'algorithm': variables_selection.algorithm,
       'removeConstantVariables': variables_selection.remove_constant_variables,
+      'variablesToRemove': variables_selection.variables_to_remove,
     }, status=200)
 
   except VariablesSelection.DoesNotExist:
@@ -48,6 +49,7 @@ def getVariablesSettings_view(request):
     variables_selection = VariablesSelection.objects.create(
       algorithm="NÃO APLICAR",
       remove_constant_variables=False,
+      variables_to_remove=[],
       project=project
     )
     variables_selection.save()
@@ -55,6 +57,7 @@ def getVariablesSettings_view(request):
     return Response({
       'algorithm': variables_selection.algorithm,
       'removeConstantVariables': variables_selection.remove_constant_variables,
+      'variablesToRemove': variables_selection.variables_to_remove,
     }, status=200)
 
 @api_view(['POST'])
@@ -63,6 +66,8 @@ def setVariablesSettings_view(request):
 
   project_id = request.POST.get('project_id')
   algorithm = request.POST.get('algorithm')
+  list_of_variables = request.POST.get('list_of_variables')
+  list_of_variables = json.loads(list_of_variables)
   remove_constant_variables = request.POST.get('remove_constant_variables')
   if(remove_constant_variables == "true"):
     remove_constant_variables = True
@@ -74,6 +79,7 @@ def setVariablesSettings_view(request):
     variables_selection = project.variablesselection_set.get()
     variables_selection.algorithm = algorithm
     variables_selection.remove_constant_variables = remove_constant_variables
+    variables_selection.variables_to_remove = list_of_variables
     variables_selection.save()
 
     return Response({
@@ -84,7 +90,8 @@ def setVariablesSettings_view(request):
     variables_selection = VariablesSelection.objects.create(
       algorithm=algorithm,
       remove_constant_variables=remove_constant_variables,
-      project=project
+      variables_to_remove=list_of_variables,
+      project=project,
     )
     variables_selection.save()
 
