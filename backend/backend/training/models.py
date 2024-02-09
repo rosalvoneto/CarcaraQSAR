@@ -18,7 +18,6 @@ class Algorithm(models.Model):
   parameters = models.JSONField(default=dict)
 
   def create(self, name, parameters):
-    # Cria uma instância de Algorithm com base no nome fornecido e parâmetros
     algorithm = Algorithm.objects.create(
       name=name,
       parameters=parameters
@@ -66,6 +65,12 @@ class VariablesSelection(models.Model):
   variables_to_remove = models.JSONField(default=list)
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+  def update(self, algorithm, remove_constant_variables, variables_to_remove):
+    self.algorithm = algorithm
+    self.remove_constant_variables = remove_constant_variables
+    self.variables_to_remove = variables_to_remove
+    self.save()
 
   def __str__(self):
     return self.algorithm

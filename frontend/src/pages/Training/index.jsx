@@ -69,7 +69,7 @@ export default function Training() {
     values[key] = value;
     setAlgorithmParameters(values);
 
-    console.log(algorithmParameters);
+    console.log(values);
   }
 
   const nextButtonAction = async() => {
@@ -95,6 +95,7 @@ export default function Training() {
       const image = `data:image/png;base64,${imageWithout}`;
       setImage(image);
 
+      return true;
     }
     return false;
   }
@@ -201,11 +202,6 @@ export default function Training() {
             pageNumber: 0
           }}
           side={'left'}
-        />
-        <Button 
-          name={'Próximo'}
-          URL={'/results'}
-          side={'right'}
         />
       </>
     )

@@ -52,7 +52,6 @@ def getVariablesSettings_view(request):
       variables_to_remove=[],
       project=project
     )
-    variables_selection.save()
 
     return Response({
       'algorithm': variables_selection.algorithm,
@@ -77,10 +76,11 @@ def setVariablesSettings_view(request):
   project = get_object_or_404(Project, id=project_id)
   try:
     variables_selection = project.variablesselection_set.get()
-    variables_selection.algorithm = algorithm
-    variables_selection.remove_constant_variables = remove_constant_variables
-    variables_selection.variables_to_remove = list_of_variables
-    variables_selection.save()
+    variables_selection.update(
+      algorithm=algorithm,
+      remove_constant_variables=remove_constant_variables,
+      variables_to_remove=list_of_variables
+    )
 
     return Response({
       'message': 'Seleção de variáveis alterada!'
@@ -93,7 +93,6 @@ def setVariablesSettings_view(request):
       variables_to_remove=list_of_variables,
       project=project,
     )
-    variables_selection.save()
 
     return Response({
       'message': 'Seleção de variáveis criada!'
@@ -127,6 +126,7 @@ def getTrainingSettings_view(request):
 
     return Response({
       'algorithm': training.algorithm.name,
+      'parameters': training.algorithm.parameters
     }, status=200)
 
 @api_view(['POST'])
@@ -137,6 +137,8 @@ def setTrainingSettings_view(request):
   algorithm = request.POST.get('algorithm')
   parameters = request.POST.get('parameters')
   parameters = json.loads(parameters)
+
+  print("PARAMETROS:", parameters)
 
   project = get_object_or_404(Project, id=project_id)
   try:
@@ -182,7 +184,7 @@ def train_view(request):
       training = project.training_set.get()
 
       return Response({
-        'message': 'Treinando!',
+        'message': 'O treinamento está finalizado!',
         'imageInBase64': image_base64,
       }, status=200)
     

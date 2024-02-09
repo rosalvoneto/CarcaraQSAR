@@ -16,7 +16,9 @@ export function Tabs({ tabs, selectedTab, setSelectedTab }) {
           }`;
 
           return(
-            <p className={classNames} onClick={() => setSelectedTab(index)}>
+            <p key={index} className={classNames} 
+              onClick={() => setSelectedTab(index)}
+            >
               { tab }
             </p>
           )
