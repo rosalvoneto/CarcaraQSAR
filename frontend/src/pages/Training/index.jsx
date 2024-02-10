@@ -17,6 +17,7 @@ import {
 } from '../../api/training';
 
 import Loading from '../../components/Loading';
+import { CheckboxInput } from '../../components/CheckboxInput';
 
 export const algorithms = [
   "Random Forest",
@@ -58,10 +59,11 @@ export default function Training() {
     }
   }
 
-  const [choosenAlgorithm, setChoosenAlgorithm] = useState("Random Forest");
+  const [choosenAlgorithm, setChoosenAlgorithm] = useState(algorithms[0]);
   const [algorithmParameters, setAlgorithmParameters] = useState({});
+  const [withFullSet, setWithFullSet] = useState(false);
+  
   const [trained, setTrained] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const changeParameters = (key, value) => {
@@ -73,10 +75,22 @@ export default function Training() {
   }
 
   const nextButtonAction = async() => {
-    const response = await setTrainingSettings(
-      projectID, choosenAlgorithm, algorithmParameters, authTokens.access
-    );
-    return response;
+    const trainingSettings = await getTrainingSettings(projectID, authTokens.access);
+    if(trainingSettings.algorithm == choosenAlgorithm) {
+      console.log("Algoritmos são iguais, não precisa modificar!");
+      return true;
+
+    } else {
+      console.log("Algoritmos são diferentes, precisa modificar!");
+      const response = await setTrainingSettings(
+        projectID, 
+        choosenAlgorithm, 
+        algorithmParameters,
+        withFullSet,
+        authTokens.access
+      );
+      return response;
+    }
   }
 
   const saveAndTrain = async() => {
@@ -85,7 +99,8 @@ export default function Training() {
     const response = await setTrainingSettings(
       projectID, 
       choosenAlgorithm, 
-      algorithmParameters, 
+      algorithmParameters,
+      withFullSet,
       authTokens.access
     );
     if(response) {
@@ -109,6 +124,9 @@ export default function Training() {
 
       console.log(response.trained);
       setTrained(response.trained);
+
+      console.log(response.withFullSet);
+      setWithFullSet(response.withFullSet);
     })
     .catch(error => {
       console.log(error);
@@ -128,12 +146,20 @@ export default function Training() {
 
         <div className={styles.container}>
 
-          <RadionInput 
-            name={"Aplicar algoritmo"}
-            options={algorithms}
-            setOption={setChoosenAlgorithm}
-            firstOption={choosenAlgorithm}
-          />
+          <div>
+            <RadionInput 
+              name={"Aplicar algoritmo"}
+              options={algorithms}
+              setOption={setChoosenAlgorithm}
+              firstOption={choosenAlgorithm}
+            />
+            <CheckboxInput 
+              name={"Com conjunto completo?"}
+              value={withFullSet} 
+              setValue={setWithFullSet}
+            />
+          </div>
+          
           <div className={styles.informationContainer}>
             <p className={styles.information}>
               {algorithmsDescriptions[algorithms.indexOf(choosenAlgorithm)]}
@@ -183,7 +209,7 @@ export default function Training() {
                       name={key[1]} 
                       type={'number'}
                       setValue={(value) => changeParameters(key[0], value)}
-                      value={algorithmParameters[key[0]]}
+                      value={algorithmParameters[key[0]] ? algorithmParameters[key[0]] : 0}
                     />
                   )
                 })

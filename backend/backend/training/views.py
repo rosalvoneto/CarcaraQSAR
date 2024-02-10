@@ -111,7 +111,8 @@ def getTrainingSettings_view(request):
     return Response({
       'algorithm': training.algorithm.name,
       'parameters': training.algorithm.parameters,
-      'trained': training.trained
+      'trained': training.trained,
+      'withFullSet': training.with_full_set,
     }, status=200)
 
   except Training.DoesNotExist:
@@ -123,13 +124,15 @@ def getTrainingSettings_view(request):
     training = Training.objects.create(
       algorithm=algorithm,
       project=project,
-      trained=False
+      trained=False,
+      with_full_set=False,
     )
 
     return Response({
       'algorithm': training.algorithm.name,
       'parameters': training.algorithm.parameters,
-      'trained': training.trained
+      'trained': training.trained,
+      'withFullSet': training.with_full_set,
     }, status=200)
 
 @api_view(['POST'])
@@ -140,6 +143,11 @@ def setTrainingSettings_view(request):
   algorithm = request.POST.get('algorithm')
   parameters = request.POST.get('parameters')
   parameters = json.loads(parameters)
+  with_full_set = request.POST.get('with_full_set')
+  if with_full_set == "true":
+    with_full_set = True
+  else:
+    with_full_set = False
 
   print("PARAMETROS:", parameters)
 
@@ -152,6 +160,7 @@ def setTrainingSettings_view(request):
     )
 
     training.trained = False
+    training.with_full_set = with_full_set
     training.save()
 
     return Response({
@@ -168,6 +177,7 @@ def setTrainingSettings_view(request):
       algorithm=algorithm,
       project=project,
       trained=False,
+      with_full_set=with_full_set,
     )
 
     return Response({

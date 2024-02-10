@@ -62,7 +62,7 @@ export const getVariablesSettings = async (
 
 // Salva configurações do treinamento
 export const setTrainingSettings = async (
-  projectID, algorithm, parameters, accessToken
+  projectID, algorithm, parameters, withFullSet, accessToken
 ) => {
 
   const parametersString = JSON.stringify(parameters)
@@ -71,6 +71,7 @@ export const setTrainingSettings = async (
   formData.append('project_id', projectID);
   formData.append('algorithm', algorithm);
   formData.append('parameters', parametersString);
+  formData.append('with_full_set', withFullSet);
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/set_training_settings`, {

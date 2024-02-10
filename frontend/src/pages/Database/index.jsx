@@ -189,7 +189,10 @@ export function Database() {
         />
 
         <div className={styles.tableInfomation}>
-          <CheckboxInput value={transpose} setValue={setTranspose}/>
+          <CheckboxInput 
+            name={"Transposição:"}
+            value={transpose} setValue={setTranspose}
+          />
           <p className={styles.tableDescription}>
             {
               `${database.lines} linhas x ${database.columns} colunas`

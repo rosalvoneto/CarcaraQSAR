@@ -53,11 +53,12 @@ class Training(models.Model):
   # Para o treinamento
   algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
   trained = models.BooleanField(default=False)
+  with_full_set = models.BooleanField(default=False)
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
   def __str__(self):
-    return self.algorithm
+    return f"Treinamento com algoritmo '{self.algorithm.name}'"
 
 class VariablesSelection(models.Model):
   # Para seleção de variáveis

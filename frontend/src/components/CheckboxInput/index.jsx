@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import styles from './styles.module.css';
 
-export function CheckboxInput({ value, setValue }) {
+export function CheckboxInput({ name, value, setValue }) {
 
   return(
     <div className={styles.container}>
-      <p className={styles.description}>Trasposição:</p>
+      <p className={styles.description}>{name}</p>
       <input 
         type="checkbox" 
         className={styles.input}
