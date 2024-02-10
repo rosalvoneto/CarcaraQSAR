@@ -80,12 +80,18 @@ export default function Training() {
 
   const nextButtonAction = async() => {
     const trainingSettings = await getTrainingSettings(projectID, authTokens.access);
-    if(trainingSettings.algorithm == choosenAlgorithm) {
-      console.log("Algoritmos são iguais, não precisa modificar!");
+
+    if(
+      trainingSettings.algorithm == choosenAlgorithm && 
+      trainingSettings.withFullSet == withFullSet
+      ) {
+      console.log("O algorítmo não mudou");
+      console.log("A configuração de conjunto completo não mudou");
+      console.log("Não precisa modificar!");
       return true;
 
     } else {
-      console.log("Algoritmos são diferentes, precisa modificar!");
+      console.log("Algo mudou, precisa modificar!");
       const response = await setTrainingSettings(
         projectID, 
         choosenAlgorithm, 
@@ -237,7 +243,9 @@ export default function Training() {
 
         <PopUp show={trained}
           title={"Treinamento finalizado"}
-          description={"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae odio tempore quaerat facilis doloribus est sint cupiditate nisi, nulla incidunt aut at beatae officiis et ea nesciunt omnis iure. Itaque."}
+          description={
+            `O treinamento com o algorítmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
+          }
           buttonName={"Ver resultados"}
           action={navigateToResults}
         />

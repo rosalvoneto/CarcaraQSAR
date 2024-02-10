@@ -57,6 +57,37 @@ class Training(models.Model):
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
+  leave_one_out =  models.ImageField(
+    upload_to='graphics_results/leave_one_out/',
+    null=True,
+    blank=True,
+    default=None
+  )
+  importance =  models.ImageField(
+    upload_to='graphics_results/importance/',
+    null=True,
+    blank=True,
+    default=None
+  )
+  k_fold_cross_validation =  models.ImageField(
+    upload_to='graphics_results/k-fold_cross_validation/',
+    null=True,
+    blank=True,
+    default=None
+  )
+  y_scrambling =  models.ImageField(
+    upload_to='graphics_results/y-scrambling/',
+    null=True,
+    blank=True,
+    default=None
+  )
+  bootstrap =  models.ImageField(
+    upload_to='graphics_results/bootstrap/',
+    null=True,
+    blank=True,
+    default=None
+  )
+
   def __str__(self):
     return f"Treinamento com algoritmo '{self.algorithm.name}'"
 
@@ -75,4 +106,4 @@ class VariablesSelection(models.Model):
     self.save()
 
   def __str__(self):
-    return self.algorithm
+    return f"Seleção de variáveis com o algoritmo '{self.algorithm}'"
