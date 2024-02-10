@@ -18,13 +18,30 @@
   z-index: 2;
 
   border: 0px solid red;
+  border-radius: 7px;
   background-color: var(--white-color-1);
 
-  width: 200px;
-  height: 120px;
+  width: 500px;
   padding: 20px;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.popupTitle {
+
+}
+
+.popupDescription {
+
+}
+
+.popupButton {
+  margin-top: 10px;
+
+  width: fit-content;
+  padding: 15px;
+
+  border-radius: 5px;
 }

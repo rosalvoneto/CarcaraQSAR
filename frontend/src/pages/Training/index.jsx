@@ -8,9 +8,11 @@ import { RadionInput } from '../../components/RadioInput';
 import { useContext, useEffect, useState } from 'react';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
+
+import PopUp from '../../components/PopUp';
 
 import { 
   getTrainingSettings, setTrainingSettings, train 
@@ -45,6 +47,8 @@ export default function Training() {
   const { authTokens } = useContext(AuthContext);
   const { projectDetails } = useContext(ProjectContext);
   const { projectID } = useParams();
+
+  const navigate = useNavigate();
 
   const href = '/training';
   const progress = 3;
@@ -113,6 +117,10 @@ export default function Training() {
     return false;
   }
 
+  const navigateToResults = () => {
+    navigate(`/${projectID}/results`);
+  }
+
   useEffect(() => {
     getTrainingSettings(projectID, authTokens.access)
     .then((response) => {
@@ -121,9 +129,6 @@ export default function Training() {
 
       console.log(response.parameters);
       setAlgorithmParameters(response.parameters);
-
-      console.log(response.trained);
-      setTrained(response.trained);
 
       console.log(response.withFullSet);
       setWithFullSet(response.withFullSet);
@@ -229,6 +234,13 @@ export default function Training() {
           </div>
 
         </div>
+
+        <PopUp show={trained}
+          title={"Treinamento finalizado"}
+          description={"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae odio tempore quaerat facilis doloribus est sint cupiditate nisi, nulla incidunt aut at beatae officiis et ea nesciunt omnis iure. Itaque."}
+          buttonName={"Ver resultados"}
+          action={navigateToResults}
+        />
 
         <Button 
           name={'Voltar'} 

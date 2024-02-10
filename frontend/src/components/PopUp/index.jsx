@@ -1,8 +1,9 @@
-
 import { useState } from 'react';
 import styles from './styles.module.css';
 
-export default function PopUp({ show }) {
+export default function PopUp({ 
+  show, title, description, buttonName, action 
+}) {
 
   return(
     <div 
@@ -15,17 +16,17 @@ export default function PopUp({ show }) {
     >
       <div className={styles.popup}>
         <h4 className={styles.popupTitle}>
-          Título
+          {title}
         </h4>
         <p className={styles.popupDescription}>
-          Descrição
+          {description}
         </p>
-        <a 
+        <button 
           className={styles.popupButton}
-          onClick={() => setShowPopup(false)}
+          onClick={() => action()}
         >
-          Botão
-        </a>
+          {buttonName}
+        </button>
       </div>
     </div>
   )
