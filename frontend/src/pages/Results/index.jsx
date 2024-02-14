@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 import { Header } from '../../components/Header';
@@ -10,6 +10,8 @@ import { Tabs } from '../../components/Tabs';
 import styles from './styles.module.css';
 
 import { statesProgressBar } from '../../settings';
+
+import { getTrainingGraphs } from '../../api/training';
 
 import Graph1 from '../../assets/results/graph1.png';
 import Graph2 from '../../assets/results/graph2.png';
@@ -44,12 +46,10 @@ export default function Results() {
 
   const href = '/results';
   const progress = 4;
-
-  const tabsNames = ["Sem conjunto externo", "Com conjunto externo"];
-
   const location = useLocation();
   const state = location.state;
-
+  
+  const tabsNames = ["Sem conjunto externo", "Com conjunto externo"];
   let pageNumber = 0;
   if(state) {
     if(state.pageNumber) {
@@ -58,8 +58,23 @@ export default function Results() {
   }
 
   const [selectedTab, setSelectedTab] = useState(0);
+  const [graphsWithoutFullSet, setGraphsWithoutFullSet] = useState([null]);
+  const [graphsWithFullSet, setGraphsWithFullSet] = useState([null]);
 
-  const downloadGraph = () => {};
+  const downloadGraph = () => {
+    console.log("Fazer o Download!");
+  };
+
+  useEffect(() => {
+    getTrainingGraphs(projectID, authTokens.access)
+    .then((graphs) => {
+      console.log(graphs);
+      setGraphsWithoutFullSet(graphs);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }, [])
 
   return(
     <>
@@ -82,7 +97,7 @@ export default function Results() {
         <div className={styles.graphContainer}>
           <Graph 
             width={550}
-            image={graphs[selectedTab][pageNumber]}
+            image={graphsWithoutFullSet[pageNumber]}
           />
           <a
             className={styles.downloadButton}
