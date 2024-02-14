@@ -41,6 +41,7 @@ export default function Outliers() {
       <Button 
         name={'Finalizar'} 
         URL={'/home'}
+        useStrictURL={true}
         side={'right'}
       />
     </>

@@ -6,7 +6,9 @@ import styles from './styles.module.css';
 
 import ProjectContext from '../../context/ProjectContext';
 
-export default function Button({ name, URL, stateToPass, side, action }) {
+export default function Button({ 
+  name, URL, stateToPass, side, action, useStrictURL
+}) {
 
   const { projectDetails } = useContext(ProjectContext);
   const navigate = useNavigate();
@@ -17,7 +19,11 @@ export default function Button({ name, URL, stateToPass, side, action }) {
       toNavigate = action();
     }
     if(toNavigate) {
-      navigate(`/${projectDetails.id}${URL}`, { state: stateToPass });
+      if(useStrictURL) {
+        navigate(URL, { state: stateToPass });
+      } else {
+        navigate(`/${projectDetails.id}${URL}`, { state: stateToPass });
+      }
     }
   }
 

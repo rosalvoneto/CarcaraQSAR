@@ -103,10 +103,12 @@ def convertAndSendDatabase_view(request):
       # Salvar modificações no backend
       project.save()
 
+      os.remove(file_name)
+
       # Abra o arquivo e retorne como uma resposta de arquivo
-      with open(file_name, 'rb') as file:
+      with open(f"media/{project.database.file}", 'rb') as file:
         response = HttpResponse(file.read(), content_type='application/force-download')
-        response['Content-Disposition'] = 'attachment; filename="output.csv"'
+        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
 
   return JsonResponse({ "message": "Nenhum arquivo encontrado!" })

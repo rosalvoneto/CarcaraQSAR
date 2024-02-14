@@ -62,7 +62,17 @@ export function Database() {
       const url = window.URL.createObjectURL(new Blob([response]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'output.csv');
+
+      // Exemplo de uma string contendo o nome do arquivo com várias extensões
+      let fileName = selectedSmilesFile.name;
+
+      // Encontrar a última ocorrência do ponto na string
+      let lastIndex = fileName.lastIndexOf('.');
+
+      // Extrair a parte da string até o último ponto
+      let newFileName = fileName.substring(0, lastIndex);
+
+      link.setAttribute('download', `${newFileName}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
