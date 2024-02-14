@@ -97,7 +97,11 @@ export default function Results() {
         <div className={styles.graphContainer}>
           <Graph 
             width={550}
-            image={graphsWithoutFullSet[pageNumber]}
+            image={
+              selectedTab == 0
+              ? graphsWithoutFullSet[pageNumber]
+              : graphsWithFullSet[pageNumber]
+            }
           />
           <a
             className={styles.downloadButton}

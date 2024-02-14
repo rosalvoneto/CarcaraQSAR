@@ -203,13 +203,13 @@ def train_view(request):
       training = project.training_set.get()
 
       # Execuções dos algoritmos e salvamento dos gráficos
-      leave_one_out(project.database.file)
+      leave_one_out(f"media/{project.database.file}")
       file_name = 'loo_temporary.png'
       with open(file_name, 'rb') as image:
         training.leave_one_out.save('loo.png', File(image), save=True)
       os.remove(file_name)
 
-      cross_validation(project.database.file)
+      cross_validation(f"media/{project.database.file}")
       file_name = 'cross_validation_temporary.png'
       with open(file_name, 'rb') as image:
         training.k_fold_cross_validation.save('cross_validation.png', File(image), save=True)

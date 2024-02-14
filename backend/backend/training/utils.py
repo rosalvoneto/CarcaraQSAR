@@ -20,8 +20,10 @@ import base64
 
 def leave_one_out(csv_path):
 
-  # data = pd.read_csv(csv_path)
-  data = pd.read_csv('Ant_KNN_BestFirst_28_65.csv')
+  data = pd.read_csv(csv_path)
+  # data = pd.read_csv('Ant_KNN_BestFirst_28_65.csv')
+  print(data)
+  
   loo = LeaveOneOut()
 
   # Normalizando
@@ -104,8 +106,9 @@ def run_exp(data):
 
 def cross_validation(csv_path):
 
-  # data = pd.read_csv(csv_path)
-  data = pd.read_csv('Ant_KNN_BestFirst_28_65.csv')
+  data = pd.read_csv(csv_path)
+  # data = pd.read_csv('Ant_KNN_BestFirst_28_65.csv')
+  print(data)
 
   # Normalizando
   X = data.iloc[:,:-1]
