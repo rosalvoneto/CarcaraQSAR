@@ -21,6 +21,8 @@ import {
 import Loading from '../../components/Loading';
 import { CheckboxInput } from '../../components/CheckboxInput';
 
+import axios from 'axios';
+
 export const algorithms = [
   "Random Forest",
   "Regressão linear",
@@ -142,6 +144,22 @@ export default function Training() {
     .catch(error => {
       console.log(error);
     })
+  }, []);
+
+  useEffect(() => {
+    const eventSource = new EventSource(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/minha_view`
+    );
+
+    eventSource.onmessage = (event) => {
+      const newMessage = event.data;
+      console.log(newMessage);
+    };
+
+    return () => {
+      // Fecha a conexão quando o componente é desmontado
+      eventSource.close();
+    };
   }, []);
 
   if(pageNumber == 0) {
