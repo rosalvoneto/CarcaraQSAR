@@ -244,7 +244,7 @@ export default function Training() {
         <PopUp show={trained}
           title={"Treinamento finalizado"}
           description={
-            `O treinamento com o algorítmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
+            `O treinamento com o algoritmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
           }
           buttonName={"Ver resultados"}
           action={navigateToResults}

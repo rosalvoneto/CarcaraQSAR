@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import LeaveOneOut
 from sklearn.model_selection import KFold
 
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Normalizer, QuantileTransformer, PowerTransformer, FunctionTransformer
 
 import joblib
 
@@ -18,11 +18,9 @@ from io import BytesIO
 import base64
 
 
-def leave_one_out(csv_path):
+def leave_one_out(csv_path, scaler_name):
 
   data = pd.read_csv(csv_path)
-  # data = pd.read_csv('Ant_KNN_BestFirst_28_65.csv')
-  print(data)
   
   loo = LeaveOneOut()
 
@@ -30,14 +28,34 @@ def leave_one_out(csv_path):
   X = data.iloc[:,:-1]
   Y = data.iloc[:,-1]
 
-  scaler = MinMaxScaler()
-  X_norm = scaler.fit_transform(X)
+  X_norm = X
+  if(scaler_name != "NÃO APLICAR"):
 
-  # Salvar o MinMaxScaler em um arquivo
-  # Escolha um nome de arquivo
-  scaler_filename = 'min_max_scaler.pkl'
-  with open(scaler_filename, 'wb') as scaler_file:
-    joblib.dump(scaler, scaler_file)
+    # scaler padrão
+    scaler = MinMaxScaler()
+
+    if(scaler_name == "MinMaxScaler"):
+      print(f"Usando o MinMaxScaler")
+    elif(scaler_name == "StandardScaler"):
+      print(f"Usando o StandardScaler")
+      scaler = StandardScaler()
+    elif(scaler_name == "RobustScaler"):
+      print(f"Usando o RobustScaler")
+      scaler = RobustScaler()
+    elif(scaler_name == "Normalizer"):
+      print(f"Usando o Normalizer")
+      scaler = Normalizer()
+    elif(scaler_name == "QuantileTransformer"):
+      print(f"Usando o QuantileTransformer")
+      scaler = QuantileTransformer(n_quantiles=len(X))
+    elif(scaler_name == "PowerTransformer"):
+      print(f"Usando o PowerTransformer")
+      scaler = PowerTransformer(method="yeo-johnson", standardize=True)
+    elif(scaler_name == "FunctionTransformer"):
+      print(f"Usando o FunctionTransformer")
+      scaler = FunctionTransformer()
+  
+    X_norm = scaler.fit_transform(X)
 
   data = pd.DataFrame(X_norm, columns = X.columns)
   data['alvo'] = Y
@@ -81,6 +99,8 @@ def leave_one_out(csv_path):
   # Limpeza da exibição
   plt.clf()
 
+  return True
+
 
 
 def run_exp(data):
@@ -104,18 +124,42 @@ def run_exp(data):
   r2 = r2_score(L_Y, L)
   return r2
 
-def cross_validation(csv_path):
+def cross_validation(csv_path, scaler_name):
 
   data = pd.read_csv(csv_path)
-  # data = pd.read_csv('Ant_KNN_BestFirst_28_65.csv')
-  print(data)
 
   # Normalizando
   X = data.iloc[:,:-1]
   Y = data.iloc[:,-1]
 
-  scaler = MinMaxScaler()
-  X_norm = scaler.fit_transform(X)
+  X_norm = X
+  if(scaler_name != "NÃO APLICAR"):
+
+    # scaler padrão
+    scaler = MinMaxScaler()
+
+    if(scaler_name == "MinMaxScaler"):
+      print(f"Usando o MinMaxScaler")
+    elif(scaler_name == "StandardScaler"):
+      print(f"Usando o StandardScaler")
+      scaler = StandardScaler()
+    elif(scaler_name == "RobustScaler"):
+      print(f"Usando o RobustScaler")
+      scaler = RobustScaler()
+    elif(scaler_name == "Normalizer"):
+      print(f"Usando o Normalizer")
+      scaler = Normalizer()
+    elif(scaler_name == "QuantileTransformer"):
+      print(f"Usando o QuantileTransformer")
+      scaler = QuantileTransformer(n_quantiles=len(X))
+    elif(scaler_name == "PowerTransformer"):
+      print(f"Usando o PowerTransformer")
+      scaler = PowerTransformer(method="yeo-johnson", standardize=True)
+    elif(scaler_name == "FunctionTransformer"):
+      print(f"Usando o FunctionTransformer")
+      scaler = FunctionTransformer()
+  
+    X_norm = scaler.fit_transform(X)
 
   data = pd.DataFrame(X_norm, columns = X.columns)
   data['alvo'] = Y
@@ -124,7 +168,6 @@ def cross_validation(csv_path):
   for _ in range(50):    
     r2 = run_exp(data)
     L.append(r2)
-    print(r2)
 
   df = pd.DataFrame(list(enumerate(L, start=1)), columns=['Reptirion', 'r2'])
   Y = df['r2'].to_numpy()
@@ -142,3 +185,5 @@ def cross_validation(csv_path):
 
   # Limpeza da exibição
   plt.clf()
+
+  return True

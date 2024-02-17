@@ -202,27 +202,43 @@ def train_view(request):
 
       training = project.training_set.get()
 
-      # Execuções dos algoritmos e salvamento dos gráficos
-      leave_one_out(f"media/{project.database.file}")
-      file_name = 'loo_temporary.png'
-      with open(file_name, 'rb') as image:
-        training.leave_one_out.save('loo.png', File(image), save=True)
-      os.remove(file_name)
+      if(project.database.normalization):
+        print("Normalização:", project.database.normalization)
 
-      cross_validation(f"media/{project.database.file}")
-      file_name = 'cross_validation_temporary.png'
-      with open(file_name, 'rb') as image:
-        training.k_fold_cross_validation.save('cross_validation.png', File(image), save=True)
-      os.remove(file_name)
+        print("Calculando leave one out:")
+        # Execuções dos algoritmos e salvamento dos gráficos
+        leave_one_out(
+          f"media/{project.database.file}",
+          project.database.normalization.name
+        )
+        file_name = 'loo_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.leave_one_out.save('loo.png', File(image), save=True)
+        os.remove(file_name)
 
-      # Atualiza treinamento para concluído
-      training.trained = True
-      training.save()
+        print("Calculando cross validation:")
+        cross_validation(
+          f"media/{project.database.file}",
+          project.database.normalization.name
+        )
+        file_name = 'cross_validation_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.k_fold_cross_validation.save('cross_validation.png', File(image), save=True)
+        os.remove(file_name)
 
-      return Response({
-        'message': 'O treinamento está finalizado!',
-        'trained': training.trained,
-      }, status=200)
+        # Atualiza treinamento para concluído
+        training.trained = True
+        training.save()
+
+        return Response({
+          'message': 'O treinamento está finalizado!',
+          'trained': training.trained,
+        }, status=200)
+      
+      else:
+        return Response({
+          'message': 'Não foi encontrada Normalização!',
+        }, status=200)
     
     return Response({
       'message': 'Não foi encontrado Database!',

@@ -20,7 +20,11 @@ class Database(models.Model):
   lines = models.IntegerField()
   columns = models.IntegerField()
   
-  normalization = models.OneToOneField(Normalization, on_delete=models.SET_NULL, null=True, blank=True)
+  normalization = models.OneToOneField(
+    Normalization, 
+    on_delete=models.SET_NULL, 
+    null=True, blank=True
+  )
 
   def create(self, name, file, file_separator, lines, columns):
     database = Database()
