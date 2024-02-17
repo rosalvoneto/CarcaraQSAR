@@ -156,7 +156,8 @@ export default function Results() {
             />
             <Button 
               name={'Próximo'} 
-              URL={'/outliers'}
+              URL={'/home'}
+              useStrictURL={true}
               side={'right'}
             />
           </>

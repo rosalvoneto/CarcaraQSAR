@@ -104,13 +104,13 @@ export const statesProgressBar = [
     href: '/results',
     stateToPass: { pageNumber: 0 },
   },
-  {
-    index: 5,
-    name: "Outliers",
-    childs: [],
-    href: '/outliers',
-    stateToPass: {},
-  },
+  // {
+  //   index: 5,
+  //   name: "Outliers",
+  //   childs: [],
+  //   href: '/outliers',
+  //   stateToPass: {},
+  // },
 ];
 
 export const variablesNames = [

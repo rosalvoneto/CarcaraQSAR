@@ -70,7 +70,7 @@ def leave_one_out(csv_path):
   fig, ax = plt.subplots()
 
   ax.scatter(L_Y, L, c=y)
-  ax.set_title('Random Forest')
+  ax.set_title(f'Leave One Out - NORMAL \n r={r:.3f} and r2={r2:.3f}')
   ax.set_xlabel('Y Real')
   ax.set_ylabel('Y Pred')
 

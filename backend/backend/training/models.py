@@ -11,7 +11,7 @@ class Algorithm(models.Model):
   ALGORITHM_CHOICES = [
     ('random_forest', 'Random Forest'),
     ('linear_regression', 'Regressão linear'),
-    ('logistic_regression', 'Regressão logística'),
+    ('KNN', 'KNN'),
     ('svm', 'Support Vector Machines (SVM)'),
   ]
   name = models.CharField(max_length=200, choices=ALGORITHM_CHOICES)
@@ -31,22 +31,6 @@ class Algorithm(models.Model):
 
   def __str__(self):
     return self.name
-
-
-
-
-class RandomForest(Algorithm):
-  num_trees = models.IntegerField()
-  max_depth = models.IntegerField()
-
-class SVM(Algorithm):
-  kernel = models.CharField(max_length=50)
-  C_parameter = models.FloatField()
-
-class LinearRegression(Algorithm):
-  regularization = models.FloatField()
-
-
 
 
 class Training(models.Model):

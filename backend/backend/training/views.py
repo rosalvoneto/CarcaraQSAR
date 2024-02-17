@@ -25,7 +25,7 @@ from .utils import cross_validation, leave_one_out
 
 from project_management.models import Project
 from database.models import Database, Normalization
-from .models import Algorithm, RandomForest, Training, VariablesSelection
+from .models import Algorithm, Training, VariablesSelection
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg

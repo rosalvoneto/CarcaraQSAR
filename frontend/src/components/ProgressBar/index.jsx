@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 import { statesProgressBar } from '../../settings';
 
-import { useNavigate } from 'react-router-dom';
 import { Block } from './Block';
 
 import styles from './styles.module.css';
@@ -12,10 +11,6 @@ export function ProgressBar({ progressNumber, subProgressNumber }) {
 
   const [progress, setProgress] = useState(progressNumber);
   const [subProgress, setSubProgress] = useState(subProgressNumber);
-
-  useEffect(() => {
-    console.log(`progress: ${progressNumber} e subProgress: ${subProgressNumber}`);
-  }, []);
 
   return(
     <div className={styles.container}>

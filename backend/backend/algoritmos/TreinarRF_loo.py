@@ -27,7 +27,8 @@ for i, (train_index, test_index) in enumerate(loo.split(data)):
     X_train = data.iloc[train_index,:-1]
     Y_train = data.iloc[train_index,-1]    
     X_teste = data.iloc[test_index,:-1]
-    Y_teste = data.iloc[test_index,-1]    
+    Y_teste = data.iloc[test_index,-1]
+
     rf = RandomForestRegressor(n_estimators=50, max_features=4) # r2 = 0.524    
     rf = rf.fit(X_train, Y_train)
     y_pred = rf.predict(X_teste)
