@@ -3,7 +3,10 @@ import pandas as pd
 import json
 import csv
 
-from django.http import FileResponse
+from threading import Thread
+from .globals import list_descriptors, keys
+
+from django.http import FileResponse, StreamingHttpResponse
 import os
 from collections import OrderedDict
 
@@ -17,7 +20,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from .utils import get_line_descriptors, getBoxPlotImage, getHistogramImage
 
@@ -29,6 +32,72 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 
 # Create your views here.
+
+import time
+
+@permission_classes([IsAuthenticated])
+def progress(request):
+  for i in range(10):
+    # Simula algum processamento
+    time.sleep(1)  
+
+    progress_percent = (i + 1) * 10
+    data = {'progress': progress_percent}
+    return JsonResponse(data)
+  
+  return JsonResponse({
+    'status': 'OK'
+  })
+
+@permission_classes([IsAuthenticated])
+def minha_view(request):
+  # Define a função de resposta SSE
+
+  def event_stream():
+    # Exemplo de 10 mensagens
+    for i in range(10):
+      # Simula um processo demorado
+      time.sleep(1)
+      # Envia a mensagem para o cliente
+      yield f"data: Mensagem {i}\n\n"
+
+  # Retorna a resposta SSE
+  response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+  response['Cache-Control'] = 'no-cache'
+  
+  # Executa mais alguma coisa aqui
+
+  # Mensagem de retorno
+  return HttpResponse("Processamento finalizado")
+
+
+def analisingFeatures(list_file_content):
+  global keys
+  global list_descriptors
+
+  keys = set()
+  list_descriptors = []
+  length = len(list_file_content)
+
+  for i in range(length):
+    print("Analisando características:", list_file_content[i])
+    descriptors = from_smiles(list_file_content[i].split(',')[0])
+
+    # Envia a mensagem de progresso para o cliente
+    # yield f"data: {i}/{length} moléculas analisadas\n\n"
+
+    list_descriptors.append(descriptors)
+
+    if(i == 0):
+      keys = set(descriptors.keys())
+    else:
+      new_keys = set(descriptors.keys())
+      keys = keys.intersection(new_keys)
+
+  keys = list(keys)
+  keys.append('alvo')
+  print("Quantidade de descritores:", len(keys))
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -47,25 +116,17 @@ def convertAndSendDatabase_view(request):
     list_file_content.remove('')
 
     # Retorna uma lista das características em comum de todas as moléculas
-    keys = set()
-    list_descriptors = []
-    for i in range(len(list_file_content)):
-      print("Analisando características:", list_file_content[i])
-      descriptors = from_smiles(list_file_content[i].split(',')[0])
-      list_descriptors.append(descriptors)
+    analisingFeatures(list_file_content)
+    print(list_descriptors)
 
-      if(i == 0):
-        keys = set(descriptors.keys())
-      else:
-        new_keys = set(descriptors.keys())
-        keys = keys & new_keys
+    # response = StreamingHttpResponse(
+    #   analisingFeatures(), content_type='text/event-stream'
+    # )
+    # response['Cache-Control'] = 'no-cache'
 
-    keys = list(keys)
-    keys.append('alvo')
-    print("Quantidade de descritores:", len(keys))
-
+    # return JsonResponse({'message': "Processamento finalizado!"})
+  
     file_name = uploaded_file.name
-
     # Cria arquivo CSV
     with open(file_name, 'w', newline='') as csv_file:
       csv_writer = csv.writer(csv_file)

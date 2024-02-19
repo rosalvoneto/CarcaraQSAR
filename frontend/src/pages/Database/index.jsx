@@ -104,8 +104,23 @@ export function Database() {
     })
 
   }, [])
-  
 
+  useEffect(() => {
+    const eventSource = new EventSource(
+      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/convert_and_send`
+    );
+
+    eventSource.onmessage = (event) => {
+      const newMessage = event.data;
+      console.log(newMessage);
+    };
+
+    return () => {
+      // Fecha a conexão quando o componente é desmontado
+      // eventSource.close();
+    };
+  }, []);
+  
   useEffect(() => {
     if(selectedFile) {
       setDatabase({

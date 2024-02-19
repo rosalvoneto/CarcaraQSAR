@@ -22,4 +22,14 @@ urlpatterns = [
     views.getNormalizationSettings_view, 
     name="get_normalization_settings"
   ),
+  path(
+    'get_progress', 
+    views.progress, 
+    name="get_progress"
+  ),
+  path(
+    'minha_view', 
+    views.minha_view, 
+    name="minha_view"
+  ),
 ]
