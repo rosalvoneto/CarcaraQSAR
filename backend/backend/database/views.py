@@ -4,7 +4,6 @@ import json
 import csv
 
 from threading import Thread
-from .globals import list_descriptors, keys
 
 from django.http import FileResponse, StreamingHttpResponse
 import os
@@ -48,40 +47,7 @@ def minha_view(request):
   # Retorna a resposta SSE
   response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
   response['Cache-Control'] = 'no-cache'
-  
-  # Executa mais alguma coisa aqui
-
-  # Mensagem de retorno
-  return HttpResponse("Processamento finalizado")
-
-
-def analisingFeatures(list_file_content):
-  global keys
-  global list_descriptors
-
-  keys = set()
-  list_descriptors = []
-  length = len(list_file_content)
-
-  for i in range(length):
-    print("Analisando características:", list_file_content[i])
-    descriptors = from_smiles(list_file_content[i].split(',')[0])
-
-    # Envia a mensagem de progresso para o cliente
-    # yield f"data: {i}/{length} moléculas analisadas\n\n"
-
-    list_descriptors.append(descriptors)
-
-    if(i == 0):
-      keys = set(descriptors.keys())
-    else:
-      new_keys = set(descriptors.keys())
-      keys = keys.intersection(new_keys)
-
-  keys = list(keys)
-  keys.append('alvo')
-  print("Quantidade de descritores:", len(keys))
-
+  return response
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -99,60 +65,96 @@ def convertAndSendDatabase_view(request):
     list_file_content = file_content.split('\n')
     list_file_content.remove('')
 
-    # Retorna uma lista das características em comum de todas as moléculas
-    analisingFeatures(list_file_content)
+    # Variáveis auxiliares
+    keys = set()
+    list_descriptors = []
 
-    # response = StreamingHttpResponse(
-    #   analisingFeatures(list_file_content), content_type='text/event-stream'
-    # )
-    # response['Cache-Control'] = 'no-cache'
-    # return response
+    # Salva uma lista das características em comum de todas as moléculas
+    def analisingFeatures():
+      nonlocal keys
+      nonlocal list_descriptors
+      nonlocal list_file_content
 
-    file_name = uploaded_file.name
-    # Cria arquivo CSV
-    with open(file_name, 'w', newline='') as csv_file:
-      csv_writer = csv.writer(csv_file)
+      keys = set()
+      list_descriptors = []
+      length = len(list_file_content)
+
+      for i in range(length):
+        print("Analisando características:", list_file_content[i])
+        descriptors = from_smiles(list_file_content[i].split(',')[0])
+
+        # Envia a mensagem de progresso para o cliente
+        # yield f"data: {i}/{length} moléculas analisadas\n\n"
+
+        list_descriptors.append(descriptors)
+
+        if(i == 0):
+          keys = set(descriptors.keys())
+        else:
+          new_keys = set(descriptors.keys())
+          keys = keys.intersection(new_keys)
       
-      # Escreve o cabeçalho
-      csv_writer.writerow(keys)
-      
-      # Escreve os dados do CSV
-      for i, line_smiles in enumerate(list_file_content):
-
-        line_smiles_split = line_smiles.split(',')
-        list_descriptors[i]['alvo'] = line_smiles_split[1]
-        line_descriptors = get_line_descriptors(keys, list_descriptors[i])
-
-        line_descriptors_split =line_descriptors.split(',')
-
-        csv_writer.writerow(line_descriptors_split)
+      keys = list(keys)
     
-      # Cria um DataFrame do Pandas com o conteúdo do arquivo
-      data_dataframe = pd.read_csv(file_name)
-      rows, columns = data_dataframe.shape
-      # Ler o arquivo.csv e o atribui a uma variável (para salvar no Database)
-      with open(file_name, 'rb') as arquivo:
-        file_content = arquivo.read()
-      # Salvar database com as informações
-      database = Database().create(
-        name=file_name,
-        file=None,
-        file_separator=',',
-        lines=rows,
-        columns=columns
-      )
-      database.file.save(file_name, ContentFile(file_content))
-      project.database = database
-      # Salvar modificações no backend
-      project.save()
+    # Cria o arquivo com as características, o salva e o retorna
+    def createFileAndSave():
+      nonlocal keys
+      nonlocal list_descriptors
+      nonlocal file_content
+      nonlocal list_file_content
+      nonlocal project
+      nonlocal project_id
+      nonlocal uploaded_file
 
-      os.remove(file_name)
+      file_name = uploaded_file.name
+      # Cria arquivo CSV
+      with open(file_name, 'w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
+        
+        # Escreve o cabeçalho
+        csv_writer.writerow(keys)
+        
+        # Escreve os dados do CSV
+        for i, line_smiles in enumerate(list_file_content):
 
-      # Abra o arquivo e retorne como uma resposta de arquivo
-      with open(f"media/{project.database.file}", 'rb') as file:
-        response = HttpResponse(file.read(), content_type='application/force-download')
-        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-        return response
+          line_smiles_split = line_smiles.split(',')
+          list_descriptors[i]['alvo'] = line_smiles_split[1]
+          line_descriptors = get_line_descriptors(keys, list_descriptors[i])
+
+          line_descriptors_split =line_descriptors.split(',')
+
+          csv_writer.writerow(line_descriptors_split)
+      
+        # Cria um DataFrame do Pandas com o conteúdo do arquivo
+        data_dataframe = pd.read_csv(file_name)
+        rows, columns = data_dataframe.shape
+        # Ler o arquivo.csv e o atribui a uma variável (para salvar no Database)
+        with open(file_name, 'rb') as arquivo:
+          file_content = arquivo.read()
+        # Salvar database com as informações
+        database = Database().create(
+          name=file_name,
+          file=None,
+          file_separator=',',
+          lines=rows,
+          columns=columns
+        )
+        database.file.save(file_name, ContentFile(file_content))
+        project.database = database
+        # Salvar modificações no backend
+        project.save()
+
+        os.remove(file_name)
+
+        # Abra o arquivo e retorne como uma resposta de arquivo
+        with open(f"media/{project.database.file}", 'rb') as file:
+          response = HttpResponse(file.read(), content_type='application/force-download')
+          response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+          return response
+
+    analisingFeatures()
+    response = createFileAndSave()
+    return response
 
   return JsonResponse({ "message": "Nenhum arquivo encontrado!" })
 
