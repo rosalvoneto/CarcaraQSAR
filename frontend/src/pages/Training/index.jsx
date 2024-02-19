@@ -235,19 +235,30 @@ export default function Training() {
               Salvar e Treinar
             </button>
           </div>
-          <div className={styles.rightDiv}>
+          {/* 
+            <div className={styles.rightDiv}>
             {
               loading && <Loading />
             }
-          </div>
+            </div>
+          */}
 
         </div>
+
+        <PopUp show={loading}
+          title={"Treinando..."}
+          buttonName={"Ver resultados"}
+          action={navigateToResults}
+        >
+          <Loading size={45} />
+        </PopUp>
 
         <PopUp show={trained}
           title={"Treinamento finalizado"}
           description={
             `O treinamento com o algoritmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
           }
+          showButton
           buttonName={"Ver resultados"}
           action={navigateToResults}
         />

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './styles.module.css';
 
 export default function PopUp({ 
-  show, title, description, buttonName, action 
+  children, show, title, description, showButton, buttonName, action 
 }) {
 
   return(
@@ -21,12 +21,16 @@ export default function PopUp({
         <p className={styles.popupDescription}>
           {description}
         </p>
-        <button 
-          className={styles.popupButton}
-          onClick={() => action()}
-        >
-          {buttonName}
-        </button>
+        {
+          showButton &&
+          <button 
+            className={styles.popupButton}
+            onClick={() => action()}
+          >
+            {buttonName}
+          </button>
+        }
+        { children }
       </div>
     </div>
   )

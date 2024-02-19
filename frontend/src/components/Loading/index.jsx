@@ -7,7 +7,7 @@ import { ArrowClockwise } from "@phosphor-icons/react";
 
 import styles from './styles.module.css';
 
-const Loading = () => {
+const Loading = ({ size }) => {
 
   const [showTimer, setShowTimer] = useState(false);
   const [seconds, setSeconds] = useState(0);
@@ -30,7 +30,7 @@ const Loading = () => {
     <div className={styles.loadingContainer}>
       <ArrowClockwise 
         className={styles.loader} 
-        size={30} color='#777777' 
+        size={size ? size : 30} color='#777777' 
         stroke='bold'
       />
       {
