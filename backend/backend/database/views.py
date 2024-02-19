@@ -30,25 +30,9 @@ from database.models import Database, Normalization
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
-
-# Create your views here.
-
 import time
 
-@permission_classes([IsAuthenticated])
-def progress(request):
-  for i in range(10):
-    # Simula algum processamento
-    time.sleep(1)  
-
-    progress_percent = (i + 1) * 10
-    data = {'progress': progress_percent}
-    return JsonResponse(data)
-  
-  return JsonResponse({
-    'status': 'OK'
-  })
-
+# Create your views here.
 @permission_classes([IsAuthenticated])
 def minha_view(request):
   # Define a função de resposta SSE
@@ -117,15 +101,13 @@ def convertAndSendDatabase_view(request):
 
     # Retorna uma lista das características em comum de todas as moléculas
     analisingFeatures(list_file_content)
-    print(list_descriptors)
 
     # response = StreamingHttpResponse(
-    #   analisingFeatures(), content_type='text/event-stream'
+    #   analisingFeatures(list_file_content), content_type='text/event-stream'
     # )
     # response['Cache-Control'] = 'no-cache'
+    # return response
 
-    # return JsonResponse({'message': "Processamento finalizado!"})
-  
     file_name = uploaded_file.name
     # Cria arquivo CSV
     with open(file_name, 'w', newline='') as csv_file:
