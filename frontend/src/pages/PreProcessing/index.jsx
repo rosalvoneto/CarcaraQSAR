@@ -100,7 +100,7 @@ export function PreProcessing({ index }) {
   
   const getGraphs = async () => {
     const histogramImage = await pullHistogram();
-    setHistogram(histogramImage)
+    setHistogram(histogramImage);
     const boxPlotImage = await pullBoxPlot();
     setBoxPlot(boxPlotImage);
   }

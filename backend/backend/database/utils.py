@@ -5,6 +5,11 @@ from io import StringIO, BytesIO
 import base64
 
 def getHistogramImage(array, num_bins):
+
+  # print(array)
+  # Remova os valores NaN do array
+  array = array[~np.isnan(array)]
+
   # Calcule o histograma
   hist, bins = np.histogram(array, bins=num_bins)
   # Calcule a amplitude dos intervalos
@@ -38,6 +43,10 @@ def getHistogramImage(array, num_bins):
   return histogram_base64
 
 def getBoxPlotImage(array):
+
+  # print(array)
+  # Remova os valores NaN do array
+  array = array[~np.isnan(array)]
   
   fig, ax = plt.subplots()
 

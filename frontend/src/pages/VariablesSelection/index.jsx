@@ -174,15 +174,15 @@ export default function VariablesSelection() {
           <div className={styles.buttonsContainer}>
             <a 
               className={styles.button}
-              onClick={() => removeVariablesOfTheList(temporaryListToRemove)}
-            >
-              <CaretLeft size={23}/>
-            </a>
-            <a 
-              className={styles.button}
               onClick={() => addVariablesToTheList(temporaryListToAdd)}
             >
               <CaretRight size={23}/>
+            </a>
+            <a 
+              className={styles.button}
+              onClick={() => removeVariablesOfTheList(temporaryListToRemove)}
+            >
+              <CaretLeft size={23}/>
             </a>
           </div>
           <div className={styles.selectedVariablesContainer}>
