@@ -79,10 +79,6 @@ export function Selector({
 
   return (
     <div className={styles.container}>
-      <p className={styles.name}>
-        <strong>{"Remover variáveis manualmente"}</strong>
-      </p>
-
       <div className={styles.inputContainer}>
         <input
           type="text"
@@ -90,7 +86,7 @@ export function Selector({
           value={inputText}
           onChange={handleInputChange}
           className={styles.input}
-          style={{ width: width }}
+          style={{ width: '100%' }}
 
           onKeyPress={handleKeyPress}
         />
@@ -101,7 +97,7 @@ export function Selector({
         ?
           <div 
             className={styles.optionsContainer}
-            style={{ width: width }}
+            style={{ width: '100%' }}
           >
             {
               filteredOptions.map((option, index) => (

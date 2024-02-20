@@ -15,7 +15,7 @@ import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 import { useParams } from 'react-router-dom';
 
-import { CaretUp, CaretDown } from '@phosphor-icons/react';
+import { CaretRight, CaretLeft } from '@phosphor-icons/react';
 
 export const algorithms = [
   "NÃO APLICAR",
@@ -157,40 +157,48 @@ export default function VariablesSelection() {
           }
         />
 
-        <div className={styles.selectorContainer}>
-          <Selector 
-            selectedVariables={listOfVariables}
-            setSelectedVariables={setListOfVariables}
+        <p className={styles.name}>
+          <strong>{"Remover variáveis manualmente"}</strong>
+        </p>
 
-            setTemporaryListToAdd={setTemporaryListToAdd}
-            temporaryListToAdd={temporaryListToAdd}
-          />
-          <a 
-            className={styles.button}
-            onClick={() => removeVariablesOfTheList(temporaryListToRemove)}
-          >
-            <CaretUp size={23}/>
-          </a>
-          <a 
-            className={styles.button}
-            onClick={() => addVariablesToTheList(temporaryListToAdd)}
-          >
-            <CaretDown size={23}/>
-          </a>
-        </div>
-        <div className={styles.selectedVariablesContainer}>
-          {
-            listOfVariables.map((variableName, index) => {
-              
-              return(
-                <Option 
-                  key={index}
-                  name={variableName}
-                  onChangeState={setValuesToTheListToRemove}
-                />
-              )
-            })
-          }
+        <div className={styles.containerContainer}>
+          <div className={styles.selectorContainer}>
+            <Selector 
+              selectedVariables={listOfVariables}
+              setSelectedVariables={setListOfVariables}
+
+              setTemporaryListToAdd={setTemporaryListToAdd}
+              temporaryListToAdd={temporaryListToAdd}
+            />
+          </div>
+          <div className={styles.buttonsContainer}>
+            <a 
+              className={styles.button}
+              onClick={() => removeVariablesOfTheList(temporaryListToRemove)}
+            >
+              <CaretLeft size={23}/>
+            </a>
+            <a 
+              className={styles.button}
+              onClick={() => addVariablesToTheList(temporaryListToAdd)}
+            >
+              <CaretRight size={23}/>
+            </a>
+          </div>
+          <div className={styles.selectedVariablesContainer}>
+            {
+              listOfVariables.map((variableName, index) => {
+                
+                return(
+                  <Option 
+                    key={index}
+                    name={variableName}
+                    onChangeState={setValuesToTheListToRemove}
+                  />
+                )
+              })
+            }
+          </div>
         </div>
       </div>
       

@@ -8,6 +8,8 @@
   background-color: var(--white-color-2);
 
   cursor: alias;
+
+  height: fit-content;
 }
 
 .textSelected {

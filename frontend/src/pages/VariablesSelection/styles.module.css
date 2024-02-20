@@ -31,26 +31,38 @@
   background-color: var(--primary-color-1);
 }
 
+.containerContainer {
+  display: flex;
+}
 
 .selectorContainer {
   display: flex;
+  flex: 1;
+
+  border: 0px solid red;
+}
+
+.buttonsContainer {
+  border: 0px solid green;
+  display: flex;
+  flex-direction: column;
 }
 
 .button {
   padding: 5px;
   border: 0px solid red;
 
-  margin-top: 26px;
   height: 35px;
 }
 
 .selectedVariablesContainer {
   border: 0px solid red;
-  padding: 5px 0;
+  padding: 5px;
 
   display: flex;
+  flex: 1;
+
   flex-wrap: wrap;
   gap: 5px;
 
-  width: 60%;
 }
