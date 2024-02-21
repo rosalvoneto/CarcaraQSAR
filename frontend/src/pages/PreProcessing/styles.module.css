@@ -67,6 +67,21 @@
   overflow: auto;
 }
 
+.ballonInformationContainer {
+  padding: 20px 0;
+}
+
+.ballonInformation {
+  width: 400px;
+  height: fit-content;
+
+  padding: 10px;
+
+  border-radius: 10px;
+  color: var(--white-color-1);
+  background-color: var(--primary-color-1);
+}
+
 .imageHelp {
   border: 1px solid var(--black-color-4);
 

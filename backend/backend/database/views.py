@@ -305,9 +305,21 @@ def getHistogram_view(request):
       variable_data = data_dataframe[variable].values
       variable_array = np.array(variable_data)
 
+      # Crie uma máscara booleana indicando quais elementos do array são NaN
+      mask_nan = np.isnan(variable_array)
+
+      # Conte a quantidade de valores NaN usando np.sum() na máscara
+      number_of_Nan_values = np.sum(mask_nan)
+
+      # Remova os valores NaN do array
+      variable_array = variable_array[~np.isnan(variable_array)]
+
       histogram_image = getHistogramImage(variable_array, num_bins)
 
-      return Response({ 'imageInBase64': histogram_image }, status=200)
+      return Response({ 
+        'imageInBase64': histogram_image,
+        'numberOfNaNValues': number_of_Nan_values
+      }, status=200)
   return Response({ 
     'message': 'Database não encontrado!',
   })
@@ -336,9 +348,21 @@ def getBoxPlot_view(request):
       variable_data = data_dataframe[variable].values
       variable_array = np.array(variable_data)
 
+      # Crie uma máscara booleana indicando quais elementos do array são NaN
+      mask_nan = np.isnan(variable_array)
+
+      # Conte a quantidade de valores NaN usando np.sum() na máscara
+      number_of_Nan_values = np.sum(mask_nan)
+
+      # Remova os valores NaN do array
+      variable_array = variable_array[~np.isnan(variable_array)]
+
       boxPlot_image = getBoxPlotImage(variable_array)
 
-      return Response({ 'imageInBase64': boxPlot_image }, status=200)
+      return Response({ 
+        'imageInBase64': boxPlot_image,
+        'numberOfNaNValues': number_of_Nan_values,
+      }, status=200)
 
   return Response({ 
     'message': 'Database não encontrado!',
