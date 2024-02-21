@@ -20,8 +20,6 @@ export function Selector({
   const { authTokens } = useContext(AuthContext);
   const { projectID } = useParams();
 
-  const width = 700;
-
   const [inputText, setInputText] = useState('');
   const [filteredOptions, setFilteredOptions] = useState([]);
 

@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import LeaveOneOut
 from sklearn.model_selection import KFold
 
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Normalizer, QuantileTransformer, PowerTransformer, FunctionTransformer
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Normalizer
 
 import joblib
 
@@ -45,15 +45,6 @@ def leave_one_out(csv_path, scaler_name):
     elif(scaler_name == "Normalizer"):
       print(f"Usando o Normalizer")
       scaler = Normalizer()
-    elif(scaler_name == "QuantileTransformer"):
-      print(f"Usando o QuantileTransformer")
-      scaler = QuantileTransformer(n_quantiles=len(X))
-    elif(scaler_name == "PowerTransformer"):
-      print(f"Usando o PowerTransformer")
-      scaler = PowerTransformer(method="yeo-johnson", standardize=True)
-    elif(scaler_name == "FunctionTransformer"):
-      print(f"Usando o FunctionTransformer")
-      scaler = FunctionTransformer()
   
     X_norm = scaler.fit_transform(X)
 
@@ -149,15 +140,6 @@ def cross_validation(csv_path, scaler_name):
     elif(scaler_name == "Normalizer"):
       print(f"Usando o Normalizer")
       scaler = Normalizer()
-    elif(scaler_name == "QuantileTransformer"):
-      print(f"Usando o QuantileTransformer")
-      scaler = QuantileTransformer(n_quantiles=len(X))
-    elif(scaler_name == "PowerTransformer"):
-      print(f"Usando o PowerTransformer")
-      scaler = PowerTransformer(method="yeo-johnson", standardize=True)
-    elif(scaler_name == "FunctionTransformer"):
-      print(f"Usando o FunctionTransformer")
-      scaler = FunctionTransformer()
   
     X_norm = scaler.fit_transform(X)
 
