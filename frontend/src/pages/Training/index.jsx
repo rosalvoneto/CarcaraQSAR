@@ -40,7 +40,7 @@ export const algorithmsDescriptions = [
 export const algorithmsParameters = [
   [["n_estimators", "Número de árvores"], ["max_features", "Quantidade de features"]],
   [["regularization", "Regularização"]],
-  [["k_neighbors", "K vizinhos mais próximos"]],
+  [["k_neighbors", "Quantidade K de vizinhos"]],
   [["kernel", "Kernel"], ["CParameter", "Parâmetro C"]],
 ];
 
@@ -71,6 +71,8 @@ export default function Training() {
   
   const [trained, setTrained] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [algorithmIndex, setAlgorithmIndex] = useState(0);
 
   const changeParameters = (key, value) => {
     let values = algorithmParameters;
@@ -144,7 +146,15 @@ export default function Training() {
     .catch(error => {
       console.log(error);
     })
+
   }, []);
+
+  useEffect(() => {
+    const index = algorithms.indexOf(choosenAlgorithm);
+    console.log("Índice do algoritmo:", index);
+    setAlgorithmIndex(index);
+
+  }, [choosenAlgorithm])
 
   if(pageNumber == 0) {
     return(
@@ -214,7 +224,7 @@ export default function Training() {
             <div className={styles.parametersContainer}>
               {
                 algorithmsParameters[
-                  0
+                  algorithmIndex
                 ].map((key, index) => {
                   return(
                     <InlineInput 
@@ -235,13 +245,6 @@ export default function Training() {
               Salvar e Treinar
             </button>
           </div>
-          {/* 
-            <div className={styles.rightDiv}>
-            {
-              loading && <Loading />
-            }
-            </div>
-          */}
 
         </div>
 

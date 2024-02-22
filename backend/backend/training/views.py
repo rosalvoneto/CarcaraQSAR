@@ -205,11 +205,15 @@ def train_view(request):
       if(project.database.normalization):
         print("Normalização:", project.database.normalization)
 
+        print("Tipo de parametros:", type(training.algorithm.parameters))
+
         print("Calculando leave one out:")
         # Execuções dos algoritmos e salvamento dos gráficos
         leave_one_out(
           f"media/{project.database.file}",
-          project.database.normalization.name
+          project.database.normalization.name,
+          training.algorithm.name,
+          training.algorithm.parameters
         )
         file_name = 'loo_temporary.png'
         with open(file_name, 'rb') as image:
@@ -219,7 +223,9 @@ def train_view(request):
         print("Calculando cross validation:")
         cross_validation(
           f"media/{project.database.file}",
-          project.database.normalization.name
+          project.database.normalization.name,
+          training.algorithm.name,
+          training.algorithm.parameters
         )
         file_name = 'cross_validation_temporary.png'
         with open(file_name, 'rb') as image:

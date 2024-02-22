@@ -17,8 +17,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from io import BytesIO
 import base64
 
-
-def leave_one_out(csv_path, scaler_name):
+def leave_one_out(csv_path, scaler_name, algorithm, parameters):
 
   data = pd.read_csv(csv_path)
   
@@ -60,11 +59,21 @@ def leave_one_out(csv_path, scaler_name):
     X_teste = data.iloc[test_index,:-1]
     Y_teste = data.iloc[test_index,-1]
 
-    rf = RandomForestRegressor(n_estimators=50, max_features=4)    
-    rf = rf.fit(X_train, Y_train)
-    y_pred = rf.predict(X_teste)
-    L_Y.append(list(Y_teste)[0])
-    L_Y_pred.append(y_pred)
+    if(algorithm == "Random Forest"):
+      print(f"Usando algoritmo Random Forest")
+      print(parameters)
+
+      rf = RandomForestRegressor(
+        n_estimators=parameters["n_estimators"], 
+        max_features=parameters["max_features"]
+      )    
+      rf = rf.fit(X_train, Y_train)
+      y_pred = rf.predict(X_teste)
+
+      L_Y.append(list(Y_teste)[0])
+      L_Y_pred.append(y_pred)
+    else:
+      print("Não foi usado nenhum algoritmo!")
 
   L = [x[0] for x in L_Y_pred]
 
@@ -94,7 +103,7 @@ def leave_one_out(csv_path, scaler_name):
 
 
 
-def run_exp(data):
+def run_exp(data, algorithm, parameters):
   L_Y = []
   L_Y_pred = []
   kf = KFold(n_splits=2, shuffle=True)
@@ -104,18 +113,26 @@ def run_exp(data):
     X_train = data.iloc[train_index,:-1]
     Y_train = data.iloc[train_index,-1]
     X_teste = data.iloc[test_index,:-1]
-    Y_teste = data.iloc[test_index,-1]        
-    rf = RandomForestRegressor(n_estimators=50, max_features=4)        
-    rf = rf.fit(X_train, Y_train)
-    y_pred = rf.predict(X_teste)
-    L_Y.extend(Y_teste)
-    L_Y_pred.extend(y_pred)
+    Y_teste = data.iloc[test_index,-1]
+
+    if(algorithm == "Random Forest"):
+      print(f"Usando algoritmo Random Forest")
+      print(parameters)
+
+      rf = RandomForestRegressor(
+        n_estimators=parameters["n_estimators"], 
+        max_features=parameters["max_features"]
+      )        
+      rf = rf.fit(X_train, Y_train)
+      y_pred = rf.predict(X_teste)
+      L_Y.extend(Y_teste)
+      L_Y_pred.extend(y_pred)
 
   L = L_Y_pred
   r2 = r2_score(L_Y, L)
   return r2
 
-def cross_validation(csv_path, scaler_name):
+def cross_validation(csv_path, scaler_name, algorithm, parameters):
 
   data = pd.read_csv(csv_path)
 
@@ -148,7 +165,7 @@ def cross_validation(csv_path, scaler_name):
 
   L = []
   for _ in range(50):    
-    r2 = run_exp(data)
+    r2 = run_exp(data, algorithm, parameters)
     L.append(r2)
 
   df = pd.DataFrame(list(enumerate(L, start=1)), columns=['Reptirion', 'r2'])
