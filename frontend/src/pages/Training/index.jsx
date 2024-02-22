@@ -89,7 +89,7 @@ export default function Training() {
       trainingSettings.algorithm == choosenAlgorithm && 
       trainingSettings.withFullSet == withFullSet
       ) {
-      console.log("O algorítmo não mudou");
+      console.log("O algoritmo não mudou");
       console.log("A configuração de conjunto completo não mudou");
       console.log("Não precisa modificar!");
       return true;
@@ -154,7 +154,11 @@ export default function Training() {
     console.log("Índice do algoritmo:", index);
     setAlgorithmIndex(index);
 
-  }, [choosenAlgorithm])
+  }, [choosenAlgorithm]);
+
+  useEffect(() => {
+    console.log("Valor do check:", withFullSet);
+  }, [withFullSet])
 
   if(pageNumber == 0) {
     return(
@@ -176,11 +180,15 @@ export default function Training() {
               setOption={setChoosenAlgorithm}
               firstOption={choosenAlgorithm}
             />
-            <CheckboxInput 
-              name={"Com conjunto completo?"}
-              value={withFullSet} 
-              setValue={setWithFullSet}
-            />
+            {/*
+              <CheckboxInput 
+                name={"Com conjunto completo?"}
+                value={withFullSet} 
+                setValue={setWithFullSet}
+              /> 
+            */}
+            <p>Sem o uso de conjunto completo</p>
+            
           </div>
           
           <div className={styles.informationContainer}>

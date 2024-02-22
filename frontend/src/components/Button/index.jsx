@@ -1,7 +1,7 @@
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import styles from './styles.module.css';
 
 import ProjectContext from '../../context/ProjectContext';
@@ -9,8 +9,9 @@ import ProjectContext from '../../context/ProjectContext';
 export default function Button({ 
   name, URL, stateToPass, side, action, useStrictURL
 }) {
+  const { projectID } = useParams();
+  const { projectDetails, setProjectInfomation } = useContext(ProjectContext);
 
-  const { projectDetails } = useContext(ProjectContext);
   const navigate = useNavigate();
 
   const actions = () => {
@@ -22,7 +23,7 @@ export default function Button({
       if(useStrictURL) {
         navigate(URL, { state: stateToPass });
       } else {
-        navigate(`/${projectDetails.id}${URL}`, { state: stateToPass });
+        navigate(`/${projectID}${URL}`, { state: stateToPass });
       }
     }
   }
