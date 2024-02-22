@@ -61,8 +61,28 @@ export default function Results() {
   const [graphsWithoutFullSet, setGraphsWithoutFullSet] = useState([null]);
   const [graphsWithFullSet, setGraphsWithFullSet] = useState([null]);
 
-  const downloadGraph = () => {
-    console.log("Fazer o Download!");
+  const downloadGraph = (imageUrl) => {
+    const link = document.createElement('a');
+    link.href = imageUrl;
+
+    // Nome do arquivo de download
+    if(pageNumber == 0) {
+      link.download = 'importance.jpg';
+    } else if(pageNumber == 1) {
+      link.download = 'leave_one_out.jpg';
+    } else if(pageNumber == 2) {
+      link.download = 'k-fold_cross_validation.jpg';
+    } else if(pageNumber == 3) {
+      link.download = 'y-scrambling.jpg';
+    } else if(pageNumber == 4) {
+      link.download = 'bootstrap.jpg';
+    } else {
+      link.download = 'undefined.jpg';
+    }
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   useEffect(() => {
@@ -105,7 +125,13 @@ export default function Results() {
           />
           <a
             className={styles.downloadButton}
-            onClick={downloadGraph}
+            onClick={
+              () => downloadGraph(
+                selectedTab == 0
+                ? graphsWithoutFullSet[pageNumber]
+                : graphsWithFullSet[pageNumber]
+              )
+            }
           >
             <DownloadSimple size={30} color='var(--black-color-1)' />
           </a>
