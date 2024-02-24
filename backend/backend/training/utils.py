@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 import pandas as pd
 import numpy as np
 
@@ -16,9 +17,15 @@ from sklearn.metrics import r2_score
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from io import BytesIO
 import base64
+from project_management.models import Project
 
-def leave_one_out(csv_path, scaler_name, algorithm, parameters):
+from training.models import Training
 
+def leave_one_out(project_id, csv_path, scaler_name, algorithm, parameters):
+
+  project = get_object_or_404(Project, id=project_id)
+  training = project.training_set.get()
+  
   data = pd.read_csv(csv_path)
   
   loo = LeaveOneOut()
@@ -53,6 +60,13 @@ def leave_one_out(csv_path, scaler_name, algorithm, parameters):
   L_Y = []
   L_Y_pred = []
 
+  if(algorithm == "Random Forest"):
+    print(f"Usando algoritmo Random Forest")
+  else:
+    print("Não foi usado nenhum algoritmo!")
+
+  length_progress = len(list(enumerate(loo.split(data))))
+
   for i, (train_index, test_index) in enumerate(loo.split(data)):
     X_train = data.iloc[train_index,:-1]
     Y_train = data.iloc[train_index,-1]    
@@ -60,8 +74,6 @@ def leave_one_out(csv_path, scaler_name, algorithm, parameters):
     Y_teste = data.iloc[test_index,-1]
 
     if(algorithm == "Random Forest"):
-      print(f"Usando algoritmo Random Forest")
-      print(parameters)
 
       rf = RandomForestRegressor(
         n_estimators=parameters["n_estimators"], 
@@ -72,8 +84,8 @@ def leave_one_out(csv_path, scaler_name, algorithm, parameters):
 
       L_Y.append(list(Y_teste)[0])
       L_Y_pred.append(y_pred)
-    else:
-      print("Não foi usado nenhum algoritmo!")
+
+      training.set_progress(i + 1, length_progress)
 
   L = [x[0] for x in L_Y_pred]
 
@@ -116,9 +128,6 @@ def run_exp(data, algorithm, parameters):
     Y_teste = data.iloc[test_index,-1]
 
     if(algorithm == "Random Forest"):
-      print(f"Usando algoritmo Random Forest")
-      print(parameters)
-
       rf = RandomForestRegressor(
         n_estimators=parameters["n_estimators"], 
         max_features=parameters["max_features"]
@@ -163,8 +172,14 @@ def cross_validation(csv_path, scaler_name, algorithm, parameters):
   data = pd.DataFrame(X_norm, columns = X.columns)
   data['alvo'] = Y
 
+  
+  if(algorithm == "Random Forest"):
+    print(f"Usando algoritmo Random Forest")
+  else:
+    print("Não foi usado nenhum algoritmo!")
+
   L = []
-  for _ in range(50):    
+  for i in range(50):    
     r2 = run_exp(data, algorithm, parameters)
     L.append(r2)
 

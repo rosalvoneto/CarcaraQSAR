@@ -5,6 +5,8 @@ import csv
 
 from threading import Thread
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from django.http import FileResponse, StreamingHttpResponse
 import os
 from collections import OrderedDict
@@ -74,6 +76,7 @@ def convertAndSendDatabase_view(request):
       nonlocal keys
       nonlocal list_descriptors
       nonlocal list_file_content
+      nonlocal project
 
       keys = set()
       list_descriptors = []
@@ -81,6 +84,10 @@ def convertAndSendDatabase_view(request):
 
       for i in range(length):
         print("Analisando características:", list_file_content[i])
+        if(project.database):
+          print(f"Progresso: {i + 1}/{length}")
+          project.database.set_conversion_progress(i + 1, length)
+          
         descriptors = from_smiles(list_file_content[i].split(',')[0])
 
         # Envia a mensagem de progresso para o cliente
@@ -423,3 +430,23 @@ def getNormalizationSettings_view(request):
   return Response({
     'message': 'Não existe Database associado ao projeto!'
   }, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getConversionProgress_view(request):
+  try:
+    project_id = request.GET.get('project_id')
+    project = get_object_or_404(Project, id=project_id)
+
+    database = project.database
+
+    if(database):    
+      return Response({
+        'progress': database.conversion_progress,
+      }, status=200)
+    else:
+      return Response({
+        'message': "Database não encontrado!",
+      }, status=500)
+  except ObjectDoesNotExist:
+    return HttpResponse("Project or training not found", status=404)

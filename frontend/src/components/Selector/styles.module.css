@@ -11,15 +11,6 @@
   width: 500px;
 }
 
-.inputContainer {
-  display: flex;
-  align-items: center;
-}
-
-.input {
-  border-radius: 10px 10px 0 0;
-}
-
 .optionsContainer {
   border-radius: 0 0 10px 10px;
   border: 1px solid var(--black-color-1);
@@ -29,4 +20,13 @@
   flex-wrap: wrap;
 
   padding: 5px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  border-radius: 10px 10px 0 0;
 }

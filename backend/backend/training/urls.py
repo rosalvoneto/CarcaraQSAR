@@ -40,4 +40,9 @@ urlpatterns = [
     views.getBootstrap_view, 
     name='get_bootstrap'
   ),
+  path(
+    'get_training_progress', 
+    views.getTrainingProgress_view, 
+    name='get_training_progress'
+  )
 ]

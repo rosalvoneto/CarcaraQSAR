@@ -106,6 +106,7 @@ export default function VariablesSelection() {
       }
     });
     setListOfVariables(newListOfVariables);
+    
   }
 
   useEffect(() => {
@@ -160,6 +161,10 @@ export default function VariablesSelection() {
         <p className={styles.name}>
           <strong>{"Remover variáveis manualmente"}</strong>
         </p>
+
+        <div className={styles.inputContainer}>
+          
+        </div>
 
         <div className={styles.containerContainer}>
           <div className={styles.selectorContainer}>

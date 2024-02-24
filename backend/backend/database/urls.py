@@ -27,4 +27,9 @@ urlpatterns = [
     views.minha_view, 
     name="minha_view"
   ),
+  path(
+    'get_conversion_progress', 
+    views.getConversionProgress_view, 
+    name='get_conversion_progress'
+  )
 ]

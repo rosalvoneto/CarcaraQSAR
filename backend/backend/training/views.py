@@ -205,11 +205,10 @@ def train_view(request):
       if(project.database.normalization):
         print("Normalização:", project.database.normalization)
 
-        print("Tipo de parametros:", type(training.algorithm.parameters))
-
         print("Calculando leave one out:")
         # Execuções dos algoritmos e salvamento dos gráficos
         leave_one_out(
+          project_id,
           f"media/{project.database.file}",
           project.database.normalization.name,
           training.algorithm.name,
@@ -244,17 +243,19 @@ def train_view(request):
       else:
         return Response({
           'message': 'Não foi encontrada Normalização!',
-        }, status=200)
+        }, status=500)
     
     return Response({
       'message': 'Não foi encontrado Database!',
-    }, status=200)
+    }, status=500)
 
   except Training.DoesNotExist:
-
     return Response({
       'message': 'Configurações de treinamento não foram encontradas!'
     }, status=200)
+  
+  except:
+    print("AQUII")
   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -360,3 +361,19 @@ def getBootstrap_view(request):
     return HttpResponse("Project or training not found", status=404)
   except ValueError:
     return HttpResponse("No file associated with bootstrap attribute", status=404)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getTrainingProgress_view(request):
+  try:
+    project_id = request.GET.get('project_id')
+    project = get_object_or_404(Project, id=project_id)
+
+    training = project.training_set.get()
+    
+    return Response({
+      'progress': training.progress,
+    }, status=200)
+
+  except ObjectDoesNotExist:
+    return HttpResponse("Project or training not found", status=404)

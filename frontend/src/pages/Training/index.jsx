@@ -1,27 +1,25 @@
-import { ProgressBar } from '../../components/ProgressBar';
-import { Header } from '../../components/Header';
+import { useContext, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import styles from './styles.module.css';
 
-import { projectName } from '../../settings';
+import { ProgressBar } from '../../components/ProgressBar';
+import { Header } from '../../components/Header';
+
 import { RadionInput } from '../../components/RadioInput';
-import { useContext, useEffect, useState } from 'react';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 
 import PopUp from '../../components/PopUp';
 
 import { 
+  getTrainingProgress,
   getTrainingSettings, setTrainingSettings, train 
 } from '../../api/training';
 
 import Loading from '../../components/Loading';
-import { CheckboxInput } from '../../components/CheckboxInput';
-
-import axios from 'axios';
 
 export const algorithms = [
   "Random Forest",
@@ -69,8 +67,9 @@ export default function Training() {
   const [algorithmParameters, setAlgorithmParameters] = useState({});
   const [withFullSet, setWithFullSet] = useState(false);
   
-  const [trained, setTrained] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [trained, setTrained] = useState("false");
+  const [loading, setLoadingTraining] = useState(false);
+  const [trainingProgress, setTrainingProgress] = useState("");
 
   const [algorithmIndex, setAlgorithmIndex] = useState(0);
 
@@ -108,8 +107,7 @@ export default function Training() {
   }
 
   const saveAndTrain = async() => {
-    setLoading(true);
-
+    
     const response = await setTrainingSettings(
       projectID, 
       choosenAlgorithm, 
@@ -117,10 +115,17 @@ export default function Training() {
       withFullSet,
       authTokens.access
     );
+
+    setLoadingTraining(true);
     if(response) {
       const response = await train(projectID, authTokens.access);
-      setLoading(false);
-      setTrained(true);
+      if(response.status == 500) {
+        setLoadingTraining(false);
+        setTrained("isError");
+      } else {
+        setLoadingTraining(false);
+        setTrained("true");
+      }
 
       return true;
     }
@@ -129,6 +134,14 @@ export default function Training() {
 
   const navigateToResults = () => {
     navigate(`/${projectID}/results`);
+  }
+
+  const getProgress = async() => {
+    if(loading) {
+      const response = await getTrainingProgress(projectID, authTokens.access);
+      setTrainingProgress(response.progress);
+      console.log(response.progress);
+    }
   }
 
   useEffect(() => {
@@ -148,6 +161,14 @@ export default function Training() {
     })
 
   }, []);
+
+  useEffect(() => {
+    // A função será executada a cada 5 segundos (5000 milissegundos)
+    const interval = setInterval(getProgress, 1000);
+    // Função de limpeza para interromper o intervalo quando 
+    // o componente for desmontado
+    return () => clearInterval(interval);
+  }, [loading]);
 
   useEffect(() => {
     const index = algorithms.indexOf(choosenAlgorithm);
@@ -180,13 +201,15 @@ export default function Training() {
               setOption={setChoosenAlgorithm}
               firstOption={choosenAlgorithm}
             />
-            {/*
+            {
+            /*
               <CheckboxInput 
                 name={"Com conjunto completo?"}
                 value={withFullSet} 
                 setValue={setWithFullSet}
               /> 
-            */}
+            */
+            }
             <p>Sem o uso de conjunto completo</p>
             
           </div>
@@ -262,9 +285,10 @@ export default function Training() {
           action={navigateToResults}
         >
           <Loading size={45} />
+          <p>{trainingProgress}</p>
         </PopUp>
 
-        <PopUp show={trained}
+        <PopUp show={trained == "true"}
           title={"Treinamento finalizado"}
           description={
             `O treinamento com o algoritmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
@@ -272,6 +296,16 @@ export default function Training() {
           showButton
           buttonName={"Ver resultados"}
           action={navigateToResults}
+        />
+
+        <PopUp show={trained == "isError"}
+          title={"Problema no treinamento"}
+          description={
+            `O treinamento com o algoritmo ${choosenAlgorithm} não foi possível de ser completado!`
+          }
+          showButton
+          buttonName={"Ok"}
+          action={() => setTrained("false")}
         />
 
         <Button 
@@ -283,7 +317,7 @@ export default function Training() {
           side={'left'}
         />
         {
-          trained &&
+          trained == "true" &&
           <Button 
             name={'Próximo'} 
             URL={'/results'}

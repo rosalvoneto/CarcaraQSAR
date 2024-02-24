@@ -19,6 +19,13 @@ class Database(models.Model):
   file_separator = models.CharField(max_length=1, default=',')
   lines = models.IntegerField()
   columns = models.IntegerField()
+
+  conversion_progress = models.CharField(
+    max_length=10,
+    null=True,
+    blank=True,
+    default=None
+  )
   
   normalization = models.OneToOneField(
     Normalization, 
@@ -37,6 +44,10 @@ class Database(models.Model):
     database.save()
 
     return database
+  
+  def set_conversion_progress(self, actual, total):
+    self.conversion_progress = f"{actual}/{total}"
+    self.save()
 
   def __str__(self):
     return f"{self.name}"

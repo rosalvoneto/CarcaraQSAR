@@ -99,9 +99,6 @@ export const getTrainingSettings = async (
   projectID, accessToken
 ) => {
 
-  const formData = new FormData();
-  formData.append('project_id', projectID);
-
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/get_training_settings?project_id=${projectID}`, {
       method: 'GET',
@@ -138,15 +135,7 @@ export const train = async (
       body: formData,
   })
 
-  let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
-  return dataResponse;
+  return response;
 }
 
 // Resgata gráficos do treinamento
@@ -192,4 +181,28 @@ export const getTrainingGraphs = async (
   }
 
   return imagesURL;
+}
+
+// Resgata progresso no treinamento 
+export const getTrainingProgress = async (
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/get_training_progress?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
 }

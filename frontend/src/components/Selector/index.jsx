@@ -25,24 +25,27 @@ export function Selector({
 
   const [variablesNames, setVariablesNames] = useState([]);
 
+  const filterArray = (searchText, variablesToRemove) => {
+    // Filtra as opções com base no texto digitado
+    const filter1 = variablesNames.filter((option) =>
+      option.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    // Filtra com base na variáveis que já estão na lista para remover
+    const filter2 = filter1.filter((item) =>
+      !variablesToRemove.includes(item)
+    );
+
+    return filter2;
+  }
+
   const handleInputChange = (e) => {
     const searchText = e.target.value;
     setInputText(searchText);
-
-    // Filtra as opções com base no texto digitado
-    const filtered = variablesNames.filter((option) =>
-      option.toLowerCase().includes(searchText.toLowerCase())
-    );
+    
+    const filtered = filterArray(searchText, selectedVariables);
     setFilteredOptions(filtered);
   };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      if(selectedVariables.includes(filteredOptions[0]) == false) {
-        setSelectedVariables([...selectedVariables, filteredOptions[0]]);
-      }
-    }
-  }
 
   const setValuesToTheListToAdd = (variableName, variableValue) => {
     if(variableValue) {
@@ -75,41 +78,36 @@ export function Selector({
     })  
   }, [])
 
+  useEffect(() => {
+    const filtered = filterArray("", selectedVariables);
+    setFilteredOptions(filtered);
+  }, [variablesNames])
+
   return (
     <div className={styles.container}>
-      <div className={styles.inputContainer}>
-        <input
-          type="text"
-          placeholder="Digite a opção desejada"
-          value={inputText}
-          onChange={handleInputChange}
-          className={styles.input}
-          style={{ width: '100%' }}
+      <input
+        type="text"
+        placeholder="Digite a opção desejada"
+        className={styles.input}
 
-          onKeyPress={handleKeyPress}
-        />
-      </div>
-      
+        value={inputText}
+        onChange={handleInputChange}
+      />
       {
-        inputText.length
-        ?
-          <div 
-            className={styles.optionsContainer}
-            style={{ width: '100%' }}
-          >
-            {
-              filteredOptions.map((option, index) => (
-                <Option 
-                  key={index}
-                  name={option} 
-                  active={index == 0 ? true : false}
-                  onChangeState={setValuesToTheListToAdd}
-                />
-              ))
-            }
-          </div>
-        :
-          undefined
+        <div 
+          className={styles.optionsContainer}
+          style={{ width: '100%' }}
+        >
+          {
+            filteredOptions.map((option, index) => (
+              <Option 
+                key={index}
+                name={option} 
+                onChangeState={setValuesToTheListToAdd}
+              />
+            ))
+          }
+        </div>
       }
       
     </div>

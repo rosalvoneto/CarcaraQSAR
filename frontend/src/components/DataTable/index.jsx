@@ -6,7 +6,7 @@ import styles from './styles.module.css';
 import AuthContext from '../../context/AuthContext';
 import Loading from '../Loading';
 
-import { getDatabase } from '../../api/database';
+import { getConversionProgress, getDatabase } from '../../api/database';
 import { convertJsonObjectInMatrix } from '../../utils';
 
 export function DataTable({ 
@@ -19,6 +19,16 @@ export function DataTable({
 
   const [loading, setLoading] = useState(false);
   const [matrix, setMatrix] = useState([]);
+
+  const [conversionProgress, setConversionProgress] = useState("");
+
+  const getProgress = async() => {
+    if(loading) {
+      const response = await getConversionProgress(projectID, authTokens.access);
+      setConversionProgress(response.progress);
+      console.log(response.progress);
+    }
+  }
 
   useEffect(() => {
 
@@ -54,10 +64,21 @@ export function DataTable({
 
   }, [transpose]);
 
-  useEffect(() => setLoading(false), []);
+  useEffect(() => {
+    // A função será executada a cada 5 segundos (5000 milissegundos)
+    const interval = setInterval(getProgress, 1000);
+    // Função de limpeza para interromper o intervalo quando 
+    // o componente for desmontado
+    return () => clearInterval(interval);
+  }, [loading]);
 
   if(loading) {
-    return <Loading/>
+    return (
+    <div className={styles.loadingContainer}>
+      <Loading/>
+      <p>Convertendo {conversionProgress} linhas do arquivo SMILES</p>
+    </div>
+  )
   } else {
     return (
       <div 

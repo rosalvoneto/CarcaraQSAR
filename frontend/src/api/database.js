@@ -211,3 +211,27 @@ export const getNormalizationSettings = async (
   }
   return dataResponse;
 }
+
+// Resgata o progresso de conversão de um arquivo SMILES para CSV
+export const getConversionProgress = async (
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/get_conversion_progress?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}

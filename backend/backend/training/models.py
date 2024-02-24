@@ -39,6 +39,13 @@ class Training(models.Model):
   trained = models.BooleanField(default=False)
   with_full_set = models.BooleanField(default=False)
 
+  progress = models.CharField(
+    max_length=10,
+    null=True,
+    blank=True,
+    default=None
+  )
+
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
   leave_one_out =  models.ImageField(
@@ -71,6 +78,10 @@ class Training(models.Model):
     blank=True,
     default=None
   )
+
+  def set_progress(self, actual, total):
+    self.progress = f"{actual}/{total}"
+    self.save()
 
   def __str__(self):
     return f"Treinamento com algoritmo '{self.algorithm.name}'"
