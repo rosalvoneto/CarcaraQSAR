@@ -221,6 +221,7 @@ def train_view(request):
 
         print("Calculando cross validation:")
         cross_validation(
+          project_id,
           f"media/{project.database.file}",
           project.database.normalization.name,
           training.algorithm.name,

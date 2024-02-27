@@ -141,7 +141,10 @@ def run_exp(data, algorithm, parameters):
   r2 = r2_score(L_Y, L)
   return r2
 
-def cross_validation(csv_path, scaler_name, algorithm, parameters):
+def cross_validation(project_id, csv_path, scaler_name, algorithm, parameters):
+
+  project = get_object_or_404(Project, id=project_id)
+  training = project.training_set.get()
 
   data = pd.read_csv(csv_path)
 
@@ -178,10 +181,14 @@ def cross_validation(csv_path, scaler_name, algorithm, parameters):
   else:
     print("Não foi usado nenhum algoritmo!")
 
+  length_progress = 50
+
   L = []
-  for i in range(50):    
+  for i in range(length_progress):    
     r2 = run_exp(data, algorithm, parameters)
     L.append(r2)
+
+    training.set_progress(i + 1, length_progress)
 
   df = pd.DataFrame(list(enumerate(L, start=1)), columns=['Reptirion', 'r2'])
   Y = df['r2'].to_numpy()
