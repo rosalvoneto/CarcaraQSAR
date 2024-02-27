@@ -47,7 +47,7 @@ export default function VariablesSelection() {
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [removeConstantVariables, setRemoveConstantVariables] = useState();
 
-  const [listOfVariables, setListOfVariables] = useState([]);
+  const [rightListOfVariables, setRightListOfVariables] = useState([]);
   const [temporaryListToRemove, setTemporaryListToRemove] = useState([]);
   const [temporaryListToAdd, setTemporaryListToAdd] = useState([]);
 
@@ -64,7 +64,7 @@ export default function VariablesSelection() {
       projectID,
       choosenAlgorithm,
       removeConstantVariables,
-      listOfVariables,
+      rightListOfVariables,
       authTokens.access
     );
     return response;
@@ -90,22 +90,22 @@ export default function VariablesSelection() {
   const removeVariablesOfTheList = (variablesToRemove) => {
     console.log("Variáveis para retirar:", variablesToRemove);
 
-    let newListOfVariables = listOfVariables.filter(variable => 
+    let newListOfVariables = rightListOfVariables.filter(variable => 
       !variablesToRemove.includes(variable)
     )
-    setListOfVariables(newListOfVariables);
+    setRightListOfVariables(newListOfVariables);
   }
 
   const addVariablesToTheList = (variablesToAdd) => {
     console.log("Variáveis para adicionar:", variablesToAdd);
 
-    let newListOfVariables = [...listOfVariables];
+    let newListOfVariables = [...rightListOfVariables];
     variablesToAdd.forEach(variableToAdd => {
-      if(!listOfVariables.includes(variableToAdd)) {
+      if(!rightListOfVariables.includes(variableToAdd)) {
         newListOfVariables.push(variableToAdd);
       }
     });
-    setListOfVariables(newListOfVariables);
+    setRightListOfVariables(newListOfVariables);
     
   }
 
@@ -119,7 +119,7 @@ export default function VariablesSelection() {
       setRemoveConstantVariables(response.removeConstantVariables);
 
       console.log(response.variablesToRemove);
-      setListOfVariables(response.variablesToRemove);
+      setRightListOfVariables(response.variablesToRemove);
     })
     .catch(error => {
       console.log(error);
@@ -132,6 +132,7 @@ export default function VariablesSelection() {
         title={projectDetails.name}
       />
       <ProgressBar progressNumber={progress}/>
+
       <div className={styles.container}>
         <div className={styles.algorithmContainer}>
           <RadionInput 
@@ -169,8 +170,8 @@ export default function VariablesSelection() {
         <div className={styles.containerContainer}>
           <div className={styles.selectorContainer}>
             <Selector 
-              selectedVariables={listOfVariables}
-              setSelectedVariables={setListOfVariables}
+              rightListOfVariables={rightListOfVariables}
+              setRightListOfVariables={setRightListOfVariables}
 
               setTemporaryListToAdd={setTemporaryListToAdd}
               temporaryListToAdd={temporaryListToAdd}
@@ -192,7 +193,7 @@ export default function VariablesSelection() {
           </div>
           <div className={styles.selectedVariablesContainer}>
             {
-              listOfVariables.map((variableName, index) => {
+              rightListOfVariables.map((variableName, index) => {
                 
                 return(
                   <Option 

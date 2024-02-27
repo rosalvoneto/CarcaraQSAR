@@ -2,11 +2,11 @@
 import { useEffect, useState } from 'react';
 import styles from './styles.module.css';
 
-export function Option({ name, active, onChangeState }) {
+export function Option({ name, onChangeState }) {
 
-  const [activated, setActivated] = useState(active);
+  const [activated, setActivated] = useState(false);
   const [classNames, setClassNames] = useState(`${styles.text} ${
-    active ? styles.textSelected : {}
+    false ? styles.textSelected : {}
   }`)
 
   const setState = () => {

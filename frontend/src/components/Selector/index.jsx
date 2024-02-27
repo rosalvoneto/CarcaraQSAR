@@ -11,8 +11,8 @@ import { getVariables } from '../../api/database';
 import AuthContext from '../../context/AuthContext';
 
 export function Selector({ 
-  setSelectedVariables, 
-  selectedVariables, 
+  setRightListOfVariables, 
+  rightListOfVariables, 
   setTemporaryListToAdd,
   temporaryListToAdd
 }) {
@@ -20,10 +20,10 @@ export function Selector({
   const { authTokens } = useContext(AuthContext);
   const { projectID } = useParams();
 
-  const [inputText, setInputText] = useState('');
-  const [filteredOptions, setFilteredOptions] = useState([]);
-
   const [variablesNames, setVariablesNames] = useState([]);
+  const [inputText, setInputText] = useState('');
+
+  const [leftListOfVariables, setLeftListOfVariables] = useState([]);
 
   const filterArray = (searchText, variablesToRemove) => {
     // Filtra as opções com base no texto digitado
@@ -43,8 +43,8 @@ export function Selector({
     const searchText = e.target.value;
     setInputText(searchText);
     
-    const filtered = filterArray(searchText, selectedVariables);
-    setFilteredOptions(filtered);
+    const filtered = filterArray(searchText, rightListOfVariables);
+    setLeftListOfVariables(filtered);
   };
 
   const setValuesToTheListToAdd = (variableName, variableValue) => {
@@ -79,9 +79,9 @@ export function Selector({
   }, [])
 
   useEffect(() => {
-    const filtered = filterArray("", selectedVariables);
-    setFilteredOptions(filtered);
-  }, [variablesNames])
+    const filtered = filterArray("", rightListOfVariables);
+    setLeftListOfVariables(filtered);
+  }, [variablesNames, rightListOfVariables])
 
   return (
     <div className={styles.container}>
@@ -99,7 +99,7 @@ export function Selector({
           style={{ width: '100%' }}
         >
           {
-            filteredOptions.map((option, index) => (
+            leftListOfVariables.map((option, index) => (
               <Option 
                 key={index}
                 name={option} 
