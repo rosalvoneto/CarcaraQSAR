@@ -1734,6 +1734,11 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
 
+"react-progress-bar@^0.1.0":
+  "integrity" "sha512-ZlZE+6PsIAeI6KjPJ4M2YMkByqLpTvw3Nqi+6izISDzl2++laeCIYKUaOtgMa7WpG+uXDvBjV5blt61P3LPvZQ=="
+  "resolved" "https://registry.npmjs.org/react-progress-bar/-/react-progress-bar-0.1.0.tgz"
+  "version" "0.1.0"
+
 "react-refresh@^0.14.0":
   "integrity" "sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ=="
   "resolved" "https://registry.npmjs.org/react-refresh/-/react-refresh-0.14.0.tgz"

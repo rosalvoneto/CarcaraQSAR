@@ -9,6 +9,8 @@ import Loading from '../Loading';
 import { getConversionProgress, getDatabase } from '../../api/database';
 import { convertJsonObjectInMatrix } from '../../utils';
 
+import ProgressBarLoading from '../ProgressBarLoading';
+
 export function DataTable({ 
   transpose, 
   jsonDatabase,
@@ -21,7 +23,7 @@ export function DataTable({
   const [loading, setLoading] = useState(false);
   const [matrix, setMatrix] = useState([]);
 
-  const [conversionProgress, setConversionProgress] = useState("");
+  const [conversionProgress, setConversionProgress] = useState("0/100");
 
   const setLoadingValue = (value) => {
     console.log("Mudando para VALOR:", value);
@@ -31,8 +33,9 @@ export function DataTable({
   const getProgress = async() => {
     if(loading) {
       const response = await getConversionProgress(projectID, authTokens.access);
-      setConversionProgress(response.progress);
-      console.log(response.progress);
+      if(response.progress) {
+        setConversionProgress(response.progress);
+      }
     }
   }
 
@@ -78,13 +81,15 @@ export function DataTable({
     return () => clearInterval(interval);
   }, [loading]);
 
-
-
   if(loading) {
     if(isSMILESConversion) {
       return (
         <div className={styles.loadingContainer}>
           <Loading/>
+          <ProgressBarLoading 
+            progress={Number(conversionProgress.split('/')[0])}
+            maximum={Number(conversionProgress.split('/')[1])}
+          />
           <p> {conversionProgress} linhas do arquivo</p>
         </div>
       )
