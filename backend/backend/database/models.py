@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 
 # Create your models here.
@@ -17,8 +18,8 @@ class Database(models.Model):
   name = models.CharField(max_length=100)
   file =  models.FileField(upload_to='databases/', null=True, blank=True)
   file_separator = models.CharField(max_length=1, default=',')
-  lines = models.IntegerField()
-  columns = models.IntegerField()
+  lines = models.IntegerField(default=0)
+  columns = models.IntegerField(default=0)
 
   conversion_progress = models.CharField(
     max_length=10,

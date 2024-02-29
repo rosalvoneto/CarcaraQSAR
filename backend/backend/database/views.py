@@ -102,6 +102,7 @@ def convertAndSendDatabase_view(request):
           keys = keys.intersection(new_keys)
       
       keys = list(keys)
+      keys.append('alvo')
     
     # Cria o arquivo com as características, o salva e o retorna
     def createFileAndSave():

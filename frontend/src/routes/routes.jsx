@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from "react";
 import { Route, Routes as Switch } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 
@@ -14,101 +15,101 @@ import Outliers from "../pages/Outliers";
 import { TrashPage } from "../pages/TrashPage";
 import { SharedPage } from "../pages/SharedPage";
 
-import { AuthProvider } from "../context/AuthContext";
-import { ProjectProvider } from "../context/ProjectContext";
+import AuthContext from "../context/AuthContext";
+import { Redirect } from "./Redirect";
+
+import Cookies from "js-cookie";
 
 export const Routes = () => {
+
+  const isAuthenticated = true;
+
   return (
-    <AuthProvider>
-      <ProjectProvider>
-        <BrowserRouter >
-          
-            <Switch>
+    <BrowserRouter >
+        <Switch>
+          <Route path="/" 
+            element={
+              <Login />
+            } 
+          />
 
-              <Route path="/" 
-                element={
-                  <Login />
-                } 
-              />
-              
-              <Route path="/home" 
-                element={
-                  <DefaultPage>
-                    <Home />
-                  </DefaultPage>
-                }
-              />
+          <Route path="/home" element={
+              isAuthenticated ? (
+                <DefaultPage>
+                  <Home />
+                </DefaultPage>
+              ) : (
+                <Redirect to='/' />
+              )
+            } 
+          />
 
-              <Route path="/shared" 
-                element={
-                  <DefaultPage>
-                    <SharedPage />
-                  </DefaultPage>
-                } 
-              />
+          <Route path="/shared" 
+            element={
+              <DefaultPage>
+                <SharedPage />
+              </DefaultPage>
+            } 
+          />
 
-              <Route path="/trash" 
-                element={
-                  <DefaultPage>
-                    <TrashPage />
-                  </DefaultPage>
-                } 
-              />
+          <Route path="/trash" 
+            element={
+              <DefaultPage>
+                <TrashPage />
+              </DefaultPage>
+            } 
+          />
 
-              <Route path="/new" 
-                element={
-                  <DefaultPage>
-                    <NewProject />
-                  </DefaultPage>
-                } 
-              />
-              <Route path="/:projectID/database" 
-                element={
-                  <DefaultPage>
-                    <Database />
-                  </DefaultPage>
-                } 
-              />
-              <Route path="/:projectID/pre-processing" 
-                element={
-                  <DefaultPage>
-                    <PreProcessing />
-                  </DefaultPage>
-                }
-              />
-              <Route path="/:projectID/variables-selection" 
-                element={
-                  <DefaultPage>
-                    <VariablesSelection />
-                  </DefaultPage>
-                } 
-              />
-              <Route path="/:projectID/training" 
-                element={
-                  <DefaultPage>
-                    <Training />
-                  </DefaultPage>
-                } 
-              />
-              <Route path="/:projectID/results" 
-                element={
-                  <DefaultPage>
-                    <Results />
-                  </DefaultPage>
-                } 
-              />
-              <Route path="/:projectID/outliers" 
-                element={
-                  <DefaultPage>
-                    <Outliers />
-                  </DefaultPage>
-                } 
-              />
-
-            </Switch>
-            
-        </BrowserRouter>
-      </ProjectProvider>
-    </AuthProvider>
+          <Route path="/new" 
+            element={
+              <DefaultPage>
+                <NewProject />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/:projectID/database" 
+            element={
+              <DefaultPage>
+                <Database />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/:projectID/pre-processing" 
+            element={
+              <DefaultPage>
+                <PreProcessing />
+              </DefaultPage>
+            }
+          />
+          <Route path="/:projectID/variables-selection" 
+            element={
+              <DefaultPage>
+                <VariablesSelection />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/:projectID/training" 
+            element={
+              <DefaultPage>
+                <Training />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/:projectID/results" 
+            element={
+              <DefaultPage>
+                <Results />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/:projectID/outliers" 
+            element={
+              <DefaultPage>
+                <Outliers />
+              </DefaultPage>
+            } 
+          />
+        </Switch>
+    </BrowserRouter>
   );
 };

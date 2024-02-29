@@ -11,7 +11,8 @@ import { convertJsonObjectInMatrix } from '../../utils';
 
 export function DataTable({ 
   transpose, 
-  jsonDatabase
+  jsonDatabase,
+  isSMILESConversion
 }) {
 
   const { projectID } = useParams();
@@ -22,6 +23,11 @@ export function DataTable({
 
   const [conversionProgress, setConversionProgress] = useState("");
 
+  const setLoadingValue = (value) => {
+    console.log("Mudando para VALOR:", value);
+    setLoading(value);
+  }
+
   const getProgress = async() => {
     if(loading) {
       const response = await getConversionProgress(projectID, authTokens.access);
@@ -31,22 +37,7 @@ export function DataTable({
   }
 
   useEffect(() => {
-
-    if(jsonDatabase === null) {
-      setLoading(true);
-    }
-
-    // Transformar em matriz toda vez que tiver um novo Database no backend
-    if(jsonDatabase) {
-      const matrix = convertJsonObjectInMatrix(jsonDatabase);
-      setMatrix(matrix);
-      setLoading(false);
-    }
-
-  }, [jsonDatabase])
-
-  useEffect(() => {
-    setLoading(true);
+    setLoadingValue(true);
 
     // Resgatar Database de acordo com a mudança na transposição da matriz
     getDatabase(projectID, authTokens.access, transpose)
@@ -55,8 +46,8 @@ export function DataTable({
         const jsonData = response.database;
         const matrix = convertJsonObjectInMatrix(jsonData);
         setMatrix(matrix);
-        setLoading(false);
       }
+      setLoadingValue(false);
     })
     .catch((error) => {
       console.log(error);
@@ -65,20 +56,45 @@ export function DataTable({
   }, [transpose]);
 
   useEffect(() => {
-    // A função será executada a cada 5 segundos (5000 milissegundos)
+
+    if(jsonDatabase === null) {
+      setLoadingValue(true);
+    }
+
+    // Transformar em matriz toda vez que tiver um novo Database no backend
+    if(jsonDatabase) {
+      const matrix = convertJsonObjectInMatrix(jsonDatabase);
+      setMatrix(matrix);
+      setLoadingValue(false);
+    }
+
+  }, [jsonDatabase])
+
+  useEffect(() => {
+    // A função será executada a cada quantidade de segundos
     const interval = setInterval(getProgress, 1000);
     // Função de limpeza para interromper o intervalo quando 
     // o componente for desmontado
     return () => clearInterval(interval);
   }, [loading]);
 
+
+
   if(loading) {
-    return (
-    <div className={styles.loadingContainer}>
-      <Loading/>
-      <p>Convertendo {conversionProgress} linhas do arquivo SMILES</p>
-    </div>
-  )
+    if(isSMILESConversion) {
+      return (
+        <div className={styles.loadingContainer}>
+          <Loading/>
+          <p> {conversionProgress} linhas do arquivo</p>
+        </div>
+      )
+    } else {
+      return (
+        <div className={styles.loadingContainer}>
+          <Loading/>
+        </div>
+      )
+    }
   } else {
     return (
       <div 

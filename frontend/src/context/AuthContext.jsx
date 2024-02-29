@@ -27,13 +27,17 @@ export const AuthProvider = ({ children }) => {
       )
   );
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const loginUserWithState = async (e) => {
     const dataResponse = await loginUser(e);
 
     if(dataResponse) {
       setAuthTokens(dataResponse);
-      setDecodifiedAccessToken(dataResponse.access)
+      setDecodifiedAccessToken(dataResponse.access);
+      
+      console.log("LOGANDO...");
+      setIsAuthenticated(true);
     }
   }
 
@@ -41,6 +45,9 @@ export const AuthProvider = ({ children }) => {
     logoutUser();
     setAuthTokens(null);
     setDecodifiedAccessToken(null);
+
+    console.log("DESLOGANDO...");
+    setIsAuthenticated(false);
   }
 
   const createUserWithState = async (e) => {
@@ -96,6 +103,8 @@ export const AuthProvider = ({ children }) => {
     createUser: createUserWithState,
     loginUser: loginUserWithState,
     logoutUser: logoutUserWithState,
+    isAuthenticated: isAuthenticated,
+    setIsAuthenticated: setIsAuthenticated,
   }
   
   return(

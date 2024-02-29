@@ -1,10 +1,17 @@
 import './App.css';
 
+import { AuthProvider } from './context/AuthContext';
+import { ProjectProvider } from './context/ProjectContext';
+
 import { Routes } from './routes/routes';
 
 function App() {
   return (
-    <Routes />
+    <AuthProvider>
+      <ProjectProvider>
+        <Routes />
+      </ProjectProvider>
+    </AuthProvider>
   )
 }
 

@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+from database.models import Database
 from .serializers import ProjectSerializer
 
 from user.models import User
@@ -33,6 +35,10 @@ def createProject_view(request):
   project.name = name
   project.description = description
   project.user = user
+
+  database = Database()
+  database.save()
+  project.database = database
   project.save()
 
   # Retorne uma resposta, por exemplo, um JSON

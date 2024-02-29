@@ -32,6 +32,8 @@ export function Database() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedSmilesFile, setSelectedSmilesFile] = useState(null);
+
+  const [isSMILESConversion, setIsSMILESConversion] = useState(false);
   
   const [transpose, setTranspose] = useState(false);
   const [separator, setSeparator] = useState(',');
@@ -104,25 +106,12 @@ export function Database() {
     })
 
   }, [])
-
-  useEffect(() => {
-    const eventSource = new EventSource(
-      `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/convert_and_send`
-    );
-
-    eventSource.onmessage = (event) => {
-      const newMessage = event.data;
-      console.log(newMessage);
-    };
-
-    return () => {
-      // Fecha a conexão quando o componente é desmontado
-      // eventSource.close();
-    };
-  }, []);
   
   useEffect(() => {
     if(selectedFile) {
+
+      setIsSMILESConversion(false);
+
       setDatabase({
         database: null,
         name: null,
@@ -152,6 +141,8 @@ export function Database() {
 
   useEffect(() => {
     if(selectedSmilesFile !== null) {
+
+      setIsSMILESConversion(true);
 
       setDatabase({
         database: null,
@@ -216,7 +207,11 @@ export function Database() {
         <div className={styles.tableInfomation}>
           <CheckboxInput 
             name={"Transposição:"}
-            value={transpose} setValue={setTranspose}
+            value={transpose} 
+            setValue={(value) => {
+              setTranspose(value);
+              setIsSMILESConversion(false);
+            }}
           />
           <p className={styles.tableDescription}>
             {
@@ -228,6 +223,7 @@ export function Database() {
         <DataTable
           transpose={transpose}
           jsonDatabase={database.database}
+          isSMILESConversion={isSMILESConversion}
         />
         
         <Button 
