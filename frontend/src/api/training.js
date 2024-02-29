@@ -134,6 +134,9 @@ export const train = async (
       },
       body: formData,
   })
+  
+  let dataResponse = await response.json();
+  console.log(dataResponse.message);
 
   return response;
 }

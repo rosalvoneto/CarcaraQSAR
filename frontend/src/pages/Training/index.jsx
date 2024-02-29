@@ -13,6 +13,7 @@ import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 
 import PopUp from '../../components/PopUp';
+import ProgressBarLoading from '../../components/ProgressBarLoading';
 
 import { 
   getTrainingProgress,
@@ -69,7 +70,10 @@ export default function Training() {
   
   const [trained, setTrained] = useState("false");
   const [loading, setLoadingTraining] = useState(false);
-  const [trainingProgress, setTrainingProgress] = useState("");
+
+  const [trainingProgress, setTrainingProgress] = useState("0/100");
+  const [progressValue, setProgressValue] = useState(0);
+  const [maximumValue, setMaximumValue] = useState(100);
 
   const [algorithmIndex, setAlgorithmIndex] = useState(0);
 
@@ -139,8 +143,12 @@ export default function Training() {
   const getProgress = async() => {
     if(loading) {
       const response = await getTrainingProgress(projectID, authTokens.access);
-      setTrainingProgress(response.progress);
-      console.log(response.progress);
+      if(response.progress) {
+        setTrainingProgress(response.progress);
+        const split = response.progress.split('/');
+        setProgressValue(Number(split[0]));
+        setMaximumValue(Number(split[1]));
+      }
     }
   }
 
@@ -285,7 +293,15 @@ export default function Training() {
           action={navigateToResults}
         >
           <Loading size={45} />
-          <p>{trainingProgress}</p>
+          <div className={styles.progressContainer}>
+            <ProgressBarLoading 
+              progress={progressValue}
+              maximum={maximumValue}
+              />
+            <p>
+              {(progressValue / maximumValue * 100).toFixed(0)}%
+            </p>
+          </div>
         </PopUp>
 
         <PopUp show={trained == "true"}
