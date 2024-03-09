@@ -22,7 +22,7 @@ from project_management.models import Project
 from training.models import Training
 
 from sklearn.model_selection import train_test_split
-from scipy import stats
+from sklearn.utils import resample
 
 def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
 
@@ -276,6 +276,49 @@ def y_scrambling(project_id, data, scaler_name, algorithm, parameters):
   # Salva a imagem Y-Scrambling temporariamente
   file_path = 'y_scrambling_temporary.png'
   fig.savefig(file_path)
+
+  # Limpeza da exibição
+  plt.clf()
+
+  return True
+
+def bootstrap(project_id, data, scaler_name, algorithm, parameters):
+
+  project = get_object_or_404(Project, id=project_id)
+  training = project.training_set.get()
+
+  N = range(data.shape[0])
+  lista = [x for x in N]
+
+  train_index = resample(lista, n_samples=len(lista), replace=True)
+  test_index = [x for x in lista if x not in train_index]
+
+  L_Y = []
+  L_Y_pred = []
+
+  X_train = data.iloc[train_index,:-1]
+  Y_train = data.iloc[train_index,-1]    
+  X_teste = data.iloc[test_index,:-1]
+  Y_teste = data.iloc[test_index,-1]
+
+  # criterion='poisson'
+  rf = RandomForestRegressor(n_estimators=100, max_features=4)
+  rf = rf.fit(X_train, Y_train)
+  y_pred = rf.predict(X_teste)
+
+  L = [x[0] for x in L_Y_pred]
+
+  r = stats.pearsonr(Y_teste, y_pred)[0]
+  r2 = r2_score(Y_teste, y_pred)
+  print(f'r: {r}')
+  print(f'r2: {r2}')
+
+  plt.title(f'Bootstrap \n r={r:.3f} and r2={r2:.3f}')
+  plt.scatter(Y_teste, y_pred)
+
+  # Salva a imagem Bootstrap temporariamente
+  file_path = 'bootstrap_temporary.png'
+  plt.savefig(file_path)
 
   # Limpeza da exibição
   plt.clf()

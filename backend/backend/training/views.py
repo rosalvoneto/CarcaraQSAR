@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
-from .utils import cross_validation, leave_one_out, y_scrambling
+from .utils import bootstrap, cross_validation, leave_one_out, y_scrambling
 
 from project_management.models import Project
 from database.models import Database, Normalization
@@ -255,6 +255,19 @@ def train_view(request):
         file_name = 'y_scrambling_temporary.png'
         with open(file_name, 'rb') as image:
           training.y_scrambling.save('y_scrambling.png', File(image), save=True)
+        os.remove(file_name)
+
+        print("Calculando Bootstrap:")
+        bootstrap(
+          project_id,
+          data,
+          project.database.normalization.name,
+          training.algorithm.name,
+          training.algorithm.parameters
+        )
+        file_name = 'bootstrap_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.bootstrap.save('bootstrap.png', File(image), save=True)
         os.remove(file_name)
 
         # Atualiza treinamento para concluído
