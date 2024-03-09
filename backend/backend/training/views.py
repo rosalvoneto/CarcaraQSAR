@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
-from .utils import cross_validation, leave_one_out
+from .utils import cross_validation, leave_one_out, y_scrambling
 
 from project_management.models import Project
 from database.models import Database, Normalization
@@ -198,18 +198,30 @@ def train_view(request):
 
   try:
     if(project.database):
+
       print("FILE:", project.database.file)
+      data = pd.read_csv(f"media/{project.database.file}")
+      rows, columns = data.shape
+      print(f"{rows} linhas e {columns} colunas")
+      
+      print("Retirando valores NaN do Dataset...")
+      data = data.dropna().reset_index(drop=True)
+      rows, columns = data.shape
+      print(f"{rows} linhas e {columns} colunas")
+
+      print(data)
 
       training = project.training_set.get()
 
       if(project.database.normalization):
         print("Normalização:", project.database.normalization)
 
-        print("Calculando leave one out:")
         # Execuções dos algoritmos e salvamento dos gráficos
+
+        print("Calculando leave one out:")
         leave_one_out(
           project_id,
-          f"media/{project.database.file}",
+          data,
           project.database.normalization.name,
           training.algorithm.name,
           training.algorithm.parameters
@@ -222,7 +234,7 @@ def train_view(request):
         print("Calculando cross validation:")
         cross_validation(
           project_id,
-          f"media/{project.database.file}",
+          data,
           project.database.normalization.name,
           training.algorithm.name,
           training.algorithm.parameters
@@ -230,6 +242,19 @@ def train_view(request):
         file_name = 'cross_validation_temporary.png'
         with open(file_name, 'rb') as image:
           training.k_fold_cross_validation.save('cross_validation.png', File(image), save=True)
+        os.remove(file_name)
+
+        print("Calculando y-scrambling:")
+        y_scrambling(
+          project_id,
+          data,
+          project.database.normalization.name,
+          training.algorithm.name,
+          training.algorithm.parameters
+        )
+        file_name = 'y_scrambling_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.y_scrambling.save('y_scrambling.png', File(image), save=True)
         os.remove(file_name)
 
         # Atualiza treinamento para concluído
@@ -255,8 +280,9 @@ def train_view(request):
       'message': 'Configurações de treinamento não foram encontradas!'
     }, status=200)
   
-  except:
-    print("AQUII")
+  except Exception as error:
+    print("\nO treinamento retornou o seguinte erro:")
+    print(error, "\n")
   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

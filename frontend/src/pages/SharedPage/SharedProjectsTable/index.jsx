@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 
 import AuthContext from '../../../context/AuthContext';
+import ProjectContext from '../../../context/ProjectContext';
 
 import styles from './styles.module.css';
 
@@ -15,8 +16,10 @@ import {
 
 export function SharedProjectsTable({ searchValue }) {
 
-  const [data, setData] = useState([]);
   const { authTokens } = useContext(AuthContext);
+  const { setProjectInfomation } = useContext(ProjectContext);
+
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     searchSharedProjects(searchValue, authTokens.access)
@@ -160,7 +163,10 @@ export function SharedProjectsTable({ searchValue }) {
                 </td>
                 <td 
                   className={`${styles.item} ${styles.name}`}
-                  onClick={() => handleTo('/database')}
+                  onClick={() => {
+                    setProjectInfomation(item.id);
+                    handleTo(`/${item.id}/database`);
+                  }}
                 >
                   {item.nome}
                 </td>

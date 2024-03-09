@@ -160,7 +160,6 @@ export function TrashProjectsTable({ searchValue }) {
                 </td>
                 <td 
                   className={`${styles.item} ${styles.name}`}
-                  onClick={() => handleTo('/database')}
                 >
                   {item.nome}
                 </td>

@@ -21,12 +21,13 @@ from project_management.models import Project
 
 from training.models import Training
 
-def leave_one_out(project_id, csv_path, scaler_name, algorithm, parameters):
+from sklearn.model_selection import train_test_split
+from scipy import stats
+
+def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
-  
-  data = pd.read_csv(csv_path)
   
   loo = LeaveOneOut()
 
@@ -78,7 +79,8 @@ def leave_one_out(project_id, csv_path, scaler_name, algorithm, parameters):
       rf = RandomForestRegressor(
         n_estimators=parameters["n_estimators"], 
         max_features=parameters["max_features"]
-      )    
+      )
+
       rf = rf.fit(X_train, Y_train)
       y_pred = rf.predict(X_teste)
 
@@ -92,7 +94,7 @@ def leave_one_out(project_id, csv_path, scaler_name, algorithm, parameters):
   r = stats.pearsonr(L_Y, L)[0]
   r2 = r2_score(L_Y, L)
 
-  y = [0 if y <=5 else 1 for y in L_Y]
+  y = [0 if y<=5 else 1 for y in L_Y]
 
   Z = np.arange(3.35, 4.38, 0.1)
 
@@ -115,12 +117,13 @@ def leave_one_out(project_id, csv_path, scaler_name, algorithm, parameters):
 
 
 
-def run_exp(data, algorithm, parameters):
-  L_Y = []
-  L_Y_pred = []
+def run_exp_for_KFold(data, algorithm, parameters):
+
   kf = KFold(n_splits=2, shuffle=True)
   kf.get_n_splits(data)
 
+  L_Y = []
+  L_Y_pred = []
   for i, (train_index, test_index) in enumerate(kf.split(data)):
     X_train = data.iloc[train_index,:-1]
     Y_train = data.iloc[train_index,-1]
@@ -132,21 +135,22 @@ def run_exp(data, algorithm, parameters):
         n_estimators=parameters["n_estimators"], 
         max_features=parameters["max_features"]
       )        
+
       rf = rf.fit(X_train, Y_train)
       y_pred = rf.predict(X_teste)
+
       L_Y.extend(Y_teste)
       L_Y_pred.extend(y_pred)
 
   L = L_Y_pred
   r2 = r2_score(L_Y, L)
+
   return r2
 
-def cross_validation(project_id, csv_path, scaler_name, algorithm, parameters):
+def cross_validation(project_id, data, scaler_name, algorithm, parameters):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
-
-  data = pd.read_csv(csv_path)
 
   # Normalizando
   X = data.iloc[:,:-1]
@@ -185,7 +189,7 @@ def cross_validation(project_id, csv_path, scaler_name, algorithm, parameters):
 
   L = []
   for i in range(length_progress):    
-    r2 = run_exp(data, algorithm, parameters)
+    r2 = run_exp_for_KFold(data, algorithm, parameters)
     L.append(r2)
 
     training.set_progress(i + 1, length_progress)
@@ -202,6 +206,75 @@ def cross_validation(project_id, csv_path, scaler_name, algorithm, parameters):
 
   # Salva a imagem Cross_validation temporariamente
   file_path = 'cross_validation_temporary.png'
+  fig.savefig(file_path)
+
+  # Limpeza da exibição
+  plt.clf()
+
+  return True
+
+def run_exp_for_YScrambling(data):
+
+  loo = LeaveOneOut()    
+      
+  L_Y = []
+  L_Y_pred = []
+  for i, (train_index, test_index) in enumerate(loo.split(data)):
+
+    X_train = data.iloc[train_index,:-1]
+    Y_train = data.iloc[train_index,-1]    
+    X_teste = data.iloc[test_index,:-1]
+    Y_teste = data.iloc[test_index,-1]
+
+    rf = RandomForestRegressor(
+      n_estimators=100, 
+      max_features=4
+    )
+    rf = rf.fit(X_train, Y_train)
+    y_pred = rf.predict(X_teste)
+
+    L_Y.append(list(Y_teste)[0])
+    L_Y_pred.append(y_pred)
+      
+  L = [x[0] for x in L_Y_pred]
+  r2 = r2_score(L_Y, L)
+  
+  return r2
+
+def y_scrambling(project_id, data, scaler_name, algorithm, parameters):
+
+  project = get_object_or_404(Project, id=project_id)
+  training = project.training_set.get()
+  
+  # # Não precisa
+  # idx = [77, 81, 84, 92, 98]
+  # data = data.drop(labels=idx, axis=0)
+
+  # Salva o dados separados
+  X_data = data.iloc[:,:-1]
+  y_data = data.iloc[:,-1].to_numpy()
+
+  length_progress = 50
+
+  L = []
+  for i in range(length_progress):
+    r2 = run_exp_for_YScrambling(data)
+    L.append(r2)
+
+    training.set_progress(i + 1, length_progress)
+
+  df = pd.DataFrame(list(enumerate(L, start=1)), columns=['Reptirion', 'r2'])
+  Y = df['r2'].to_numpy()
+  X = [x+1 for x in range(length_progress)]
+
+  fig, ax = plt.subplots()
+
+  ax.scatter(X, Y)
+  ax.set_ylabel("$Q^2$ $_{Y-Scrambling}$")
+  ax.set_xlabel("Repetition")
+
+  # Salva a imagem Y-Scrambling temporariamente
+  file_path = 'y_scrambling_temporary.png'
   fig.savefig(file_path)
 
   # Limpeza da exibição
