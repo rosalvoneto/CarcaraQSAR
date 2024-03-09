@@ -21,7 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
-from .utils import bootstrap, cross_validation, leave_one_out, y_scrambling
+from .utils import bootstrap, cross_validation, importance, leave_one_out, y_scrambling
 
 from project_management.models import Project
 from database.models import Database, Normalization
@@ -209,8 +209,6 @@ def train_view(request):
       rows, columns = data.shape
       print(f"{rows} linhas e {columns} colunas")
 
-      print(data)
-
       training = project.training_set.get()
 
       if(project.database.normalization):
@@ -257,6 +255,7 @@ def train_view(request):
           training.y_scrambling.save('y_scrambling.png', File(image), save=True)
         os.remove(file_name)
 
+        # A partir daqui surge problema com o Dataset do CSV (com duas linhas)
         print("Calculando Bootstrap:")
         bootstrap(
           project_id,
@@ -268,6 +267,19 @@ def train_view(request):
         file_name = 'bootstrap_temporary.png'
         with open(file_name, 'rb') as image:
           training.bootstrap.save('bootstrap.png', File(image), save=True)
+        os.remove(file_name)
+
+        print("Calculando Importance:")
+        importance(
+          project_id,
+          data,
+          project.database.normalization.name,
+          training.algorithm.name,
+          training.algorithm.parameters
+        )
+        file_name = 'importance_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.importance.save('importance.png', File(image), save=True)
         os.remove(file_name)
 
         # Atualiza treinamento para concluído
@@ -294,8 +306,13 @@ def train_view(request):
     }, status=200)
   
   except Exception as error:
-    print("\nO treinamento retornou o seguinte erro:")
+    print()
+    print("O treinamento retornou o seguinte erro:")
     print(error, "\n")
+
+    return Response({
+      'message': 'Erro no treinamento',
+    }, status=500)
   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

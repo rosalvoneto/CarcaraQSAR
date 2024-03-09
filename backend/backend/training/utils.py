@@ -8,21 +8,18 @@ from sklearn.model_selection import KFold
 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, Normalizer
 
-import joblib
-
 import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.metrics import r2_score
 
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from io import BytesIO
-import base64
 from project_management.models import Project
 
-from training.models import Training
+import time
+from sklearn.inspection import permutation_importance
 
 from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
+
 
 def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
 
@@ -31,7 +28,7 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
   
   loo = LeaveOneOut()
 
-  # Normalizando
+  # Normalização
   X = data.iloc[:,:-1]
   Y = data.iloc[:,-1]
 
@@ -152,7 +149,7 @@ def cross_validation(project_id, data, scaler_name, algorithm, parameters):
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
 
-  # Normalizando
+  # Normalização
   X = data.iloc[:,:-1]
   Y = data.iloc[:,-1]
 
@@ -213,7 +210,7 @@ def cross_validation(project_id, data, scaler_name, algorithm, parameters):
 
   return True
 
-def run_exp_for_YScrambling(data):
+def run_exp_for_YScrambling(data, algorithm, parameters):
 
   loo = LeaveOneOut()    
       
@@ -227,8 +224,8 @@ def run_exp_for_YScrambling(data):
     Y_teste = data.iloc[test_index,-1]
 
     rf = RandomForestRegressor(
-      n_estimators=100, 
-      max_features=4
+      n_estimators=parameters["n_estimators"], 
+      max_features=parameters["max_features"]
     )
     rf = rf.fit(X_train, Y_train)
     y_pred = rf.predict(X_teste)
@@ -258,7 +255,7 @@ def y_scrambling(project_id, data, scaler_name, algorithm, parameters):
 
   L = []
   for i in range(length_progress):
-    r2 = run_exp_for_YScrambling(data)
+    r2 = run_exp_for_YScrambling(data, algorithm, parameters)
     L.append(r2)
 
     training.set_progress(i + 1, length_progress)
@@ -301,8 +298,10 @@ def bootstrap(project_id, data, scaler_name, algorithm, parameters):
   X_teste = data.iloc[test_index,:-1]
   Y_teste = data.iloc[test_index,-1]
 
-  # criterion='poisson'
-  rf = RandomForestRegressor(n_estimators=100, max_features=4)
+  rf = RandomForestRegressor(
+    n_estimators=parameters["n_estimators"], 
+    max_features=parameters["max_features"]
+  )
   rf = rf.fit(X_train, Y_train)
   y_pred = rf.predict(X_teste)
 
@@ -319,6 +318,80 @@ def bootstrap(project_id, data, scaler_name, algorithm, parameters):
   # Salva a imagem Bootstrap temporariamente
   file_path = 'bootstrap_temporary.png'
   plt.savefig(file_path)
+
+  # Limpeza da exibição
+  plt.clf()
+
+  return True
+
+def importance(project_id, data, scaler_name, algorithm, parameters):
+
+  project = get_object_or_404(Project, id=project_id)
+  training = project.training_set.get()
+
+  # Separa o Dataset em dois diferentes Dataframes
+  X_data = data.iloc[:,:-1]
+  y_data = data.iloc[:,-1]
+
+  X_train, X_test, y_train, y_test = train_test_split(
+    X_data, 
+    y_data, 
+    train_size=0.8, 
+    random_state=0
+  )
+
+  rf = RandomForestRegressor(
+    n_estimators=parameters["n_estimators"], 
+    max_features=parameters["max_features"]
+  )
+  rf = rf.fit(X_train, y_train)
+
+  y_pred = rf.predict(X_test)
+
+  start_time = time.time()
+  importances = rf.feature_importances_
+  std = np.std(
+    [tree.feature_importances_ for tree in rf.estimators_],
+    axis=0
+  )
+  elapsed_time = time.time() - start_time
+
+  print(f"Elapsed time to compute the importances: {elapsed_time:.3f} seconds")
+  feature_names = list(X_train.columns)
+
+  start_time = time.time()
+  result = permutation_importance(
+    rf, X_test, y_test, n_repeats=10, random_state=42, n_jobs=2
+  )
+  elapsed_time = time.time() - start_time
+  print(f"Elapsed time to compute the importances: {elapsed_time:.3f} seconds")
+
+  forest_importances = pd.Series(
+    result.importances_mean, index=feature_names
+  )
+
+  most_important = forest_importances.sort_values(ascending=False)[:8]
+  l_X  = [x for x, y in most_important.items()]
+  l_Y  = [y for x, y in most_important.items()]
+
+  # Criar a figura e os eixos
+  fig, ax = plt.subplots(figsize=(16, 9))
+  # Plotar o gráfico de barras
+  ax.bar(l_X, l_Y, align='edge', width=0.4)
+
+  # Aumentar o tamanho da fonte das informações
+  # Ajuste o tamanho da fonte do rótulo do eixo x
+  ax.set_xlabel('Variables', fontsize=16)
+  # Ajuste o tamanho da fonte do rótulo do eixo y
+  ax.set_ylabel('Importance', fontsize=16)
+  # Ajuste o tamanho da fonte dos números da escala dos eixos
+  ax.tick_params(axis='both', which='major', labelsize=14)
+  
+  # Salva a imagem Importance temporariamente
+  file_path = 'importance_temporary.png'
+  fig.savefig(file_path)
+
+  r2_score(y_test, y_pred)
 
   # Limpeza da exibição
   plt.clf()

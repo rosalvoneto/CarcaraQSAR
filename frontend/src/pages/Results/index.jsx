@@ -108,15 +108,23 @@ export default function Results() {
 
       <div className={styles.container}>
 
-        <Tabs 
-          tabs={tabsNames} 
-          selectedTab={selectedTab}
-          setSelectedTab={setSelectedTab}
-        />
+        {
+        /*
+          <Tabs 
+            tabs={tabsNames} 
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+          />
+        */
+        }
 
         <div className={styles.graphContainer}>
           <Graph 
-            width={550}
+            width={
+              pageNumber == 0
+              ? 800
+              : 600
+            }
             image={
               selectedTab == 0
               ? graphsWithoutFullSet[pageNumber]
