@@ -246,7 +246,6 @@ def train_view(request):
         y_scrambling(
           project_id,
           data,
-          project.database.normalization.name,
           training.algorithm.name,
           training.algorithm.parameters
         )
@@ -260,7 +259,6 @@ def train_view(request):
         bootstrap(
           project_id,
           data,
-          project.database.normalization.name,
           training.algorithm.name,
           training.algorithm.parameters
         )
@@ -273,7 +271,6 @@ def train_view(request):
         importance(
           project_id,
           data,
-          project.database.normalization.name,
           training.algorithm.name,
           training.algorithm.parameters
         )

@@ -198,6 +198,7 @@ def cross_validation(project_id, data, scaler_name, algorithm, parameters):
   fig, ax = plt.subplots()
 
   ax.scatter(X, Y)
+  ax.set_title(f'K-Fold Cross Validation - Repeated {length_progress} times')
   ax.set_ylabel("$Q^2$ $_{KFOLD}$")
   ax.set_xlabel("Repetition")
 
@@ -223,22 +224,23 @@ def run_exp_for_YScrambling(data, algorithm, parameters):
     X_teste = data.iloc[test_index,:-1]
     Y_teste = data.iloc[test_index,-1]
 
-    rf = RandomForestRegressor(
-      n_estimators=parameters["n_estimators"], 
-      max_features=parameters["max_features"]
-    )
-    rf = rf.fit(X_train, Y_train)
-    y_pred = rf.predict(X_teste)
+    if(algorithm == "Random Forest"):
+      rf = RandomForestRegressor(
+        n_estimators=parameters["n_estimators"], 
+        max_features=parameters["max_features"]
+      )
+      rf = rf.fit(X_train, Y_train)
+      y_pred = rf.predict(X_teste)
 
-    L_Y.append(list(Y_teste)[0])
-    L_Y_pred.append(y_pred)
+      L_Y.append(list(Y_teste)[0])
+      L_Y_pred.append(y_pred)
       
   L = [x[0] for x in L_Y_pred]
   r2 = r2_score(L_Y, L)
   
   return r2
 
-def y_scrambling(project_id, data, scaler_name, algorithm, parameters):
+def y_scrambling(project_id, data, algorithm, parameters):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
@@ -267,6 +269,7 @@ def y_scrambling(project_id, data, scaler_name, algorithm, parameters):
   fig, ax = plt.subplots()
 
   ax.scatter(X, Y)
+  ax.set_title(f'Y-Scrambling - Repeated {length_progress} times')
   ax.set_ylabel("$Q^2$ $_{Y-Scrambling}$")
   ax.set_xlabel("Repetition")
 
@@ -279,7 +282,7 @@ def y_scrambling(project_id, data, scaler_name, algorithm, parameters):
 
   return True
 
-def bootstrap(project_id, data, scaler_name, algorithm, parameters):
+def bootstrap(project_id, data, algorithm, parameters):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
@@ -298,12 +301,13 @@ def bootstrap(project_id, data, scaler_name, algorithm, parameters):
   X_teste = data.iloc[test_index,:-1]
   Y_teste = data.iloc[test_index,-1]
 
-  rf = RandomForestRegressor(
-    n_estimators=parameters["n_estimators"], 
-    max_features=parameters["max_features"]
-  )
-  rf = rf.fit(X_train, Y_train)
-  y_pred = rf.predict(X_teste)
+  if(algorithm == "Random Forest"):
+    rf = RandomForestRegressor(
+      n_estimators=parameters["n_estimators"], 
+      max_features=parameters["max_features"]
+    )
+    rf = rf.fit(X_train, Y_train)
+    y_pred = rf.predict(X_teste)
 
   L = [x[0] for x in L_Y_pred]
 
@@ -324,7 +328,7 @@ def bootstrap(project_id, data, scaler_name, algorithm, parameters):
 
   return True
 
-def importance(project_id, data, scaler_name, algorithm, parameters):
+def importance(project_id, data, algorithm, parameters):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
@@ -340,13 +344,13 @@ def importance(project_id, data, scaler_name, algorithm, parameters):
     random_state=0
   )
 
-  rf = RandomForestRegressor(
-    n_estimators=parameters["n_estimators"], 
-    max_features=parameters["max_features"]
-  )
-  rf = rf.fit(X_train, y_train)
-
-  y_pred = rf.predict(X_test)
+  if(algorithm == "Random Forest"):
+    rf = RandomForestRegressor(
+      n_estimators=parameters["n_estimators"], 
+      max_features=parameters["max_features"]
+    )
+    rf = rf.fit(X_train, y_train)
+    y_pred = rf.predict(X_test)
 
   start_time = time.time()
   importances = rf.feature_importances_
