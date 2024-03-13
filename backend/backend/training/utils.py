@@ -229,7 +229,6 @@ def run_exp_for_YScrambling(data, algorithm, parameters, suffle_Y):
     # Embaralha os valores de Y_train
     if(suffle_Y):
       Y_train = shuffle(Y_train)
-      # print(Y_train)
 
     if(algorithm == "Random Forest"):
       rf = RandomForestRegressor(

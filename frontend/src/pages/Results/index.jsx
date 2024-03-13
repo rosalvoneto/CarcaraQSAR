@@ -29,6 +29,7 @@ import { DownloadSimple } from '@phosphor-icons/react';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
+import TableResult from '../../components/TableResult';
 
 const graphsWithoutExternalSet = [Graph1, Graph2, Graph3, Graph4, Graph5];
 const graphsWithExternalSet = [Graph6, Graph7, Graph8, Graph9, Graph10];
@@ -109,41 +110,52 @@ export default function Results() {
       <div className={styles.container}>
 
         {
-        /*
-          <Tabs 
-            tabs={tabsNames} 
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-          />
-        */
+          /*
+            <Tabs 
+              tabs={tabsNames} 
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+            />
+          */
         }
 
-        <div className={styles.graphContainer}>
-          <Graph 
-            width={
-              pageNumber == 0
-              ? 800
-              : 600
-            }
-            image={
-              selectedTab == 0
-              ? graphsWithoutFullSet[pageNumber]
-              : graphsWithFullSet[pageNumber]
-            }
-          />
-          <a
-            className={styles.downloadButton}
-            onClick={
-              () => downloadGraph(
-                selectedTab == 0
-                ? graphsWithoutFullSet[pageNumber]
-                : graphsWithFullSet[pageNumber]
-              )
-            }
-          >
-            <DownloadSimple size={30} color='var(--black-color-1)' />
-          </a>
-        </div>
+        {
+          pageNumber != 4
+          ? 
+          
+            <div className={styles.graphContainer}>
+              <Graph 
+                width={
+                  pageNumber == 0
+                  ? 800
+                  : 600
+                }
+                image={
+                  selectedTab == 0
+                  ? graphsWithoutFullSet[pageNumber]
+                  : graphsWithFullSet[pageNumber]
+                }
+              />
+              <a
+                className={styles.downloadButton}
+                onClick={
+                  () => downloadGraph(
+                    selectedTab == 0
+                    ? graphsWithoutFullSet[pageNumber]
+                    : graphsWithFullSet[pageNumber]
+                  )
+                }
+              >
+                <DownloadSimple size={30} color='var(--black-color-1)' />
+              </a>
+            </div>
+          
+          :
+
+            <TableResult />
+        }
+        
+        
 
       </div>
 
