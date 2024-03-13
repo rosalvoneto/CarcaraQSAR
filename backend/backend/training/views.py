@@ -216,31 +216,31 @@ def train_view(request):
 
         # Execuções dos algoritmos e salvamento dos gráficos
 
-        print("Calculando leave one out:")
-        leave_one_out(
-          project_id,
-          data,
-          project.database.normalization.name,
-          training.algorithm.name,
-          training.algorithm.parameters
-        )
-        file_name = 'loo_temporary.png'
-        with open(file_name, 'rb') as image:
-          training.leave_one_out.save('loo.png', File(image), save=True)
-        os.remove(file_name)
+        # print("Calculando leave one out:")
+        # leave_one_out(
+        #   project_id,
+        #   data,
+        #   project.database.normalization.name,
+        #   training.algorithm.name,
+        #   training.algorithm.parameters
+        # )
+        # file_name = 'loo_temporary.png'
+        # with open(file_name, 'rb') as image:
+        #   training.leave_one_out.save('loo.png', File(image), save=True)
+        # os.remove(file_name)
 
-        print("Calculando cross validation:")
-        cross_validation(
-          project_id,
-          data,
-          project.database.normalization.name,
-          training.algorithm.name,
-          training.algorithm.parameters
-        )
-        file_name = 'cross_validation_temporary.png'
-        with open(file_name, 'rb') as image:
-          training.k_fold_cross_validation.save('cross_validation.png', File(image), save=True)
-        os.remove(file_name)
+        # print("Calculando cross validation:")
+        # cross_validation(
+        #   project_id,
+        #   data,
+        #   project.database.normalization.name,
+        #   training.algorithm.name,
+        #   training.algorithm.parameters
+        # )
+        # file_name = 'cross_validation_temporary.png'
+        # with open(file_name, 'rb') as image:
+        #   training.k_fold_cross_validation.save('cross_validation.png', File(image), save=True)
+        # os.remove(file_name)
 
         print("Calculando y-scrambling:")
         y_scrambling(
@@ -255,29 +255,29 @@ def train_view(request):
         os.remove(file_name)
 
         # A partir daqui surge problema com o Dataset do CSV (com duas linhas)
-        print("Calculando Bootstrap:")
-        bootstrap(
-          project_id,
-          data,
-          training.algorithm.name,
-          training.algorithm.parameters
-        )
-        file_name = 'bootstrap_temporary.png'
-        with open(file_name, 'rb') as image:
-          training.bootstrap.save('bootstrap.png', File(image), save=True)
-        os.remove(file_name)
+        # print("Calculando Bootstrap:")
+        # bootstrap(
+        #   project_id,
+        #   data,
+        #   training.algorithm.name,
+        #   training.algorithm.parameters
+        # )
+        # file_name = 'bootstrap_temporary.png'
+        # with open(file_name, 'rb') as image:
+        #   training.bootstrap.save('bootstrap.png', File(image), save=True)
+        # os.remove(file_name)
 
-        print("Calculando Importance:")
-        importance(
-          project_id,
-          data,
-          training.algorithm.name,
-          training.algorithm.parameters
-        )
-        file_name = 'importance_temporary.png'
-        with open(file_name, 'rb') as image:
-          training.importance.save('importance.png', File(image), save=True)
-        os.remove(file_name)
+        # print("Calculando Importance:")
+        # importance(
+        #   project_id,
+        #   data,
+        #   training.algorithm.name,
+        #   training.algorithm.parameters
+        # )
+        # file_name = 'importance_temporary.png'
+        # with open(file_name, 'rb') as image:
+        #   training.importance.save('importance.png', File(image), save=True)
+        # os.remove(file_name)
 
         # Atualiza treinamento para concluído
         training.trained = True

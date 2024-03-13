@@ -2,6 +2,8 @@ from django.shortcuts import get_object_or_404
 import pandas as pd
 import numpy as np
 
+from sklearn.utils import shuffle
+
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import LeaveOneOut
 from sklearn.model_selection import KFold
@@ -211,9 +213,9 @@ def cross_validation(project_id, data, scaler_name, algorithm, parameters):
 
   return True
 
-def run_exp_for_YScrambling(data, algorithm, parameters):
+def run_exp_for_YScrambling(data, algorithm, parameters, suffle_Y):
 
-  loo = LeaveOneOut()    
+  loo = LeaveOneOut()
       
   L_Y = []
   L_Y_pred = []
@@ -223,6 +225,11 @@ def run_exp_for_YScrambling(data, algorithm, parameters):
     Y_train = data.iloc[train_index,-1]    
     X_teste = data.iloc[test_index,:-1]
     Y_teste = data.iloc[test_index,-1]
+
+    # Embaralha os valores de Y_train
+    if(suffle_Y):
+      Y_train = shuffle(Y_train)
+      # print(Y_train)
 
     if(algorithm == "Random Forest"):
       rf = RandomForestRegressor(
@@ -244,34 +251,47 @@ def y_scrambling(project_id, data, algorithm, parameters):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
-  
-  # # Não precisa
-  # idx = [77, 81, 84, 92, 98]
-  # data = data.drop(labels=idx, axis=0)
 
   # Salva o dados separados
   X_data = data.iloc[:,:-1]
   y_data = data.iloc[:,-1].to_numpy()
 
+  times = 2
   length_progress = 50
 
   L = []
-  for i in range(length_progress):
-    r2 = run_exp_for_YScrambling(data, algorithm, parameters)
-    L.append(r2)
+  L_shuffled = []
+  for j in range(times):
+    for i in range(length_progress):
+      r2 = 0
+      if(j == 0):
+        r2 = run_exp_for_YScrambling(data, algorithm, parameters, False)
+        L.append(r2)
+      else:
+        r2 = run_exp_for_YScrambling(data, algorithm, parameters, True)
+        L_shuffled.append(r2)
+      print(f"{length_progress * j + (i + 1)}/{length_progress * times}")
+      training.set_progress(length_progress * j + (i + 1), length_progress * times)
 
-    training.set_progress(i + 1, length_progress)
+  X = [x+1 for x in range(length_progress)]
 
   df = pd.DataFrame(list(enumerate(L, start=1)), columns=['Reptirion', 'r2'])
   Y = df['r2'].to_numpy()
-  X = [x+1 for x in range(length_progress)]
+
+  df_shuffled = pd.DataFrame(list(enumerate(L_shuffled, start=1)), columns=['Reptirion', 'r2'])
+  Y_shuffled = df_shuffled['r2'].to_numpy()
 
   fig, ax = plt.subplots()
 
-  ax.scatter(X, Y)
+  ax.scatter(X, Y, label = 'Y = Normal')
+  ax.scatter(X, Y_shuffled, label = 'Y = Scrambling')
+
   ax.set_title(f'Y-Scrambling - Repeated {length_progress} times')
-  ax.set_ylabel("$Q^2$ $_{Y-Scrambling}$")
+
+  ax.set_ylabel("$Q^2$ $_{LOO}$")
   ax.set_xlabel("Repetition")
+
+  ax.legend()
 
   # Salva a imagem Y-Scrambling temporariamente
   file_path = 'y_scrambling_temporary.png'
