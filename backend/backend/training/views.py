@@ -216,18 +216,18 @@ def train_view(request):
 
         # Execuções dos algoritmos e salvamento dos gráficos
 
-        # print("Calculando leave one out:")
-        # leave_one_out(
-        #   project_id,
-        #   data,
-        #   project.database.normalization.name,
-        #   training.algorithm.name,
-        #   training.algorithm.parameters
-        # )
-        # file_name = 'loo_temporary.png'
-        # with open(file_name, 'rb') as image:
-        #   training.leave_one_out.save('loo.png', File(image), save=True)
-        # os.remove(file_name)
+        print("Calculando leave one out:")
+        leave_one_out(
+          project_id,
+          data,
+          project.database.normalization.name,
+          training.algorithm.name,
+          training.algorithm.parameters
+        )
+        file_name = 'loo_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.leave_one_out.save('loo.png', File(image), save=True)
+        os.remove(file_name)
 
         # print("Calculando cross validation:")
         # cross_validation(
@@ -242,30 +242,33 @@ def train_view(request):
         #   training.k_fold_cross_validation.save('cross_validation.png', File(image), save=True)
         # os.remove(file_name)
 
-        print("Calculando y-scrambling:")
-        y_scrambling(
-          project_id,
-          data,
-          training.algorithm.name,
-          training.algorithm.parameters
-        )
-        file_name = 'y_scrambling_temporary.png'
-        with open(file_name, 'rb') as image:
-          training.y_scrambling.save('y_scrambling.png', File(image), save=True)
-        os.remove(file_name)
-
-        # A partir daqui surge problema com o Dataset do CSV (com duas linhas)
-        # print("Calculando Bootstrap:")
-        # bootstrap(
+        # print("Calculando y-scrambling:")
+        # y_scrambling(
         #   project_id,
         #   data,
         #   training.algorithm.name,
         #   training.algorithm.parameters
         # )
-        # file_name = 'bootstrap_temporary.png'
+        # file_name = 'y_scrambling_temporary.png'
         # with open(file_name, 'rb') as image:
-        #   training.bootstrap.save('bootstrap.png', File(image), save=True)
+        #   training.y_scrambling.save('y_scrambling.png', File(image), save=True)
         # os.remove(file_name)
+
+        # A partir daqui surge problema com o Dataset do CSV (com duas linhas)
+        print("Calculando Bootstrap:")
+        for index in range(0, 10):
+          bootstrap(
+            project_id,
+            data,
+            training.algorithm.name,
+            training.algorithm.parameters,
+            index
+          )
+
+        file_name = 'bootstrap_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.bootstrap.save('bootstrap.png', File(image), save=True)
+        os.remove(file_name)
 
         # print("Calculando Importance:")
         # importance(
@@ -431,3 +434,26 @@ def getTrainingProgress_view(request):
 
   except ObjectDoesNotExist:
     return HttpResponse("Project or training not found", status=404)
+  
+def getBootstrapDetails_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  training = project.training_set.get()
+  bootstrap_instances = training.bootstrapvalues_set.all()
+  length = len(bootstrap_instances)
+
+  response = {
+    "molecules": [],
+    "R_values": [],
+    "R2_values": [],
+  }
+
+  for i in range(length):
+    response['molecules'].append(bootstrap_instances[i].molecules)
+    response['R_values'].append(bootstrap_instances[i].R_value)
+    response['R2_values'].append(bootstrap_instances[i].R2_value)
+  
+  return JsonResponse(response, status=200, safe=False)
+  

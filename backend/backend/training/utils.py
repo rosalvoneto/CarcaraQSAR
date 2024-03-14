@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.metrics import r2_score
 
+from training.models import BootstrapValues
 from project_management.models import Project
 
 import time
@@ -301,7 +302,7 @@ def y_scrambling(project_id, data, algorithm, parameters):
 
   return True
 
-def bootstrap(project_id, data, algorithm, parameters):
+def bootstrap(project_id, data, algorithm, parameters, index):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
@@ -332,8 +333,23 @@ def bootstrap(project_id, data, algorithm, parameters):
 
   r = stats.pearsonr(Y_teste, y_pred)[0]
   r2 = r2_score(Y_teste, y_pred)
-  print(f'r: {r}')
-  print(f'r2: {r2}')
+
+  bootstrap_instances = training.bootstrapvalues_set.all()
+  bootstrap_length = len(bootstrap_instances)
+
+  if(index < bootstrap_length):
+    bootstrap_instances[index].update(
+      molecules=test_index,
+      R_value=r,
+      R2_value=r2
+    )
+  else:
+    bootstrap_value = BootstrapValues.objects.create(
+      training=training,
+      molecules=test_index,
+      R_value=r,
+      R2_value=r2
+    )
 
   plt.title(f'Bootstrap \n r={r:.3f} and r2={r2:.3f}')
   plt.scatter(Y_teste, y_pred)

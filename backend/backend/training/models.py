@@ -32,7 +32,6 @@ class Algorithm(models.Model):
   def __str__(self):
     return self.name
 
-
 class Training(models.Model):
   # Para o treinamento
   algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
@@ -85,6 +84,26 @@ class Training(models.Model):
 
   def __str__(self):
     return f"Treinamento com algoritmo '{self.algorithm.name}'"
+  
+class BootstrapValues(models.Model):
+  molecules = models.JSONField(default=list)
+  R_value = models.FloatField()
+  R2_value = models.FloatField()
+
+  training = models.ForeignKey(
+    Training, 
+    on_delete=models.CASCADE,
+    null=True
+  )
+
+  def update(self, molecules, R_value, R2_value):
+    self.molecules = molecules
+    self.R_value = R_value
+    self.R2_value = R2_value
+    self.save()
+
+  def __str__(self):
+    return f"Bootstrap do treinamento"
 
 class VariablesSelection(models.Model):
   # Para seleção de variáveis
