@@ -209,3 +209,27 @@ export const getTrainingProgress = async (
   }
   return dataResponse;
 }
+
+// Resgata progresso no treinamento 
+export const getBootstrapDetails = async (
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/get_bootstrap_details?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}
