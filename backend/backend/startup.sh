@@ -1,2 +1,2 @@
 #!/bin/bash
-python manage.py migrate && python manage.py collectstatic --no-input && gunicorn --workers 2 backend.wsgi
+python3 manage.py migrate && python3 manage.py collectstatic --no-input && gunicorn --workers 2 backend.wsgi
