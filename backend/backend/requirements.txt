@@ -2,7 +2,6 @@ asgiref==3.7.2
 certifi==2023.11.17
 cffi==1.16.0
 charset-normalizer==3.3.2
-contourpy==1.2.0
 cryptography==41.0.7
 cycler==0.12.1
 defusedxml==0.8.0rc2
