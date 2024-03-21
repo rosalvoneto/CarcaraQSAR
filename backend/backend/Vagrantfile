@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   end
   
   # Encaminhamento de portas para acessar o servidor Django
-  config.vm.network "forwarded_port", guest: 8000, host: 1234
+  config.vm.network "forwarded_port", guest: 8000, host: 8000
 
   config.vm.provision "shell", inline: <<-SHELL
     # Atualiza a lista de pacotes
