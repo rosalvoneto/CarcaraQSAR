@@ -1,7 +1,3 @@
-"""
-To find the minimum  of sphere function on interval (-10 to 10) with
-2 dimensions in domain using default parameters:
-"""
 
 from beecolpy import abc
 
