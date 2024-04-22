@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import random
 
 from sklearn.svm import SVR
@@ -11,7 +10,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 import matplotlib.pyplot as plt
 
-from beecolpy import abc
+from beecolpy import bin_abc
 
 
 
@@ -25,7 +24,7 @@ dataframe = pd.read_csv(filepath)
 variables_quantity = 5
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
-iterations = 300
+iterations = 200
 
 counter_iterations = 0
 X_iterations = []
@@ -46,7 +45,6 @@ def get_variables(variables_quantity):
 
 def convert_binary_array_to_variables(binary_array):
 
-  binary_array = [round(x) for x in binary_array]
   print(binary_array)
 
   variables = list(dataframe.columns)
@@ -104,26 +102,30 @@ def evaluate_binary_array(binary_array):
 def abc_model():
 
   boundaries = [(0, 1) for i in range(len(dataframe.columns) - 1)]
+  bits_count = len(dataframe.columns) - 1
 
-  abc_algorithm = abc(
+  bin_abc_algorithm = bin_abc(
     evaluate_binary_array,
-    boundaries,
-    colony_size=100,
+    bits_count,
+    method='bin',
+    colony_size=40,
     scouts=0.5,
     iterations=iterations,
     min_max='max',
-    nan_protection=True,
+    nan_protection=3,
+    transfer_function='sigmoid',
+    result_format='best',
+    best_model_iterations=0,
     log_agents=True
   )
 
-  abc_algorithm.fit()
-  solution = abc_algorithm.get_solution()
-  status = abc_algorithm.get_status()
+  bin_abc_algorithm.fit()
+  solution = bin_abc_algorithm.get_solution()
+  status = bin_abc_algorithm.get_status()
 
   return solution, status
 
 solution, status = abc_model()
-solution = [round(x) for x in solution]
 
 print("")
 print("Solução:")
@@ -142,4 +144,4 @@ ax2.plot(X_iterations, r2_values, color='red', label='R2 values')
 ax2.set_title(f'R2 values using {kernel} kernel')
 
 plt.tight_layout()
-plt.savefig(f'abc_R2({r2:.2f})_i({iterations}).png')
+plt.savefig(f'binabc_R2({r2:.2f})_i({iterations}).png')
