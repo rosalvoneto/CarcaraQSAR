@@ -1,3 +1,28 @@
+
+# Sugestão de parâmetros para ABC:
+# - Empregadas (Employed) 15
+# - Observadoras (onlooker) 15
+# - Scout 1
+
+# Algoritmo para avaliar: random forest regressor (não SVM)
+# - Número de arvores: 50
+# - Features: LOG2 do número de variáveis
+
+# Critério de parada:
+# - Quando chegar perto de 1000 variáveis ativas
+# - O r2 do conjunto de teste não melhora depois de N iterações
+
+# Usar o uma busca pela melhor escolha (em árvore) para avaliar as variáveis que são solução do algoritmo de colônia de abelhas
+# Pode ser feita uma implementação em Python mesmo
+
+# Busca gulosa com teste para encontrar as melhores das melhores variáveis
+# Imagem no cronograma
+# Deve retornar de 3 a 30 variáveis
+# Modelos univariáveis. Para cada variável das 1025
+# Pegar aquele com maior R2
+
+
+
 import pandas as pd
 import numpy as np
 import random
@@ -23,13 +48,15 @@ dataframe = pd.read_csv(filepath)
 # dataframe = scaler.fit_transform(dataframe)
 
 variables_quantity = 5
+
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
-iterations = 300
 
 counter_iterations = 0
 X_iterations = []
 r2_values = []
+
+iterations = 300
 
 
 def get_variables(variables_quantity):

@@ -48,7 +48,6 @@ def convert_binary_array_to_variables(binary_array):
   print(binary_array)
 
   variables = list(dataframe.columns)
-
   sample_variables = []
   for i in range(len(variables) - 1):
     if(binary_array[i] == 1):
@@ -108,7 +107,10 @@ def abc_model():
     evaluate_binary_array,
     bits_count,
     method='bin',
-    colony_size=40,
+
+    # 15 Employed bees
+    # 15 Onlooker bees
+    colony_size=30, 
     scouts=0.5,
     iterations=iterations,
     min_max='max',
