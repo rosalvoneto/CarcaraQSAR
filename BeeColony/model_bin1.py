@@ -8,17 +8,16 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.discriminant_analysis import StandardScaler
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 
 import matplotlib.pyplot as plt
 # from mpl_toolkits.mplot3d import Axes3D
 
-from beecolpy import bin_abc
 from ecabc import ABC
 
 
 
-filepath = "base.csv"
+filepath = "base_full.csv"
 dataframe = pd.read_csv(filepath)
 
 # # Normalizar os dados
@@ -28,10 +27,13 @@ dataframe = pd.read_csv(filepath)
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 10
+iterations = 100
 
 X_iterations = []
-r2_values = []
+metric_values = []
+
+metric_for_cost_function = "mse"
+metric_statistic = "r2"
 
 
 def convert_values_to_variables(binary_array):
@@ -47,7 +49,7 @@ def convert_values_to_variables(binary_array):
 def evaluate_variables(variables):
 
   # Separar as características (X) e a variável de destino (y)
-  global X, y, X_test, y_pred
+  global X, y, X_test, y_pred, X_train, y_train
   X = dataframe[variables]
   y = dataframe.iloc[:, -1]
 
@@ -72,38 +74,52 @@ def evaluate_variables(variables):
   model.fit(X_train, y_train)
 
   # Fazer previsões
-  y_pred = model.predict(X_test)
+  y_pred = model.predict(X_train)
 
+  print("")
   # Avaliar o modelo usando o coeficiente Mean Square Error
-  mse = mean_squared_error(y_test, y_pred)
+  mse = mean_squared_error(y_train, y_pred)
   print("Coeficiente MSE do modelo:", mse)
   # Avaliar o modelo usando o coeficiente R²
-  r2 = r2_score(y_test, y_pred)
-  print("Coeficiente R² do modelo:", r2)  
+  r2 = r2_score(y_train, y_pred)
+  print("Coeficiente R² do modelo:", r2)
+  # Avaliar o modelo usando o coeficiente Erro Médio Absoluto (MAE)
+  mae = mean_absolute_error(y_train, y_pred)
+  print("Erro Médio Absoluto (MAE):", mae)
 
-  return r2, mse
+  return r2, mse, mae
+
+def evaluate_R2(values):
+  variables = convert_values_to_variables(values)
+  return float(evaluate_variables(variables)[0])
 
 def evaluate_MSE(values):
   variables = convert_values_to_variables(values)
   return float(evaluate_variables(variables)[1])
 
-def evaluate_R2(values):
+def evaluate_MAE(values):
   variables = convert_values_to_variables(values)
-  return float(evaluate_variables(variables)[0])
+  return float(evaluate_variables(variables)[2])
 
 def abc_model():
 
   print("Preparando o algoritmo ABC...")
 
   abc = ABC(15, evaluate_MSE)
+
   for i in range(len(dataframe.columns) - 1):
     abc.add_param(0, 2, name=f'Variable{i}')
   abc.initialize()
 
   for i in range(iterations * super_iterations):
     abc.search()
+
+    solution = list(abc.best_params.values())
+    variables_quantity = solution.count(1)
+
     print("="*50)
     print('Iteration:', i + 1)
+    print(f'Variables quantity: {variables_quantity}')
     print('Average fitness: {}'.format(abc.average_fitness))
     print('Average obj. fn. return value: {}'.format(abc.average_ret_val))
     print('Best fitness score: {}'.format(abc.best_fitness))
@@ -111,42 +127,56 @@ def abc_model():
     print("="*50)
     print("")
 
-    global r2_values, X_iterations
-    solution = list(abc.best_params.values())
-    r2 = evaluate_R2(solution)
-    r2_values.append(r2)
+    global metric_statistic, metric_values, X_iterations
+    
+    metric = 0
+    if(metric_statistic == "r2"):
+      metric = evaluate_R2(solution)
+    elif(metric_statistic == "mse"):
+      metric = evaluate_MSE(solution)
+    elif(metric_statistic == "mae"):
+      metric = evaluate_MAE(solution)
+      
+    metric_values.append(metric)
     X_iterations.append(i + 1)
 
-
-  mse = abc.best_fitness
   solution = list(abc.best_params.values())
+  return solution
 
-  return solution, mse
-
-solution, mse = abc_model()
+solution = abc_model()
 
 print("")
 print("Solução:")
-r2 = evaluate_R2(solution)
+
+evaluated_metric = 0
+if(metric_statistic == "r2"):
+  evaluated_metric = evaluate_R2(solution)
+if(metric_statistic == "mse"):
+  evaluated_metric = evaluate_MSE(solution)
+if(metric_statistic == "mae"):
+  evaluated_metric = evaluate_MAE(solution)
+
+variables_quantity = solution.count(1)
+print(f"Quantidade de variáveis: {variables_quantity}")
 
 # Plotar resultados
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
 ax1.plot(
-  X, y, 
+  X_train, y_train, 
   marker='o', linestyle='', markersize=4, color='black', label='Data'
 )
 ax1.plot(
-  X_test, y_pred, 
+  X_train, y_pred, 
   marker='o', linestyle='', markersize=4, color='red', label='Predictions'
 )
-ax1.set_title(f'Random Forest (R2: {r2:.2f})')
+ax1.set_title(f'Random Forest ({metric_statistic}: {evaluated_metric:.2f})')
 
 ax2.plot(
-  X_iterations, r2_values, 
+  X_iterations, metric_values, 
   marker='o', linestyle='', markersize=4, color='red', label='R2 values'
 )
-ax2.set_title(f'R2 values sequency')
+ax2.set_title(f'{metric_statistic} values sequency')
 
 plt.tight_layout()
-plt.savefig(f'ecabc_R2({r2:.2f})_i({iterations}*{super_iterations}).png')
+plt.savefig(f'ecabc_m({metric_for_cost_function})_{metric_statistic}({evaluated_metric:.2f})_i({iterations}*{super_iterations})_v({variables_quantity}).png')

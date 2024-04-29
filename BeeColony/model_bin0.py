@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.discriminant_analysis import StandardScaler
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 
 import matplotlib.pyplot as plt
 # from mpl_toolkits.mplot3d import Axes3D
@@ -27,14 +27,17 @@ dataframe = pd.read_csv(filepath)
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 10
+iterations = 100
 
 counter_iterations = 0
 X_iterations = []
-r2_values = []
+metric_values = []
+
+metric_for_cost_function = "r2"
+metric_statistic = "r2"
 
 
-def convert_binary_array_to_variables(binary_array):
+def convert_values_to_variables(binary_array):
 
   variables = list(dataframe.columns)
   sample_variables = []
@@ -47,7 +50,7 @@ def convert_binary_array_to_variables(binary_array):
 def evaluate_variables(variables):
 
   # Separar as características (X) e a variável de destino (y)
-  global X, y, X_test, y_pred
+  global X, y, X_test, y_pred, X_train, y_train
   X = dataframe[variables]
   y = dataframe.iloc[:, -1]
 
@@ -72,29 +75,37 @@ def evaluate_variables(variables):
   model.fit(X_train, y_train)
 
   # Fazer previsões
-  y_pred = model.predict(X_test)
+  y_pred = model.predict(X_train)
 
+  print("")
   # Avaliar o modelo usando o coeficiente R²
-  r2 = r2_score(y_test, y_pred)
+  r2 = r2_score(y_train, y_pred)
   print("Coeficiente R² do modelo:", r2)
   # Avaliar o modelo usando o coeficiente Mean Square Error
-  mse = mean_squared_error(y_test, y_pred)
+  mse = mean_squared_error(y_train, y_pred)
   print("Coeficiente MSE do modelo:", mse)
+  # Avaliar o modelo usando o coeficiente Erro Médio Absoluto (MAE)
+  mae = mean_absolute_error(y_train, y_pred)
+  print("Erro Médio Absoluto (MAE):", mae)
 
-  global r2_values, X_iterations, counter_iterations
+  global metric_values, X_iterations, counter_iterations
   counter_iterations += 1
   X_iterations.append(counter_iterations)
-  r2_values.append(r2)
+  metric_values.append(r2)
 
-  return r2, mse
+  return r2, mse, mae
 
 def evaluate_R2(binary_array):
-  variables = convert_binary_array_to_variables(binary_array)
+  variables = convert_values_to_variables(binary_array)
   return float(evaluate_variables(variables)[0])
 
 def evaluate_MSE(binary_array):
-  variables = convert_binary_array_to_variables(binary_array)
+  variables = convert_values_to_variables(binary_array)
   return float(evaluate_variables(variables)[1])
+
+def evaluate_MAE(binary_array):
+  variables = convert_values_to_variables(binary_array)
+  return float(evaluate_variables(variables)[2])
 
 def abc_model():
 
@@ -112,8 +123,8 @@ def abc_model():
     # 15 Onlooker bees
     colony_size=30,
 
-    # Scout_limit = colony_size * bits_count * scouts
-    scouts=0.5,
+    # Scout_limit = scouts
+    scouts=1,
     iterations=iterations,
     min_max='max',
     nan_protection=True,
@@ -129,37 +140,45 @@ def abc_model():
   solution = bin_abc_algorithm.get_solution()
   status = bin_abc_algorithm.get_status()
 
-  return solution, status
+  return solution
 
-solution, status = abc_model()
+solution = abc_model()
 
 print("")
 print("Solução:")
-r2 = evaluate_R2(solution)
+
+evaluated_metric = 0
+if(metric_statistic == "r2"):
+  evaluated_metric = evaluate_R2(solution)
+if(metric_statistic == "mse"):
+  evaluated_metric = evaluate_MSE(solution)
+if(metric_statistic == "mae"):
+  evaluated_metric = evaluate_MAE(solution)
+
+variables_quantity = solution.count(True)
+print(f"Quantidade de variáveis: {variables_quantity}")
 
 # Plotar resultados
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
 ax1.plot(
-  X, y, 
+  X_train, y_train, 
   marker='o', linestyle='', markersize=4, color='black', label='Data'
 )
 ax1.plot(
-  X_test, y_pred, 
+  X_train, y_pred,
   marker='o', linestyle='', markersize=4, color='red', label='Predictions'
 )
-ax1.set_title(f'Random Forest (R2: {r2:.2f})')
+ax1.set_title(f'Random Forest ({metric_statistic}: {evaluated_metric:.2f})')
 
 ax2.plot(
-  X_iterations, r2_values, 
+  X_iterations, metric_values, 
   marker='o', linestyle='', markersize=4, color='red', label='R2 values'
 )
-ax2.set_title(f'R2 values sequency')
+ax2.set_title(f'{metric_statistic} values sequency')
 
 plt.tight_layout()
-plt.savefig(f'binabc_R2({r2:.2f})_i({iterations}*{super_iterations}).png')
-
-
+plt.savefig(f'binabc_m({metric_for_cost_function})_{metric_statistic}({evaluated_metric:.2f})_i({iterations}*{super_iterations})_v({variables_quantity}).png')
 
 
 

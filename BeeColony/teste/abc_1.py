@@ -4,13 +4,13 @@ def minimize_integers(integers):
   return sum(integers)
 
 abc = ABC(10, minimize_integers)
-abc.add_param(0, 10, name='Int_1')
-abc.add_param(0, 10, name='Int_2')
-abc.add_param(0, 10, name='Int_3')
-abc.add_param(0, 10, name='Int_4')
+abc.add_param(0, 1000, name='Int_1')
+abc.add_param(0, 1000, name='Int_2')
+abc.add_param(0, 1000, name='Int_3')
+abc.add_param(0, 1000, name='Int_4')
 abc.initialize()
 
-for _ in range(10):
+for _ in range(100):
   abc.search()
   print('Average fitness: {}'.format(abc.average_fitness))
   print('Average obj. fn. return value: {}'.format(abc.average_ret_val))
