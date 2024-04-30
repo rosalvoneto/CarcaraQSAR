@@ -1,4 +1,6 @@
 import pandas as pd
+from utils import convert_binary_array_to_variables, convert_variables_to_binary_array, get_variables
+
 import math
 # import random
 
@@ -15,19 +17,10 @@ import matplotlib.pyplot as plt
 
 from beecolpy import bin_abc
 
-
-
-filepath = "base_full.csv"
-dataframe = pd.read_csv(filepath)
-
-# # Normalizar os dados
-# scaler = StandardScaler()
-# dataframe = scaler.fit_transform(dataframe)
-
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 100
+iterations = 1
 
 counter_iterations = 0
 X_iterations = []
@@ -96,15 +89,18 @@ def evaluate_variables(variables):
   return r2, mse, mae
 
 def evaluate_R2(binary_array):
-  variables = convert_values_to_variables(binary_array)
+  full_variables = get_variables(dataframe)
+  variables = convert_binary_array_to_variables(binary_array, full_variables)
   return float(evaluate_variables(variables)[0])
 
 def evaluate_MSE(binary_array):
-  variables = convert_values_to_variables(binary_array)
+  full_variables = get_variables(dataframe)
+  variables = convert_binary_array_to_variables(binary_array, full_variables)
   return float(evaluate_variables(variables)[1])
 
 def evaluate_MAE(binary_array):
-  variables = convert_values_to_variables(binary_array)
+  full_variables = get_variables(dataframe)
+  variables = convert_binary_array_to_variables(binary_array, full_variables)
   return float(evaluate_variables(variables)[2])
 
 def abc_model():
@@ -138,9 +134,19 @@ def abc_model():
     bin_abc_algorithm.fit()
 
   solution = bin_abc_algorithm.get_solution()
-  status = bin_abc_algorithm.get_status()
 
-  return solution
+  if isinstance(solution, list):
+    return solution
+  else:
+    return []
+
+
+filepath = "base_full.csv"
+dataframe = pd.read_csv(filepath)
+
+# # Normalizar os dados
+# scaler = StandardScaler()
+# dataframe = scaler.fit_transform(dataframe)
 
 solution = abc_model()
 
@@ -155,8 +161,18 @@ if(metric_statistic == "mse"):
 if(metric_statistic == "mae"):
   evaluated_metric = evaluate_MAE(solution)
 
-variables_quantity = solution.count(True)
-print(f"Quantidade de variáveis: {variables_quantity}")
+
+full_variables = get_variables(dataframe)
+variables = convert_binary_array_to_variables(solution, full_variables)
+print(f"Quantidade de variáveis: {len(variables)}")
+
+new_dataframe = dataframe[variables]
+# Adicionando a última coluna
+last_column_name = list(dataframe.columns)[-1]
+new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
+print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
+
+new_dataframe.to_csv("base_compressed.csv")
 
 # Plotar resultados
 fig, (ax1, ax2) = plt.subplots(2, 1)
@@ -178,32 +194,5 @@ ax2.plot(
 ax2.set_title(f'{metric_statistic} values sequency')
 
 plt.tight_layout()
-plt.savefig(f'binabc_m({metric_for_cost_function})_{metric_statistic}({evaluated_metric:.2f})_i({iterations}*{super_iterations})_v({variables_quantity}).png')
+plt.savefig(f'binabc_m({metric_for_cost_function})_{metric_statistic}({evaluated_metric:.2f})_i({iterations}*{super_iterations})_v({len(variables)}).png')
 
-
-
-
-# # Array tridimensional de exemplo
-# data = food_sources
-
-# # Convertendo para um array NumPy para facilitar o acesso aos dados
-# data_array = np.array(data)
-
-# # Criando a figura e o subplot 3D
-# fig = plt.figure()
-# ax = fig.add_subplot(111, projection='3d')
-
-# # Iterando sobre os elementos do array e plotando-os como pontos no gráfico 3D
-# for i in range(len(data)):
-#     for j in range(len(data[i])):
-#         for k in range(len(data[i][j])):
-#             # Coordenadas x, y, z com a cor azul e marcador 'o'
-#             ax.scatter(i, j, k, c='b', marker='o')  
-
-# # Definindo os rótulos dos eixos
-# ax.set_xlabel('X')
-# ax.set_ylabel('Y')
-# ax.set_zlabel('Z')
-
-# # Exibindo o gráfico
-# plt.savefig("Food_sources.png")

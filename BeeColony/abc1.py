@@ -1,4 +1,6 @@
 import pandas as pd
+from utils import convert_binary_array_to_variables, convert_variables_to_binary_array, get_variables
+
 import math
 # import random
 
@@ -16,18 +18,10 @@ import matplotlib.pyplot as plt
 from ecabc import ABC
 
 
-
-filepath = "base_full.csv"
-dataframe = pd.read_csv(filepath)
-
-# # Normalizar os dados
-# scaler = StandardScaler()
-# dataframe = scaler.fit_transform(dataframe)
-
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 100
+iterations = 1
 
 X_iterations = []
 metric_values = []
@@ -89,16 +83,19 @@ def evaluate_variables(variables):
 
   return r2, mse, mae
 
-def evaluate_R2(values):
-  variables = convert_values_to_variables(values)
+def evaluate_R2(binary_array):
+  full_variables = get_variables(dataframe)
+  variables = convert_binary_array_to_variables(binary_array, full_variables)
   return float(evaluate_variables(variables)[0])
 
-def evaluate_MSE(values):
-  variables = convert_values_to_variables(values)
+def evaluate_MSE(binary_array):
+  full_variables = get_variables(dataframe)
+  variables = convert_binary_array_to_variables(binary_array, full_variables)
   return float(evaluate_variables(variables)[1])
 
-def evaluate_MAE(values):
-  variables = convert_values_to_variables(values)
+def evaluate_MAE(binary_array):
+  full_variables = get_variables(dataframe)
+  variables = convert_binary_array_to_variables(binary_array, full_variables)
   return float(evaluate_variables(variables)[2])
 
 def abc_model():
@@ -143,6 +140,13 @@ def abc_model():
   solution = list(abc.best_params.values())
   return solution
 
+filepath = "base_full.csv"
+dataframe = pd.read_csv(filepath)
+
+# # Normalizar os dados
+# scaler = StandardScaler()
+# dataframe = scaler.fit_transform(dataframe)
+
 solution = abc_model()
 
 print("")
@@ -156,8 +160,18 @@ if(metric_statistic == "mse"):
 if(metric_statistic == "mae"):
   evaluated_metric = evaluate_MAE(solution)
 
-variables_quantity = solution.count(1)
-print(f"Quantidade de variáveis: {variables_quantity}")
+
+full_variables = get_variables(dataframe)
+variables = convert_binary_array_to_variables(solution, full_variables)
+print(f"Quantidade de variáveis: {len(variables)}")
+
+new_dataframe = dataframe[variables]
+# Adicionando a última coluna
+last_column_name = list(dataframe.columns)[-1]
+new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
+print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
+
+new_dataframe.to_csv("base_compressed.csv")
 
 # Plotar resultados
 fig, (ax1, ax2) = plt.subplots(2, 1)
@@ -179,4 +193,4 @@ ax2.plot(
 ax2.set_title(f'{metric_statistic} values sequency')
 
 plt.tight_layout()
-plt.savefig(f'ecabc_m({metric_for_cost_function})_{metric_statistic}({evaluated_metric:.2f})_i({iterations}*{super_iterations})_v({variables_quantity}).png')
+plt.savefig(f'ecabc_m({metric_for_cost_function})_{metric_statistic}({evaluated_metric:.2f})_i({iterations}*{super_iterations})_v({len(variables)}).png')

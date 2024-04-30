@@ -1,5 +1,6 @@
 
 import pandas as pd
+from utils import convert_binary_array_to_variables, convert_variables_to_binary_array, get_variables
 
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
@@ -7,57 +8,7 @@ from sklearn.discriminant_analysis import StandardScaler
 
 from sklearn.svm import SVC, SVR
 
-class Graph:
-    def __init__(self):
-        self.graph = {}
 
-    def add_edge(self, node1, node2, weight):
-        if node1 not in self.graph:
-            self.graph[node1] = []
-        self.graph[node1].append((node2, weight))
-
-    def best_first_search(self, start, goal):
-        visited = set()
-        # (heuristic_value, node)
-        queue = [(0, start)]
-        
-        while queue:
-            # Sort by heuristic value
-            queue.sort()
-            # Get node with lowest heuristic value
-            heuristic_value, current_node = queue.pop(0)
-            visited.add(current_node)
-
-            print(current_node)
-
-            if current_node == goal:
-                print("Goal found!")
-                return
-
-            for neighbor, weight in self.graph.get(current_node, []):
-                if neighbor not in visited:
-                    queue.append((weight, neighbor))
-
-        print("Goal not reachable!")
-
-def convert_variables_to_binary_array(full_variables, choosen_variables):
-    array = []
-    for variable in full_variables:
-        if(variable in choosen_variables):
-            array.append(1)
-        else:
-            array.append(0)
-    
-    return array
-
-def convert_binary_array_to_variables(binary_array, full_variables):
-
-  choosen_variables = []
-  for i in range(len(full_variables)):
-    if(binary_array[i] == 1):
-      choosen_variables.append(full_variables[i])
-
-  return choosen_variables
 
 def create_model(dataframe, variables):
   
@@ -82,15 +33,11 @@ def create_model(dataframe, variables):
   # Fazer previsões
   y_pred = model.predict(X_test)
   
-  print("")
   # Avaliar o modelo usando o coeficiente R²
   r2 = r2_score(y_test, y_pred)
   print("Coeficiente R² do modelo:", r2)
 
   return r2
-
-def get_variables(dataframe):
-  return list(dataframe.columns)
 
 def evaluate_best_variable(dataframe):
 
@@ -98,8 +45,6 @@ def evaluate_best_variable(dataframe):
 
   metric_values = []
   for i, variable in enumerate(variables):
-    if(i == len(variables) - 1):
-      break
     print(f"Testando variável {i}:{variable}")
     metric = create_model(dataframe, [variable])
     metric_values.append(metric)
@@ -109,66 +54,112 @@ def evaluate_best_variable(dataframe):
 
   return variables[maximum_index], maximum_value
 
-def calculate_R2(binary_array, full_variables):
-    choosen_variables = convert_binary_array_to_variables(binary_array, full_variables)
-    return create_model(dataframe, choosen_variables)
 
-def explore_graph(node, current_R2, max_R2, visited, max_consecutive_worse_R2):
 
-    # Prune the branch if current R2 is worse than max R2
-    if current_R2 <= max_R2:
-        return max_R2, max_consecutive_worse_R2
+class Graph:
+    def __init__(self):
+        self.graph = {}
 
-    # Avoid revisiting nodes to prevent infinite loops
-    if node in visited:
-        return max_R2, max_consecutive_worse_R2
+    def add_node(self, node):
+        self.graph[tuple(node)] = []
 
-    visited.add(node)
+    def add_child(self, parent, child):
+        self.graph[tuple(parent)].append(child)
 
-    if current_R2 > max_R2:
-        max_R2 = current_R2
-        max_consecutive_worse_R2 = 0
-    else:
-        max_consecutive_worse_R2 += 1
+    def greedy_search(self, start, full_variables):
+        visited = set()
+        frontier = [(self.calculate_R2(start, full_variables), start)]
+        best_node = None
+        best_R2 = 0
 
-    # Prune the branch if consecutive worse R2 values exceed threshold
-    if max_consecutive_worse_R2 >= 2:
-        return max_R2, max_consecutive_worse_R2
+        while frontier:
+            # Ordena a fronteira pelo valor de R2 decrescente
+            frontier.sort(reverse=True)
+            # Obtém o nó com o maior valor de R2
+            current_R2, current_node = frontier.pop(0)
 
-    # Explore 5 children for each node
-    for i in range(len(node)):
-        # Add 1 to one position of the array
-        if node[i] == 0:
+            if tuple(current_node) in visited:
+                continue
+
+            visited.add(tuple(current_node))
+
+            print(f"Valor R2 = {current_R2} para o nó atual")
+
+            # Condição de parada
+            if current_R2 >= r2_condition:
+                print(f"R2 >= {r2_condition}. Parando a busca.")
+                best_node = current_node
+                best_R2 = current_R2
+                break
+            
+            # Atualiza o melhor nó encontrado até agora
+            if current_R2 > best_R2:
+                best_node = current_node
+                best_R2 = current_R2
+
+            for child in self.generate_children(current_node):
+                if tuple(child) not in visited:
+                    frontier.append(
+                       (self.calculate_R2(child, full_variables), child)
+                    )
+        return best_node, best_R2
+
+    def calculate_R2(self, binary_array, full_variables):
+        choosen_variables = convert_binary_array_to_variables(
+           binary_array, full_variables
+        )
+        return create_model(dataframe, choosen_variables)
+
+    def generate_children(self, node):
+        children = []
+
+        # Adiciona 1 em uma posição diferente do array para gerar os filhos
+        for i in range(len(node)):
+            if(node[i] == 1):
+                continue
             child = node[:i] + [1] + node[i+1:]
-            child_R2 = calculate_R2(child, full_variables)
-            max_R2, max_consecutive_worse_R2 = explore_graph(child, child_R2, max_R2, visited, max_consecutive_worse_R2)
+            children.append(child)
 
-    # Backtrack
-    visited.remove(node)
+        return children
 
-    return max_R2, max_consecutive_worse_R2
 
 
 # Criação do Dataframe
-filepath = "base_full.csv"
+r2_condition = 0.99
+filepath = "base_compressed.csv"
 dataframe = pd.read_csv(filepath)
 
+
+# Escolha da melhor variável inicial
 print("BUSCA PELA MELHOR VARIÁVEL")
 
-# # Escolha da melhor variável inicial
-# variable, value = evaluate_best_variable(dataframe)
-# print("Melhor variável:", variable)
-# print("Melhor R2:", value)
-# print("\n")
+variable, value = evaluate_best_variable(dataframe)
+print("Melhor variável:", variable)
+print("Melhor R2:", value)
+print("\n")
 
-variable = "Eta_beta_A"
+# Escolha da melhor configuração de variáveis
+print('BUSCA GULOSA:')
 
-print('BUSCA PELA MELHOR ESCOLHA:')
 # Definindo valores iniciais para a Busca pela melhor escolha
 full_variables = get_variables(dataframe)
 start_node = convert_variables_to_binary_array(full_variables, [variable])
-initial_R2 = calculate_R2(start_node, full_variables)
-visited = set()
 
-max_R2, max_consecutive_worse_R2 = explore_graph(start_node, initial_R2, initial_R2, visited, 0)
+graph = Graph()
+# Adiciona o nó inicial
+graph.add_node(start_node)
+# Realiza a busca
+best_node, best_R2 = graph.greedy_search(start_node, full_variables)
+print("Melhor R2:", best_R2)
 
+full_variables = get_variables(dataframe)
+variables = convert_binary_array_to_variables(best_node, full_variables)
+print(f"Quantidade de variáveis: {len(variables)}")
+
+new_dataframe = dataframe[variables]
+# Adicionando a última coluna
+last_column_name = list(dataframe.columns)[-1]
+new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
+print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
+
+new_dataframe.to_csv("base_best.csv")
