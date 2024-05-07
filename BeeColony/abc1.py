@@ -21,7 +21,7 @@ from ecabc import ABC
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 1
+iterations = 100
 
 X_iterations = []
 metric_values = []
@@ -68,17 +68,17 @@ def evaluate_variables(variables):
   model.fit(X_train, y_train)
 
   # Fazer previsões
-  y_pred = model.predict(X_train)
+  y_pred = model.predict(X_test)
 
   print("")
   # Avaliar o modelo usando o coeficiente Mean Square Error
-  mse = mean_squared_error(y_train, y_pred)
+  mse = mean_squared_error(y_test, y_pred)
   print("Coeficiente MSE do modelo:", mse)
   # Avaliar o modelo usando o coeficiente R²
-  r2 = r2_score(y_train, y_pred)
+  r2 = r2_score(y_test, y_pred)
   print("Coeficiente R² do modelo:", r2)
   # Avaliar o modelo usando o coeficiente Erro Médio Absoluto (MAE)
-  mae = mean_absolute_error(y_train, y_pred)
+  mae = mean_absolute_error(y_test, y_pred)
   print("Erro Médio Absoluto (MAE):", mae)
 
   return r2, mse, mae
@@ -171,20 +171,20 @@ last_column_name = list(dataframe.columns)[-1]
 new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
 print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
 
-new_dataframe.to_csv("base_compressed.csv")
+new_dataframe.to_csv("base_compressed.csv", index=False)
 
 # Plotar resultados
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
-ax1.plot(
-  X_train, y_train, 
-  marker='o', linestyle='', markersize=4, color='black', label='Data'
-)
-ax1.plot(
-  X_train, y_pred, 
-  marker='o', linestyle='', markersize=4, color='red', label='Predictions'
-)
-ax1.set_title(f'Random Forest ({metric_statistic}: {evaluated_metric:.2f})')
+# ax1.plot(
+#   X_train, y_train, 
+#   marker='o', linestyle='', markersize=4, color='black', label='Data'
+# )
+# ax1.plot(
+#   X_train, y_pred, 
+#   marker='o', linestyle='', markersize=4, color='red', label='Predictions'
+# )
+# ax1.set_title(f'Random Forest ({metric_statistic}: {evaluated_metric:.2f})')
 
 ax2.plot(
   X_iterations, metric_values, 

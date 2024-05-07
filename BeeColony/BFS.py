@@ -35,7 +35,6 @@ def create_model(dataframe, variables):
   
   # Avaliar o modelo usando o coeficiente R²
   r2 = r2_score(y_test, y_pred)
-  print("Coeficiente R² do modelo:", r2)
 
   return r2
 
@@ -66,13 +65,21 @@ class Graph:
     def add_child(self, parent, child):
         self.graph[tuple(parent)].append(child)
 
+    def calculate_R2(self, binary_array, full_variables):
+        choosen_variables = convert_binary_array_to_variables(
+           binary_array, full_variables
+        )
+        return create_model(dataframe, choosen_variables)
+
     def greedy_search(self, start, full_variables):
         visited = set()
         frontier = [(self.calculate_R2(start, full_variables), start)]
         best_node = None
         best_R2 = 0
+        i = 0
 
         while frontier:
+            i += 1
             # Ordena a fronteira pelo valor de R2 decrescente
             frontier.sort(reverse=True)
             # Obtém o nó com o maior valor de R2
@@ -84,6 +91,12 @@ class Graph:
             visited.add(tuple(current_node))
 
             print(f"Valor R2 = {current_R2} para o nó atual")
+
+            # Abre o arquivo em modo de escrita ('w')
+            with open("Valores R2.csv", "a") as arquivo:
+                # Escreve os dados no arquivo
+                arquivo.write(f"{i}, {current_R2}, {current_node}\n")
+            print("Dados foram salvos no arquivo.")
 
             # Condição de parada
             if current_R2 >= r2_condition:
@@ -97,28 +110,48 @@ class Graph:
                 best_node = current_node
                 best_R2 = current_R2
 
-            for child in self.generate_children(current_node):
-                if tuple(child) not in visited:
+            childrens = self.generate_children(current_node)
+
+            bests_R2 = []
+            for child in childrens:
+                bests_R2.append(self.calculate_R2(child, full_variables))
+            
+            # Obtém os índices dos maiores elementos de bests_R2
+            child_quantity = 5
+
+            bests_indexes = sorted(
+                range(len(bests_R2)), 
+                key=lambda i: bests_R2[i], 
+                reverse=True
+            )[:child_quantity]
+
+            print(f"Melhores índices: {bests_indexes}")
+
+            for index in bests_indexes:
+
+                # print(f"length child {index}: {len(childrens[index])}")
+                # for i, value in enumerate(childrens[index]):
+                #     if(value == 1):
+                #         print(i)
+
+                if (
+                    tuple(childrens[index]) not in visited 
+                    and bests_R2[index] >= current_R2
+                ):
                     frontier.append(
                        (self.calculate_R2(child, full_variables), child)
                     )
+            
+            print(f"Quantidade da barreira: {len(frontier)}")
         return best_node, best_R2
-
-    def calculate_R2(self, binary_array, full_variables):
-        choosen_variables = convert_binary_array_to_variables(
-           binary_array, full_variables
-        )
-        return create_model(dataframe, choosen_variables)
 
     def generate_children(self, node):
         children = []
-
         # Adiciona 1 em uma posição diferente do array para gerar os filhos
         for i in range(len(node)):
-            if(node[i] == 1):
-                continue
-            child = node[:i] + [1] + node[i+1:]
-            children.append(child)
+            if node[i] == 0:
+                child = node[:i] + [1] + node[i+1:]
+                children.append(child)
 
         return children
 
@@ -138,6 +171,11 @@ print("Melhor variável:", variable)
 print("Melhor R2:", value)
 print("\n")
 
+with open("best_variable.csv", 'a') as arquivo:
+    arquivo.write(f"Variable, R2_value\n")
+    arquivo.write(f"{variable}, {value}\n")
+
+
 # Escolha da melhor configuração de variáveis
 print('BUSCA GULOSA:')
 
@@ -152,7 +190,6 @@ graph.add_node(start_node)
 best_node, best_R2 = graph.greedy_search(start_node, full_variables)
 print("Melhor R2:", best_R2)
 
-full_variables = get_variables(dataframe)
 variables = convert_binary_array_to_variables(best_node, full_variables)
 print(f"Quantidade de variáveis: {len(variables)}")
 
@@ -162,4 +199,4 @@ last_column_name = list(dataframe.columns)[-1]
 new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
 print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
 
-new_dataframe.to_csv("base_best.csv")
+new_dataframe.to_csv("base_best.csv", index=False)

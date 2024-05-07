@@ -11,9 +11,6 @@ def convert_variables_to_binary_array(full_variables, choosen_variables):
 
 def convert_binary_array_to_variables(binary_array, full_variables):
 
-  # print(len(binary_array))
-  # print(len(full_variables))
-
   choosen_variables = []
   for i in range(len(full_variables)):
     if(binary_array[i] == 1):
