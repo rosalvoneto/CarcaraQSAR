@@ -73,27 +73,31 @@ class Graph:
 
     def greedy_search(self, start, full_variables):
         visited = set()
-        frontier = [(self.calculate_R2(start, full_variables), start)]
         best_node = None
         best_R2 = 0
         i = 0
 
-        while frontier:
+        frontier = []
+        frontier.append((self.calculate_R2(start, full_variables), start))
+
+        while len(frontier) > 0:
             i += 1
             # Ordena a fronteira pelo valor de R2 decrescente
-            frontier.sort(reverse=True)
+            frontier = sorted(frontier, key=lambda x: x[0], reverse=True)
+            for item in frontier:
+                print(item[0])
+
             # Obtém o nó com o maior valor de R2
             current_R2, current_node = frontier.pop(0)
 
             if tuple(current_node) in visited:
                 continue
-
             visited.add(tuple(current_node))
 
             print(f"Valor R2 = {current_R2} para o nó atual")
 
             # Abre o arquivo em modo de escrita ('w')
-            with open("Valores R2.csv", "a") as arquivo:
+            with open("Valores R21.csv", "a") as arquivo:
                 # Escreve os dados no arquivo
                 arquivo.write(f"{i}, {current_R2}, {current_node}\n")
             print("Dados foram salvos no arquivo.")
@@ -129,17 +133,17 @@ class Graph:
 
             for index in bests_indexes:
 
-                # print(f"length child {index}: {len(childrens[index])}")
-                # for i, value in enumerate(childrens[index]):
-                #     if(value == 1):
-                #         print(i)
+                print(f"length child {index}: {len(childrens[index])}")
+                for i, value in enumerate(childrens[index]):
+                    if(value == 1):
+                        print(i)
 
                 if (
                     tuple(childrens[index]) not in visited 
                     and bests_R2[index] >= current_R2
                 ):
                     frontier.append(
-                       (self.calculate_R2(child, full_variables), child)
+                       (self.calculate_R2(childrens[index], full_variables), childrens[index])
                     )
             
             print(f"Quantidade da barreira: {len(frontier)}")
@@ -159,7 +163,9 @@ class Graph:
 
 # Criação do Dataframe
 r2_condition = 0.99
-filepath = "base_compressed.csv"
+filepath = "base_compressed1.csv"
+print(f"Analisando '{filepath}'")
+
 dataframe = pd.read_csv(filepath)
 
 
@@ -171,7 +177,7 @@ print("Melhor variável:", variable)
 print("Melhor R2:", value)
 print("\n")
 
-with open("best_variable.csv", 'a') as arquivo:
+with open("best_variable1.csv", 'a') as arquivo:
     arquivo.write(f"Variable, R2_value\n")
     arquivo.write(f"{variable}, {value}\n")
 
@@ -199,4 +205,4 @@ last_column_name = list(dataframe.columns)[-1]
 new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
 print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
 
-new_dataframe.to_csv("base_best.csv", index=False)
+new_dataframe.to_csv("base_best1.csv", index=False)

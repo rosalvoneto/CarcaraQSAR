@@ -21,7 +21,7 @@ from ecabc import ABC
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 100
+iterations = 30
 
 X_iterations = []
 metric_values = []

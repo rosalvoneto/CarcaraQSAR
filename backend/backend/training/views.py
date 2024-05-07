@@ -265,10 +265,10 @@ def train_view(request):
             index
           )
 
-        # file_name = 'bootstrap_temporary.png'
-        # with open(file_name, 'rb') as image:
-        #   training.bootstrap.save('bootstrap.png', File(image), save=True)
-        # os.remove(file_name)
+        file_name = 'bootstrap_temporary.png'
+        with open(file_name, 'rb') as image:
+          training.bootstrap.save('bootstrap.png', File(image), save=True)
+        os.remove(file_name)
 
         print("Calculando Importance:")
         importance(
