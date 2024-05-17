@@ -20,7 +20,7 @@ from beecolpy import bin_abc
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 100
+iterations = 30
 
 counter_iterations = 0
 X_iterations = []
@@ -143,6 +143,12 @@ def abc_model():
 
 filepath = "base_full.csv"
 dataframe = pd.read_csv(filepath)
+print(f"Linhas e colunas: {dataframe.shape}")
+
+indexes = [77, 81, 84, 92, 98]
+dataframe = dataframe.drop(indexes)
+print(f"Linhas e colunas: {dataframe.shape}")
+
 
 # # Normalizar os dados
 # scaler = StandardScaler()

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 from utils import convert_binary_array_to_variables, convert_variables_to_binary_array, get_variables
 
@@ -143,6 +144,12 @@ def abc_model():
 
 filepath = "base_full.csv"
 dataframe = pd.read_csv(filepath)
+print(f"Linhas e colunas: {dataframe.shape}")
+
+# indexes = [77, 81, 84, 92, 98]
+# dataframe = dataframe.drop(indexes)
+# print(f"Linhas e colunas: {dataframe.shape}")
+
 
 # Normalizar os dados
 scaler = StandardScaler()

@@ -1,13 +1,15 @@
 
+import math
 import pandas as pd
 from utils import convert_binary_array_to_variables, convert_variables_to_binary_array, get_variables
 
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
+
 from sklearn.discriminant_analysis import StandardScaler
 
 from sklearn.svm import SVC, SVR
-
+from sklearn.ensemble import RandomForestRegressor
 
 
 def create_model(dataframe, variables):
@@ -25,7 +27,18 @@ def create_model(dataframe, variables):
   )
 
   # Criar o modelo
-  model = SVR(kernel='rbf', C=1.0, gamma='scale')
+  if(use_model == "SVM"):
+    model = SVR(kernel='rbf', C=1.0, gamma='scale')
+
+  elif(use_model == "Random Forest"):
+    max_features = int(math.ceil(math.log2(len(variables))))
+    model = RandomForestRegressor(
+      n_estimators=50,
+      max_features=max_features
+    )
+  else:
+    model = SVR(kernel='rbf', C=1.0, gamma='scale')
+
 
   # Treinar o modelo
   model.fit(X_train, y_train)
@@ -163,11 +176,12 @@ class Graph:
 
 # Criação do Dataframe
 r2_condition = 0.99
-filepath = "base_compressed1.csv"
-print(f"Analisando '{filepath}'")
+use_model = "Random Forest"
 
+filepath = "base_compressed1.csv"
 dataframe = pd.read_csv(filepath)
 
+print(f"Analisando '{filepath}'")
 
 # Escolha da melhor variável inicial
 print("BUSCA PELA MELHOR VARIÁVEL")

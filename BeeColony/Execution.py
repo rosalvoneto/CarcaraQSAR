@@ -25,6 +25,11 @@ metric_for_cost_function = "r2"
 # Leitura do Dataframe
 filepath = "base_full.csv"
 dataframe = pd.read_csv(filepath)
+print(f"Linhas e colunas: {dataframe.shape}")
+
+indexes = [77, 81, 84, 92, 98]
+dataframe = dataframe.drop(indexes)
+print(f"Linhas e colunas: {dataframe.shape}")
 
 full_variables = get_variables(dataframe)
 
@@ -33,17 +38,24 @@ interval = (0, 10)
 use_limit = False
 full_variables_length = len(full_variables)
 
-probability_crossover = 0.5
-probability_mutation = 0.001
-limit_generations = 100
+probability_crossover = 0.25
+probability_mutation = 0.005
+limit_generations = 30
 limit_not_improvement = 10
 population_quantity = 5
 
 
 # Definindo o problema
 problem = Problem()
-population = problem.generateInitPopulation(
-  interval[0], interval[1],
+
+# population = problem.generateInitPopulation(
+#   interval[0], interval[1],
+#   full_variables_length,
+#   population_quantity
+# )
+
+population = problem.generateBestPopulation(
+  dataframe,
   full_variables_length,
   population_quantity
 )
