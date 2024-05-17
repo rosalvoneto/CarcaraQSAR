@@ -1,4 +1,5 @@
 import pandas as pd
+
 from utils import convert_binary_array_to_variables, convert_variables_to_binary_array, get_variables
 
 import math
@@ -47,9 +48,9 @@ def evaluate_variables(variables):
   X = dataframe[variables]
   y = dataframe.iloc[:, -1]
 
-  # Normalizar os dados
-  scaler = StandardScaler()
-  X = scaler.fit_transform(X)
+  # # Normalizar os dados
+  # scaler = StandardScaler()
+  # X = scaler.fit_transform(X)
 
   # Dividir o conjunto de dados em treino e teste
   X_train, X_test, y_train, y_test = train_test_split(
@@ -143,9 +144,10 @@ def abc_model():
 filepath = "base_full.csv"
 dataframe = pd.read_csv(filepath)
 
-# # Normalizar os dados
-# scaler = StandardScaler()
-# dataframe = scaler.fit_transform(dataframe)
+# Normalizar os dados
+scaler = StandardScaler()
+dataframe_array = scaler.fit_transform(dataframe)
+dataframe = pd.DataFrame(dataframe_array)
 
 solution = abc_model()
 
