@@ -23,7 +23,7 @@ from ecabc import ABC
 kernels = ['linear', 'poly', 'rbf', 'sigmoid']
 kernel = kernels[2]
 super_iterations = 1
-iterations = 30
+iterations = 100
 
 X_iterations = []
 metric_values = []
@@ -151,10 +151,10 @@ print(f"Linhas e colunas: {dataframe.shape}")
 # print(f"Linhas e colunas: {dataframe.shape}")
 
 
-# Normalizar os dados
-scaler = StandardScaler()
-dataframe_array = scaler.fit_transform(dataframe)
-dataframe = pd.DataFrame(dataframe_array)
+# # Normalizar os dados
+# scaler = StandardScaler()
+# dataframe_array = scaler.fit_transform(dataframe)
+# dataframe = pd.DataFrame(dataframe_array)
 
 solution = abc_model()
 
@@ -175,6 +175,7 @@ variables = convert_binary_array_to_variables(solution, full_variables)
 print(f"Quantidade de variáveis: {len(variables)}")
 
 new_dataframe = dataframe[variables]
+
 # Adicionando a última coluna
 last_column_name = list(dataframe.columns)[-1]
 new_dataframe[last_column_name] = dataframe[last_column_name].tolist()

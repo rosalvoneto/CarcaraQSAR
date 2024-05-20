@@ -32,6 +32,8 @@ def create_model(dataframe, variables):
 
   elif(use_model == "Random Forest"):
     max_features = int(math.ceil(math.log2(len(variables))))
+    if(max_features == 0):
+        max_features = 1
     model = RandomForestRegressor(
       n_estimators=50,
       max_features=max_features
@@ -110,7 +112,7 @@ class Graph:
             print(f"Valor R2 = {current_R2} para o nó atual")
 
             # Abre o arquivo em modo de escrita ('w')
-            with open("Valores R21.csv", "a") as arquivo:
+            with open(f"Valores R2{test_id}.csv", "a") as arquivo:
                 # Escreve os dados no arquivo
                 arquivo.write(f"{i}, {current_R2}, {current_node}\n")
             print("Dados foram salvos no arquivo.")
@@ -175,10 +177,12 @@ class Graph:
 
 
 # Criação do Dataframe
+test_id = 1
+
 r2_condition = 0.99
 use_model = "Random Forest"
 
-filepath = "base_compressed1.csv"
+filepath = f"base_compressed{test_id}.csv"
 dataframe = pd.read_csv(filepath)
 
 print(f"Analisando '{filepath}'")
@@ -191,7 +195,7 @@ print("Melhor variável:", variable)
 print("Melhor R2:", value)
 print("\n")
 
-with open("best_variable1.csv", 'a') as arquivo:
+with open(f"best_variable{test_id}.csv", 'a') as arquivo:
     arquivo.write(f"Variable, R2_value\n")
     arquivo.write(f"{variable}, {value}\n")
 
@@ -219,4 +223,4 @@ last_column_name = list(dataframe.columns)[-1]
 new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
 print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
 
-new_dataframe.to_csv("base_best1.csv", index=False)
+new_dataframe.to_csv(f"base_best{test_id}.csv", index=False)

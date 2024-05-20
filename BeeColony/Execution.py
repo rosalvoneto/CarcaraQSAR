@@ -27,9 +27,9 @@ filepath = "base_full.csv"
 dataframe = pd.read_csv(filepath)
 print(f"Linhas e colunas: {dataframe.shape}")
 
-indexes = [77, 81, 84, 92, 98]
-dataframe = dataframe.drop(indexes)
-print(f"Linhas e colunas: {dataframe.shape}")
+# indexes = [77, 81, 84, 92, 98]
+# dataframe = dataframe.drop(indexes)
+# print(f"Linhas e colunas: {dataframe.shape}")
 
 full_variables = get_variables(dataframe)
 
@@ -40,9 +40,11 @@ full_variables_length = len(full_variables)
 
 probability_crossover = 0.25
 probability_mutation = 0.005
-limit_generations = 30
+limit_generations = 100
 limit_not_improvement = 10
 population_quantity = 5
+# Quantidade de melhores variáveis para começar
+info_gain_quantity = 50
 
 
 # Definindo o problema
@@ -57,7 +59,8 @@ problem = Problem()
 population = problem.generateBestPopulation(
   dataframe,
   full_variables_length,
-  population_quantity
+  population_quantity,
+  info_gain_quantity
 )
 
 

@@ -16,7 +16,9 @@ class Problem:
     # Converter a string binária em um número inteiro
     return int(binary_string, 2)
 
-  def calculateBestIndexes(self, dataframe: pd.DataFrame):
+  def calculateBestIndexes(
+    self, dataframe: pd.DataFrame, info_gain_quantity: int
+  ):
 
     # Suponha que dataframe seja o seu DataFrame
     # Separar as variáveis preditoras da variável alvo
@@ -34,26 +36,26 @@ class Problem:
     # Ordenar o DataFrame pelo valor de Information Gain em ordem decrescente
     infogain_df = infogain_df.sort_values(by='infogain', ascending=False)
 
-    # Selecionar os nomes das 30 variáveis com maior Information Gain
-    top_30_variaveis = infogain_df.head(30)['variavel']
+    # Selecionar os nomes das melhores variáveis com maior Information Gain
+    top_variaveis = infogain_df.head(info_gain_quantity)['variavel']
 
     # Obter os índices dessas variáveis no DataFrame original
-    top_30_indices = [
-      dataframe.columns.get_loc(var) for var in top_30_variaveis
+    top_indices = [
+      dataframe.columns.get_loc(var) for var in top_variaveis
     ]
-    print("Melhores 30 variáveis:")
-    print(top_30_indices)
+    print("Melhores variáveis:")
+    print(top_indices)
 
     # Inicializar uma lista de 0s
     binarry_array = [0] * length_variables
 
-    # Atualizar os índices presentes em top_30_indices para 1
-    for index in top_30_indices:
+    # Atualizar os índices presentes em top_indices para 1
+    for index in top_indices:
       if(type(index) == int):
         binarry_array[index] = 1
 
     self.initial_binary_array = binarry_array
-    self.initial_indexes = top_30_indices
+    self.initial_indexes = top_indices
 
   def generateInitPopulation(
       self, 
@@ -79,10 +81,11 @@ class Problem:
       self, 
       dataframe: pd.DataFrame,
       bitstring_length: int, 
-      quantity: int
+      quantity: int,
+      info_gain_quantity: int
     ):
 
-    self.calculateBestIndexes(dataframe)
+    self.calculateBestIndexes(dataframe, info_gain_quantity)
 
     population = []
 
