@@ -11,7 +11,9 @@ import Button from '../../components/Button';
 import { Selector } from '../../components/Selector';
 import { Option } from '../../components/Selector/Option';
 
-import { getVariablesSettings, setVariablesSettings } from '../../api/training';
+import 
+{ getVariablesSettings, setVariablesSettings } 
+from '../../api/variablesSelection';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -85,6 +87,7 @@ export default function VariablesSelection() {
     const response = await setVariablesSettings(
       projectID,
       choosenAlgorithm,
+      algorithmParameters,
       removeConstantVariables,
       rightListOfVariables,
       authTokens.access
@@ -148,6 +151,11 @@ export default function VariablesSelection() {
     .then(response => {
       console.log(response.algorithm);
       setChoosenAlgorithm(response.algorithm);
+      
+      if(response.algorithmParameters) {
+        console.log(response.algorithmParameters);
+        setAlgorithmParameters(response.algorithmParameters);
+      }
 
       console.log(response.removeConstantVariables);
       setRemoveConstantVariables(response.removeConstantVariables);

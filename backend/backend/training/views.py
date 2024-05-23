@@ -21,11 +21,13 @@ from rest_framework.permissions import IsAuthenticated
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
+
 from .utils import bootstrap, cross_validation, importance, leave_one_out, y_scrambling
 
 from project_management.models import Project
 from database.models import Database, Normalization
-from .models import Algorithm, Training, VariablesSelection
+from .models import Algorithm, Training
+from variables_selection.models import VariablesSelection
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -43,6 +45,7 @@ def getVariablesSettings_view(request):
 
     return Response({
       'algorithm': variables_selection.algorithm,
+      'algorithmParameters': variables_selection.algorithm_parameters,
       'removeConstantVariables': variables_selection.remove_constant_variables,
       'variablesToRemove': variables_selection.variables_to_remove,
     }, status=200)
@@ -51,6 +54,7 @@ def getVariablesSettings_view(request):
 
     variables_selection = VariablesSelection.objects.create(
       algorithm="NÃO APLICAR",
+      algorithm_parameters={},
       remove_constant_variables=False,
       variables_to_remove=[],
       project=project
@@ -58,6 +62,7 @@ def getVariablesSettings_view(request):
 
     return Response({
       'algorithm': variables_selection.algorithm,
+      'algorithmParameters': variables_selection.algorithm_parameters,
       'removeConstantVariables': variables_selection.remove_constant_variables,
       'variablesToRemove': variables_selection.variables_to_remove,
     }, status=200)
@@ -68,6 +73,10 @@ def setVariablesSettings_view(request):
 
   project_id = request.POST.get('project_id')
   algorithm = request.POST.get('algorithm')
+  algorithm_parameters = request.POST.get('algorithm_parameters')
+  algorithm_parameters = json.loads(algorithm_parameters)
+  print(algorithm_parameters)
+
   list_of_variables = request.POST.get('list_of_variables')
   list_of_variables = json.loads(list_of_variables)
   remove_constant_variables = request.POST.get('remove_constant_variables')
@@ -81,6 +90,7 @@ def setVariablesSettings_view(request):
     variables_selection = project.variablesselection_set.get()
     variables_selection.update(
       algorithm=algorithm,
+      algorithm_parameters=algorithm_parameters,
       remove_constant_variables=remove_constant_variables,
       variables_to_remove=list_of_variables
     )
@@ -92,6 +102,7 @@ def setVariablesSettings_view(request):
   except VariablesSelection.DoesNotExist:
     variables_selection = VariablesSelection.objects.create(
       algorithm=algorithm,
+      algorithm_parameters=algorithm_parameters,
       remove_constant_variables=remove_constant_variables,
       variables_to_remove=list_of_variables,
       project=project,
