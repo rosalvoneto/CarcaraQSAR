@@ -2,7 +2,7 @@
 from utils import convert_binary_array_to_variables, get_variables
 import pandas as pd
 
-test_id = 1
+test_id = 2
 
 filepath = f"base_compressed{test_id}.csv"
 dataframe = pd.read_csv(filepath)

@@ -35,8 +35,7 @@ export function Block({ state, useImage, progress }) {
     console.log(state);
     
     navigate(
-      `/${projectDetails.id}${state.href}`, 
-      { state: state.stateToPass }
+      `/${projectDetails.id}${state.href}`, { state: state.stateToPass }
     );
   }
 

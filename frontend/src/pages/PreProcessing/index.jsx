@@ -259,6 +259,9 @@ export function PreProcessing({ index }) {
         <Button 
           name={'Próximo'} 
           URL={`/variables-selection`}
+          stateToPass={{
+            pageNumber: 0
+          }}
           side={'right'}
           action={nextButtonAction}
         />

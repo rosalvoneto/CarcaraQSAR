@@ -6,7 +6,7 @@ After=network.target
 User=root
 Group=www-data
 WorkingDirectory=/home/ubuntu/CarcaraQSAR/backend/backend
-ExecStart=/home/ubuntu/CarcaraQSAR/backend/backend/gunicorn --timeout=300 --workers=6 --timeout 7000 --threads=2 --worker-connections=2048 --bind 0.0.0.0:8000 backend.wsgi
+ExecStart=/home/ubuntu/CarcaraQSAR/backend/backend/gunicorn --timeout=300 --workers=6 --timeout 15000 --threads=2 --worker-connections=2048 --bind 0.0.0.0:8000 backend.wsgi
 
 [Install]
 WantedBy=multi-user.target

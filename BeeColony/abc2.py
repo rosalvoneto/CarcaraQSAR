@@ -9,7 +9,7 @@ from sklearn.svm import SVR
 
 from sklearn.feature_selection import mutual_info_regression
 
-max_no_improvement = 15
+max_no_improvement = 100
 no_improvement_count = 0
 
 # Função para calcular R²
@@ -84,7 +84,6 @@ def abc_algorithm(df, model, n_bees=20, n_iterations=100):
         bees = [create_bee(base_bee, n_features, max_mutations=50) for _ in range(n_bees)]
     else:
         bees = [random.sample(range(n_features), random.randint(1, n_features)) for _ in range(n_bees)]
-    print(bees)
 
     fitness = [evaluate_subset(X, y, bee, model) for bee in bees]
 

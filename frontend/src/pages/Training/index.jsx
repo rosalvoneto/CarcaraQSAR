@@ -233,6 +233,9 @@ export default function Training() {
         <Button 
           name={'Voltar'} 
           URL={'/variables-selection'}
+          stateToPass={{
+            pageNumber: 2
+          }}
           side={'left'}
         />
         <Button 
@@ -271,7 +274,11 @@ export default function Training() {
                       name={key[1]} 
                       type={'number'}
                       setValue={(value) => changeParameters(key[0], value)}
-                      value={algorithmParameters[key[0]] ? algorithmParameters[key[0]] : 0}
+                      value={
+                        algorithmParameters[key[0]] 
+                        ? algorithmParameters[key[0]] 
+                        : 0
+                      }
                     />
                   )
                 })

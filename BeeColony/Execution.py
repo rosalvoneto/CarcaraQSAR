@@ -40,8 +40,8 @@ full_variables_length = len(full_variables)
 
 probability_crossover = 0.25
 probability_mutation = 0.005
-limit_generations = 100
-limit_not_improvement = 10
+limit_generations = 300
+limit_not_improvement = 30
 population_quantity = 5
 # Quantidade de melhores variáveis para começar
 info_gain_quantity = 50
@@ -170,7 +170,7 @@ last_column_name = list(dataframe.columns)[-1]
 new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
 print("Quantidade de colunas do novo Dataframe:", len(list(new_dataframe.columns)))
 
-new_dataframe.to_csv("base_compressed.csv", index=False)
+new_dataframe.to_csv("base_compressed_ag.csv", index=False)
 
 
 # Plotar resultados

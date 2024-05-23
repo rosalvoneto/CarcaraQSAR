@@ -35,9 +35,31 @@ export const statesProgressBar = [
   {
     index: 2,
     name: "Seleção de Variáveis",
-    childs: [],
+    childs: [
+      {
+        index: 0,
+        name: "Remover variáveis",
+        childs: [],
+        href: '/variables-selection',
+        stateToPass: { pageNumber: 0 },
+      },
+      {
+        index: 1,
+        name: "Aplicar algoritmo Bioinspirado",
+        childs: [],
+        href: '/variables-selection',
+        stateToPass: { pageNumber: 1 },
+      },
+      {
+        index: 2,
+        name: "Remover linhas",
+        childs: [],
+        href: '/variables-selection',
+        stateToPass: { pageNumber: 2 },
+      },
+    ],
     href: '/variables-selection',
-    stateToPass: {},
+    stateToPass: { pageNumber: 0 },
   },
   {
     index: 3,

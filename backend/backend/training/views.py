@@ -206,6 +206,11 @@ def train_view(request):
       
       print("Retirando valores NaN do Dataset...")
       data = data.dropna().reset_index(drop=True)
+
+      print("Retirando valores de outliers...")
+      indexes = [77, 81, 84, 92, 98]
+      data = data.drop(indexes).reset_index(drop=True)
+
       rows, columns = data.shape
       print(f"{rows} linhas e {columns} colunas")
 

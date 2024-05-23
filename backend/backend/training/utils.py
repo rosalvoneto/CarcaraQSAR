@@ -23,6 +23,31 @@ from sklearn.inspection import permutation_importance
 from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 
+def verify_Nan(df):
+  # # Verificar se o DataFrame possui NaNs
+  # if df.isna().any().any():
+  #   print("O DataFrame possui valores NaN.")
+    
+  #   # Identificar e imprimir as posições dos NaNs
+  #   nan_positions = np.where(df.isna())
+  #   for row, col in zip(*nan_positions):
+  #     print(f'NaN encontrado na linha {row}, coluna {df.columns[col]}')
+  # else:
+  #   print("O DataFrame não possui valores NaN.")
+
+  # Verificar se o DataFrame possui NaNs
+  if df.isna().any().any():
+    print("O DataFrame possui valores NaN.")
+    # Identificar posições dos NaNs
+    nan_positions = np.where(df.isna())
+    print(nan_positions)  
+
+    for index in nan_positions:
+      print(df.iloc[index])
+  else:
+    print("O DataFrame não possui valores NaN.")
+
+
 
 def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
 
@@ -69,10 +94,13 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
   length_progress = len(list(enumerate(loo.split(data))))
 
   for i, (train_index, test_index) in enumerate(loo.split(data)):
+    
     X_train = data.iloc[train_index,:-1]
-    Y_train = data.iloc[train_index,-1]    
+    Y_train = data.iloc[train_index,-1]
     X_teste = data.iloc[test_index,:-1]
     Y_teste = data.iloc[test_index,-1]
+
+    verify_Nan(Y_train)
 
     if(algorithm == "Random Forest"):
 
@@ -81,13 +109,16 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
         max_features=parameters["max_features"]
       )
 
+
       rf = rf.fit(X_train, Y_train)
       y_pred = rf.predict(X_teste)
 
       L_Y.append(list(Y_teste)[0])
       L_Y_pred.append(y_pred)
+      
 
       training.set_progress(i + 1, length_progress)
+
 
   L = [x[0] for x in L_Y_pred]
 
