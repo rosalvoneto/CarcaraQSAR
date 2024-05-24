@@ -16,9 +16,9 @@ class VariablesSelection(models.Model):
   def update(
       self, 
       algorithm,
-      algorithm_parameters = {},
-      remove_constant_variables = False, 
-      variables_to_remove = []
+      algorithm_parameters,
+      remove_constant_variables, 
+      variables_to_remove
     ):
     self.algorithm = algorithm
     self.algorithm_parameters = algorithm_parameters

@@ -8,4 +8,5 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('database/', include('database.urls')),
     path('training/', include('training.urls')),
+    path('variables-selection/', include('variables_selection.urls')),
 ]

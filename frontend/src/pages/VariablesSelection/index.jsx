@@ -12,7 +12,7 @@ import { Selector } from '../../components/Selector';
 import { Option } from '../../components/Selector/Option';
 
 import 
-{ getVariablesSettings, setVariablesSettings } 
+{ getVariablesSettings, setVariablesSettings, removeRowsOfDatabase } 
 from '../../api/variablesSelection';
 
 import AuthContext from '../../context/AuthContext';
@@ -75,24 +75,14 @@ export default function VariablesSelection() {
   const [temporaryListToRemove, setTemporaryListToRemove] = useState([]);
   const [temporaryListToAdd, setTemporaryListToAdd] = useState([]);
 
+  const [rowsToRemove, setRowsToRemove] = useState("");
+
   const handleChangeRemoveConstantVariables = (value) => {
     if(value === optionsToRemoveVariables[0]) {
       setRemoveConstantVariables(true);
     } else {
       setRemoveConstantVariables(false);
     }
-  }
-
-  const nextButtonAction = async() => {
-    const response = await setVariablesSettings(
-      projectID,
-      choosenAlgorithm,
-      algorithmParameters,
-      removeConstantVariables,
-      rightListOfVariables,
-      authTokens.access
-    );
-    return response;
   }
 
   const setValuesToTheListToRemove = (variableName, variableValue) => {
@@ -140,6 +130,27 @@ export default function VariablesSelection() {
     setAlgorithmParameters(values);
 
     console.log(values);
+  }
+
+  const nextButtonAction = async() => {
+    const response = await setVariablesSettings(
+      projectID,
+      choosenAlgorithm,
+      algorithmParameters,
+      removeConstantVariables,
+      rightListOfVariables,
+      authTokens.access
+    );
+    return response;
+  }
+
+  const removeRows = async() => {
+    const response = await removeRowsOfDatabase(
+      projectID,
+      rowsToRemove,
+      authTokens.access
+    );
+    return response;
   }
 
   const saveAndSelect = () => {
@@ -362,6 +373,11 @@ export default function VariablesSelection() {
         />
 
         <div className={styles.container}>
+          <InlineInput 
+            name={"Linhas para remover:"}
+            width={"80%"}
+            setValue={setRowsToRemove}
+          />
         </div>
         
         <Button 
@@ -379,7 +395,10 @@ export default function VariablesSelection() {
             pageNumber: 0
           }}
           side={'right'}
-          action={nextButtonAction}
+          action={async() => {
+            await removeRows();
+            await nextButtonAction();
+          }}
         />
       </>
     )

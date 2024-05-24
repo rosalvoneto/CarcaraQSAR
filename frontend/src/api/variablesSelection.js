@@ -63,3 +63,33 @@ export const getVariablesSettings = async (
   }
   return dataResponse;
 }
+
+// Remover linhas do Database
+export const removeRowsOfDatabase = async(projectID, rowsToRemoveString, accessToken) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+  formData.append('rows', rowsToRemoveString);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/remove_rows`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  console.log("Aaqui")
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    return true;
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    return false;
+  }
+}
