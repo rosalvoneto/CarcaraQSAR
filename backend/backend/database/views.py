@@ -278,6 +278,7 @@ def getVariables_view(request):
       )
 
       variables = data_dataframe.columns.tolist()
+      variables.pop()
 
       return JsonResponse({
         'variables': variables

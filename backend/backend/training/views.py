@@ -1,18 +1,10 @@
-from io import StringIO
 import pandas as pd
 import json
-import csv
 
-from django.http import FileResponse
 import os
-from collections import OrderedDict
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from django.utils.encoding import smart_str
-from django.core.files.base import ContentFile
-
-from padelpy import from_smiles
 from django.core.files import File
 
 from rest_framework.response import Response
@@ -25,92 +17,8 @@ from django.shortcuts import get_object_or_404
 from .utils import bootstrap, cross_validation, importance, leave_one_out, y_scrambling
 
 from project_management.models import Project
-from database.models import Database, Normalization
 from .models import Algorithm, Training
-from variables_selection.models import VariablesSelection
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-import numpy as np
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getVariablesSettings_view(request):
-
-  project_id = request.GET.get('project_id')
-  project = get_object_or_404(Project, id=project_id)
-
-  try:
-    variables_selection = project.variablesselection_set.get()
-
-    return Response({
-      'algorithm': variables_selection.algorithm,
-      'algorithmParameters': variables_selection.algorithm_parameters,
-      'removeConstantVariables': variables_selection.remove_constant_variables,
-      'variablesToRemove': variables_selection.variables_to_remove,
-    }, status=200)
-
-  except VariablesSelection.DoesNotExist:
-
-    variables_selection = VariablesSelection.objects.create(
-      algorithm="NÃO APLICAR",
-      algorithm_parameters={},
-      remove_constant_variables=False,
-      variables_to_remove=[],
-      project=project
-    )
-
-    return Response({
-      'algorithm': variables_selection.algorithm,
-      'algorithmParameters': variables_selection.algorithm_parameters,
-      'removeConstantVariables': variables_selection.remove_constant_variables,
-      'variablesToRemove': variables_selection.variables_to_remove,
-    }, status=200)
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def setVariablesSettings_view(request):
-
-  project_id = request.POST.get('project_id')
-  algorithm = request.POST.get('algorithm')
-  algorithm_parameters = request.POST.get('algorithm_parameters')
-  algorithm_parameters = json.loads(algorithm_parameters)
-  print(algorithm_parameters)
-
-  list_of_variables = request.POST.get('list_of_variables')
-  list_of_variables = json.loads(list_of_variables)
-  remove_constant_variables = request.POST.get('remove_constant_variables')
-  if(remove_constant_variables == "true"):
-    remove_constant_variables = True
-  else:
-    remove_constant_variables = False
-
-  project = get_object_or_404(Project, id=project_id)
-  try:
-    variables_selection = project.variablesselection_set.get()
-    variables_selection.update(
-      algorithm=algorithm,
-      algorithm_parameters=algorithm_parameters,
-      remove_constant_variables=remove_constant_variables,
-      variables_to_remove=list_of_variables
-    )
-
-    return Response({
-      'message': 'Seleção de variáveis alterada!'
-    }, status=200)
-
-  except VariablesSelection.DoesNotExist:
-    variables_selection = VariablesSelection.objects.create(
-      algorithm=algorithm,
-      algorithm_parameters=algorithm_parameters,
-      remove_constant_variables=remove_constant_variables,
-      variables_to_remove=list_of_variables,
-      project=project,
-    )
-
-    return Response({
-      'message': 'Seleção de variáveis criada!'
-    }, status=200)
   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

@@ -17,7 +17,7 @@ export const setVariablesSettings = async (
   formData.append('list_of_variables', listOfVariablesString);
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/set_settings`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/set_settings`, {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
@@ -46,7 +46,7 @@ export const getVariablesSettings = async (
   formData.append('project_id', projectID);
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/get_settings?project_id=${projectID}`, {
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/get_settings?project_id=${projectID}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
