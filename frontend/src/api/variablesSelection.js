@@ -65,7 +65,9 @@ export const getVariablesSettings = async (
 }
 
 // Remover linhas do Database
-export const removeRowsOfDatabase = async(projectID, rowsToRemoveString, accessToken) => {
+export const removeDatabaseRows = async(
+  projectID, rowsToRemoveString, accessToken
+) => {
 
   const formData = new FormData();
   formData.append('project_id', projectID);
@@ -80,7 +82,63 @@ export const removeRowsOfDatabase = async(projectID, rowsToRemoveString, accessT
       body: formData,
   })
 
-  console.log("Aaqui")
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    return true;
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    return false;
+  }
+}
+
+// Remover variáveis constantes do Database
+export const removeDatabaseConstantVariables = async(
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/remove_constant_variables`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    return true;
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    return false;
+  }
+}
+
+// Remover variáveis do Database
+export const removeDatabaseVariables = async(
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/remove_variables`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
 
   let dataResponse = await response.json();
   if(response.status == 200) {

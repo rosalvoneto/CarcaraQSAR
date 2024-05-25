@@ -1,6 +1,5 @@
 from io import StringIO
-from django.shortcuts import get_object_or_404, render
-from django.core.files import File
+from django.shortcuts import get_object_or_404
 
 from io import StringIO
 import pandas as pd
@@ -14,8 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from database.models import CSVDatabase
 from project_management.models import Project
 from variables_selection.models import VariablesSelection
-
-import os
+from variables_selection.utils import get_variables_settings, update_database
 
 # Create your views here.
 @api_view(['GET'])
@@ -25,32 +23,9 @@ def getVariablesSettings_view(request):
   project_id = request.GET.get('project_id')
   project = get_object_or_404(Project, id=project_id)
 
-  try:
-    variables_selection = project.variablesselection_set.get()
+  response = get_variables_settings(project)
+  return Response(response, status=200)
 
-    return Response({
-      'algorithm': variables_selection.algorithm,
-      'algorithmParameters': variables_selection.algorithm_parameters,
-      'removeConstantVariables': variables_selection.remove_constant_variables,
-      'variablesToRemove': variables_selection.variables_to_remove,
-    }, status=200)
-
-  except VariablesSelection.DoesNotExist:
-
-    variables_selection = VariablesSelection.objects.create(
-      algorithm="NÃO APLICAR",
-      algorithm_parameters={},
-      remove_constant_variables=False,
-      variables_to_remove=[],
-      project=project
-    )
-
-    return Response({
-      'algorithm': variables_selection.algorithm,
-      'algorithmParameters': variables_selection.algorithm_parameters,
-      'removeConstantVariables': variables_selection.remove_constant_variables,
-      'variablesToRemove': variables_selection.variables_to_remove,
-    }, status=200)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -121,8 +96,7 @@ def removeRows_view(request):
 
       # Vincular Database atual ao histórico
       message = "Database antes da remoção de linhas!"
-
-      previous_database = CSVDatabase.objects.create(
+      CSVDatabase.objects.create(
         file=database.file,
         change_description=message,
         actual_database=database
@@ -132,32 +106,131 @@ def removeRows_view(request):
       dataframe = dataframe.drop(rows_to_remove).reset_index(drop=True)
 
       # Atualizar Database principal com o novo arquivo
-      # Pegar dados de linhas e colunas
-      rows, columns = dataframe.shape
+      database = update_database(database, dataframe)
 
-      # Transformar o dataframe em um arquivo
-      file_path = "new_database.csv"
-      dataframe.to_csv(file_path, index=False)
-
-      with open(file_path, 'rb') as new_file:
-        django_file = File(new_file)
-
-        database.update_file(
-          file=django_file,
-          lines=rows,
-          columns=columns
-        )
-        project.database = database
-      
       # Salvar mudanças no backend
+      project.database = database
       project.save()
 
-      os.remove(file_path)
-
       return Response({
-        'message': 'Remoção bem sucedida de linhas do Database principal',
+        'message': 'Remoção bem sucedida de linhas do Database!',
       }, status=200)
 
+  return Response({
+    'message': 'Database principal não encontrado!',
+  }, status=200)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def removeConstantVariables_view(request):
+
+  project_id = request.POST.get('project_id')
+
+  project = get_object_or_404(Project, id=project_id)
+  database = project.database
+
+  if(database):
+    if(database.file):
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      file_content = database.file.read().decode('utf-8')
+      dataframe = pd.read_csv(
+        StringIO(file_content), 
+        sep=database.file_separator
+      )
+
+      # Remoção de colunas constantes
+      response = get_variables_settings(project)
+      to_delete = response["removeConstantVariables"]
+
+      if(to_delete):
+
+        # Vincular Database atual ao histórico
+        message = "Database antes da remoção de variáveis constantes!"
+        CSVDatabase.objects.create(
+          file=database.file,
+          change_description=message,
+          actual_database=database
+        )
+
+        # Identificar colunas onde todos os valores são iguais
+        columns_to_drop = [column for column in dataframe.columns if dataframe[column].nunique() == 1]
+        # Remover essas colunas do DataFrame
+        dataframe = dataframe.drop(columns=columns_to_drop)
+
+        # Atualizar Database principal com o novo arquivo
+        database = update_database(database, dataframe)
+
+        # Salvar mudanças no backend
+        project.database = database
+        project.save()
+
+        return Response({
+          'message': 'Remoção de colunas constantes do Database!',
+        }, status=200)
+      else:
+        return Response({
+          'message': 'Colunas constantes não removidas!',
+        }, status=200)
+
+  return Response({
+    'message': 'Database principal não encontrado!',
+  }, status=200)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def removeVariables_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  database = project.database
+
+  if(database):
+    if(database.file):
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      file_content = database.file.read().decode('utf-8')
+      dataframe = pd.read_csv(
+        StringIO(file_content), 
+        sep=database.file_separator
+      )
+
+      # Remoção de variáveis do usuário
+      response = get_variables_settings(project)
+      variables_to_remove = response["variablesToRemove"]
+
+      if(len(variables_to_remove)):
+
+        # Vincular Database atual ao histórico
+        message = "Database antes da remoção de variáveis pelo usuário!"
+        CSVDatabase.objects.create(
+          file=database.file,
+          change_description=message,
+          actual_database=database
+        )
+
+        # Verificar quais colunas de 'variables_to_remove'
+        # estão realmente no DataFrame
+        columns_to_remove = [
+          column for column in variables_to_remove if column in dataframe.columns
+        ]
+        # Remover as colunas confirmadas
+        if columns_to_remove:
+          dataframe = dataframe.drop(columns=columns_to_remove)
+
+        # Atualizar Database principal com o novo arquivo
+        database = update_database(database, dataframe)
+
+        # Salvar mudanças no backend
+        project.database = database
+        project.save()
+
+        return Response({
+          'message': 'Remoção de variáveis escolhidas pelo usuário!',
+        }, status=200)
+      else:
+        return Response({
+          'message': 'Nenhuma variável para remover pelo usuário!',
+        }, status=200)
+    
   return Response({
     'message': 'Database principal não encontrado!',
   }, status=200)

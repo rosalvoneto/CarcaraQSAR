@@ -11,8 +11,13 @@ import Button from '../../components/Button';
 import { Selector } from '../../components/Selector';
 import { Option } from '../../components/Selector/Option';
 
-import 
-{ getVariablesSettings, setVariablesSettings, removeRowsOfDatabase } 
+import { 
+  getVariablesSettings, 
+  setVariablesSettings, 
+  removeDatabaseRows,
+  removeDatabaseConstantVariables, 
+  removeDatabaseVariables
+} 
 from '../../api/variablesSelection';
 
 import AuthContext from '../../context/AuthContext';
@@ -132,7 +137,7 @@ export default function VariablesSelection() {
     console.log(values);
   }
 
-  const nextButtonAction = async() => {
+  const handleToChangeVariables = async() => {
     const response = await setVariablesSettings(
       projectID,
       choosenAlgorithm,
@@ -141,20 +146,34 @@ export default function VariablesSelection() {
       rightListOfVariables,
       authTokens.access
     );
+    await removeDatabaseConstantVariables(projectID, authTokens.access);
+    await removeDatabaseVariables(projectID, authTokens.access);
+
     return response;
   }
 
-  const removeRows = async() => {
-    const response = await removeRowsOfDatabase(
+  const handleToChangeAlgorithm = async() => {
+    const response = await setVariablesSettings(
+      projectID,
+      choosenAlgorithm,
+      algorithmParameters,
+      removeConstantVariables,
+      rightListOfVariables,
+      authTokens.access
+    );
+
+    return response;
+  }
+
+  const saveAndSelect = () => {}
+
+  const handleToChangeRows = async() => {
+    const response = await removeDatabaseRows(
       projectID,
       rowsToRemove,
       authTokens.access
     );
     return response;
-  }
-
-  const saveAndSelect = () => {
-    
   }
 
   useEffect(() => {
@@ -273,7 +292,7 @@ export default function VariablesSelection() {
             pageNumber: 1
           }}
           side={'right'}
-          action={nextButtonAction}
+          action={handleToChangeVariables}
         />
       </>
     )
@@ -357,7 +376,7 @@ export default function VariablesSelection() {
             pageNumber: 2
           }}
           side={'right'}
-          action={nextButtonAction}
+          action={handleToChangeAlgorithm}
         />
       </>
     )
@@ -395,10 +414,7 @@ export default function VariablesSelection() {
             pageNumber: 0
           }}
           side={'right'}
-          action={async() => {
-            await removeRows();
-            await nextButtonAction();
-          }}
+          action={handleToChangeRows}
         />
       </>
     )

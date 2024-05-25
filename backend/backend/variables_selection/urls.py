@@ -13,4 +13,10 @@ urlpatterns = [
     name='get_variables_settings'
   ),
   path('remove_rows',views.removeRows_view, name='remove_rows' ),
+  path(
+    'remove_constant_variables',
+    views.removeConstantVariables_view, 
+    name='remove_constant_variables' 
+  ),
+  path('remove_variables',views.removeVariables_view, name='remove_variables' ),
 ]
