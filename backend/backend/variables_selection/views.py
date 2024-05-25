@@ -5,7 +5,8 @@ from io import StringIO
 import pandas as pd
 import json
 
-import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -13,7 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 from database.models import CSVDatabase
 from project_management.models import Project
 from variables_selection.models import VariablesSelection
-from variables_selection.utils import get_variables_settings, update_database
+from variables_selection.utils import get_variables_settings, update_database, generate_new_database
+from variables_selection.algorithms.abc import ABC_execution
 
 # Create your views here.
 @api_view(['GET'])
@@ -231,6 +233,39 @@ def removeVariables_view(request):
           'message': 'Nenhuma variável para remover pelo usuário!',
         }, status=200)
     
+  return Response({
+    'message': 'Database principal não encontrado!',
+  }, status=200)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def makeSelection_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  database = project.database
+
+  if(database):
+    if(database.file):
+
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      file_content = database.file.read().decode('utf-8')
+      dataframe = pd.read_csv(
+        StringIO(file_content), 
+        sep=database.file_separator
+      )
+
+      # Cria um modelo
+      model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+      # Faz a seleção de variáveis
+      best_subset, best_r2 = ABC_execution(dataframe, model)
+      generate_new_database("base_compressed.csv",dataframe, best_subset)
+
+      return Response({
+        'message': 'Seleção de variáveis aplicada!',
+      }, status=200)
+
   return Response({
     'message': 'Database principal não encontrado!',
   }, status=200)

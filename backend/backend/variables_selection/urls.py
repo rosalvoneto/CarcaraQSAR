@@ -19,4 +19,5 @@ urlpatterns = [
     name='remove_constant_variables' 
   ),
   path('remove_variables',views.removeVariables_view, name='remove_variables' ),
+  path('make_selection', views.makeSelection_view, name='make_selection')
 ]

@@ -1,6 +1,7 @@
 
 import os
 from django.core.files import File
+import pandas as pd
 
 from variables_selection.models import VariablesSelection
 
@@ -51,3 +52,18 @@ def update_database(database, dataframe):
   os.remove(file_path)
 
   return database
+
+def generate_new_database(
+    database_name,
+    df: pd.DataFrame, 
+    variables_indexes
+  ):
+  selected_columns = df.columns[variables_indexes]
+  new_dataframe = df[selected_columns]
+
+  # Adicionando a última coluna do Database original
+  last_column_name = list(df.columns)[-1]
+  new_dataframe[last_column_name] = df[last_column_name].tolist()
+  print("Quantidade de colunas do novo Dataframe:", new_dataframe.shape[1])
+
+  new_dataframe.to_csv(database_name, index=False)

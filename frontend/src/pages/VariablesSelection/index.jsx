@@ -16,7 +16,8 @@ import {
   setVariablesSettings, 
   removeDatabaseRows,
   removeDatabaseConstantVariables, 
-  removeDatabaseVariables
+  removeDatabaseVariables,
+  makeSelection
 } 
 from '../../api/variablesSelection';
 
@@ -152,7 +153,7 @@ export default function VariablesSelection() {
     return response;
   }
 
-  const handleToChangeAlgorithm = async() => {
+  const saveAndSelect = async() => {
     const response = await setVariablesSettings(
       projectID,
       choosenAlgorithm,
@@ -161,11 +162,10 @@ export default function VariablesSelection() {
       rightListOfVariables,
       authTokens.access
     );
+    await makeSelection(projectID, authTokens.access);
 
     return response;
   }
-
-  const saveAndSelect = () => {}
 
   const handleToChangeRows = async() => {
     const response = await removeDatabaseRows(
@@ -376,7 +376,6 @@ export default function VariablesSelection() {
             pageNumber: 2
           }}
           side={'right'}
-          action={handleToChangeAlgorithm}
         />
       </>
     )

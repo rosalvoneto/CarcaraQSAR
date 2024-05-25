@@ -151,3 +151,32 @@ export const removeDatabaseVariables = async(
     return false;
   }
 }
+
+// Faz a seleção de variáveis com o algoritmo bioinspirado
+export const makeSelection = async(
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/make_selection`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    return true;
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+    return false;
+  }
+}
