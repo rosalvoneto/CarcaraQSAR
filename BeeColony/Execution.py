@@ -27,10 +27,6 @@ filepath = "base_full.csv"
 dataframe = pd.read_csv(filepath)
 print(f"Linhas e colunas: {dataframe.shape}")
 
-# indexes = [77, 81, 84, 92, 98]
-# dataframe = dataframe.drop(indexes)
-# print(f"Linhas e colunas: {dataframe.shape}")
-
 full_variables = get_variables(dataframe)
 
 # Variáveis

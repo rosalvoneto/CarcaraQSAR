@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 from sklearn.feature_selection import mutual_info_regression
 
-from variables_selection.utils import generate_new_database
+from variables_selection.algorithms.utils.utils import generate_new_database
 
 class ABCAlgorithm():
 
