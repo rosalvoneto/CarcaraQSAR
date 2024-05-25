@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from variables_selection.utils import get_variables_settings, update_database
-from variables_selection.algorithms.abc import ABC_execution
+from variables_selection.algorithms.abc import ABCAlgorithm
 from variables_selection.algorithms.execution import AGExecution
 
 from database.models import CSVDatabase
@@ -250,6 +250,9 @@ def makeSelection_view(request):
   if(database):
     if(database.file):
 
+      response = get_variables_settings(project)
+      parameters = response["algorithmParameters"]
+
       # Cria um DataFrame do Pandas com o conteúdo do arquivo
       file_content = database.file.read().decode('utf-8')
       dataframe = pd.read_csv(
@@ -261,25 +264,37 @@ def makeSelection_view(request):
       model = RandomForestRegressor(n_estimators=100, random_state=42)
 
       # Faz a seleção de variáveis
-      # # ABC
-      # best_subset, best_r2 = ABC_execution(dataframe, model)
-      # generate_new_database("base_compressed.csv",dataframe, best_subset)
-
-      # AG
-      ag = AGExecution(
-        dataframe=dataframe,
-        population_quantity=5,
-        info_gain_quantity=50,
-        probability_crossover=0.25,
-        probability_mutation=0.005,
-        use_limit=False,
-        limit_inferior=0,
-        limit_superior=10,
-        limit_generations=15,
-        limit_not_improvement=30
+      # ABC
+      abc = ABCAlgorithm(
+        bees=parameters["bees"],
+        maximum_iterations=parameters["maximum_iterations"],
+        limit_not_improvement=parameters["limit_not_improvement"],
+        info_gain_quantity=parameters["info_gain_quantity"]
       )
-      solution, best_r2 = ag.AG_execution()
-      ag.generate_base_compressed("base_compressed.csv", dataframe, solution)
+      best_subset, best_r2 = abc.execution(dataframe, model)
+      print("Melhor R2:", best_r2)
+
+      abc.generate_new_database(
+        "base_compressed.csv",
+        dataframe, 
+        best_subset
+      )
+
+      # # AG
+      # ag = AGExecution(
+      #   dataframe=dataframe,
+      #   population_quantity=5,
+      #   info_gain_quantity=50,
+      #   probability_crossover=0.25,
+      #   probability_mutation=0.005,
+      #   use_limit=False,
+      #   limit_inferior=0,
+      #   limit_superior=10,
+      #   limit_generations=15,
+      #   limit_not_improvement=30
+      # )
+      # solution, best_r2 = ag.AG_execution()
+      # ag.generate_base_compressed("base_compressed.csv", dataframe, solution)
 
       return Response({
         'message': 'Seleção de variáveis aplicada!',

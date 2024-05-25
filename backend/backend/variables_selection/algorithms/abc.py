@@ -4,11 +4,7 @@ import random
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
-from sklearn.ensemble import RandomForestRegressor
-
 from sklearn.feature_selection import mutual_info_regression
-
-from variables_selection.algorithms.utils.utils import generate_new_database
 
 class ABCAlgorithm():
 
@@ -16,13 +12,15 @@ class ABCAlgorithm():
             self,
             bees,
             maximum_iterations,
-            max_no_improvement
+            limit_not_improvement,
+            info_gain_quantity
         ):
         self.n_bees = bees
         self.n_iterations = maximum_iterations
-        self.max_no_improvement = max_no_improvement
+        self.limit_not_improvement = limit_not_improvement
+        self.info_gain_quantity = info_gain_quantity
 
-        self.no_improvement_count = 0
+        self.not_improvement_count = 0
         self.iteration = 0
 
     # Função para calcular R²
@@ -33,7 +31,7 @@ class ABCAlgorithm():
         y_pred = model.predict(X_test)
         return r2_score(y_test, y_pred)
 
-    def create_bee(self, base_bee, n_features, max_mutations=5):
+    def create_bee(self, base_bee, n_features, max_mutations):
         """
         Cria uma nova "abelha" que é levemente diferente da base_bee.
         """
@@ -91,7 +89,7 @@ class ABCAlgorithm():
         X = df.iloc[:, :-1]
         y = df.iloc[:, -1]
 
-        base_bee = self.calculateBestIndexes(df, 50)
+        base_bee = self.calculateBestIndexes(df, self.info_gain_quantity)
         # Inicializa abelhas
         if(True):
             bees = [self.create_bee(base_bee, n_features, max_mutations=50) for _ in range(self.n_bees)]
@@ -103,8 +101,6 @@ class ABCAlgorithm():
         best_bee = bees[np.argmax(fitness)]
         best_fitness = max(fitness)
         
-        global no_improvement_count
-
         self.iteration = 0
         while self.iteration < self.n_iterations:
             self.iteration += 1
@@ -123,7 +119,7 @@ class ABCAlgorithm():
                 
                 # Atualiza se nova posição for melhor
                 if new_fitness > fitness[i]:
-                    no_improvement_count = 0
+                    self.not_improvement_count = 0
 
                     bees[i] = new_bee
                     fitness[i] = new_fitness
@@ -133,11 +129,11 @@ class ABCAlgorithm():
                         best_bee = new_bee
                         best_fitness = new_fitness
                 else:
-                    no_improvement_count += 1
+                    self.not_improvement_count += 1
             
-            if no_improvement_count >= self.max_no_improvement:
+            if self.not_improvement_count >= self.limit_not_improvement:
                 print(f"Parando na iteração {self.iteration}")
-                print(f"Não houve melhoria nas últimas {self.max_no_improvement} iterações")
+                print(f"Não houve melhoria nas últimas {self.limit_not_improvement} iterações")
                 break
                 
             print(f"Iteração {self.iteration + 1}/{self.n_iterations}, Melhor R²: {best_fitness}")
@@ -145,17 +141,17 @@ class ABCAlgorithm():
         self.best_bee = best_bee
         self.best_fitness = best_fitness
         return best_bee, best_fitness
+    
+    def generate_new_database(
+        self,
+        database_name,
+        dataframe: pd.DataFrame, 
+        variables_indexes
+    ):
+        selected_columns = dataframe.columns[variables_indexes]
+        new_dataframe = dataframe[selected_columns]
 
-def ABC_execution(df: pd.DataFrame, model):
-    abc = ABCAlgorithm(
-        bees=20,
-        maximum_iterations=5,
-        max_no_improvement=10
-    )
-
-    best_subset, best_r2 = abc.execution(df, model)
-    print(f"Melhor subconjunto de variáveis: {best_subset}")
-    print(f"Melhor valor de R²: {best_r2}")
-
-    return best_subset, best_r2
-
+        # Adicionando a última coluna do Database original
+        last_column_name = list(dataframe.columns)[-1]
+        new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
+        new_dataframe.to_csv(database_name, index=False)

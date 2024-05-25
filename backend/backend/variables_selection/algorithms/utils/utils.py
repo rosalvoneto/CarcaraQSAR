@@ -36,6 +36,4 @@ def generate_new_database(
   # Adicionando a última coluna do Database original
   last_column_name = list(df.columns)[-1]
   new_dataframe[last_column_name] = df[last_column_name].tolist()
-  print("Quantidade de colunas do novo Dataframe:", new_dataframe.shape[1])
-
   new_dataframe.to_csv(database_name, index=False)

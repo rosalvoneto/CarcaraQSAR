@@ -45,8 +45,10 @@ export const algorithmsParameters = [
     ["Population", "População"]
   ],
   [
-    ["Interations", "Interações"],
-    ["Bees", "Abelhas"],
+    ["maximum_iterations", "Interações"],
+    ["bees", "Abelhas"],
+    ["limit_not_improvement", "Limite sem melhoria"],
+    ["info_gain_quantity", "Ganho de informação"],
   ]
 ]
 
