@@ -41,8 +41,12 @@ export const algorithmsDescriptions = [
 export const algorithmsParameters = [
   [],
   [
-    ["Interations", "Interações"],
-    ["Population", "População"]
+    ['population_quantity', 'Quantidade da população'],
+    ['info_gain_quantity', 'Ganho de informação'],
+    ["probability_crossover", "Probabilidade de crossover"],
+    ['probability_mutation', 'Probabilidade de mutação'],
+    ['limit_generations', 'Limite de gerações'],
+    ['limit_not_improvement', 'Limite sem melhoria'],
   ],
   [
     ["maximum_iterations", "Interações"],
@@ -311,48 +315,50 @@ export default function VariablesSelection() {
 
         <div className={styles.container}>
           <div className={styles.algorithmContainer}>
-            <RadionInput 
-              name={"Algoritmo BioInspirado"}
-              options={algorithms}
-              setOption={setChoosenAlgorithm}
-              firstOption={choosenAlgorithm}
-            />
+            <div>
+              <RadionInput 
+                name={"Algoritmo BioInspirado"}
+                options={algorithms}
+                setOption={setChoosenAlgorithm}
+                firstOption={choosenAlgorithm}
+              />
+              {
+                algorithmIndex != 0
+                ?
+                  <p className={styles.name}>
+                    <strong>{"Hiperparâmetros"}</strong>
+                  </p>
+                : 
+                  undefined
+              }
+              <div className={styles.parametersContainer}>
+                {
+                  algorithmsParameters[
+                    algorithmIndex
+                  ].map((key, index) => {
+                    return(
+                      <InlineInput 
+                        key={index}
+                        name={key[1]} 
+                        type={'number'}
+                        setValue={(value) => changeParameters(key[0], value)}
+                        value={
+                          algorithmParameters[key[0]] 
+                          ? algorithmParameters[key[0]] 
+                          : 0
+                        }
+                      />
+                    )
+                  })
+                }
+              </div>
+            </div>
+
             <div className={styles.informationContainer}>
               <p className={styles.information}>
                 { algorithmsDescriptions[algorithmIndex] }
               </p>
             </div>
-          </div>
-
-          {
-            algorithmIndex != 0
-            ?
-              <p className={styles.name}>
-                <strong>{"Hiperparâmetros"}</strong>
-              </p>
-            : 
-              undefined
-          }
-          <div className={styles.parametersContainer}>
-            {
-              algorithmsParameters[
-                algorithmIndex
-              ].map((key, index) => {
-                return(
-                  <InlineInput 
-                    key={index}
-                    name={key[1]} 
-                    type={'number'}
-                    setValue={(value) => changeParameters(key[0], value)}
-                    value={
-                      algorithmParameters[key[0]] 
-                      ? algorithmParameters[key[0]] 
-                      : 0
-                    }
-                  />
-                )
-              })
-            }
           </div>
 
           <button 

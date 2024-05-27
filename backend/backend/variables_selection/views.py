@@ -252,6 +252,7 @@ def makeSelection_view(request):
 
       response = get_variables_settings(project)
       parameters = response["algorithmParameters"]
+      algorithm = response["algorithm"]
 
       # Cria um DataFrame do Pandas com o conteúdo do arquivo
       file_content = database.file.read().decode('utf-8')
@@ -264,52 +265,55 @@ def makeSelection_view(request):
       model = RandomForestRegressor(n_estimators=100, random_state=42)
 
       # Faz a seleção de variáveis
-      # # ABC
-      # abc = ABCAlgorithm(
-      #   bees=parameters["bees"],
-      #   maximum_iterations=parameters["maximum_iterations"],
-      #   limit_not_improvement=parameters["limit_not_improvement"],
-      #   info_gain_quantity=parameters["info_gain_quantity"]
-      # )
-      # best_subset, best_r2 = abc.execution(dataframe, model)
-      # print("Melhor R2:", best_r2)
+      print("Algoritmo escolhido:", algorithm)
+      if(algorithm == "Colônia de abelhas"):
+        # ABC
+        abc = ABCAlgorithm(
+          bees=parameters["bees"],
+          maximum_iterations=parameters["maximum_iterations"],
+          limit_not_improvement=parameters["limit_not_improvement"],
+          info_gain_quantity=parameters["info_gain_quantity"]
+        )
+        best_subset, best_r2 = abc.execution(dataframe, model)
+        print("Melhor R2:", best_r2)
 
-      # abc.generate_new_database(
-      #   "base_compressed.csv",
-      #   dataframe, 
-      #   best_subset
-      # )
+        abc.generate_new_database(
+          "base_compressed.csv",
+          dataframe, 
+          best_subset
+        )
 
-      # GA
-      # Definindo o problema
-      problem = Problem(dataframe)
-      # Definindo a população
-      population = problem.generateBestPopulation(
-        quantity=5,
-        info_gain_quantity=50
-      )
+      elif(algorithm == "ALgoritmo genético"):
+        # GA
+        # Definindo o problema
+        problem = Problem(dataframe)
+        # Definindo a população
+        population = problem.generateBestPopulation(
+          quantity=parameters['population_quantity'],
+          info_gain_quantity=parameters['info_gain_quantity']
+        )
 
-      ga = GAAlgorithm(
-        probability_crossover=0.25,
-        probability_mutation=0.005,
-        use_limit=False,
-        limit_inferior=0,
-        limit_superior=1,
-        limit_generations=15,
-        limit_not_improvement=10,
-        population=population,
-        model=model,
-        dataframe=dataframe
-      )
+        ga = GAAlgorithm(
+          probability_crossover=parameters['probability_crossover'],
+          probability_mutation=parameters['probability_mutation'],
+          use_limit=False,
+          limit_inferior=0,
+          limit_superior=1,
+          limit_generations=parameters['limit_generations'],
+          limit_not_improvement=parameters['limit_not_improvement'],
+          population=population,
+          model=model,
+          dataframe=dataframe
+        )
 
-      best_subset, best_r2 = ga.execution()
-      print("Melhor R2:", best_r2)
+        best_subset, best_r2 = ga.execution()
+        print("Melhor R2:", best_r2)
 
-      ga.generate_new_database(
-        "base_compressed.csv",
-        dataframe,
-        best_subset
-      )
+        ga.generate_new_database(
+          "base_compressed.csv",
+          dataframe,
+          best_subset
+        )
 
       return Response({
         'message': 'Seleção de variáveis aplicada!',
