@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from variables_selection.utils import get_variables_settings, update_database
 from variables_selection.algorithms.abc import ABCAlgorithm
-from variables_selection.algorithms.execution import AGExecution
+from variables_selection.algorithms.ga import GAAlgorithm, Problem
 
 from database.models import CSVDatabase
 from project_management.models import Project
@@ -264,37 +264,52 @@ def makeSelection_view(request):
       model = RandomForestRegressor(n_estimators=100, random_state=42)
 
       # Faz a seleção de variáveis
-      # ABC
-      abc = ABCAlgorithm(
-        bees=parameters["bees"],
-        maximum_iterations=parameters["maximum_iterations"],
-        limit_not_improvement=parameters["limit_not_improvement"],
-        info_gain_quantity=parameters["info_gain_quantity"]
+      # # ABC
+      # abc = ABCAlgorithm(
+      #   bees=parameters["bees"],
+      #   maximum_iterations=parameters["maximum_iterations"],
+      #   limit_not_improvement=parameters["limit_not_improvement"],
+      #   info_gain_quantity=parameters["info_gain_quantity"]
+      # )
+      # best_subset, best_r2 = abc.execution(dataframe, model)
+      # print("Melhor R2:", best_r2)
+
+      # abc.generate_new_database(
+      #   "base_compressed.csv",
+      #   dataframe, 
+      #   best_subset
+      # )
+
+      # GA
+      # Definindo o problema
+      problem = Problem(dataframe)
+      # Definindo a população
+      population = problem.generateBestPopulation(
+        quantity=5,
+        info_gain_quantity=50
       )
-      best_subset, best_r2 = abc.execution(dataframe, model)
+
+      ga = GAAlgorithm(
+        probability_crossover=0.25,
+        probability_mutation=0.005,
+        use_limit=False,
+        limit_inferior=0,
+        limit_superior=1,
+        limit_generations=15,
+        limit_not_improvement=10,
+        population=population,
+        model=model,
+        dataframe=dataframe
+      )
+
+      best_subset, best_r2 = ga.execution()
       print("Melhor R2:", best_r2)
 
-      abc.generate_new_database(
+      ga.generate_new_database(
         "base_compressed.csv",
-        dataframe, 
+        dataframe,
         best_subset
       )
-
-      # # AG
-      # ag = AGExecution(
-      #   dataframe=dataframe,
-      #   population_quantity=5,
-      #   info_gain_quantity=50,
-      #   probability_crossover=0.25,
-      #   probability_mutation=0.005,
-      #   use_limit=False,
-      #   limit_inferior=0,
-      #   limit_superior=10,
-      #   limit_generations=15,
-      #   limit_not_improvement=30
-      # )
-      # solution, best_r2 = ag.AG_execution()
-      # ag.generate_base_compressed("base_compressed.csv", dataframe, solution)
 
       return Response({
         'message': 'Seleção de variáveis aplicada!',

@@ -20,7 +20,7 @@ def convert_binary_array_to_variables(binary_array, full_variables):
 
   return choosen_variables
 
-def get_variables(dataframe):
+def get_variables(dataframe: pd.DataFrame):
   variables = list(dataframe.columns)
   variables.pop()
   return variables

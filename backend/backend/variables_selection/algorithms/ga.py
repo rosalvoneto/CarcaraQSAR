@@ -1,16 +1,35 @@
-from typing import Callable, List
-from bitstring import BitArray 
-from random import randint
-import random
 
+import random
 import pandas as pd
+from random import randint
+
+from typing import List
+from bitstring import BitArray
+
+from sklearn.discriminant_analysis import StandardScaler
 from sklearn.feature_selection import mutual_info_regression
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+from sklearn.model_selection import train_test_split 
+
+from variables_selection.algorithms.utils.utils import convert_binary_array_to_variables, get_variables
+
+
 
 class Problem:
 
-  def __init__(self):
+  def __init__(
+    self,
+    dataframe,
+  ):
     self.initial_binary_array = []
     self.initial_indexes = []
+
+    self.dataframe = dataframe
+
+    full_variables = get_variables(dataframe)
+    self.full_variables_length = len(full_variables)
+
+
 
   def convertBinaryArrayToInt(self, binary_array):
     # Converter a lista de inteiros em uma string binária
@@ -19,15 +38,15 @@ class Problem:
     return int(binary_string, 2)
 
   def calculateBestIndexes(
-    self, dataframe: pd.DataFrame, info_gain_quantity: int
+    self, info_gain_quantity: int
   ):
 
     # Suponha que dataframe seja o seu DataFrame
     # Separar as variáveis preditoras da variável alvo
-    X = dataframe.drop(columns=['alvo'])
-    y = dataframe['alvo']
+    X = self.dataframe.drop(columns=['alvo'])
+    y = self.dataframe['alvo']
 
-    length_variables = len(dataframe.columns) - 1
+    length_variables = len(self.dataframe.columns) - 1
     
     # Calcular a Information Gain para cada variável
     infogain = mutual_info_regression(X, y)
@@ -43,10 +62,8 @@ class Problem:
 
     # Obter os índices dessas variáveis no DataFrame original
     top_indices = [
-      dataframe.columns.get_loc(var) for var in top_variaveis
+      self.dataframe.columns.get_loc(var) for var in top_variaveis
     ]
-    print("Melhores variáveis:")
-    print(top_indices)
 
     # Inicializar uma lista de 0s
     binarry_array = [0] * length_variables
@@ -63,7 +80,6 @@ class Problem:
       self, 
       limit_inferior: int, 
       limit_superior: int, 
-      bitstring_length: int, 
       quantity: int
     ):
     population = []
@@ -74,84 +90,119 @@ class Problem:
       values.append(value)
 
     for value in values:
-      value_bitstring = BitArray(int = value, length = int(bitstring_length))
+      value_bitstring = BitArray(
+        int = value, length = int(self.full_variables_length)
+      )
       population.append(value_bitstring)
     
     return population
 
   def generateBestPopulation(
       self, 
-      dataframe: pd.DataFrame,
-      bitstring_length: int, 
       quantity: int,
       info_gain_quantity: int
     ):
 
-    self.calculateBestIndexes(dataframe, info_gain_quantity)
+    self.calculateBestIndexes(info_gain_quantity)
 
     population = []
 
     for i in range(quantity):
       value = self.convertBinaryArrayToInt(self.initial_binary_array)
       value_bitstring = BitArray(
-        int = value + i, length = int(bitstring_length)
+        int = value + i, length = int(self.full_variables_length)
       )
-      print(f'Quantidade de variáveis no cromossomo {i}:')
-      print(value_bitstring.count(1))
 
       population.append(value_bitstring)
     
     return population
   
 
-class Algorithm:
+
+
+
+class GAAlgorithm:
+
   def __init__(
-      self,
-      function: Callable[[BitArray], float],
-      probability_crossover: float, 
-      probability_mutation: float, 
-      population: List[BitArray],
-      use_limit: bool,
-      limit_inferior: int,  
-      limit_superior: int
-    ):
-    self.function = function
+    self,
+    probability_crossover: float, 
+    probability_mutation: float, 
+    use_limit: bool,
+    limit_inferior: int,  
+    limit_superior: int,
+    limit_generations: int,
+    limit_not_improvement: int,
+    population: List[BitArray],
+    model,
+    dataframe: pd.DataFrame
+  ):
 
     self.probability_crossover = probability_crossover
     self.probability_mutation = probability_mutation
-    self.population = population
+    self.use_limit = use_limit
+    self.limit_inferior = limit_inferior
+    self.limit_superior = limit_superior
+    self.limit_generations = limit_generations
+    self.limit_not_improvement = limit_not_improvement
     self.generations = 0
 
-    self.fitness()
+    self.population = population
+    self.model = model
+    self.dataframe = dataframe
 
     self.last_aptidao = []
     self.improvement = False
     self.last_maximum_aptidao = 0
     self.count_not_improvement = 0
-
-    self.limit_inferior = limit_inferior
-    self.limit_superior = limit_superior
-    self.use_limit = use_limit
-
     self.length = len(population[0].bin)
+
+    self.fitness()
+
+  # Avalia variáveis específicas em relação ao dataframe
+  def evaluate_variables(self, dataframe, variables):
+    # Separar as características (X) e a variável de destino (y)
+    X = dataframe[variables]
+    y = dataframe.iloc[:, -1]
+
+    # Normalizar os dados
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    # Dividir o conjunto de dados em treino e teste
+    X_train, X_test, y_train, y_test = train_test_split(
+      X, y, test_size=0.2, random_state=42
+    )
+
+    # Treinar o modelo
+    self.model.fit(X_train, y_train)
+
+    # Fazer previsões
+    y_pred = self.model.predict(X_test)
+
+    # Avaliar o modelo usando o coeficiente R²
+    r2 = r2_score(y_test, y_pred)
+    # Avaliar o modelo usando o coeficiente Mean Square Error
+    mse = mean_squared_error(y_test, y_pred)
+    # Avaliar o modelo usando o coeficiente Erro Médio Absoluto (MAE)
+    mae = mean_absolute_error(y_test, y_pred)
+
+    return r2, mse, mae
+
+  # Função de avaliação com R2
+  def evaluate_function(self, parameters: BitArray):
     
-  # Os menores valores de f(x) devem ter maiores aptidões
+    binary_array = parameters.tobitarray().tolist()
+
+    full_variables = get_variables(self.dataframe)
+    variables = convert_binary_array_to_variables(binary_array, full_variables)
+    return float(self.evaluate_variables(self.dataframe, variables)[0])
+
+  # ===============================================================================
+
   def fitness(self):
     self.aptidao = []
     for item in self.population:
-      self.aptidao.append(self.function(item))
-
-  """
-  # Divisão da probabilidade de seleção (equação do slide 32)
-  def probabilitySelection(self):
-    soma = 0
-    for value in self.aptidao:
-      soma += value
-    
-    self.probabilities = []
-    for value in self.aptidao:
-      self.probabilities.append(value / soma)
-  """
+      self.aptidao.append(self.evaluate_function(item))
 
   def selection(self):
     aptidao_list = self.aptidao.copy()
@@ -224,6 +275,8 @@ class Algorithm:
 
     return mutated_cromossomos
   
+  # ======================================================================
+
   def generateNewGeneration(self):
     news = []
     for i in range(0, 2):
@@ -241,8 +294,8 @@ class Algorithm:
     self.fitness()
 
     print("")
-    print("Generation", self.generations)
-    print(self.aptidao)
+    print("Generation:", self.generations)
+    print("Aptidão:", self.aptidao)
 
   def evaluate(self):
     last = max(self.last_aptidao)
@@ -253,12 +306,39 @@ class Algorithm:
     else:
       self.improvement = False
       self.count_not_improvement += 1
-    
 
-  def execution(self, limit_generations: int, limit_not_improvement: int):
+  def execution(self):
     while (
-      self.generations <= limit_generations and
-      self.count_not_improvement <= limit_not_improvement
+      self.generations <= self.limit_generations and
+      self.count_not_improvement <= self.limit_not_improvement
     ):
       self.generateNewGeneration()
       self.evaluate()
+
+    maximum_aptidao_value = max(self.aptidao)
+    maximum_aptidao_index = self.aptidao.index(maximum_aptidao_value)
+
+    solution = self.population[maximum_aptidao_index]
+
+    print(f"Melhor subconjunto de variáveis: {solution}")
+    print(f"Melhor valor de R²: {maximum_aptidao_value}")
+
+    return solution, maximum_aptidao_value
+
+  # ======================================================================
+
+  def generate_new_database(
+    self,
+    database_name,
+    dataframe: pd.DataFrame,
+    solution: BitArray
+  ):
+    full_variables = get_variables(dataframe)
+    binary_array = solution.tobitarray().tolist()
+    variables = convert_binary_array_to_variables(binary_array, full_variables)
+    new_dataframe = dataframe[variables]
+
+    # Adicionando a última coluna
+    last_column_name = list(dataframe.columns)[-1]
+    new_dataframe[last_column_name] = dataframe[last_column_name].tolist()
+    new_dataframe.to_csv(database_name, index=False)

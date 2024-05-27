@@ -1,7 +1,6 @@
 
 import os
 from django.core.files import File
-import pandas as pd
 
 from variables_selection.models import VariablesSelection
 
