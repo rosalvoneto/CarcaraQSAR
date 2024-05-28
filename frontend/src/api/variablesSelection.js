@@ -2,8 +2,10 @@
 // Salva configurações da seleção de variáveis 
 export const setVariablesSettings = async (
   projectID, 
+  removeConstantVariables, listOfVariables,
   algorithm, algorithmParameters, 
-  removeConstantVariables, listOfVariables, accessToken
+  rowsToRemoveString,
+  accessToken
 ) => {
 
   const listOfVariablesString = JSON.stringify(listOfVariables)
@@ -15,6 +17,7 @@ export const setVariablesSettings = async (
   formData.append('algorithm_parameters', parametersString);
   formData.append('remove_constant_variables', removeConstantVariables);
   formData.append('list_of_variables', listOfVariablesString);
+  formData.append('rows_to_remove', rowsToRemoveString);
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/set_settings`, {
@@ -66,12 +69,11 @@ export const getVariablesSettings = async (
 
 // Remover linhas do Database
 export const removeDatabaseRows = async(
-  projectID, rowsToRemoveString, accessToken
+  projectID, accessToken
 ) => {
 
   const formData = new FormData();
   formData.append('project_id', projectID);
-  formData.append('rows', rowsToRemoveString);
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/remove_rows`, {

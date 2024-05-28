@@ -7,27 +7,34 @@ from variables_selection.models import VariablesSelection
 def get_variables_settings(project):
   try:
     variables_selection = project.variablesselection_set.get()
+
+    print("ROWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
+    print(variables_selection.rows_to_remove)
+
     return {
-      'algorithm': variables_selection.algorithm,
-      'algorithmParameters': variables_selection.algorithm_parameters,
       'removeConstantVariables': variables_selection.remove_constant_variables,
       'variablesToRemove': variables_selection.variables_to_remove,
+      'algorithm': variables_selection.algorithm,
+      'algorithmParameters': variables_selection.algorithm_parameters,
+      'rowsToRemove': variables_selection.rows_to_remove,
     }
 
   except VariablesSelection.DoesNotExist:
     variables_selection = VariablesSelection.objects.create(
-      algorithm="NÃO APLICAR",
-      algorithm_parameters={},
       remove_constant_variables=False,
       variables_to_remove=[],
-      project=project
+      algorithm="NÃO APLICAR",
+      algorithm_parameters={},
+      rows_to_remove=[],
+      project=project,
     )
 
     return {
-      'algorithm': variables_selection.algorithm,
-      'algorithmParameters': variables_selection.algorithm_parameters,
       'removeConstantVariables': variables_selection.remove_constant_variables,
       'variablesToRemove': variables_selection.variables_to_remove,
+      'algorithm': variables_selection.algorithm,
+      'algorithmParameters': variables_selection.algorithm_parameters,
+      'rowsToRemove': variables_selection.rows_to_remove,
     }
 
 def update_database(database, dataframe):
@@ -51,3 +58,18 @@ def update_database(database, dataframe):
   os.remove(file_path)
 
   return database
+  
+def is_convertible_to_int_list(string):
+  # Remove espaços em branco desnecessários
+  string = string.strip()
+  # Tentar dividir a string e converter cada parte em um inteiro
+  try:
+    # Dividir a string por vírgulas
+    parts = string.split(',')
+    # Converter cada parte em um inteiro
+    int_list = [int(part.strip()) for part in parts]
+    
+    return True, int_list
+  except ValueError:
+    # Se ocorrer um ValueError, a conversão falhou
+    return False, []

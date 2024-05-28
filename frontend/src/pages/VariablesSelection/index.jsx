@@ -147,10 +147,11 @@ export default function VariablesSelection() {
   const handleToChangeVariables = async() => {
     const response = await setVariablesSettings(
       projectID,
-      choosenAlgorithm,
-      algorithmParameters,
       removeConstantVariables,
       rightListOfVariables,
+      choosenAlgorithm,
+      algorithmParameters,
+      rowsToRemove,
       authTokens.access
     );
     await removeDatabaseConstantVariables(projectID, authTokens.access);
@@ -160,23 +161,36 @@ export default function VariablesSelection() {
   }
 
   const saveAndSelect = async() => {
-    const response = await setVariablesSettings(
+    await setVariablesSettings(
       projectID,
-      choosenAlgorithm,
-      algorithmParameters,
       removeConstantVariables,
       rightListOfVariables,
+      choosenAlgorithm,
+      algorithmParameters,
+      rowsToRemove,
       authTokens.access
     );
-    await makeSelection(projectID, authTokens.access);
+    const response = await makeSelection(projectID, authTokens.access);
 
     return response;
   }
 
   const handleToChangeRows = async() => {
+
+    console.log("ROWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+    console.log(rowsToRemove);
+
+    await setVariablesSettings(
+      projectID,
+      removeConstantVariables,
+      rightListOfVariables,
+      choosenAlgorithm,
+      algorithmParameters,
+      rowsToRemove,
+      authTokens.access
+    );
     const response = await removeDatabaseRows(
       projectID,
-      rowsToRemove,
       authTokens.access
     );
     return response;
@@ -185,6 +199,12 @@ export default function VariablesSelection() {
   useEffect(() => {
     getVariablesSettings(projectID, authTokens.access)
     .then(response => {
+      console.log(response.removeConstantVariables);
+      setRemoveConstantVariables(response.removeConstantVariables);
+
+      console.log(response.variablesToRemove);
+      setRightListOfVariables(response.variablesToRemove);
+
       console.log(response.algorithm);
       setChoosenAlgorithm(response.algorithm);
       
@@ -192,12 +212,10 @@ export default function VariablesSelection() {
         console.log(response.algorithmParameters);
         setAlgorithmParameters(response.algorithmParameters);
       }
+      
+      console.log(response.rowsToRemove);
+      setRowsToRemove(response.rowsToRemove.toString());
 
-      console.log(response.removeConstantVariables);
-      setRemoveConstantVariables(response.removeConstantVariables);
-
-      console.log(response.variablesToRemove);
-      setRightListOfVariables(response.variablesToRemove);
     })
     .catch(error => {
       console.log(error);
@@ -403,7 +421,11 @@ export default function VariablesSelection() {
             name={"Linhas para remover:"}
             width={"80%"}
             setValue={setRowsToRemove}
+            value={rowsToRemove}
           />
+          <p className={styles.name}>
+            <strong>{"Linhas removidas"}</strong>
+          </p>
         </div>
         
         <Button 

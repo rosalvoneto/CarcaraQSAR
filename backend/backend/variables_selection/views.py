@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from variables_selection.utils import get_variables_settings, update_database
+from variables_selection.utils import get_variables_settings, is_convertible_to_int_list, update_database
 from variables_selection.algorithms.abc import ABCAlgorithm
 from variables_selection.algorithms.ga import GAAlgorithm, Problem
 
@@ -49,14 +49,18 @@ def setVariablesSettings_view(request):
   else:
     remove_constant_variables = False
 
+  indexes = request.POST.get('rows_to_remove')
+  is_convertible, rows_to_remove = is_convertible_to_int_list(indexes)
+
   project = get_object_or_404(Project, id=project_id)
   try:
     variables_selection = project.variablesselection_set.get()
     variables_selection.update(
+      remove_constant_variables=remove_constant_variables,
+      variables_to_remove=list_of_variables,
       algorithm=algorithm,
       algorithm_parameters=algorithm_parameters,
-      remove_constant_variables=remove_constant_variables,
-      variables_to_remove=list_of_variables
+      rows_to_remove=rows_to_remove,
     )
 
     return Response({
@@ -65,10 +69,11 @@ def setVariablesSettings_view(request):
 
   except VariablesSelection.DoesNotExist:
     variables_selection = VariablesSelection.objects.create(
-      algorithm=algorithm,
-      algorithm_parameters=algorithm_parameters,
       remove_constant_variables=remove_constant_variables,
       variables_to_remove=list_of_variables,
+      algorithm=algorithm,
+      algorithm_parameters=algorithm_parameters,
+      rows_to_remove=rows_to_remove,
       project=project,
     )
 
@@ -81,12 +86,11 @@ def setVariablesSettings_view(request):
 def removeRows_view(request):
 
   project_id = request.POST.get('project_id')
-  indexes = request.POST.get('rows')
-  rows_to_remove = indexes.split(',')
-  rows_to_remove = [int(value) for value in rows_to_remove]
-
   project = get_object_or_404(Project, id=project_id)
+  variables_selection = project.variablesselection_set.get()
+
   database = project.database
+  rows_to_remove = variables_selection.rows_to_remove
 
   if(database):
     if(database.file):
