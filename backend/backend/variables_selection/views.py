@@ -1,23 +1,26 @@
-from io import StringIO
-from django.shortcuts import get_object_or_404
 
 from io import StringIO
 import pandas as pd
 import json
+import math
 
-from sklearn.ensemble import RandomForestRegressor
+from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from variables_selection.utils import get_variables_settings, is_convertible_to_int_list, update_database
-from variables_selection.algorithms.abc import ABCAlgorithm
-from variables_selection.algorithms.ga import GAAlgorithm, Problem
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
 
 from database.models import CSVDatabase
 from project_management.models import Project
 from variables_selection.models import VariablesSelection
+from variables_selection.utils import get_variables_settings, is_convertible_to_int_list, update_database
+from variables_selection.algorithms.abc import ABCAlgorithm
+from variables_selection.algorithms.ga import GAAlgorithm, Problem
+from variables_selection.algorithms.BFS import Graph
+
 
 # Create your views here.
 @api_view(['GET'])
@@ -258,9 +261,10 @@ def makeSelection_view(request):
       parameters = response["algorithmParameters"]
       algorithm = response["algorithm"]
 
-      # Cria um DataFrame do Pandas com o conteúdo do arquivo
       file_content = database.file.read().decode('utf-8')
-      dataframe = pd.read_csv(
+
+      # Leitura da base completa
+      base = pd.read_csv(
         StringIO(file_content), 
         sep=database.file_separator
       )
@@ -269,29 +273,25 @@ def makeSelection_view(request):
       model = RandomForestRegressor(n_estimators=100, random_state=42)
 
       # Faz a seleção de variáveis
-      print("Algoritmo escolhido:", algorithm)
+      print("SELEÇÃO COM ALGORITMO")
       if(algorithm == "Colônia de abelhas"):
-        # ABC
         abc = ABCAlgorithm(
           bees=parameters["bees"],
           maximum_iterations=parameters["maximum_iterations"],
           limit_not_improvement=parameters["limit_not_improvement"],
           info_gain_quantity=parameters["info_gain_quantity"]
         )
-        best_subset, best_r2 = abc.execution(dataframe, model)
+        best_subset, best_r2 = abc.execution(base, model)
         print("Melhor R2:", best_r2)
 
         abc.generate_new_database(
           "base_compressed.csv",
-          dataframe, 
+          base, 
           best_subset
         )
 
       elif(algorithm == "ALgoritmo genético"):
-        # GA
-        # Definindo o problema
-        problem = Problem(dataframe)
-        # Definindo a população
+        problem = Problem(base)
         population = problem.generateBestPopulation(
           quantity=parameters['population_quantity'],
           info_gain_quantity=parameters['info_gain_quantity']
@@ -307,17 +307,36 @@ def makeSelection_view(request):
           limit_not_improvement=parameters['limit_not_improvement'],
           population=population,
           model=model,
-          dataframe=dataframe
+          dataframe=base
         )
 
-        best_subset, best_r2 = ga.execution()
-        print("Melhor R2:", best_r2)
+        best_subset, best_R2 = ga.execution()
+        print("Melhor R2:", best_R2)
 
         ga.generate_new_database(
           "base_compressed.csv",
-          dataframe,
+          base,
           best_subset
         )
+
+      # Leitura da base comprimida
+      base_compressed = pd.read_csv('base_compressed.csv')      
+
+      graph = Graph(
+        dataframe=base_compressed,
+        r2_condition=0.99,
+      )
+
+      # Busca pela melhor variável
+      print("BUSCA PELA MELHOR VARIÁVEL")
+      best_variable, best_R2 = graph.evaluate_best_variable()
+      print("Melhor R2:", best_R2)
+      
+      # Busca gulosa
+      print('BUSCA GULOSA')
+      best_node, best_R2 = graph.execution(best_variable)
+      print("Melhor R2:", best_R2)
+
 
       return Response({
         'message': 'Seleção de variáveis aplicada!',
