@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CaretRight, CaretLeft } from '@phosphor-icons/react';
 
 import styles from './styles.module.css';
@@ -24,6 +24,9 @@ from '../../api/variablesSelection';
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 import { InlineInput } from '../../components/InlineInput';
+import PopUp from '../../components/PopUp';
+import Loading from '../../components/Loading';
+import ProgressBarLoading from '../../components/ProgressBarLoading';
 
 
 export const algorithms = [
@@ -89,6 +92,11 @@ export default function VariablesSelection() {
 
   const [rowsToRemove, setRowsToRemove] = useState("");
 
+  const [selecting, setSelecting] = useState(false);
+  const [selected, setSelected] = useState("false");
+
+  const navigate = useNavigate();
+
   const handleChangeRemoveConstantVariables = (value) => {
     if(value === optionsToRemoveVariables[0]) {
       setRemoveConstantVariables(true);
@@ -145,7 +153,7 @@ export default function VariablesSelection() {
   }
 
   const handleToChangeVariables = async() => {
-    const response = await setVariablesSettings(
+    await setVariablesSettings(
       projectID,
       removeConstantVariables,
       rightListOfVariables,
@@ -156,11 +164,9 @@ export default function VariablesSelection() {
     );
     await removeDatabaseConstantVariables(projectID, authTokens.access);
     await removeDatabaseVariables(projectID, authTokens.access);
-
-    return response;
   }
 
-  const saveAndSelect = async() => {
+  const handleToMakeSelection = async() => {
     await setVariablesSettings(
       projectID,
       removeConstantVariables,
@@ -170,16 +176,14 @@ export default function VariablesSelection() {
       rowsToRemove,
       authTokens.access
     );
-    const response = await makeSelection(projectID, authTokens.access);
 
-    return response;
+    setSelecting(true);
+    await makeSelection(projectID, authTokens.access);
+    setSelecting(false);
+    setSelected("true");
   }
 
   const handleToChangeRows = async() => {
-
-    console.log("ROWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-    console.log(rowsToRemove);
-
     await setVariablesSettings(
       projectID,
       removeConstantVariables,
@@ -189,11 +193,7 @@ export default function VariablesSelection() {
       rowsToRemove,
       authTokens.access
     );
-    const response = await removeDatabaseRows(
-      projectID,
-      authTokens.access
-    );
-    return response;
+    await removeDatabaseRows(projectID, authTokens.access);
   }
 
   useEffect(() => {
@@ -379,15 +379,45 @@ export default function VariablesSelection() {
             </div>
           </div>
 
+          <PopUp show={selecting}
+            title={"Selecionando..."}
+          >
+            <Loading size={45} />
+            <div className={styles.progressContainer}>
+              <ProgressBarLoading 
+                progress={12}
+                maximum={100}
+              />
+              <p>
+                {(12 / 100 * 100).toFixed(0)}%
+              </p>
+            </div>
+          </PopUp>
+
+          <PopUp show={selected == "true"}
+            title={"Seleção finalizada"}
+            description={
+              `A seleção com o algoritmo ${choosenAlgorithm} está finalizada! Clique no botão abaixo para ir para o próximo passo!`
+            }
+            showButton
+            buttonName={"Próximo"}
+            action={() => {
+              const url = '/variables-selection';
+              navigate(`/${projectID}${url}`, { state: {
+                pageNumber: 2
+              }});
+            }}
+          />
+
           <button 
-            onClick={saveAndSelect}
+            onClick={handleToMakeSelection}
             className={styles.button}
           >
             Salvar e Selecionar
           </button>
         </div>
         
-        <Button 
+        <Button
           name={'Voltar'} 
           URL={`/variables-selection`}
           stateToPass={{

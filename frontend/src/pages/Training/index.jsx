@@ -296,8 +296,6 @@ export default function Training() {
 
         <PopUp show={loading}
           title={"Treinando..."}
-          buttonName={"Ver resultados"}
-          action={navigateToResults}
         >
           <Loading size={45} />
           <div className={styles.progressContainer}>
