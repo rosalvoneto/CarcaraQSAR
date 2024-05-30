@@ -57,6 +57,13 @@ export const statesProgressBar = [
         href: '/variables-selection',
         stateToPass: { pageNumber: 2 },
       },
+      {
+        index: 3,
+        name: "Histórico da base de dados",
+        childs: [],
+        href: '/variables-selection',
+        stateToPass: { pageNumber: 3 },
+      },
     ],
     href: '/variables-selection',
     stateToPass: { pageNumber: 0 },

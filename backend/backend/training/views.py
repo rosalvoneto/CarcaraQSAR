@@ -115,11 +115,13 @@ def train_view(request):
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
 
-  try:
-    if(project.database):
+  database = project.get_database()
 
-      print("FILE:", project.database.file)
-      data = pd.read_csv(f"media/{project.database.file}")
+  try:
+    if(database):
+
+      print("FILE:", database.file)
+      data = pd.read_csv(f"media/{database.file}")
       rows, columns = data.shape
       print(f"{rows} linhas e {columns} colunas")
       
@@ -131,8 +133,8 @@ def train_view(request):
 
       training = project.training_set.get()
 
-      if(project.database.normalization):
-        print("Normalização:", project.database.normalization)
+      if(database.normalization):
+        print("Normalização:", database.normalization)
 
         # Execuções dos algoritmos e salvamento dos gráficos
 
@@ -140,7 +142,7 @@ def train_view(request):
         leave_one_out(
           project_id,
           data,
-          project.database.normalization.name,
+          database.normalization.name,
           training.algorithm.name,
           training.algorithm.parameters
         )
@@ -153,7 +155,7 @@ def train_view(request):
         cross_validation(
           project_id,
           data,
-          project.database.normalization.name,
+          database.normalization.name,
           training.algorithm.name,
           training.algorithm.parameters
         )

@@ -11,11 +11,18 @@ from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
 
 class Graph:
-    def __init__(self, dataframe, r2_condition):
+    def __init__(
+        self, 
+        dataframe, 
+        r2_condition, 
+        limit_not_improvement
+    ):
         self.dataframe = dataframe
+        self.graph = {}
+        self.not_improvement_count = 0
 
         self.r2_condition = r2_condition
-        self.graph = {}
+        self.limit_not_improvement = limit_not_improvement
 
     def add_node(self, node):
         self.graph[tuple(node)] = []
@@ -58,22 +65,30 @@ class Graph:
             with open("Valores R2.csv", "a") as arquivo:
                 # Escreve os dados no arquivo
                 arquivo.write(f"{i}, {current_R2}, {current_node}\n")
-            print("Dados foram salvos no arquivo.")
+            
+            # Verificação de melhoria no R2
+            if current_R2 > best_R2:
+                best_node = current_node
+                best_R2 = current_R2
 
-            # Condição de parada
+                self.not_improvement_count = 0
+            else:
+                self.not_improvement_count += 1
+            
+            # Condição de parada: R2
             if current_R2 >= self.r2_condition:
                 print(f"R2 >= {self.r2_condition}. Parando a busca.")
                 best_node = current_node
                 best_R2 = current_R2
                 break
+
+            # Condição de parada: No improvement
+            if(self.not_improvement_count >= self.limit_not_improvement):
+                print(f"Sem melhoria nas {self.limit_not_improvement} últimas interações. Parando a busca.")
+                break
             
-            # Atualiza o melhor nó encontrado até agora
-            if current_R2 > best_R2:
-                best_node = current_node
-                best_R2 = current_R2
-
+            
             childrens = self.generate_children(current_node)
-
             bests_R2 = []
             for child in childrens:
                 bests_R2.append(self.calculate_R2(child, full_variables))
@@ -140,7 +155,8 @@ class Graph:
                 max_features = 1
             model = RandomForestRegressor(
                 n_estimators=100,
-                max_features=max_features
+                random_state=42,
+                max_features="log2"
             )
 
         # Treinar o modelo

@@ -33,24 +33,6 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 import time
 
-# Create your views here.
-@permission_classes([IsAuthenticated])
-def minha_view(request):
-  # Define a função de resposta SSE
-
-  def event_stream():
-    # Exemplo de 10 mensagens
-    for i in range(10):
-      # Simula um processo demorado
-      time.sleep(1)
-      # Envia a mensagem para o cliente
-      yield f"data: Mensagem {i}\n\n"
-
-  # Retorna a resposta SSE
-  response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
-  response['Cache-Control'] = 'no-cache'
-  return response
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def convertAndSendDatabase_view(request):
@@ -84,9 +66,11 @@ def convertAndSendDatabase_view(request):
 
       for i in range(length):
         print("Analisando características:", list_file_content[i])
-        if(project.database):
+        project_database = project.get_database()
+
+        if(project_database):
           print(f"Progresso: {i + 1}/{length}")
-          project.database.set_conversion_progress(i + 1, length)
+          project_database.set_conversion_progress(i + 1, length)
           
         descriptors = from_smiles(list_file_content[i].split(',')[0])
 
@@ -140,22 +124,22 @@ def convertAndSendDatabase_view(request):
         with open(file_name, 'rb') as arquivo:
           file_content = arquivo.read()
         # Salvar database com as informações
-        database = Database().create(
+        database = Database.objects.create(
           name=file_name,
           file=None,
           file_separator=',',
           lines=rows,
-          columns=columns
+          columns=columns,
+          project=project
         )
         database.file.save(file_name, ContentFile(file_content))
-        project.database = database
         # Salvar modificações no backend
         project.save()
 
         os.remove(file_name)
 
         # Abra o arquivo e retorne como uma resposta de arquivo
-        with open(f"media/{project.database.file}", 'rb') as file:
+        with open(f"media/{database.file}", 'rb') as file:
           response = HttpResponse(file.read(), content_type='application/force-download')
           response['Content-Disposition'] = f'attachment; filename="{file_name}"'
           return response
@@ -190,14 +174,15 @@ def sendDatabase_view(request):
     )
     rows, columns = data_dataframe.shape
 
-    database = Database().create(
+    Database.objects.create(
       name=uploaded_file.name,
       file=uploaded_file,
       file_separator=separator,
       lines=rows,
-      columns=columns
+      columns=columns,
+      description="Database original",
+      project=project
     )
-    project.database = database
     
     # Salvar no backend
     project.save()
@@ -216,7 +201,7 @@ def getDatabase_view(request):
     transposed = False
 
   project = get_object_or_404(Project, id=project_id)
-  database = project.database
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -265,7 +250,7 @@ def getVariables_view(request):
   project_id = request.GET.get('project_id')
 
   project = get_object_or_404(Project, id=project_id)
-  database = project.database
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -298,7 +283,7 @@ def getHistogram_view(request):
   num_bins = int(divisions_bins)
 
   project = get_object_or_404(Project, id=project_id)
-  database = project.database
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -341,7 +326,7 @@ def getBoxPlot_view(request):
   variable = request.GET.get('variable')
 
   project = get_object_or_404(Project, id=project_id)
-  database = project.database
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -385,14 +370,15 @@ def setNormalizationSettings_view(request):
   normalization = request.POST.get('normalization')
 
   project = get_object_or_404(Project, id=project_id)
+  database = project.get_database()
 
-  if(project.database):
-    if(project.database.normalization):
-      project.database.normalization.update(normalization, False)
+  if(database):
+    if(database.normalization):
+      database.normalization.update(normalization, False)
     else:
       normalization_instance = Normalization.objects.create(name=normalization)
-      project.database.normalization = normalization_instance
-      project.database.save()
+      database.normalization = normalization_instance
+      database.save()
 
     return Response({
       'message': f'Normalização {normalization} salva!'
@@ -407,25 +393,26 @@ def getNormalizationSettings_view(request):
 
   project_id = request.GET.get('project_id')
   project = get_object_or_404(Project, id=project_id)
+  database = project.get_database()
 
-  if(project.database):
-    if(project.database.normalization):
+  if(database):
+    if(database.normalization):
 
       data = {
-        'normalization': project.database.normalization.name,
-        'applied': project.database.normalization.applied
+        'normalization': database.normalization.name,
+        'applied': database.normalization.applied
       }
       return Response(data, status=200)
 
     else:
       
       normalization = Normalization.objects.create(name="NÃO APLICAR")
-      project.database.normalization = normalization
-      project.database.save()
+      database.normalization = normalization
+      database.save()
 
       data = {
-        'normalization': project.database.normalization.name,
-        'applied': project.database.normalization.applied
+        'normalization': database.normalization.name,
+        'applied': database.normalization.applied
       }
       return Response(data, status=200)
 
@@ -440,7 +427,7 @@ def getConversionProgress_view(request):
     project_id = request.GET.get('project_id')
     project = get_object_or_404(Project, id=project_id)
 
-    database = project.database
+    database = project.get_database()
 
     if(database):    
       return Response({

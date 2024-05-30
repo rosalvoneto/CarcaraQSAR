@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 
 from project_management.models import Project
@@ -10,6 +11,12 @@ class VariablesSelection(models.Model):
   algorithm_parameters = models.JSONField(default=dict)
 
   rows_to_remove = models.JSONField(default=list)
+
+  # 0: Database original
+  # 1: Database com remoção de variáveis
+  # 2: Database com aplicação do algoritmo
+  # 3: Database com remoção de linhas (final)
+  modification_level = models.IntegerField(default=0)
 
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)

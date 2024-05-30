@@ -23,11 +23,6 @@ urlpatterns = [
     name="get_normalization_settings"
   ),
   path(
-    'minha_view', 
-    views.minha_view, 
-    name="minha_view"
-  ),
-  path(
     'get_conversion_progress', 
     views.getConversionProgress_view, 
     name='get_conversion_progress'

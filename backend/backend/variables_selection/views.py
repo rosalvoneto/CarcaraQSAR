@@ -2,9 +2,9 @@
 from io import StringIO
 import pandas as pd
 import json
-import math
 
 from django.shortcuts import get_object_or_404
+from django.core.files import File
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -13,10 +13,10 @@ from rest_framework.permissions import IsAuthenticated
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 
-from database.models import CSVDatabase
+from database.models import Database
 from project_management.models import Project
 from variables_selection.models import VariablesSelection
-from variables_selection.utils import get_variables_settings, is_convertible_to_int_list, update_database
+from variables_selection.utils import get_variables_settings, is_convertible_to_int_list
 from variables_selection.algorithms.abc import ABCAlgorithm
 from variables_selection.algorithms.ga import GAAlgorithm, Problem
 from variables_selection.algorithms.BFS import Graph
@@ -90,10 +90,11 @@ def removeRows_view(request):
 
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
-  variables_selection = project.variablesselection_set.get()
 
-  database = project.database
+  variables_selection = project.variablesselection_set.get()
   rows_to_remove = variables_selection.rows_to_remove
+
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -105,23 +106,14 @@ def removeRows_view(request):
         sep=database.file_separator
       )
 
-      # Vincular Database atual ao histórico
-      message = "Database antes da remoção de linhas!"
-      CSVDatabase.objects.create(
-        file=database.file,
-        change_description=message,
-        actual_database=database
-      )
-
       # Remoção de linhas
       dataframe = dataframe.drop(rows_to_remove).reset_index(drop=True)
 
-      # Atualizar Database principal com o novo arquivo
-      database = update_database(database, dataframe)
-
-      # Salvar mudanças no backend
-      project.database = database
-      project.save()
+      database.create_database(
+        path="Database_with_dropped_lines.csv",
+        description="Database após a remoção de linhas",
+        dataframe=dataframe
+      )
 
       return Response({
         'message': 'Remoção bem sucedida de linhas do Database!',
@@ -138,7 +130,7 @@ def removeConstantVariables_view(request):
   project_id = request.POST.get('project_id')
 
   project = get_object_or_404(Project, id=project_id)
-  database = project.database
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -155,25 +147,17 @@ def removeConstantVariables_view(request):
 
       if(to_delete):
 
-        # Vincular Database atual ao histórico
-        message = "Database antes da remoção de variáveis constantes!"
-        CSVDatabase.objects.create(
-          file=database.file,
-          change_description=message,
-          actual_database=database
-        )
-
         # Identificar colunas onde todos os valores são iguais
         columns_to_drop = [column for column in dataframe.columns if dataframe[column].nunique() == 1]
         # Remover essas colunas do DataFrame
         dataframe = dataframe.drop(columns=columns_to_drop)
 
-        # Atualizar Database principal com o novo arquivo
-        database = update_database(database, dataframe)
-
-        # Salvar mudanças no backend
-        project.database = database
-        project.save()
+        # Criar novo Database
+        database.create_database(
+          path="Database_without_constant_variables.csv",
+          description="Database após a remoção de variáveis constantes",
+          dataframe=dataframe
+        )
 
         return Response({
           'message': 'Remoção de colunas constantes do Database!',
@@ -193,7 +177,7 @@ def removeVariables_view(request):
 
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
-  database = project.database
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -210,14 +194,6 @@ def removeVariables_view(request):
 
       if(len(variables_to_remove)):
 
-        # Vincular Database atual ao histórico
-        message = "Database antes da remoção de variáveis pelo usuário!"
-        CSVDatabase.objects.create(
-          file=database.file,
-          change_description=message,
-          actual_database=database
-        )
-
         # Verificar quais colunas de 'variables_to_remove'
         # estão realmente no DataFrame
         columns_to_remove = [
@@ -227,12 +203,12 @@ def removeVariables_view(request):
         if columns_to_remove:
           dataframe = dataframe.drop(columns=columns_to_remove)
 
-        # Atualizar Database principal com o novo arquivo
-        database = update_database(database, dataframe)
-
-        # Salvar mudanças no backend
-        project.database = database
-        project.save()
+        # Criar novo Database
+        database.create_database(
+          path="Database_without_choosen_variables.csv",
+          description="Database após a remoção de variáveis pelo usuário!",
+          dataframe=dataframe
+        )
 
         return Response({
           'message': 'Remoção de variáveis escolhidas pelo usuário!',
@@ -252,7 +228,7 @@ def makeSelection_view(request):
 
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
-  database = project.database
+  database = project.get_database()
 
   if(database):
     if(database.file):
@@ -270,7 +246,11 @@ def makeSelection_view(request):
       )
 
       # Cria um modelo
-      model = RandomForestRegressor(n_estimators=100, random_state=42)
+      model = RandomForestRegressor(
+        n_estimators=200,
+        random_state=42,
+        max_features="log2",
+      )
 
       # Faz a seleção de variáveis
       print("SELEÇÃO COM ALGORITMO")
@@ -324,7 +304,8 @@ def makeSelection_view(request):
 
       graph = Graph(
         dataframe=base_compressed,
-        r2_condition=0.99,
+        r2_condition=parameters['r2_condition_BFS'],
+        limit_not_improvement=parameters['limit_not_improvement_BFS']
       )
 
       # Busca pela melhor variável
@@ -337,6 +318,15 @@ def makeSelection_view(request):
       best_node, best_R2 = graph.execution(best_variable)
       print("Melhor R2:", best_R2)
 
+      # Ler CSV do melhor conjunto de variáveis
+      dataframe = pd.read_csv("base_best.csv")
+
+      # Criar novo Database
+      database.create_database(
+        path="Database_with_algorithm_execution.csv",
+        description="Database após a execução do algoritmo",
+        dataframe=dataframe
+      )
 
       return Response({
         'message': 'Seleção de variáveis aplicada!',

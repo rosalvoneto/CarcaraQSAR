@@ -153,7 +153,8 @@ class GAAlgorithm:
     self.last_aptidao = []
     self.improvement = False
     self.last_maximum_aptidao = 0
-    self.count_not_improvement = 0
+    self.not_improvement_count = 0
+    
     self.length = len(population[0].bin)
 
     self.fitness()
@@ -302,15 +303,15 @@ class GAAlgorithm:
     current = max(self.aptidao)
     if(last < current):
       self.improvement = True
-      self.count_not_improvement = 0
+      self.not_improvement_count = 0
     else:
       self.improvement = False
-      self.count_not_improvement += 1
+      self.not_improvement_count += 1
 
   def execution(self):
     while (
       self.generations <= self.limit_generations and
-      self.count_not_improvement <= self.limit_not_improvement
+      self.not_improvement_count <= self.limit_not_improvement
     ):
       self.generateNewGeneration()
       self.evaluate()

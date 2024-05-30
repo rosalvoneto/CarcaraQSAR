@@ -95,3 +95,10 @@
   align-items: center;
   justify-content: center;
 }
+
+.historyBlock {
+  display: flex;
+  gap: 30px;
+
+  /* border: 1px solid red; */
+}

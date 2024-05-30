@@ -19,27 +19,22 @@ from .models import Project
 def createProject_view(request):
 
   user = request.user
-
-  # Recupere os dados do corpo da requisição
   data = request.data
-
-  # Faça algo com os dados
   name = data.get('project_name')
   description = data.get('project_description')
 
-  print(name)
-  print(description)
-
-  # Realize as operações desejadas com os dados
-  project = Project()
-  project.name = name
-  project.description = description
-  project.user = user
-
-  database = Database()
-  database.save()
-  project.database = database
-  project.save()
+  # Crie um projeto
+  project = Project.objects.create(
+    name=name,
+    description = description,
+    user=user
+  )
+  # # Cria um database 
+  # Database.objects.create(
+  #   name="Database",
+  #   description="Database gerado automaticamente na criação do projeto",
+  #   project=project
+  # )
 
   # Retorne uma resposta, por exemplo, um JSON
   resposta = {
@@ -55,8 +50,6 @@ def projects_view(request):
 
   user = request.user
   search_value = request.GET.get('query', '')
-  print(user)
-  print(search_value)
 
   projects = Project.objects.filter(isActive=True, user=user)
   projects = projects.filter(name__icontains=search_value)
@@ -82,8 +75,6 @@ def sharedProjects_view(request):
 
   user = request.user
   search_value = request.GET.get('query', '')
-  print(user)
-  print(search_value)
 
   projects = Project.objects.filter(isActive=True, shared=True, user=user)
   projects = projects.filter(name__icontains=search_value)
@@ -109,8 +100,6 @@ def deactivatedProjects_view(request):
 
   user = request.user
   search_value = request.GET.get('query', '')
-  print(user)
-  print(search_value)
 
   projects = Project.objects.filter(isActive=False, user=user)
   projects = projects.filter(name__icontains=search_value)

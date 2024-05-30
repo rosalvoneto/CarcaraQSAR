@@ -37,3 +37,9 @@ def generate_new_database(
   last_column_name = list(df.columns)[-1]
   new_dataframe[last_column_name] = df[last_column_name].tolist()
   new_dataframe.to_csv(database_name, index=False)
+
+def create_base():
+  dataframe = pd.DataFrame()
+  dataframe.to_csv("base_best.csv", index=False)
+
+  return dataframe

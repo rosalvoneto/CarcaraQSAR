@@ -50,12 +50,16 @@ export const algorithmsParameters = [
     ['probability_mutation', 'Probabilidade de mutação'],
     ['limit_generations', 'Limite de gerações'],
     ['limit_not_improvement', 'Limite sem melhoria'],
+    ['r2_condition_BFS', 'R2 do BFS'],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
   ],
   [
     ["maximum_iterations", "Interações"],
     ["bees", "Abelhas"],
     ["limit_not_improvement", "Limite sem melhoria"],
     ["info_gain_quantity", "Ganho de informação"],
+    ['r2_condition_BFS', 'R2 do BFS'],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
   ]
 ]
 
@@ -415,6 +419,7 @@ export default function VariablesSelection() {
           >
             Salvar e Selecionar
           </button>
+
         </div>
         
         <Button
@@ -468,12 +473,80 @@ export default function VariablesSelection() {
         />
         <Button 
           name={'Próximo'} 
+          URL={`/variables-selection`} 
+          stateToPass={{
+            pageNumber: 3
+          }}
+          side={'right'}
+          action={handleToChangeRows}
+        />
+      </>
+    )
+  } else if(pageNumber == 3) {
+    return(
+      <>
+        <Header 
+          title={projectDetails.name}
+        />
+        <ProgressBar 
+          progressNumber={progress}
+          subProgressNumber={pageNumber}
+        />
+
+        <table className={styles.container}>
+          <tbody>
+
+            <div>
+              <p className={styles.name}>
+                <strong>{"Remoção de variáveis:"}</strong>
+              </p>
+              <td className={styles.historyBlock}>
+                <p>Nome: Base.csv</p>
+                <p>Data: 28/06/2024</p>
+                <p>X linhas e Y colunas</p>
+              </td>
+            </div>
+
+            <div>
+              <p className={styles.name}>
+                <strong>{"Aplicação do algoritmo bioinspirado:"}</strong>
+              </p>
+              <td className={styles.historyBlock}>
+                <p>Nome: Base.csv</p>
+                <p>Data: 28/06/2024</p>
+                <p>X linhas e Y colunas</p>
+              </td>
+            </div>
+
+            <div>
+              <p className={styles.name}>
+                <strong>{"Remoção de linhas:"}</strong>
+              </p>
+              <td className={styles.historyBlock}>
+                <p>Nome: Base.csv</p>
+                <p>Data: 28/06/2024</p>
+                <p>X linhas e Y colunas</p>
+              </td>
+            </div>
+
+          </tbody>
+        </table>
+        
+        <Button 
+          name={'Voltar'} 
+          URL={`/variables-selection`}
+          stateToPass={{
+            pageNumber: 2
+          }}
+          side={'left'}
+        />
+        <Button 
+          name={'Próximo'} 
           URL={`/training`} 
           stateToPass={{
             pageNumber: 0
           }}
           side={'right'}
-          action={handleToChangeRows}
         />
       </>
     )
