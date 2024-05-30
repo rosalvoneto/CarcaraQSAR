@@ -228,12 +228,12 @@ def train_view(request):
     }, status=200)
   
   except Exception as error:
-    print()
     print("O treinamento retornou o seguinte erro:")
     print(error, "\n")
 
     return Response({
       'message': 'Erro no treinamento',
+      'error': str(error)
     }, status=500)
   
 @api_view(['GET'])

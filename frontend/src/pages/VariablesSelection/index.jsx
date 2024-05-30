@@ -101,6 +101,7 @@ export default function VariablesSelection() {
 
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState("false");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [databases, setDatabases] = useState([]);
 
@@ -188,12 +189,14 @@ export default function VariablesSelection() {
 
     setSelecting(true);
     const response = await makeSelection(projectID, authTokens.access);
-    if(response) {
-      setSelecting(false);
-      setSelected("true");
-    } else {
+    
+    if(response.error) {
       setSelecting(false);
       setSelected("error");
+      setErrorMessage(response.error);
+    } else {
+      setSelecting(false);
+      setSelected("true");
     }
   }
 
@@ -476,7 +479,8 @@ export default function VariablesSelection() {
           <PopUp show={selected == "error"}
             title={"Erro"}
             description={
-              `Um erro interno do servidor não permitiu concluir a seleção.`
+              `Um erro interno do servidor não permitiu concluir a seleção.\n
+              ${errorMessage}.`
             }
             showButton
             buttonName={"Ok"}

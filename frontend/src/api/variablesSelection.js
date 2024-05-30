@@ -173,12 +173,9 @@ export const makeSelection = async(
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
     console.log(dataResponse);
-    return true;
-    
   } else {
     console.log(`Status: ${response.status}`);
-    return false;
   }
+  return dataResponse
 }

@@ -231,118 +231,127 @@ def makeSelection_view(request):
   project = get_object_or_404(Project, id=project_id)
   database = project.get_database()
 
-  if(database):
-    if(database.file):
+  try:
+    if(database):
+      if(database.file):
+        response = get_variables_settings(project)
+        parameters = response["algorithmParameters"]
+        algorithm = response["algorithm"]
 
-      response = get_variables_settings(project)
-      parameters = response["algorithmParameters"]
-      algorithm = response["algorithm"]
+        if(algorithm == "NÃO APLICAR"):
+          return Response({
+            'message': 'Seleção de variáveis não aplicada!',
+          }, status=200)
 
-      if(algorithm == "NÃO APLICAR"):
-        return Response({
-          'message': 'Seleção de variáveis não aplicada!',
-        }, status=200)
+        file_content = database.file.read().decode('utf-8')
 
-      file_content = database.file.read().decode('utf-8')
-
-      # Leitura da base completa
-      base = pd.read_csv(
-        StringIO(file_content), 
-        sep=database.file_separator
-      )
-
-      # Cria um modelo
-      model = RandomForestRegressor(
-        n_estimators=200,
-        random_state=42,
-        max_features="log2",
-      )
-
-      # Faz a seleção de variáveis
-      print("SELEÇÃO COM ALGORITMO")
-      if(algorithm == "Colônia de abelhas"):
-        abc = ABCAlgorithm(
-          bees=parameters["bees"],
-          maximum_iterations=parameters["maximum_iterations"],
-          limit_not_improvement=parameters["limit_not_improvement"],
-          info_gain_quantity=parameters["info_gain_quantity"]
-        )
-        best_subset, best_r2 = abc.execution(base, model)
-        print("Melhor R2:", best_r2)
-
-        abc.generate_new_database(
-          "base_compressed.csv",
-          base, 
-          best_subset
+        # Leitura da base completa
+        base = pd.read_csv(
+          StringIO(file_content), 
+          sep=database.file_separator
         )
 
-      elif(algorithm == "ALgoritmo genético"):
-        problem = Problem(base)
-        population = problem.generateBestPopulation(
-          quantity=parameters['population_quantity'],
-          info_gain_quantity=parameters['info_gain_quantity']
+        # Cria um modelo
+        model = RandomForestRegressor(
+          n_estimators=200,
+          random_state=42,
+          max_features="log2",
         )
 
-        ga = GAAlgorithm(
-          probability_crossover=parameters['probability_crossover'],
-          probability_mutation=parameters['probability_mutation'],
-          use_limit=False,
-          limit_inferior=0,
-          limit_superior=1,
-          limit_generations=parameters['limit_generations'],
-          limit_not_improvement=parameters['limit_not_improvement'],
-          population=population,
-          model=model,
-          dataframe=base
+        # Faz a seleção de variáveis
+        print("SELEÇÃO COM ALGORITMO")
+        if(algorithm == "Colônia de abelhas"):
+          abc = ABCAlgorithm(
+            bees=parameters["bees"],
+            maximum_iterations=parameters["maximum_iterations"],
+            limit_not_improvement=parameters["limit_not_improvement"],
+            info_gain_quantity=parameters["info_gain_quantity"]
+          )
+          best_subset, best_r2 = abc.execution(base, model)
+          print("Melhor R2:", best_r2)
+
+          abc.generate_new_database(
+            "base_compressed.csv",
+            base, 
+            best_subset
+          )
+
+        elif(algorithm == "ALgoritmo genético"):
+          problem = Problem(base)
+          population = problem.generateBestPopulation(
+            quantity=parameters['population_quantity'],
+            info_gain_quantity=parameters['info_gain_quantity']
+          )
+
+          ga = GAAlgorithm(
+            probability_crossover=parameters['probability_crossover'],
+            probability_mutation=parameters['probability_mutation'],
+            use_limit=False,
+            limit_inferior=0,
+            limit_superior=1,
+            limit_generations=parameters['limit_generations'],
+            limit_not_improvement=parameters['limit_not_improvement'],
+            population=population,
+            model=model,
+            dataframe=base
+          )
+
+          best_subset, best_R2 = ga.execution()
+          print("Melhor R2:", best_R2)
+
+          ga.generate_new_database(
+            "base_compressed.csv",
+            base,
+            best_subset
+          )
+
+        # Leitura da base comprimida
+        base_compressed = pd.read_csv('base_compressed.csv')      
+
+        graph = Graph(
+          dataframe=base_compressed,
+          r2_condition=parameters['r2_condition_BFS'],
+          limit_not_improvement=parameters['limit_not_improvement_BFS']
         )
 
-        best_subset, best_R2 = ga.execution()
+        # Busca pela melhor variável
+        print("BUSCA PELA MELHOR VARIÁVEL")
+        best_variable, best_R2 = graph.evaluate_best_variable()
+        print("Melhor R2:", best_R2)
+        
+        # Busca gulosa
+        print('BUSCA GULOSA')
+        best_node, best_R2 = graph.execution(best_variable)
         print("Melhor R2:", best_R2)
 
-        ga.generate_new_database(
-          "base_compressed.csv",
-          base,
-          best_subset
+        # Ler CSV do melhor conjunto de variáveis
+        dataframe = pd.read_csv("base_best.csv")
+
+        # Criar novo Database
+        database.create_database(
+          path="Database_with_algorithm_execution.csv",
+          description="Database após a execução do algoritmo",
+          dataframe=dataframe
         )
 
-      # Leitura da base comprimida
-      base_compressed = pd.read_csv('base_compressed.csv')      
+        # Deletar os arquivos temporários
+        os.remove("base_compressed.csv")
+        os.remove("best_variable.csv")
+        os.remove("Valores_R2.csv")
+        os.remove("base_best.csv")
 
-      graph = Graph(
-        dataframe=base_compressed,
-        r2_condition=parameters['r2_condition_BFS'],
-        limit_not_improvement=parameters['limit_not_improvement_BFS']
-      )
+        return Response({
+          'message': 'Seleção de variáveis aplicada!',
+        }, status=200)
+    
+  except Exception as error:
+    print("A seleção retornou o seguinte erro:")
+    print(error, "\n")
 
-      # Busca pela melhor variável
-      print("BUSCA PELA MELHOR VARIÁVEL")
-      best_variable, best_R2 = graph.evaluate_best_variable()
-      print("Melhor R2:", best_R2)
-      
-      # Busca gulosa
-      print('BUSCA GULOSA')
-      best_node, best_R2 = graph.execution(best_variable)
-      print("Melhor R2:", best_R2)
-
-      # Ler CSV do melhor conjunto de variáveis
-      dataframe = pd.read_csv("base_best.csv")
-
-      # Criar novo Database
-      database.create_database(
-        path="Database_with_algorithm_execution.csv",
-        description="Database após a execução do algoritmo",
-        dataframe=dataframe
-      )
-
-      # Deletar os arquivos temporários
-      os.remove("base_compressed.csv")
-      os.remove("best_variable.csv")
-      os.remove("Valores_R2.csv")
-      os.remove("base_best.csv")
-
-      return Response({
-        'message': 'Seleção de variáveis aplicada!',
-      }, status=200)
+    return Response({
+      'message': 'Erro na seleção',
+      'error': str(error),
+    }, status=200)
 
   return Response({
     'message': 'Database principal não encontrado!',
