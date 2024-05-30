@@ -1,7 +1,8 @@
 
-from io import StringIO
-import pandas as pd
+import os
 import json
+import pandas as pd
+from io import StringIO
 
 from django.shortcuts import get_object_or_404
 from django.core.files import File
@@ -206,7 +207,7 @@ def removeVariables_view(request):
         # Criar novo Database
         database.create_database(
           path="Database_without_choosen_variables.csv",
-          description="Database após a remoção de variáveis pelo usuário!",
+          description="Database após a remoção de variáveis pelo usuário",
           dataframe=dataframe
         )
 
@@ -236,6 +237,11 @@ def makeSelection_view(request):
       response = get_variables_settings(project)
       parameters = response["algorithmParameters"]
       algorithm = response["algorithm"]
+
+      if(algorithm == "NÃO APLICAR"):
+        return Response({
+          'message': 'Seleção de variáveis não aplicada!',
+        }, status=200)
 
       file_content = database.file.read().decode('utf-8')
 
@@ -327,6 +333,12 @@ def makeSelection_view(request):
         description="Database após a execução do algoritmo",
         dataframe=dataframe
       )
+
+      # Deletar os arquivos temporários
+      os.remove("base_compressed.csv")
+      os.remove("best_variable.csv")
+      os.remove("Valores_R2.csv")
+      os.remove("base_best.csv")
 
       return Response({
         'message': 'Seleção de variáveis aplicada!',

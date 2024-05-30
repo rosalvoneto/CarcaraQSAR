@@ -235,3 +235,51 @@ export const getConversionProgress = async (
   }
   return dataResponse;
 }
+
+// Resgata todos os Databases associados ao projeto
+export const getDatabases = async (
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/get_databases?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}
+
+// Resgata um CSV de um Database específico
+export const downloadDatabase = async (
+  projectID, index, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/download_database?project_id=${projectID}&database_index=${index}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.text();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}

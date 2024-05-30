@@ -7,7 +7,8 @@
 
 .pageContentContainer {
   border: 0px solid green;
-  padding: 15px;
+  padding-right: 15px;
+  padding-left: 15px;
 
   display: flex;
   flex-direction: column;
@@ -16,5 +17,5 @@
 
   position: relative;
 
-  padding-bottom: 70px;
+  padding-bottom: 60px;
 }

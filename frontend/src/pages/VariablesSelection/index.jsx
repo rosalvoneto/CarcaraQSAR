@@ -20,6 +20,9 @@ import {
   makeSelection
 } 
 from '../../api/variablesSelection';
+import { downloadDatabase, getDatabases } from '../../api/database';
+
+import { DownloadSimple } from '@phosphor-icons/react';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -98,6 +101,8 @@ export default function VariablesSelection() {
 
   const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState("false");
+
+  const [databases, setDatabases] = useState([]);
 
   const navigate = useNavigate();
 
@@ -182,9 +187,14 @@ export default function VariablesSelection() {
     );
 
     setSelecting(true);
-    await makeSelection(projectID, authTokens.access);
-    setSelecting(false);
-    setSelected("true");
+    const response = await makeSelection(projectID, authTokens.access);
+    if(response) {
+      setSelecting(false);
+      setSelected("true");
+    } else {
+      setSelecting(false);
+      setSelected("error");
+    }
   }
 
   const handleToChangeRows = async() => {
@@ -198,7 +208,47 @@ export default function VariablesSelection() {
       authTokens.access
     );
     await removeDatabaseRows(projectID, authTokens.access);
+
+    getDatabases(projectID, authTokens.access)
+    .then((response) => {
+      console.log(response.databases);
+      setDatabases(response.databases);
+    })
   }
+
+  // Fazer download automático do CSV que vem do Backend
+  const handleDownload = async (databaseIndex) => {
+
+    let response = await downloadDatabase(
+      projectID, 
+      databaseIndex,
+      authTokens.access
+    );
+
+    try {
+      // Crie um link temporário e clique nele para iniciar o download
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Exemplo de uma string contendo o nome do arquivo com várias extensões
+      let fileName = databases[databaseIndex].name;
+
+      // Encontrar a última ocorrência do ponto na string
+      let lastIndex = fileName.lastIndexOf('.');
+
+      // Extrair a parte da string até o último ponto
+      let newFileName = fileName.substring(0, lastIndex);
+
+      link.setAttribute('download', `${newFileName}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error);
+    }
+  };
+
 
   useEffect(() => {
     getVariablesSettings(projectID, authTokens.access)
@@ -232,6 +282,16 @@ export default function VariablesSelection() {
     setAlgorithmIndex(index);
 
   }, [choosenAlgorithm]);
+
+  useEffect(() => {
+    if(pageNumber == 3) {
+      getDatabases(projectID, authTokens.access)
+      .then((response) => {
+        console.log(response.databases);
+        setDatabases(response.databases);
+      })
+    }
+  }, [pageNumber])
 
   if(pageNumber == 0) {
     return(
@@ -348,7 +408,7 @@ export default function VariablesSelection() {
                 algorithmIndex != 0
                 ?
                   <p className={styles.name}>
-                    <strong>{"Hiperparâmetros"}</strong>
+                    {/* <strong>{"Hiperparâmetros"}</strong> */}
                   </p>
                 : 
                   undefined
@@ -413,12 +473,28 @@ export default function VariablesSelection() {
             }}
           />
 
-          <button 
-            onClick={handleToMakeSelection}
-            className={styles.button}
-          >
-            Salvar e Selecionar
-          </button>
+          <PopUp show={selected == "error"}
+            title={"Erro"}
+            description={
+              `Um erro interno do servidor não permitiu concluir a seleção.`
+            }
+            showButton
+            buttonName={"Ok"}
+            action={() => {
+              setSelecting(false);
+              setSelected("false");
+            }}
+          />
+
+          {
+            algorithmIndex != 0 &&
+            <button 
+              onClick={handleToMakeSelection}
+              className={styles.button}
+            >
+              Salvar e Selecionar
+            </button>
+          }
 
         </div>
         
@@ -430,14 +506,17 @@ export default function VariablesSelection() {
           }}
           side={'left'}
         />
-        <Button 
-          name={'Próximo'} 
-          URL={`/variables-selection`} 
-          stateToPass={{
-            pageNumber: 2
-          }}
-          side={'right'}
-        />
+        {
+          algorithmIndex == 0 &&
+          <Button 
+            name={'Próximo'} 
+            URL={`/variables-selection`} 
+            stateToPass={{
+              pageNumber: 2
+            }}
+            side={'right'}
+          />
+        }
       </>
     )
   } else if(pageNumber == 2) {
@@ -458,9 +537,6 @@ export default function VariablesSelection() {
             setValue={setRowsToRemove}
             value={rowsToRemove}
           />
-          <p className={styles.name}>
-            <strong>{"Linhas removidas"}</strong>
-          </p>
         </div>
         
         <Button 
@@ -493,44 +569,37 @@ export default function VariablesSelection() {
           subProgressNumber={pageNumber}
         />
 
-        <table className={styles.container}>
-          <tbody>
+        <div className={styles.container}>
 
-            <div>
-              <p className={styles.name}>
-                <strong>{"Remoção de variáveis:"}</strong>
-              </p>
-              <td className={styles.historyBlock}>
-                <p>Nome: Base.csv</p>
-                <p>Data: 28/06/2024</p>
-                <p>X linhas e Y colunas</p>
-              </td>
+            <div className={styles.contentContainer}>
+              {
+                databases.map((dbInformation, index) => {
+                  return(
+                    <>
+                      <p className={styles.name}>
+                        <strong>{dbInformation.description}</strong>
+                      </p>
+                      <div className={styles.historyBlock}>
+                        <p>Nome: {dbInformation.name}</p>
+                        <p>Data: {dbInformation.created_at}</p>
+                        <p>{dbInformation.lines} linhas e {dbInformation.columns} colunas</p>
+                      </div>
+                      <a
+                        className={styles.downloadButton}
+                        onClick={() => {
+                          handleDownload(index);
+                        }}
+                      >
+                        <DownloadSimple size={30} color='var(--black-color-1)' />
+                      </a>
+                    </>
+                  )
+                })
+              }
+              
             </div>
 
-            <div>
-              <p className={styles.name}>
-                <strong>{"Aplicação do algoritmo bioinspirado:"}</strong>
-              </p>
-              <td className={styles.historyBlock}>
-                <p>Nome: Base.csv</p>
-                <p>Data: 28/06/2024</p>
-                <p>X linhas e Y colunas</p>
-              </td>
-            </div>
-
-            <div>
-              <p className={styles.name}>
-                <strong>{"Remoção de linhas:"}</strong>
-              </p>
-              <td className={styles.historyBlock}>
-                <p>Nome: Base.csv</p>
-                <p>Data: 28/06/2024</p>
-                <p>X linhas e Y colunas</p>
-              </td>
-            </div>
-
-          </tbody>
-        </table>
+        </div>
         
         <Button 
           name={'Voltar'} 

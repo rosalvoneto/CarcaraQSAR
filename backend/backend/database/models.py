@@ -19,11 +19,11 @@ class Normalization(models.Model):
   
 class Database(models.Model):
   name = models.CharField(max_length=100)
+  description = models.CharField(max_length=300 ,default="")
   file =  models.FileField(upload_to='databases/', null=True, blank=True)
   file_separator = models.CharField(max_length=1, default=',')
   lines = models.IntegerField(default=0)
   columns = models.IntegerField(default=0)
-  description = models.CharField(max_length=300 ,default="")
 
   created_at = models.DateTimeField(auto_now_add=True)
 

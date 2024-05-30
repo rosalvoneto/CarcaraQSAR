@@ -26,5 +26,15 @@ urlpatterns = [
     'get_conversion_progress', 
     views.getConversionProgress_view, 
     name='get_conversion_progress'
+  ),
+  path(
+    'get_databases', 
+    views.getDatabases_view, 
+    name='get_databases'
+  ),
+  path(
+    'download_database',
+    views.downloadDatabase_view,
+    name='download_database'
   )
 ]

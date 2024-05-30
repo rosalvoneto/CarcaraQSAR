@@ -15,24 +15,13 @@ class Project(models.Model):
   
   user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-  def get_database(self):
-    # Recuperar todos os bancos de dados associados ao projeto
+  def get_databases(self):
     databases = self.databases.all()
-
-    # # Verificar se a queryset está vazia
-    # if not databases.exists():
-    #   # Se não existir nenhum banco de dados associado, criar um novo
-    #   new_database = Database.objects.create(
-    #     name="Database",
-    #     description="Database gerado automaticamente na função get_database()", 
-    #     project=self
-    #   )
-    #   # Atualizar a queryset para incluir o novo banco de dados
-    #   databases = self.databases.all()
-
     databases = list(reversed(databases))
-    print(databases)
+    return databases
 
+  def get_database(self):
+    databases = self.get_databases()
     return databases[0]
 
   def __str__(self):

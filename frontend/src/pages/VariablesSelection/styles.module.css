@@ -3,6 +3,7 @@
   margin-top: 15px;
 
   overflow: auto;
+  border: 0px solid red;
 }
 
 .algorithmContainer {
@@ -10,7 +11,6 @@
 }
 
 .informationContainer {
-  border: 0px solid red;
 
   display: flex;
   justify-content: center;

@@ -27,6 +27,7 @@ from .utils import get_line_descriptors, getBoxPlotImage, getHistogramImage
 
 from project_management.models import Project
 from database.models import Database, Normalization
+from database.serializers import DatabaseSerializer
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -439,3 +440,39 @@ def getConversionProgress_view(request):
       }, status=500)
   except ObjectDoesNotExist:
     return HttpResponse("Project or training not found", status=404)
+  
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getDatabases_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  databases = project.get_databases()
+
+  data = []
+  for db in databases:
+    serializer = DatabaseSerializer(db)
+    data.append(serializer.data)
+
+  return Response({ 
+    'databases': data
+  }, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def downloadDatabase_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  
+  index = request.GET.get('database_index')
+  index = int(index)
+
+  databases = project.get_databases()
+
+  # Abra o arquivo e retorne como uma resposta de arquivo
+  with open(f"media/{databases[index].file}", 'rb') as file:
+    response = HttpResponse(file.read(), content_type='application/force-download')
+    response['Content-Disposition'] = f'attachment; filename="{databases[index].name}"'
+    return response
