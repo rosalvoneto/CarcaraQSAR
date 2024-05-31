@@ -22,6 +22,10 @@ from variables_selection.algorithms.abc import ABCAlgorithm
 from variables_selection.algorithms.ga import GAAlgorithm, Problem
 from variables_selection.algorithms.BFS import Graph
 
+from celery import shared_task
+from celery.signals import task_success, task_failure
+from variables_selection.tasks import tarefa_com_delay, callback_sucesso, callback_falha
+
 
 # Create your views here.
 @api_view(['GET'])
@@ -223,14 +227,8 @@ def removeVariables_view(request):
     'message': 'Database principal não encontrado!',
   }, status=200)
 
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
-def makeSelection_view(request):
-
-  project_id = request.POST.get('project_id')
-  project = get_object_or_404(Project, id=project_id)
-  database = project.get_database()
-
+@shared_task
+def makeSelection(project, database):
   try:
     if(database):
       if(database.file):
@@ -356,3 +354,21 @@ def makeSelection_view(request):
   return Response({
     'message': 'Database principal não encontrado!',
   }, status=200)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def makeSelection_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  database = project.get_database()
+
+  resultado = tarefa_com_delay.apply_async(
+    args=[10], 
+    link=callback_sucesso.s()
+  )
+  print(resultado)
+
+  resposta = {"message": "Tarefa iniciada com sucesso."}
+  return Response(resposta, status=200)

@@ -246,3 +246,9 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Configurações do Celery
+# URL do seu broker de mensagens
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost'
+# URL para resultados das tarefas (opcional)
+CELERY_RESULT_BACKEND = 'rpc://'

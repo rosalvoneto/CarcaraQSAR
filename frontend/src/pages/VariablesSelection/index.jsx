@@ -452,11 +452,11 @@ export default function VariablesSelection() {
             <Loading size={45} />
             <div className={styles.progressContainer}>
               <ProgressBarLoading 
-                progress={12}
+                progress={0}
                 maximum={100}
               />
               <p>
-                {(12 / 100 * 100).toFixed(0)}%
+                {(0 / 100 * 100).toFixed(0)}%
               </p>
             </div>
           </PopUp>
@@ -464,15 +464,13 @@ export default function VariablesSelection() {
           <PopUp show={selected == "true"}
             title={"Seleção finalizada"}
             description={
-              `A seleção com o algoritmo ${choosenAlgorithm} está finalizada! Clique no botão abaixo para ir para o próximo passo!`
+              `A seleção com o algoritmo ${choosenAlgorithm} está sendo executada em segundo plano!`
             }
             showButton
-            buttonName={"Próximo"}
+            buttonName={"Ok"}
             action={() => {
-              const url = '/variables-selection';
-              navigate(`/${projectID}${url}`, { state: {
-                pageNumber: 2
-              }});
+              setSelected("false");
+              setSelecting(false);
             }}
           />
 
