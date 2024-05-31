@@ -81,6 +81,8 @@ export default function VariablesSelection() {
   const location = useLocation();
   const state = location.state;
 
+  const [algorithmIndex, setAlgorithmIndex] = useState(0);
+
   let pageNumber = 0;
   if(state) {
     if(state.pageNumber) {
@@ -89,7 +91,6 @@ export default function VariablesSelection() {
   }
 
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
-  const [algorithmIndex, setAlgorithmIndex] = useState(0);
   const [algorithmParameters, setAlgorithmParameters] = useState({});
 
   const [removeConstantVariables, setRemoveConstantVariables] = useState();
@@ -291,6 +292,15 @@ export default function VariablesSelection() {
       console.log(response.rowsToRemove);
       setRowsToRemove(response.rowsToRemove.toString());
 
+      if(response.algorithmProgress) {
+        console.log(response.algorithmProgress);
+        const split = response.algorithmProgress.split('/');
+        setProgressValue(Number(split[0]));
+        setMaximumValue(Number(split[1]));
+
+        setSelected("hide progress");
+      }
+
     })
     .catch(error => {
       console.log(error);
@@ -299,10 +309,12 @@ export default function VariablesSelection() {
 
   useEffect(() => {
     const index = algorithms.indexOf(choosenAlgorithm);
-    console.log("Índice do algoritmo:", index);
-    setAlgorithmIndex(index);
-
-  }, [choosenAlgorithm]);
+    if(index == -1) {
+      setAlgorithmIndex(0);
+    } else {
+      setAlgorithmIndex(index);
+    }
+  }, [choosenAlgorithm]);    
 
   useEffect(() => {
     if(pageNumber == 3) {
@@ -425,34 +437,30 @@ export default function VariablesSelection() {
                 setOption={setChoosenAlgorithm}
                 firstOption={choosenAlgorithm}
               />
-              {
-                algorithmIndex != 0
-                ?
-                  <p className={styles.name}>
-                    {/* <strong>{"Hiperparâmetros"}</strong> */}
-                  </p>
-                : 
-                  undefined
-              }
+
               <div className={styles.parametersContainer}>
                 {
-                  algorithmsParameters[
-                    algorithmIndex
-                  ].map((key, index) => {
-                    return(
-                      <InlineInput 
-                        key={index}
-                        name={key[1]} 
-                        type={'number'}
-                        setValue={(value) => changeParameters(key[0], value)}
-                        value={
-                          algorithmParameters[key[0]] 
-                          ? algorithmParameters[key[0]] 
-                          : 0
-                        }
-                      />
-                    )
-                  })
+                  true
+                  ?
+                    algorithmsParameters[
+                      algorithmIndex
+                    ].map((key, index) => {
+                      return(
+                        <InlineInput 
+                          key={index}
+                          name={key[1]} 
+                          type={'number'}
+                          setValue={(value) => changeParameters(key[0], value)}
+                          value={
+                            algorithmParameters[key[0]] 
+                            ? algorithmParameters[key[0]] 
+                            : 0
+                          }
+                        />
+                      )
+                    })
+                  :
+                    undefined
                 }
               </div>
             </div>
@@ -566,14 +574,14 @@ export default function VariablesSelection() {
                   Salvar e Selecionar
                 </button>
               :
-              <button 
-                onClick={() => {
-                  setSelected("show progress");
-                }}
-                className={styles.button}
-              >
-                Mostrar progresso
-              </button>
+                <button 
+                  onClick={() => {
+                    setSelected("show progress");
+                  }}
+                  className={styles.button}
+                >
+                  Mostrar progresso
+                </button>
               
             )
           }

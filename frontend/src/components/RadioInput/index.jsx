@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext } from 'react';
 import styles from './styles.module.css';
 
-export function RadionInput({ name, options, setOption, firstOption }) {
+export function RadionInput({ name, options, setOption, firstOption, disabledInputs }) {
 
   // Estado para controlar a opção selecionada
   const [selectedOption, setSelectedOption] = useState(firstOption);
@@ -36,6 +36,13 @@ export function RadionInput({ name, options, setOption, firstOption }) {
                   value={option}
                   checked={selectedOption === option}
                   onChange={handleOptionChange}
+                  disabled={
+                    disabledInputs
+                    ?
+                      disabledInputs.includes(index)
+                    :
+                      false
+                  }
                 />
                 {option}
               </label>

@@ -28,6 +28,7 @@ export const algorithms = [
   "KNN",
   "Support Vector Machines (SVM)",
 ];
+const disabledInputs = [1, 2, 3];
 
 export const algorithmsDescriptions = [
   "O algoritmo Random Forest é um método de aprendizado de máquina que combina múltiplas árvores de decisão para tomar decisões mais precisas e estáveis. Ele funciona criando um conjunto de árvores de decisão, cada uma treinada em uma amostra aleatória dos dados e usando diferentes conjuntos de recursos. Ao fazer previsões, as árvores votam em conjunto, e a classe ou valor com mais votos é escolhido como a previsão final. Isso reduz a tendência de overfitting e melhora a robustez do modelo.",
@@ -206,6 +207,7 @@ export default function Training() {
               options={algorithms}
               setOption={setChoosenAlgorithm}
               firstOption={choosenAlgorithm}
+              disabledInputs={disabledInputs}
             />
             {
             /*

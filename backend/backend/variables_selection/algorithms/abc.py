@@ -13,12 +13,15 @@ class ABCAlgorithm():
             bees,
             maximum_iterations,
             limit_not_improvement,
-            info_gain_quantity
+            info_gain_quantity,
+            interation_function
         ):
         self.n_bees = bees
         self.n_iterations = maximum_iterations
         self.limit_not_improvement = limit_not_improvement
         self.info_gain_quantity = info_gain_quantity
+
+        self.interation_function = interation_function
 
         self.not_improvement_count = 0
         self.iteration = 0
@@ -103,6 +106,10 @@ class ABCAlgorithm():
         
         self.iteration = 0
         while self.iteration < self.n_iterations:
+
+            # Função de interação
+            self.interation_function(self.iteration, self.n_iterations)
+
             self.iteration += 1
             for i in range(self.n_bees):
 

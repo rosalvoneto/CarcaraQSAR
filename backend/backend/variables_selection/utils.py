@@ -12,6 +12,7 @@ def get_variables_settings(project):
       'algorithm': variables_selection.algorithm,
       'algorithmParameters': variables_selection.algorithm_parameters,
       'rowsToRemove': variables_selection.rows_to_remove,
+      'algorithmProgress': variables_selection.algorithm_progress
     }
 
   except VariablesSelection.DoesNotExist:
@@ -22,6 +23,7 @@ def get_variables_settings(project):
       algorithm_parameters={},
       rows_to_remove=[],
       project=project,
+      algorithm_progress=None,
     )
 
     return {
@@ -30,6 +32,7 @@ def get_variables_settings(project):
       'algorithm': variables_selection.algorithm,
       'algorithmParameters': variables_selection.algorithm_parameters,
       'rowsToRemove': variables_selection.rows_to_remove,
+      'algorithmProgress': variables_selection.algorithm_progress
     }
 
 def is_convertible_to_int_list(string):

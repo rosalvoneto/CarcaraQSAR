@@ -134,7 +134,8 @@ class GAAlgorithm:
     limit_not_improvement: int,
     population: List[BitArray],
     model,
-    dataframe: pd.DataFrame
+    dataframe: pd.DataFrame,
+    interation_function
   ):
 
     self.probability_crossover = probability_crossover
@@ -149,6 +150,7 @@ class GAAlgorithm:
     self.population = population
     self.model = model
     self.dataframe = dataframe
+    self.interation_function = interation_function
 
     self.last_aptidao = []
     self.improvement = False
@@ -313,6 +315,9 @@ class GAAlgorithm:
       self.generations <= self.limit_generations and
       self.not_improvement_count <= self.limit_not_improvement
     ):
+      # Função de interação
+      self.interation_function(self.generations, self.limit_generations)
+
       self.generateNewGeneration()
       self.evaluate()
 
@@ -320,9 +325,6 @@ class GAAlgorithm:
     maximum_aptidao_index = self.aptidao.index(maximum_aptidao_value)
 
     solution = self.population[maximum_aptidao_index]
-
-    print(f"Melhor subconjunto de variáveis: {solution}")
-    print(f"Melhor valor de R²: {maximum_aptidao_value}")
 
     return solution, maximum_aptidao_value
 

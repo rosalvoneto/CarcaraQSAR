@@ -15,7 +15,8 @@ class Graph:
         self, 
         dataframe, 
         r2_condition, 
-        limit_not_improvement
+        limit_not_improvement,
+        interation_function
     ):
         self.dataframe = dataframe
         self.graph = {}
@@ -23,6 +24,8 @@ class Graph:
 
         self.r2_condition = r2_condition
         self.limit_not_improvement = limit_not_improvement
+
+        self.interation_function = interation_function
 
     def add_node(self, node):
         self.graph[tuple(node)] = []
@@ -87,6 +90,11 @@ class Graph:
                 print(f"Sem melhoria nas {self.limit_not_improvement} últimas interações. Parando a busca.")
                 break
             
+            # Função da interação
+            self.interation_function(
+                self.not_improvement_count,
+                self.limit_not_improvement
+            )
             
             childrens = self.generate_children(current_node)
             bests_R2 = []
@@ -106,11 +114,6 @@ class Graph:
 
             for index in bests_indexes:
 
-                print(f"length child {index}: {len(childrens[index])}")
-                for i, value in enumerate(childrens[index]):
-                    if(value == 1):
-                        print(i)
-
                 if (
                     tuple(childrens[index]) not in visited 
                     and bests_R2[index] >= current_R2
@@ -119,7 +122,7 @@ class Graph:
                        (self.calculate_R2(childrens[index], full_variables), childrens[index])
                     )
             
-            print(f"Quantidade da barreira: {len(frontier)}")
+            print(f"Quantidade na barreira: {len(frontier)}")
         return best_node, best_R2
 
     def generate_children(self, node):
@@ -179,6 +182,9 @@ class Graph:
             print(f"Testando variável {i}:{variable}")
             metric = self.evaluate_model([variable])
             metric_values.append(metric)
+
+            # Função da interação
+            self.interation_function(i + 1, len(variables))
         
         best_R2 = max(metric_values)
         maximum_index = metric_values.index(best_R2)

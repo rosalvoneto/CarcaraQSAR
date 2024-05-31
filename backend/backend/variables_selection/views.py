@@ -241,7 +241,12 @@ def make_selection(project_id):
   database = project.get_database()
   variables_selection = project.variablesselection_set.get()
 
-  variables_selection.set_algorithm_progress(1, 3)
+  def update_selection_progress(actual, maximum):
+    nonlocal variables_selection
+    variables_selection.set_algorithm_progress(
+      actual,
+      maximum
+    )
 
   try:
     if(database):
@@ -262,6 +267,7 @@ def make_selection(project_id):
           StringIO(file_content), 
           sep=database.file_separator
         )
+        print(base)
 
         # Cria um modelo
         model = RandomForestRegressor(
@@ -277,9 +283,13 @@ def make_selection(project_id):
             bees=parameters["bees"],
             maximum_iterations=parameters["maximum_iterations"],
             limit_not_improvement=parameters["limit_not_improvement"],
-            info_gain_quantity=parameters["info_gain_quantity"]
+            info_gain_quantity=parameters["info_gain_quantity"],
+            interation_function=update_selection_progress
           )
-          best_subset, best_r2 = abc.execution(base, model)
+          best_subset, best_r2 = abc.execution(
+            base, 
+            model
+          )
           print("Melhor R2:", best_r2)
 
           abc.generate_new_database(
@@ -288,7 +298,7 @@ def make_selection(project_id):
             best_subset
           )
 
-        elif(algorithm == "ALgoritmo genético"):
+        elif(algorithm == "Algoritmo genético"):
           problem = Problem(base)
           population = problem.generateBestPopulation(
             quantity=parameters['population_quantity'],
@@ -305,7 +315,8 @@ def make_selection(project_id):
             limit_not_improvement=parameters['limit_not_improvement'],
             population=population,
             model=model,
-            dataframe=base
+            dataframe=base,
+            interation_function=update_selection_progress
           )
 
           best_subset, best_R2 = ga.execution()
@@ -316,15 +327,15 @@ def make_selection(project_id):
             base,
             best_subset
           )
-        variables_selection.set_algorithm_progress(1, 3)
 
         # Leitura da base comprimida
-        base_compressed = pd.read_csv('base_compressed.csv')  
+        base_compressed = pd.read_csv("base_compressed.csv")
 
         graph = Graph(
           dataframe=base_compressed,
           r2_condition=parameters['r2_condition_BFS'],
-          limit_not_improvement=parameters['limit_not_improvement_BFS']
+          limit_not_improvement=parameters['limit_not_improvement_BFS'],
+          interation_function=update_selection_progress
         )
 
         # Busca pela melhor variável
@@ -332,14 +343,10 @@ def make_selection(project_id):
         best_variable, best_R2 = graph.evaluate_best_variable()
         print("Melhor R2:", best_R2)
 
-        variables_selection.set_algorithm_progress(2, 3)
-        
         # Busca gulosa
         print('BUSCA GULOSA')
         best_node, best_R2 = graph.execution(best_variable)
         print("Melhor R2:", best_R2)
-
-        variables_selection.set_algorithm_progress(3, 3)
 
         # Ler CSV do melhor conjunto de variáveis
         dataframe = pd.read_csv("base_best.csv")
@@ -354,8 +361,12 @@ def make_selection(project_id):
         # Deletar os arquivos temporários
         os.remove("base_compressed.csv")
         os.remove("best_variable.csv")
-        os.remove("Valores_R2.csv")
+        os.remove("Valores R2.csv")
         os.remove("base_best.csv")
+
+        # Zerar o progresso
+        variables_selection.selection_progress = None
+        variables_selection.save()
 
         return {
           'message': 'Seleção de variáveis aplicada!',
@@ -390,7 +401,7 @@ def makeSelection_view(request):
   return Response(resposta, status=200)
 
   """
-  
+
   response = make_selection(project_id)
   return Response(response, status=200)
 
