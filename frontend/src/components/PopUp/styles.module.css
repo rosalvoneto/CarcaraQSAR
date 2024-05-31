@@ -37,11 +37,22 @@
 
 }
 
+.buttonsContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
 .popupButton {
   margin-top: 10px;
+  width: fit-content;
+  border-radius: 5px;
+  padding: 15px;
+}
 
+.closeButton {
+  /* position: absolute; */
+  margin-top: 10px;
+  border-radius: 5px;
   width: fit-content;
   padding: 15px;
-
-  border-radius: 5px;
 }

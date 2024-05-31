@@ -17,7 +17,8 @@ import {
   removeDatabaseRows,
   removeDatabaseConstantVariables, 
   removeDatabaseVariables,
-  makeSelection
+  makeSelection,
+  getSelectionProgress
 } 
 from '../../api/variablesSelection';
 import { downloadDatabase, getDatabases } from '../../api/database';
@@ -99,11 +100,12 @@ export default function VariablesSelection() {
 
   const [rowsToRemove, setRowsToRemove] = useState("");
 
-  const [selecting, setSelecting] = useState(false);
   const [selected, setSelected] = useState("false");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const [databases, setDatabases] = useState([]);
+
+  const [progressValue, setProgressValue] = useState(0);
+  const [maximumValue, setMaximumValue] = useState(100);
 
   const navigate = useNavigate();
 
@@ -187,16 +189,13 @@ export default function VariablesSelection() {
       authTokens.access
     );
 
-    setSelecting(true);
+    setSelected("first time");
     const response = await makeSelection(projectID, authTokens.access);
-    
+
     if(response.error) {
-      setSelecting(false);
       setSelected("error");
-      setErrorMessage(response.error);
     } else {
-      setSelecting(false);
-      setSelected("true");
+      setSelected("finished");
     }
   }
 
@@ -252,6 +251,25 @@ export default function VariablesSelection() {
     }
   };
 
+  const getProgress = async() => {
+    console.log("Dentro de getProgress()");
+
+    const response = await getSelectionProgress(projectID, authTokens.access);
+    if(response.progress) {
+      console.log(response.progress);
+      const split = response.progress.split('/');
+      setProgressValue(Number(split[0]));
+      setMaximumValue(Number(split[1]));
+    }
+  }
+
+  useEffect(() => {
+    // A função será executada a cada quantidade de segundos
+    const interval = setInterval(getProgress, 5000);
+    // Função de limpeza para interromper o intervalo quando 
+    // o componente for desmontado
+    return () => clearInterval(interval);
+  }, [selected]);
 
   useEffect(() => {
     getVariablesSettings(projectID, authTokens.access)
@@ -443,59 +461,121 @@ export default function VariablesSelection() {
               <p className={styles.information}>
                 { algorithmsDescriptions[algorithmIndex] }
               </p>
+              {
+                /* 
+                <ProgressBarLoading 
+                  progress={0}
+                  maximum={100}
+                /> 
+                */
+              }
             </div>
           </div>
 
-          <PopUp show={selecting}
-            title={"Selecionando..."}
-          >
-            <Loading size={45} />
-            <div className={styles.progressContainer}>
-              <ProgressBarLoading 
-                progress={0}
-                maximum={100}
-              />
-              <p>
-                {(0 / 100 * 100).toFixed(0)}%
-              </p>
-            </div>
-          </PopUp>
+          {
+            selected == "first time" &&
+            <PopUp 
+              show={true}
+              title={"Seleção em andamento..."}
+              description={
+                `A seleção com o algoritmo ${choosenAlgorithm} está sendo executada!`
+              }
 
-          <PopUp show={selected == "true"}
-            title={"Seleção finalizada"}
-            description={
-              `A seleção com o algoritmo ${choosenAlgorithm} está sendo executada em segundo plano!`
-            }
-            showButton
-            buttonName={"Ok"}
-            action={() => {
-              setSelected("false");
-              setSelecting(false);
-            }}
-          />
+              showButton
+              buttonName={"Ok"}
+              action={() => {
+                setSelected("show progress");
+              }}
+            />
+          }
+          
+          {
+            selected == "show progress" &&
+            <PopUp 
+              show={true}
+              title={"Selecionando..."}
 
-          <PopUp show={selected == "error"}
-            title={"Erro"}
-            description={
-              `Um erro interno do servidor não permitiu concluir a seleção.\n
-              ${errorMessage}.`
-            }
-            showButton
-            buttonName={"Ok"}
-            action={() => {
-              setSelecting(false);
-              setSelected("false");
-            }}
-          />
+              showButton
+              buttonName={"Fechar"}
+              action={() => {
+                setSelected("hide progress")
+              }}
+            >
+              <Loading size={45} />
+              <div className={styles.progressContainer}>
+                <ProgressBarLoading 
+                  progress={progressValue}
+                  maximum={maximumValue}
+                />
+                <p>
+                  {(progressValue / maximumValue * 100).toFixed(0)}%
+                </p>
+              </div>
+            </PopUp>
+          }
+
+          {
+            selected == "error" &&
+            <PopUp 
+              show={true}
+              title={"Erro"}
+              description={
+                `Um erro interno do servidor não permitiu concluir a seleção.`
+              }
+
+              showButton
+              buttonName={"Fechar"}
+              action={() => {
+                setSelected("false");
+              }}
+            />
+          }
+
+          {
+            selected == "finished" &&
+            <PopUp 
+              show={true}
+              title={"Seleção finalizada"}
+              description={
+                `Seleção finalizada.`
+              }
+
+              showButton
+              buttonName={"Ok"}
+              action={() => {
+                navigate(
+                  '/variables-selection',
+                  { 
+                    state: { pageNumber: 3 }
+                  }
+                );
+              }}
+            />
+          }
+
 
           {
             algorithmIndex != 0 &&
-            <button 
-              onClick={handleToMakeSelection}
-              className={styles.button}
-            >
-              Salvar e Selecionar
-            </button>
+            (
+              selected == "false"
+              ?
+                <button 
+                  onClick={handleToMakeSelection}
+                  className={styles.button}
+                >
+                  Salvar e Selecionar
+                </button>
+              :
+              <button 
+                onClick={() => {
+                  setSelected("show progress");
+                }}
+                className={styles.button}
+              >
+                Mostrar progresso
+              </button>
+              
+            )
           }
 
         </div>

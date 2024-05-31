@@ -21,10 +21,12 @@ from variables_selection.utils import get_variables_settings, is_convertible_to_
 from variables_selection.algorithms.abc import ABCAlgorithm
 from variables_selection.algorithms.ga import GAAlgorithm, Problem
 from variables_selection.algorithms.BFS import Graph
+from variables_selection.tasks import tarefa_com_delay, callback_sucesso, callback_falha
 
 from celery import shared_task
 from celery.signals import task_success, task_failure
-from variables_selection.tasks import tarefa_com_delay, callback_sucesso, callback_falha
+
+from backend.celery import app
 
 
 # Create your views here.
@@ -227,8 +229,20 @@ def removeVariables_view(request):
     'message': 'Database principal não encontrado!',
   }, status=200)
 
-@shared_task
-def makeSelection(project, database):
+@app.task
+def execute_after_make_selection(response):
+  print("Tarefa finalizada!")
+  print(response)
+
+@app.task
+def make_selection(project_id):
+
+  project = get_object_or_404(Project, id=project_id)
+  database = project.get_database()
+  variables_selection = project.variablesselection_set.get()
+
+  variables_selection.set_algorithm_progress(1, 3)
+
   try:
     if(database):
       if(database.file):
@@ -257,7 +271,7 @@ def makeSelection(project, database):
         )
 
         # Faz a seleção de variáveis
-        print("SELEÇÃO COM ALGORITMO")
+        print("SELEÇÃO COM O ALGORITMO")
         if(algorithm == "Colônia de abelhas"):
           abc = ABCAlgorithm(
             bees=parameters["bees"],
@@ -302,9 +316,10 @@ def makeSelection(project, database):
             base,
             best_subset
           )
+        variables_selection.set_algorithm_progress(1, 3)
 
         # Leitura da base comprimida
-        base_compressed = pd.read_csv('base_compressed.csv')      
+        base_compressed = pd.read_csv('base_compressed.csv')  
 
         graph = Graph(
           dataframe=base_compressed,
@@ -316,11 +331,15 @@ def makeSelection(project, database):
         print("BUSCA PELA MELHOR VARIÁVEL")
         best_variable, best_R2 = graph.evaluate_best_variable()
         print("Melhor R2:", best_R2)
+
+        variables_selection.set_algorithm_progress(2, 3)
         
         # Busca gulosa
         print('BUSCA GULOSA')
         best_node, best_R2 = graph.execution(best_variable)
         print("Melhor R2:", best_R2)
+
+        variables_selection.set_algorithm_progress(3, 3)
 
         # Ler CSV do melhor conjunto de variáveis
         dataframe = pd.read_csv("base_best.csv")
@@ -338,22 +357,22 @@ def makeSelection(project, database):
         os.remove("Valores_R2.csv")
         os.remove("base_best.csv")
 
-        return Response({
+        return {
           'message': 'Seleção de variáveis aplicada!',
-        }, status=200)
+        }
     
   except Exception as error:
     print("A seleção retornou o seguinte erro:")
     print(error, "\n")
 
-    return Response({
+    return {
       'message': 'Erro na seleção',
       'error': str(error),
-    }, status=200)
+    }
 
-  return Response({
+  return {
     'message': 'Database principal não encontrado!',
-  }, status=200)
+  }
 
 
 @api_view(['PUT'])
@@ -361,14 +380,30 @@ def makeSelection(project, database):
 def makeSelection_view(request):
 
   project_id = request.POST.get('project_id')
-  project = get_object_or_404(Project, id=project_id)
-  database = project.get_database()
 
-  resultado = tarefa_com_delay.apply_async(
-    args=[10], 
-    link=callback_sucesso.s()
+  """
+  resultado = make_selection.apply_async(
+    args=[project_id], 
+    link=execute_after_make_selection.s()
   )
-  print(resultado)
-
   resposta = {"message": "Tarefa iniciada com sucesso."}
   return Response(resposta, status=200)
+
+  """
+  
+  response = make_selection(project_id)
+  return Response(response, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getSelectionProgress_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  variables_selection = project.variablesselection_set.get()
+
+  algorithm_progress = variables_selection.algorithm_progress
+
+  return Response({
+    'progress': algorithm_progress,
+  }, status=200)

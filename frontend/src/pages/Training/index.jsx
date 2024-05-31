@@ -71,7 +71,6 @@ export default function Training() {
   const [trained, setTrained] = useState("false");
   const [loading, setLoadingTraining] = useState(false);
 
-  const [trainingProgress, setTrainingProgress] = useState("0/100");
   const [progressValue, setProgressValue] = useState(0);
   const [maximumValue, setMaximumValue] = useState(100);
 
@@ -144,7 +143,6 @@ export default function Training() {
     if(loading) {
       const response = await getTrainingProgress(projectID, authTokens.access);
       if(response.progress) {
-        setTrainingProgress(response.progress);
         const split = response.progress.split('/');
         setProgressValue(Number(split[0]));
         setMaximumValue(Number(split[1]));
@@ -171,7 +169,7 @@ export default function Training() {
   }, []);
 
   useEffect(() => {
-    // A função será executada a cada 5 segundos (5000 milissegundos)
+    // A função será executada a cada quantidade de segundos
     const interval = setInterval(getProgress, 1000);
     // Função de limpeza para interromper o intervalo quando 
     // o componente for desmontado

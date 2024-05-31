@@ -9,17 +9,22 @@ class VariablesSelection(models.Model):
 
   algorithm = models.CharField(max_length=200)
   algorithm_parameters = models.JSONField(default=dict)
+  algorithm_progress = models.CharField(
+    max_length=10,
+    null=True,
+    blank=True,
+    default=None
+  )
 
   rows_to_remove = models.JSONField(default=list)
 
-  # 0: Database original
-  # 1: Database com remoção de variáveis
-  # 2: Database com aplicação do algoritmo
-  # 3: Database com remoção de linhas (final)
-  modification_level = models.IntegerField(default=0)
 
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+  def set_algorithm_progress(self, actual, total):
+    self.algorithm_progress = f"{actual}/{total}"
+    self.save()
 
   def update(
       self, 

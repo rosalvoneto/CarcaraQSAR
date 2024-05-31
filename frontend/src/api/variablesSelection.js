@@ -45,9 +45,6 @@ export const getVariablesSettings = async (
   projectID, accessToken
 ) => {
 
-  const formData = new FormData();
-  formData.append('project_id', projectID);
-
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/get_settings?project_id=${projectID}`, {
       method: 'GET',
@@ -58,9 +55,7 @@ export const getVariablesSettings = async (
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
     console.log(dataResponse);
-    
   } else {
     console.log(`Status: ${response.status}`);
   }
@@ -169,6 +164,28 @@ export const makeSelection = async(
         'Authorization': 'Bearer ' + String(accessToken)
       },
       body: formData,
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+    console.log(dataResponse);
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse
+}
+
+// Resgatar o progresso na seleção de variáveis através do algoritmo
+export const getSelectionProgress = async(
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/get_selection_progress?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
   })
 
   let dataResponse = await response.json();
