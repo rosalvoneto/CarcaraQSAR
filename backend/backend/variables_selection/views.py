@@ -98,11 +98,16 @@ def removeRows_view(request):
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
 
+  database = project.get_database()
+
   variables_selection = project.variablesselection_set.get()
   rows_to_remove = variables_selection.rows_to_remove
 
-  database = project.get_database()
-
+  if(len(rows_to_remove) == 0):
+    return Response({
+      'message': 'Usuário não quis remover linhas do Database!',
+    }, status=200)
+  
   if(database):
     if(database.file):
 

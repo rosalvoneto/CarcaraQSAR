@@ -476,3 +476,20 @@ def downloadDatabase_view(request):
     response = HttpResponse(file.read(), content_type='application/force-download')
     response['Content-Disposition'] = f'attachment; filename="{databases[index].name}"'
     return response
+  
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def deleteDatabase_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  
+  index = request.GET.get('database_index')
+  index = int(index)
+
+  databases = project.get_databases()
+  databases[index].delete()
+
+  return Response({
+    'message': 'Database específico apagado com sucesso!'
+  }, status=200)

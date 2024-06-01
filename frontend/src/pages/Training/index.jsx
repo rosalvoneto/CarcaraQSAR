@@ -70,7 +70,6 @@ export default function Training() {
   const [withFullSet, setWithFullSet] = useState(false);
   
   const [trained, setTrained] = useState("false");
-  const [loading, setLoadingTraining] = useState(false);
 
   const [progressValue, setProgressValue] = useState(0);
   const [maximumValue, setMaximumValue] = useState(100);
@@ -119,16 +118,14 @@ export default function Training() {
       withFullSet,
       authTokens.access
     );
-
-    setLoadingTraining(true);
+    
+    setTrained("first time");
     if(response) {
       const response = await train(projectID, authTokens.access);
       if(response.status == 500) {
-        setLoadingTraining(false);
-        setTrained("isError");
+        setTrained("error");
       } else {
-        setLoadingTraining(false);
-        setTrained("true");
+        setTrained("finished");
       }
 
       return true;
@@ -141,7 +138,7 @@ export default function Training() {
   }
 
   const getProgress = async() => {
-    if(loading) {
+    if(trained != "false") {
       const response = await getTrainingProgress(projectID, authTokens.access);
       if(response.progress) {
         const split = response.progress.split('/');
@@ -162,6 +159,15 @@ export default function Training() {
 
       console.log(response.withFullSet);
       setWithFullSet(response.withFullSet);
+
+      if(response.algorithmProgress) {
+        console.log(response.algorithmProgress);
+        const split = response.algorithmProgress.split('/');
+        setProgressValue(Number(split[0]));
+        setMaximumValue(Number(split[1]));
+
+        setTrained("hide progress");
+      }
     })
     .catch(error => {
       console.log(error);
@@ -175,7 +181,7 @@ export default function Training() {
     // Função de limpeza para interromper o intervalo quando 
     // o componente for desmontado
     return () => clearInterval(interval);
-  }, [loading]);
+  }, [trained]);
 
   useEffect(() => {
     const index = algorithms.indexOf(choosenAlgorithm);
@@ -284,50 +290,98 @@ export default function Training() {
                 })
               }
             </div>
-            <button 
-              onClick={saveAndTrain}
-              className={styles.button}
-            >
-              Salvar e Treinar
-            </button>
+            {
+              trained == "false"
+              ?
+                <button 
+                  onClick={saveAndTrain}
+                  className={styles.button}
+                >
+                  Salvar e Treinar
+                </button>
+              :
+                <button 
+                  onClick={() => {
+                    setTrained("show progress");
+                  }}
+                  className={styles.button}
+                >
+                  Mostrar progresso
+                </button>
+            }
           </div>
 
         </div>
 
-        <PopUp show={loading}
-          title={"Treinando..."}
-        >
-          <Loading size={45} />
-          <div className={styles.progressContainer}>
-            <ProgressBarLoading 
-              progress={progressValue}
-              maximum={maximumValue}
-              />
-            <p>
-              {(progressValue / maximumValue * 100).toFixed(0)}%
-            </p>
-          </div>
-        </PopUp>
+        {
+          trained == "first time" &&
+          <PopUp 
+            show={true}
+            title={"Treinamento em andamento..."}
+            description={`O treinamento com o algoritmo ${choosenAlgorithm} está sendo executado!`}
 
-        <PopUp show={trained == "true"}
-          title={"Treinamento finalizado"}
-          description={
-            `O treinamento com o algoritmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
-          }
-          showButton
-          buttonName={"Ver resultados"}
-          action={navigateToResults}
-        />
+            showButton
+            buttonName={"Ok"}
+            action={() => {
+              setTrained("show progress");
+            }}
+          />
+        }
 
-        <PopUp show={trained == "isError"}
-          title={"Problema no treinamento"}
-          description={
-            `O treinamento com o algoritmo ${choosenAlgorithm} não foi possível de ser completado!`
-          }
-          showButton
-          buttonName={"Ok"}
-          action={() => setTrained("false")}
-        />
+        {
+          trained == "show progress" &&
+          <PopUp 
+            show={true}
+            title={"Treinando..."}
+
+            showButton
+            buttonName={"Fechar"}
+            action={() => {
+              setTrained("hide progress");
+            }}
+          >
+            <Loading size={45} />
+            <div className={styles.progressContainer}>
+              <ProgressBarLoading 
+                progress={progressValue}
+                maximum={maximumValue}
+                />
+              <p>
+                {(progressValue / maximumValue * 100).toFixed(0)}%
+              </p>
+            </div>
+          </PopUp>
+        }
+
+        {
+          trained == "error" &&
+          <PopUp 
+            show={true}
+            title={"Problema no treinamento"}
+            description={
+              `Um erro interno do servidor não permitiu concluir o treinamento.`
+            }
+
+            showButton
+            buttonName={"Fechar"}
+            action={() => setTrained("false")}
+          />
+        }
+
+        {
+          trained == "finished" &&
+          <PopUp 
+            show={true}
+            title={"Treinamento finalizado"}
+            description={
+              `O treinamento com o algoritmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
+            }
+
+            showButton
+            buttonName={"Ver resultados"}
+            action={navigateToResults}
+          />
+        }
 
         <Button 
           name={'Voltar'} 
@@ -338,7 +392,7 @@ export default function Training() {
           side={'left'}
         />
         {
-          trained == "true" &&
+          trained == "finished" &&
           <Button 
             name={'Próximo'} 
             URL={'/results'}

@@ -283,3 +283,27 @@ export const downloadDatabase = async (
   }
   return dataResponse;
 }
+
+// Deleta um Database específico
+export const deleteDatabase = async (
+  projectID, index, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/delete_database?project_id=${projectID}&database_index=${index}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}

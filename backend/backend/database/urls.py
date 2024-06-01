@@ -36,5 +36,10 @@ urlpatterns = [
     'download_database',
     views.downloadDatabase_view,
     name='download_database'
+  ),
+  path(
+    'delete_database',
+    views.deleteDatabase_view,
+    name='delete_database'
   )
 ]

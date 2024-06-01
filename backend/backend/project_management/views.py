@@ -24,17 +24,11 @@ def createProject_view(request):
   description = data.get('project_description')
 
   # Crie um projeto
-  project = Project.objects.create(
+  Project.objects.create(
     name=name,
     description = description,
     user=user
   )
-  # # Cria um database 
-  # Database.objects.create(
-  #   name="Database",
-  #   description="Database gerado automaticamente na criação do projeto",
-  #   project=project
-  # )
 
   # Retorne uma resposta, por exemplo, um JSON
   resposta = {

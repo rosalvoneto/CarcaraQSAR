@@ -34,7 +34,8 @@ def getTrainingSettings_view(request):
       'algorithm': training.algorithm.name,
       'parameters': training.algorithm.parameters,
       'trained': training.trained,
-      'withFullSet': training.with_full_set
+      'withFullSet': training.with_full_set,
+      'algorithmProgress': training.progress,
     }, status=200)
 
   except Training.DoesNotExist:
@@ -48,13 +49,15 @@ def getTrainingSettings_view(request):
       project=project,
       trained=False,
       with_full_set=False,
+      progress=None
     )
 
     return Response({
       'algorithm': training.algorithm.name,
       'parameters': training.algorithm.parameters,
       'trained': training.trained,
-      'withFullSet': training.with_full_set
+      'withFullSet': training.with_full_set,
+      'algorithmProgress': training.progress,
     }, status=200)
 
 @api_view(['POST'])
@@ -206,6 +209,8 @@ def train_view(request):
 
         # Atualiza treinamento para concluído
         training.trained = True
+        # Zerar o progresso
+        training.progress = None
         training.save()
 
         return Response({

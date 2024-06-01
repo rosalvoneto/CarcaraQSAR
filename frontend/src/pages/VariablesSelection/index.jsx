@@ -21,9 +21,9 @@ import {
   getSelectionProgress
 } 
 from '../../api/variablesSelection';
-import { downloadDatabase, getDatabases } from '../../api/database';
+import { deleteDatabase, downloadDatabase, getDatabases } from '../../api/database';
 
-import { DownloadSimple } from '@phosphor-icons/react';
+import { DownloadSimple, TrashSimple } from '@phosphor-icons/react';
 
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
@@ -109,6 +109,17 @@ export default function VariablesSelection() {
   const [maximumValue, setMaximumValue] = useState(100);
 
   const navigate = useNavigate();
+
+  const navigateToVariablesSelection = () => {
+    navigate(
+      `/${projectID}/variables-selection`,
+      {
+        state: {
+          pageNumber: 2
+        }
+      }
+    );
+  }
 
   const handleChangeRemoveConstantVariables = (value) => {
     if(value === optionsToRemoveVariables[0]) {
@@ -222,7 +233,7 @@ export default function VariablesSelection() {
   // Fazer download automático do CSV que vem do Backend
   const handleDownload = async (databaseIndex) => {
 
-    let response = await downloadDatabase(
+    const response = await downloadDatabase(
       projectID, 
       databaseIndex,
       authTokens.access
@@ -252,9 +263,21 @@ export default function VariablesSelection() {
     }
   };
 
-  const getProgress = async() => {
-    console.log("Dentro de getProgress()");
+  // Deletar o Database associado do backend
+  const handleDelete = async (databaseIndex) => {
 
+    await deleteDatabase(
+      projectID, 
+      databaseIndex,
+      authTokens.access
+    );
+
+    const response = await getDatabases(projectID, authTokens.access)
+    console.log(response.databases);
+    setDatabases(response.databases);
+  }
+
+  const getProgress = async() => {
     const response = await getSelectionProgress(projectID, authTokens.access);
     if(response.progress) {
       console.log(response.progress);
@@ -550,14 +573,7 @@ export default function VariablesSelection() {
 
               showButton
               buttonName={"Ok"}
-              action={() => {
-                navigate(
-                  '/variables-selection',
-                  { 
-                    state: { pageNumber: 3 }
-                  }
-                );
-              }}
+              action={navigateToVariablesSelection}
             />
           }
 
@@ -675,12 +691,18 @@ export default function VariablesSelection() {
                         <p>{dbInformation.lines} linhas e {dbInformation.columns} colunas</p>
                       </div>
                       <a
-                        className={styles.downloadButton}
                         onClick={() => {
                           handleDownload(index);
                         }}
                       >
                         <DownloadSimple size={30} color='var(--black-color-1)' />
+                      </a>
+                      <a
+                        onClick={() => {
+                          handleDelete(index);
+                        }}
+                      >
+                        <TrashSimple size={27} color='var(--black-color-1)' />
                       </a>
                     </>
                   )

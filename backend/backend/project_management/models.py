@@ -22,7 +22,10 @@ class Project(models.Model):
 
   def get_database(self):
     databases = self.get_databases()
-    return databases[0]
+    if(len(databases)):
+      return databases[0]
+    else:
+      return None
 
   def __str__(self):
     return f"{self.name}: {self.description}"
