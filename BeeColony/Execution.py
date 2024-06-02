@@ -15,6 +15,25 @@ import pandas as pd
 from utils import convert_binary_array_to_variables
 from utils import convert_variables_to_binary_array, get_variables
 
+# Parâmetros
+# Quantidade da população: 5
+# Ganho de informação: 50
+# Probabilidade de crossover: 0.25
+# Probabilidade de mutação: 0.005
+# Limite de gerações: 300
+# Limite sem melhoria: 30
+
+# model:
+# max_features = math.ceil(math.log2(len(variables)))
+# if(max_features == 0):
+#   max_features = 1
+
+# model = RandomForestRegressor(
+#   n_estimators=50,
+#   max_features=max_features
+# )
+
+
 metric_values = []
 X_iterations = []
 counter_iterations = 0

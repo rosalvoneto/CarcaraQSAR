@@ -253,6 +253,9 @@ def make_selection(project_id):
       maximum
     )
 
+  # Índices para remover
+  # indexes = [77, 81, 84, 92, 98]
+
   try:
     if(database):
       if(database.file):
@@ -273,6 +276,48 @@ def make_selection(project_id):
           sep=database.file_separator
         )
         print(base)
+
+        # Parâmetros ABC
+        # model: RandomForestRegressor(n_estimators=100, random_state=42)
+        # Interações: 100
+        # Abelhas: 20
+        # Limite sem melhoria: 100
+        # Ganho de informação: 50
+        # max_mutations = 50
+
+        # Parâmetros GA
+        # Quantidade da população: 5
+        # Ganho de informação: 50
+        # Probabilidade de crossover: 0.25
+        # Probabilidade de mutação: 0.005
+        # Limite de gerações: 300
+        # Limite sem melhoria: 30
+        # model:
+        # max_features = math.ceil(math.log2(len(variables)))
+        # if(max_features == 0):
+        #   max_features = 1
+        # model = RandomForestRegressor(
+        #   n_estimators=50,
+        #   max_features=max_features
+        # )
+
+        # Parâmetros BFS
+        # R2: 0.99
+        # Limite sem melhoria: 5
+        # model:
+        # max_features = int(math.ceil(math.log2(len(variables))))
+        # if(max_features == 0):
+        #     max_features = 1
+        # model = RandomForestRegressor(
+        #     n_estimators=50,
+        #     max_features=max_features
+        # )
+
+
+
+        # Variação dos testes:
+        # 1-Ganho de informação = 30
+        # 2-Ajustar modelos para usar especificações anteriores
 
         # Cria um modelo
         model = RandomForestRegressor(
@@ -298,7 +343,7 @@ def make_selection(project_id):
           print("Melhor R2:", best_r2)
 
           abc.generate_new_database(
-            "base_compressed.csv",
+            "base_best.csv",
             base, 
             best_subset
           )
@@ -315,7 +360,7 @@ def make_selection(project_id):
             probability_mutation=parameters['probability_mutation'],
             use_limit=False,
             limit_inferior=0,
-            limit_superior=1,
+            limit_superior=10,
             limit_generations=parameters['limit_generations'],
             limit_not_improvement=parameters['limit_not_improvement'],
             population=population,
@@ -332,26 +377,34 @@ def make_selection(project_id):
             base,
             best_subset
           )
+        
+        if(algorithm != "Colônia de abelhas"):
 
-        # Leitura da base comprimida
-        base_compressed = pd.read_csv("base_compressed.csv")
+          # Leitura da base comprimida
+          base_compressed = pd.read_csv("base_compressed.csv")
+          
+          # Criar um modelo
+          model = RandomForestRegressor(
+            n_estimators=50,
+            random_state=42,
+            max_features="log2"
+          )
+          graph = Graph(
+            dataframe=base_compressed,
+            r2_condition=parameters['r2_condition_BFS'],
+            limit_not_improvement=parameters['limit_not_improvement_BFS'],
+            interation_function=update_selection_progress
+          )
 
-        graph = Graph(
-          dataframe=base_compressed,
-          r2_condition=parameters['r2_condition_BFS'],
-          limit_not_improvement=parameters['limit_not_improvement_BFS'],
-          interation_function=update_selection_progress
-        )
+          # Busca pela melhor variável
+          print("BUSCA PELA MELHOR VARIÁVEL")
+          best_variable, best_R2 = graph.evaluate_best_variable()
+          print("Melhor R2:", best_R2)
 
-        # Busca pela melhor variável
-        print("BUSCA PELA MELHOR VARIÁVEL")
-        best_variable, best_R2 = graph.evaluate_best_variable()
-        print("Melhor R2:", best_R2)
-
-        # Busca gulosa
-        print('BUSCA GULOSA')
-        best_node, best_R2 = graph.execution(best_variable)
-        print("Melhor R2:", best_R2)
+          # Busca gulosa
+          print('BUSCA GULOSA')
+          best_node, best_R2 = graph.execution(best_variable)
+          print("Melhor R2:", best_R2)
 
         # Ler CSV do melhor conjunto de variáveis
         dataframe = pd.read_csv("base_best.csv")
@@ -364,10 +417,13 @@ def make_selection(project_id):
         )
 
         # Deletar os arquivos temporários
-        os.remove("base_compressed.csv")
-        os.remove("best_variable.csv")
-        os.remove("Valores R2.csv")
-        os.remove("base_best.csv")
+        try:
+          os.remove("base_compressed.csv")
+          os.remove("best_variable.csv")
+          os.remove("Valores R2.csv")
+          os.remove("base_best.csv")
+        except Exception as error:
+          print(error)
 
         # Zerar o progresso
         variables_selection.selection_progress = None

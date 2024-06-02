@@ -11,6 +11,19 @@ from sklearn.discriminant_analysis import StandardScaler
 from sklearn.svm import SVC, SVR
 from sklearn.ensemble import RandomForestRegressor
 
+# Parâmetros:
+# R2: 0.99
+# Limite sem melhoria: 5
+
+# model:
+# max_features = int(math.ceil(math.log2(len(variables))))
+# if(max_features == 0):
+#     max_features = 1
+# model = RandomForestRegressor(
+#     n_estimators=50,
+#     max_features=max_features
+# )
+
 
 def create_model(dataframe, variables):
   

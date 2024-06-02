@@ -9,6 +9,19 @@ from sklearn.svm import SVR
 
 from sklearn.feature_selection import mutual_info_regression
 
+
+
+# Parâmetros
+# model: RandomForestRegressor(n_estimators=100, random_state=42)
+# Interações: 100
+# Abelhas: 20
+# Limite sem melhoria: 100
+# Ganho de informação: 50
+
+# max_mutations = 50
+
+
+
 max_no_improvement = 100
 no_improvement_count = 0
 

@@ -153,11 +153,8 @@ class Graph:
         if(False):
             model = SVR(kernel='rbf', C=1.0, gamma='scale')
         else:
-            max_features = int(math.ceil(math.log2(len(variables))))
-            if(max_features == 0):
-                max_features = 1
             model = RandomForestRegressor(
-                n_estimators=100,
+                n_estimators=50,
                 random_state=42,
                 max_features="log2"
             )
