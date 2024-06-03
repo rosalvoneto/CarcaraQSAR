@@ -28,5 +28,5 @@ dist-ssr
 *.pyc
 *.pot
 __pycache__
-media
-staticfiles
+# media
+# staticfiles
