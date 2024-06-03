@@ -126,17 +126,18 @@ class ABCAlgorithm():
                 
                 # Atualiza se nova posição for melhor
                 if new_fitness > fitness[i]:
-                    self.not_improvement_count = 0
 
                     bees[i] = new_bee
                     fitness[i] = new_fitness
                     
                     # Atualiza melhor global
                     if new_fitness > best_fitness:
+                        self.not_improvement_count = 0
+
                         best_bee = new_bee
                         best_fitness = new_fitness
-                else:
-                    self.not_improvement_count += 1
+                    else:
+                        self.not_improvement_count += 1
             
             if self.not_improvement_count >= self.limit_not_improvement:
                 print(f"Parando na iteração {self.iteration}")

@@ -62,6 +62,7 @@ class Graph:
                 continue
             visited.add(tuple(current_node))
 
+            print(f"Quantidade de variáveis atual: {current_node.count(1)}")
             print(f"Valor R2 = {current_R2} para o nó atual")
 
             # Abre o arquivo em modo de escrita ('w')
@@ -125,15 +126,46 @@ class Graph:
             print(f"Quantidade na barreira: {len(frontier)}")
         return best_node, best_R2
 
+    # def generate_children(self, node):
+    #     children = []
+    #     # Adiciona 1 em uma posição diferente do array para gerar os filhos
+    #     for i in range(len(node)):
+    #         if node[i] == 0:
+    #             child = node[:i] + [1] + node[i+1:]
+    #             children.append(child)
+
+    #     return children
+
+    # def generate_children(self, node):
+    #     children = []
+    #     # Adiciona 1 em duas posições diferentes do array para gerar os filhos
+    #     for i in range(len(node)):
+    #         for j in range(i + 1, len(node)):
+    #             if node[i] == 0 and node[j] == 0:
+    #                 # Cria uma cópia do nó original
+    #                 child = node[:]
+    #                 # Substitui as posições i e j por 1
+    #                 child[i] = 1
+    #                 child[j] = 1
+    #                 children.append(child)
+
+    #     return children
+    
     def generate_children(self, node):
         children = []
-        # Adiciona 1 em uma posição diferente do array para gerar os filhos
-        for i in range(len(node)):
-            if node[i] == 0:
-                child = node[:i] + [1] + node[i+1:]
+        # Adiciona 1 em duas posições adjacentes 
+        # diferentes do array para gerar os filhos
+        for i in range(len(node) - 1):
+            if node[i] == 0 and node[i + 1] == 0:
+                # Cria uma cópia do nó original
+                child = node[:]
+                # Substitui as posições adjacentes i e i+1 por 1
+                child[i] = 1
+                child[i + 1] = 1
                 children.append(child)
 
         return children
+
     
     def evaluate_model(self, variables):
   

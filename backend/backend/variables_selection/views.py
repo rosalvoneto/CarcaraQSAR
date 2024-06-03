@@ -276,9 +276,10 @@ def make_selection(project_id):
           sep=database.file_separator
         )
         print(base)
+        
+        ## Configurações padrões:
 
         # Parâmetros ABC
-        # model: RandomForestRegressor(n_estimators=100, random_state=42)
         # Interações: 100
         # Abelhas: 20
         # Limite sem melhoria: 100
@@ -292,32 +293,179 @@ def make_selection(project_id):
         # Probabilidade de mutação: 0.005
         # Limite de gerações: 300
         # Limite sem melhoria: 30
-        # model:
-        # max_features = math.ceil(math.log2(len(variables)))
-        # if(max_features == 0):
-        #   max_features = 1
-        # model = RandomForestRegressor(
-        #   n_estimators=50,
-        #   max_features=max_features
-        # )
 
         # Parâmetros BFS
         # R2: 0.99
         # Limite sem melhoria: 5
-        # model:
-        # max_features = int(math.ceil(math.log2(len(variables))))
-        # if(max_features == 0):
-        #     max_features = 1
+
+
+
+
+
+
+        ##### Teste 1:
+        # ABC
+        # Sem BFS
+        # Com Drop
+
+        ##### Teste 2:
+        # ABC 
+        # Usando model abaixo
         # model = RandomForestRegressor(
-        #     n_estimators=50,
-        #     max_features=max_features
+        #   n_estimators=100,
+        #   random_state=42,
         # )
+        # Sem BFS
+        # Com Drop
+
+        ##### Teste 3:
+        # ABC
+        # Usando model abaixo
+        # model = RandomForestRegressor(
+        #   n_estimators=100,
+        #   random_state=42,
+        # )
+        # Com BFS
+        # Com Drop
+
+        ### Sem BFS no ABC está melhor
+        ### Mudança de model não trouxe mudança significativa
 
 
 
-        # Variação dos testes:
-        # 1-Ganho de informação = 30
-        # 2-Ajustar modelos para usar especificações anteriores
+
+
+        ##### Teste 4:
+        # GA
+        # Interações: 30
+        # model = RandomForestRegressor(
+        #   n_estimators=100,
+        #   random_state=42,
+        # )
+        # Com BFS
+        # Sem Drop
+
+        ##### Teste 5:
+        # GA
+        # Interações: 30
+        # model = RandomForestRegressor(
+        #   n_estimators=100,
+        #   random_state=42,
+        # )
+        # Com BFS
+        # Com Drop
+
+        ### Com Drop foi melhor
+
+
+
+
+        ##### Teste 6:
+        # GA
+        # Interações: 30
+        # Com BFS
+        # Com Drop
+
+
+        
+
+
+        ##### Teste 7:
+        # ABC
+        # Abelhas: 50
+        # Com BFS
+        # Com Drop
+
+        ##### Teste 8:
+        # ABC
+        # Abelhas: 50
+        # Sem BFS
+        # Com Drop
+
+        ##### Teste 9:
+        # Base de dados: o resultado do teste 8
+        # ABC
+        # Abelhas: 50
+        # Sem BFS
+        # Com Drop
+
+
+
+
+
+        ##### Teste 10:
+        # Base de dados: o resultado do teste 8
+        # ABC
+        # Abelhas: 50
+        # Quantidade de árvores: 30
+        # Quantidade de features: 5
+        # Com BFS
+        # Com Drop
+
+
+        ##### Teste 11:
+        # Base de dados: o resultado do teste 8
+        # ABC
+        # Abelhas: 50
+        # Quantidade de árvores: 30
+        # Quantidade de features: 3
+        # Com BFS
+        # Com Drop
+
+        ##### Teste 12:
+        # Base de dados: o resultado do teste 8
+        # ABC
+        # Abelhas: 50
+        # Quantidade de árvores: 30
+        # Quantidade de features: 10
+        # Com BFS
+        # Com Drop
+
+        ##### Teste 13:
+        # Base de dados: o resultado do teste 8
+        # ABC
+        # Abelhas: 50
+        # Quantidade de árvores: 20
+        # Quantidade de features: 5
+        # Com BFS
+        # Com Drop
+
+        ##### Teste 14:
+        # Base de dados: o resultado do teste 8
+        # ABC
+        # Abelhas: 50
+        # Quantidade de árvores: 40
+        # Quantidade de features: 4
+        # Com BFS
+        # Com Drop
+
+        ##### Teste 15:
+        # Base de dados: o resultado do teste 8
+        # ABC
+        # Abelhas: 50
+        # Quantidade de árvores: 35
+        # Quantidade de features: 4
+        # Com BFS
+        # Com Drop
+
+        ##### Teste 16:
+        # ABC
+        # Abelhas: 50
+        # Com BFS
+        # Com Drop
+        # Limite sem melhoria do BFS: 1
+
+        ##### Teste 17:
+        # ABC
+        # Abelhas: 50
+        # Com BFS
+        # Com Drop
+        # Limite sem melhoria do BFS: 1
+
+
+
+        condition = algorithm != "Colônia de abelhas"
+        condition = True
 
         # Cria um modelo
         model = RandomForestRegressor(
@@ -342,8 +490,14 @@ def make_selection(project_id):
           )
           print("Melhor R2:", best_r2)
 
+          file_name = ""
+          if(condition):
+            file_name = "base_compressed.csv"
+          else:
+            file_name = "base_best.csv"
+
           abc.generate_new_database(
-            "base_best.csv",
+            file_name,
             base, 
             best_subset
           )
@@ -378,10 +532,16 @@ def make_selection(project_id):
             best_subset
           )
         
-        if(algorithm != "Colônia de abelhas"):
-
+        if(condition):
           # Leitura da base comprimida
           base_compressed = pd.read_csv("base_compressed.csv")
+
+          # Criar novo Database
+          database.create_database(
+            path="Database_with_only_algorithm_execution.csv",
+            description="Database após somente a execução do algoritmo",
+            dataframe=base_compressed
+          )
           
           # Criar um modelo
           model = RandomForestRegressor(
