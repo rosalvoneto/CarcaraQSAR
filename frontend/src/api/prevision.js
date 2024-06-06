@@ -3,9 +3,11 @@ export const makePrevision = async(
   projectID, variablesValues, accessToken
 ) => {
 
+  const variablesValuesString = JSON.stringify(variablesValues);
+
   const formData = new FormData();
   formData.append('project_id', projectID);
-  formData.append('variables_values', variablesValues);
+  formData.append('variables_values', variablesValuesString);
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/prevision/make_prevision`, {

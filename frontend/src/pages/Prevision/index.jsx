@@ -11,6 +11,7 @@ import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 import { InlineInput } from '../../components/InlineInput';
 import { getVariables } from '../../api/database';
+import { makePrevision } from '../../api/prevision';
 
 export default function Prevision() {
 
@@ -33,8 +34,8 @@ export default function Prevision() {
     console.log(variablesValues);
   }
 
-  const hadleMakePrevision = () => {
-    
+  const hadleMakePrevision = async () => {
+    const response = await makePrevision(projectID, variablesValues, authTokens.access);
   }
 
   useEffect(() => {

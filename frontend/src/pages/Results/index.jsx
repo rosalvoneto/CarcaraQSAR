@@ -165,8 +165,10 @@ export default function Results() {
             />
             <Button 
               name={'Próximo'} 
-              URL={'/home'}
-              useStrictURL={true}
+              URL={'/prevision'}
+              stateToPass={{
+                pageNumber: 0
+              }}
               side={'right'}
             />
           </>

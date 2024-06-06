@@ -4,7 +4,7 @@ export const setTrainingSettings = async (
   projectID, algorithm, parameters, withFullSet, accessToken
 ) => {
 
-  const parametersString = JSON.stringify(parameters)
+  const parametersString = JSON.stringify(parameters);
 
   const formData = new FormData();
   formData.append('project_id', projectID);
