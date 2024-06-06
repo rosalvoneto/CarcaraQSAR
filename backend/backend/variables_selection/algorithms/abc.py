@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from sklearn.feature_selection import mutual_info_regression
@@ -28,10 +29,25 @@ class ABCAlgorithm():
 
     # Função para calcular R²
     def evaluate_subset(self, X, y, subset, model):
+        
         X_subset = X.iloc[:, subset]
-        X_train, X_test, y_train, y_test = train_test_split(X_subset, y, test_size=0.2, random_state=42)
+
+        # Normalizar os dados
+        scaler = MinMaxScaler()
+        X_subset = scaler.fit_transform(X_subset)
+
+        # Dividir o conjunto de dados em treino e teste
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_subset, y, test_size=0.2, random_state=42
+        )
+
+        # Treinar o modelo
         model.fit(X_train, y_train)
+
+        # Fazer as previsões
         y_pred = model.predict(X_test)
+
+        # Avaliar o modelo
         return r2_score(y_test, y_pred)
 
     def create_bee(self, base_bee, n_features, max_mutations):

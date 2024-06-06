@@ -5,6 +5,7 @@ from user.models import User
 from prevision.models import PrevisionModel
 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 
 from joblib import dump, load
@@ -50,9 +51,8 @@ class Project(models.Model):
     y = dataframe.iloc[:, -1]
 
     # Normalizar os dados
-    # (Deve ser utilizado a normalização correta)
     scaler = MinMaxScaler()
-    X = scaler.transform(X)
+    X_subset = scaler.fit_transform(X)
 
     # Criar o modelo
     # (Deve ser utilizado o tipo de modelo correto)
@@ -62,7 +62,7 @@ class Project(models.Model):
     )
 
     # Treinar o modelo
-    model.fit(X, y)
+    model.fit(X_subset, y)
 
     return model
   
@@ -91,13 +91,14 @@ class Project(models.Model):
         with open(file_path, 'rb') as new_file:
           django_file = File(new_file)
 
-        # Vincula modelo ao projeto
-        prevision_model = PrevisionModel.objects.create(
-          model_file=django_file,
-          variables=variables
-        )
+          # Vincula modelo ao projeto
+          prevision_model = PrevisionModel.objects.create(
+            model_file=django_file,
+            variables=variables
+          )
         self.prevision_model = prevision_model
         self.save()
+
 
         # Exclui o modelo da localização temporária
         os.remove(file_path)

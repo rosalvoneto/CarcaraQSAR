@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.core.files import File
 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.model_selection import train_test_split
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -40,22 +41,23 @@ def makePrevision_view(request):
   project = get_object_or_404(Project, id=project_id)
   variables_values = request.POST.get('variables_values')
   variables_values = json.loads(variables_values)
-  print(variables_values)
 
   # Redimensione os dados para uma matriz 2D
-  variables_values_array = np.array(variables_values).reshape(-1, 1)
+  dataframe = pd.DataFrame([variables_values])
+  dataframe_transposto = dataframe.T
 
   # Faz a normalização dos valores das variáveis
   # (Deve ser utilizado a normalização correta)
   scaler = MinMaxScaler()
-  X = scaler.fit_transform(variables_values_array)
+  X_subset = scaler.fit_transform(dataframe_transposto)
+  X_subset = X_subset.T
 
   # Recupera o model do banco de dados
   if(project.prevision_model):
     model = project.prevision_model.retrieve_model()
 
     # Realiza a previsão
-    prevision = model.predict(X)
+    prevision = model.predict(X_subset)
 
     # Retorna valor da previsão
     return Response({

@@ -9,6 +9,11 @@
   border: 0px solid red;
 }
 
+.buttonsContainer {
+  display: flex;
+  gap: 10px;
+}
+
 .button {
   margin-top: 10px;
 

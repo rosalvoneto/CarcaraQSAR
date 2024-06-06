@@ -6,13 +6,12 @@ from random import randint
 from typing import List
 from bitstring import BitArray
 
-from sklearn.discriminant_analysis import StandardScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.feature_selection import mutual_info_regression
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from sklearn.model_selection import train_test_split 
 
 from variables_selection.algorithms.utils.utils import convert_binary_array_to_variables, get_variables
-
 
 
 class Problem:
@@ -168,7 +167,7 @@ class GAAlgorithm:
     y = dataframe.iloc[:, -1]
 
     # Normalizar os dados
-    scaler = StandardScaler()
+    scaler = MinMaxScaler()
     X = scaler.fit_transform(X)
 
     # Dividir o conjunto de dados em treino e teste

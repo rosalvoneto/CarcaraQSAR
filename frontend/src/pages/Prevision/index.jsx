@@ -11,7 +11,7 @@ import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 import { InlineInput } from '../../components/InlineInput';
 import { getVariables } from '../../api/database';
-import { makePrevision } from '../../api/prevision';
+import { makePrevision, createModel } from '../../api/prevision';
 
 export default function Prevision() {
 
@@ -30,12 +30,18 @@ export default function Prevision() {
     let array = variablesValues;
     array[index] = value;
     setVariablesValues(array);
-
-    console.log(variablesValues);
   }
 
-  const hadleMakePrevision = async () => {
-    const response = await makePrevision(projectID, variablesValues, authTokens.access);
+  const hadleToMakePrevision = async () => {
+    const response = await makePrevision(
+      projectID, variablesValues, authTokens.access
+    );
+  }
+
+  const hadleToCreateModel = async () => {
+    const response = await createModel(
+      projectID, authTokens.access
+    );
   }
 
   useEffect(() => {
@@ -74,12 +80,20 @@ export default function Prevision() {
           })
         }
       </div>
-      <button 
-        onClick={hadleMakePrevision}
-        className={styles.button}
-      >
-        Fazer previsão
-      </button>
+      <div className={styles.buttonsContainer}>
+        <button 
+          onClick={hadleToCreateModel}
+          className={styles.button}
+        >
+          Criar modelo
+        </button>
+        <button 
+          onClick={hadleToMakePrevision}
+          className={styles.button}
+        >
+          Fazer previsão
+        </button>
+      </div>
 
       <Button 
         name={'Voltar'} 
