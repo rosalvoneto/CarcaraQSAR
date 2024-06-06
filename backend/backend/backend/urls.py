@@ -9,4 +9,5 @@ urlpatterns = [
     path('database/', include('database.urls')),
     path('training/', include('training.urls')),
     path('variables-selection/', include('variables_selection.urls')),
+    path('prevision/', include('prevision.urls')),
 ]

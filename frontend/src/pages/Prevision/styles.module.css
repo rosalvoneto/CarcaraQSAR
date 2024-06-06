@@ -1,0 +1,19 @@
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+
+
+  overflow: auto;
+  border: 0px solid red;
+}
+
+.button {
+  margin-top: 10px;
+
+  width: fit-content;
+  padding: 15px;
+
+  border-radius: 5px;
+}

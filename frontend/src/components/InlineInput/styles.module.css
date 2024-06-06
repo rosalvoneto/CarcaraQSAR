@@ -3,8 +3,12 @@
   display: flex;
   align-items: center;
 
+  
   gap: 5px;
   padding: 5px 0;
+
+  margin-right: auto;
+  /* margin-left: auto; */
 }
 
 .input {
@@ -12,9 +16,14 @@
   width: 75px;
   height: 25px;
 
+  border: 0;
+  outline: 0;
+
   border-radius: 5px;
 
   background-color: var(--white-color-2);
 
   text-align: center;
+
+  padding: 3px;
 }

@@ -14,11 +14,9 @@ import Results from "../pages/Results";
 import Outliers from "../pages/Outliers";
 import { TrashPage } from "../pages/TrashPage";
 import { SharedPage } from "../pages/SharedPage";
+import Prevision from "../pages/Prevision";
 
-import AuthContext from "../context/AuthContext";
 import { Redirect } from "./Redirect";
-
-import Cookies from "js-cookie";
 
 export const Routes = () => {
 
@@ -99,6 +97,13 @@ export const Routes = () => {
             element={
               <DefaultPage>
                 <Results />
+              </DefaultPage>
+            } 
+          />
+          <Route path="/:projectID/prevision" 
+            element={
+              <DefaultPage>
+                <Prevision />
               </DefaultPage>
             } 
           />

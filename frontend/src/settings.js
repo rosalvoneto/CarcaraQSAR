@@ -133,13 +133,13 @@ export const statesProgressBar = [
     href: '/results',
     stateToPass: { pageNumber: 0 },
   },
-  // {
-  //   index: 5,
-  //   name: "Outliers",
-  //   childs: [],
-  //   href: '/outliers',
-  //   stateToPass: {},
-  // },
+  {
+    index: 5,
+    name: "Previsão",
+    childs: [],
+    href: '/prevision',
+    stateToPass: {},
+  },
 ];
 
 export const variablesNames = [

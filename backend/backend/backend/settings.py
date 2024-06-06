@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'database',
     'training',
     'variables_selection',
+    'prevision',
 
     'django.contrib.admin',
     'django.contrib.auth',
