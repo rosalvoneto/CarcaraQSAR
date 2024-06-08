@@ -11,7 +11,12 @@ import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 import { InlineInput } from '../../components/InlineInput';
 import { getVariables } from '../../api/database';
-import { makePrevision, createModel } from '../../api/prevision';
+import { 
+  makePrevision, 
+  createModel, 
+  getModel, 
+  deleteModel 
+} from '../../api/prevision';
 
 export default function Prevision() {
 
@@ -25,6 +30,8 @@ export default function Prevision() {
 
   const [variablesNames, setVariablesNames] = useState([]);
   const [variablesValues, setVariablesValues] = useState([]);
+
+  const [hasModel, setHasModel] = useState(false);
 
   const changeVariableValue = (index, value) => {
     let array = variablesValues;
@@ -42,7 +49,27 @@ export default function Prevision() {
     const response = await createModel(
       projectID, authTokens.access
     );
+
+    getModel(projectID, authTokens.access)
+    .then(response => {
+      setHasModel(response.hasModel);
+    })
   }
+
+  const hadleToDeleteModel = async () => {
+    const response = await deleteModel(
+      projectID, authTokens.access
+    );
+
+    getModel(projectID, authTokens.access)
+    .then(response => {
+      setHasModel(response.hasModel);
+    })
+  } 
+
+  const hadleToDownloadModel = async () => {
+    
+  } 
 
   useEffect(() => {
     getVariables(projectID, authTokens.access)
@@ -52,6 +79,11 @@ export default function Prevision() {
       let x = response.variables.length;
       let array = new Array(x).fill(0);
       setVariablesValues(array);
+    })
+
+    getModel(projectID, authTokens.access)
+    .then(response => {
+      setHasModel(response.hasModel);
     })
   }, [])
 
@@ -81,18 +113,37 @@ export default function Prevision() {
         }
       </div>
       <div className={styles.buttonsContainer}>
-        <button 
-          onClick={hadleToCreateModel}
-          className={styles.button}
-        >
-          Criar modelo
-        </button>
-        <button 
-          onClick={hadleToMakePrevision}
-          className={styles.button}
-        >
-          Fazer previsão
-        </button>
+        {
+          hasModel
+          ? 
+            <>
+              <button 
+                onClick={hadleToMakePrevision}
+                className={styles.button}
+              >
+                Fazer previsão
+              </button>
+              <button 
+                onClick={hadleToDeleteModel}
+                className={styles.button}
+              >
+                Excluir modelo
+              </button>
+              <button 
+                onClick={hadleToDownloadModel}
+                className={styles.button}
+              >
+                Baixar modelo
+              </button>
+            </>
+          :
+            <button 
+              onClick={hadleToCreateModel}
+              className={styles.button}
+            >
+              Criar modelo
+            </button>
+          }
       </div>
 
       <Button 

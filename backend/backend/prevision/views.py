@@ -66,3 +66,35 @@ def makePrevision_view(request):
   return Response({
     'message': 'Não há modelo de previsão no banco de dados!'
   }, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def hasModel_view(request):
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  if(project.prevision_model):
+    return Response({
+      'hasModel': True,
+      'message': 'O projeto tem um modelo associado'
+    }, status=200)
+  
+  return Response({
+    'hasModel': False,
+    'message': 'O projeto não tem um modelo associado'
+  }, status=200)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteModel_view(request):
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  prevision_model = project.prevision_model
+  prevision_model.delete()
+  project.prevision_model = None
+  project.save()
+
+  return Response({
+    'message': 'Modelo apagado com sucesso!'
+  }, status=200)
