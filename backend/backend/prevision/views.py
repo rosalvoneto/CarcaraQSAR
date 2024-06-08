@@ -6,6 +6,7 @@ from io import StringIO
 
 from django.shortcuts import get_object_or_404
 from django.core.files import File
+from django.http import HttpResponse
 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
@@ -98,3 +99,18 @@ def deleteModel_view(request):
   return Response({
     'message': 'Modelo apagado com sucesso!'
   }, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def donwloadModel_view(request):
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  prevision_model = project.prevision_model
+  model_file = prevision_model.model_file
+
+  # Abra o arquivo e retorne como uma resposta de arquivo
+  with open(f"media/{model_file}", 'rb') as file:
+    response = HttpResponse(file.read(), content_type='application/force-download')
+    response['Content-Disposition'] = f'attachment; filename="{model_file.name}"'
+    return response

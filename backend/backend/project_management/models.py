@@ -94,7 +94,8 @@ class Project(models.Model):
           # Vincula modelo ao projeto
           prevision_model = PrevisionModel.objects.create(
             model_file=django_file,
-            variables=variables
+            variables=variables,
+            project_id=database.project.id
           )
         self.prevision_model = prevision_model
         self.save()

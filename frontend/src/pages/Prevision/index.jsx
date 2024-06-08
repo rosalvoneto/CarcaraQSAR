@@ -15,7 +15,8 @@ import {
   makePrevision, 
   createModel, 
   getModel, 
-  deleteModel 
+  deleteModel, 
+  downloadModel
 } from '../../api/prevision';
 
 export default function Prevision() {
@@ -68,7 +69,26 @@ export default function Prevision() {
   } 
 
   const hadleToDownloadModel = async () => {
-    
+    const response = await downloadModel(
+      projectID, authTokens.access
+    );
+
+    try {
+      // Crie um link temporário e clique nele para iniciar o download
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      console.log(response);
+      let fileName = 'model';
+
+      link.setAttribute('download', `${fileName}.joblib`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error);
+    }
   } 
 
   useEffect(() => {
