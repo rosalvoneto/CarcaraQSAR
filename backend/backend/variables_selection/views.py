@@ -553,7 +553,8 @@ def make_selection(project_id):
             dataframe=base_compressed,
             r2_condition=parameters['r2_condition_BFS'],
             limit_not_improvement=parameters['limit_not_improvement_BFS'],
-            interation_function=update_selection_progress
+            interation_function=update_selection_progress,
+            n_child_positions=parameters['n_child_positions']
           )
 
           # Busca pela melhor variável

@@ -27,9 +27,9 @@ class ABCAlgorithm():
         self.not_improvement_count = 0
         self.iteration = 0
 
-    # Função para calcular R²
-    def evaluate_subset(self, X, y, subset, model):
-        
+    # Avalia variáveis específicas em relação ao dataframe
+    def evaluate_variables(self, X, y, subset, model):
+        # Separar as características (X)
         X_subset = X.iloc[:, subset]
 
         # Normalizar os dados
@@ -44,11 +44,13 @@ class ABCAlgorithm():
         # Treinar o modelo
         model.fit(X_train, y_train)
 
-        # Fazer as previsões
+        # Fazer previsões
         y_pred = model.predict(X_test)
 
-        # Avaliar o modelo
-        return r2_score(y_test, y_pred)
+        # Avaliar o modelo usando o coeficiente R²
+        r2 = r2_score(y_test, y_pred)
+
+        return r2
 
     def create_bee(self, base_bee, n_features, max_mutations):
         """
@@ -102,20 +104,22 @@ class ABCAlgorithm():
 
         return top_indices
 
-    # Algoritmo ABC
+    # Execução do Algoritmo ABC
     def execution(self, df, model):
+
         n_features = df.shape[1] - 1
+
         X = df.iloc[:, :-1]
         y = df.iloc[:, -1]
 
-        base_bee = self.calculateBestIndexes(df, self.info_gain_quantity)
         # Inicializa abelhas
+        base_bee = self.calculateBestIndexes(df, self.info_gain_quantity)
         if(True):
             bees = [self.create_bee(base_bee, n_features, max_mutations=50) for _ in range(self.n_bees)]
         else:
             bees = [random.sample(range(n_features), random.randint(1, n_features)) for _ in range(n_bees)]
 
-        fitness = [self.evaluate_subset(X, y, bee, model) for bee in bees]
+        fitness = [self.evaluate_variables(X, y, bee, model) for bee in bees]
 
         best_bee = bees[np.argmax(fitness)]
         best_fitness = max(fitness)
@@ -137,7 +141,7 @@ class ABCAlgorithm():
                 else:
                     new_bee.append(random.choice(list(set(range(n_features)) - set(new_bee))))
                 
-                new_fitness = self.evaluate_subset(X, y, new_bee, model)
+                new_fitness = self.evaluate_variables(X, y, new_bee, model)
                 print(new_fitness)
                 
                 # Atualiza se nova posição for melhor

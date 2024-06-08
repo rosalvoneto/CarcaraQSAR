@@ -6,7 +6,7 @@ from variables_selection.algorithms.utils.utils import convert_binary_array_to_v
 
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
-from sklearn.discriminant_analysis import StandardScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
 
@@ -16,7 +16,8 @@ class Graph:
         dataframe, 
         r2_condition, 
         limit_not_improvement,
-        interation_function
+        interation_function,
+        n_child_positions
     ):
         self.dataframe = dataframe
         self.graph = {}
@@ -26,6 +27,7 @@ class Graph:
         self.limit_not_improvement = limit_not_improvement
 
         self.interation_function = interation_function
+        self.n_child_positions = n_child_positions
 
     def add_node(self, node):
         self.graph[tuple(node)] = []
@@ -37,7 +39,7 @@ class Graph:
         choosen_variables = convert_binary_array_to_variables(
            binary_array, full_variables
         )
-        return self.evaluate_model(choosen_variables)
+        return self.evaluate_variables(choosen_variables)
 
     def greedy_search(self, start, full_variables):
         visited = set()
@@ -97,7 +99,9 @@ class Graph:
                 self.limit_not_improvement
             )
             
-            childrens = self.generate_children(current_node)
+            childrens = self.generate_children(
+                current_node, self.n_child_positions
+            )
             bests_R2 = []
             for child in childrens:
                 bests_R2.append(self.calculate_R2(child, full_variables))
@@ -151,29 +155,44 @@ class Graph:
 
     #     return children
     
-    def generate_children(self, node):
+    # def generate_children(self, node):
+    #     children = []
+    #     # Adiciona 1 em duas posições adjacentes 
+    #     # diferentes do array para gerar os filhos
+    #     for i in range(len(node) - 1):
+    #         if node[i] == 0 and node[i + 1] == 0:
+    #             # Cria uma cópia do nó original
+    #             child = node[:]
+    #             # Substitui as posições adjacentes i e i+1 por 1
+    #             child[i] = 1
+    #             child[i + 1] = 1
+    #             children.append(child)
+
+    #     return children
+    
+    def generate_children(self, node, n_positions):
         children = []
-        # Adiciona 1 em duas posições adjacentes 
-        # diferentes do array para gerar os filhos
-        for i in range(len(node) - 1):
-            if node[i] == 0 and node[i + 1] == 0:
+        # Adiciona 1 em N posições adjacentes diferentes
+        # do array para gerar os filhos
+        for i in range(len(node) - n_positions + 1):
+            if all(node[i + j] == 0 for j in range(n_positions)):
                 # Cria uma cópia do nó original
                 child = node[:]
-                # Substitui as posições adjacentes i e i+1 por 1
-                child[i] = 1
-                child[i + 1] = 1
+                # Substitui as posições adjacentes por 1
+                for j in range(n_positions):
+                    child[i + j] = 1
                 children.append(child)
-
         return children
 
-    
-    def evaluate_model(self, variables):
-  
+
+    # Avalia variáveis específicas em relação ao dataframe
+    def evaluate_variables(self, variables):
+        # Separar as características (X) e a variável de destino (y)
         X = self.dataframe[variables]
         y = self.dataframe.iloc[:, -1]
 
         # Normalizar os dados
-        scaler = StandardScaler()
+        scaler = MinMaxScaler()
         X = scaler.fit_transform(X)
 
         # Dividir o conjunto de dados em treino e teste
@@ -209,7 +228,7 @@ class Graph:
         metric_values = []
         for i, variable in enumerate(variables):
             print(f"Testando variável {i}:{variable}")
-            metric = self.evaluate_model([variable])
+            metric = self.evaluate_variables([variable])
             metric_values.append(metric)
 
             # Função da interação

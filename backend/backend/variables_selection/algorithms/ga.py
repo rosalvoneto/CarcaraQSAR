@@ -183,13 +183,9 @@ class GAAlgorithm:
 
     # Avaliar o modelo usando o coeficiente R²
     r2 = r2_score(y_test, y_pred)
-    # Avaliar o modelo usando o coeficiente Mean Square Error
-    mse = mean_squared_error(y_test, y_pred)
-    # Avaliar o modelo usando o coeficiente Erro Médio Absoluto (MAE)
-    mae = mean_absolute_error(y_test, y_pred)
 
-    return r2, mse, mae
-
+    return r2
+  
   # Função de avaliação com R2
   def evaluate_function(self, parameters: BitArray):
     
@@ -197,9 +193,7 @@ class GAAlgorithm:
 
     full_variables = get_variables(self.dataframe)
     variables = convert_binary_array_to_variables(binary_array, full_variables)
-    return float(self.evaluate_variables(self.dataframe, variables)[0])
-
-  # ===============================================================================
+    return float(self.evaluate_variables(self.dataframe, variables))
 
   def fitness(self):
     self.aptidao = []

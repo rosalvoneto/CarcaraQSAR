@@ -24,16 +24,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 
 def verify_Nan(df):
-  # # Verificar se o DataFrame possui NaNs
-  # if df.isna().any().any():
-  #   print("O DataFrame possui valores NaN.")
-    
-  #   # Identificar e imprimir as posições dos NaNs
-  #   nan_positions = np.where(df.isna())
-  #   for row, col in zip(*nan_positions):
-  #     print(f'NaN encontrado na linha {row}, coluna {df.columns[col]}')
-  # else:
-  #   print("O DataFrame não possui valores NaN.")
 
   # Verificar se o DataFrame possui NaNs
   if df.isna().any().any():
