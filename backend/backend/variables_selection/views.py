@@ -587,8 +587,8 @@ def make_selection(project_id):
           print(error)
 
         # Zerar o progresso
-        variables_selection.selection_progress = None
-        variables_selection.save()
+        variables_selection.set_progress_none()
+        project.save()
 
         return {
           'message': 'Seleção de variáveis aplicada!',

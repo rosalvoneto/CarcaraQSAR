@@ -318,12 +318,16 @@ export default function VariablesSelection() {
       setRowsToRemove(response.rowsToRemove.toString());
 
       if(response.algorithmProgress) {
+        console.log("====================================");
         console.log(response.algorithmProgress);
+        console.log("====================================");
         const split = response.algorithmProgress.split('/');
         setProgressValue(Number(split[0]));
         setMaximumValue(Number(split[1]));
 
         setSelected("hide progress");
+      } else {
+        setSelected("false");
       }
 
     })
@@ -575,7 +579,10 @@ export default function VariablesSelection() {
 
               showButton
               buttonName={"Ok"}
-              action={navigateToVariablesSelection}
+              action={() => {
+                setSelected("false");
+                navigateToVariablesSelection();
+              }}
             />
           }
 

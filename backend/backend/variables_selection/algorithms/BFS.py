@@ -80,6 +80,8 @@ class Graph:
                 self.not_improvement_count = 0
             else:
                 self.not_improvement_count += 1
+
+            print(f"not_improvement_count: {self.not_improvement_count}")
             
             # Condição de parada: R2
             if current_R2 >= self.r2_condition:
@@ -100,7 +102,7 @@ class Graph:
             )
             
             childrens = self.generate_children(
-                current_node, self.n_child_positions
+                current_node
             )
             bests_R2 = []
             for child in childrens:
@@ -170,7 +172,9 @@ class Graph:
 
     #     return children
     
-    def generate_children(self, node, n_positions):
+    def generate_children(self, node):
+
+        n_positions = self.n_child_positions
         children = []
         # Adiciona 1 em N posições adjacentes diferentes
         # do array para gerar os filhos

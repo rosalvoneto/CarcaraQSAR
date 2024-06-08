@@ -1,4 +1,3 @@
-from email.policy import default
 from django.db import models
 
 from project_management.models import Project
@@ -24,6 +23,10 @@ class VariablesSelection(models.Model):
 
   def set_algorithm_progress(self, actual, total):
     self.algorithm_progress = f"{actual}/{total}"
+    self.save()
+    
+  def set_progress_none(self):
+    self.algorithm_progress = None
     self.save()
 
   def update(

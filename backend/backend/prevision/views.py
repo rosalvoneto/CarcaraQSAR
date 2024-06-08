@@ -43,19 +43,33 @@ def makePrevision_view(request):
   variables_values = request.POST.get('variables_values')
   variables_values = json.loads(variables_values)
 
-  # Redimensione os dados para uma matriz 2D
-  dataframe = pd.DataFrame([variables_values])
-  dataframe_transposto = dataframe.T
+  # # Recupera o Database
+  # database = project.get_database()
+  # # Cria um DataFrame do Pandas com o conteúdo do arquivo
+  # file_content = database.file.read().decode('utf-8')
+  # database_df = pd.read_csv(
+  #   StringIO(file_content), 
+  #   sep=database.file_separator
+  # )
 
-  # Faz a normalização dos valores das variáveis
-  # (Deve ser utilizado a normalização correta)
-  scaler = MinMaxScaler()
-  X_subset = scaler.fit_transform(dataframe_transposto)
-  X_subset = X_subset.T
 
-  # Recupera o model do banco de dados
   if(project.prevision_model):
+
+    # Redimensione os dados para uma matriz 2D
+    dataframe = pd.DataFrame(
+      [variables_values],
+      columns=project.prevision_model.variables
+    )
+    print(dataframe)
+
+    # Recuperar scaler do banco de dados
+    scaler = project.prevision_model.retrieve_scaler()
+    # Recuperar modelo do banco de dados
     model = project.prevision_model.retrieve_model()
+
+    # Faz a normalização dos valores das variáveis
+    X_subset = scaler.transform(dataframe)
+    print(X_subset)
 
     # Realiza a previsão
     prevision = model.predict(X_subset)

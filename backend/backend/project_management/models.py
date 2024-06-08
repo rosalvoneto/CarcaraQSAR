@@ -54,6 +54,25 @@ class Project(models.Model):
     scaler = MinMaxScaler()
     X_subset = scaler.fit_transform(X)
 
+    # Recupera Database
+    database = self.get_database()
+
+    # Salvar o scaler em arquivo
+    file_path = 'scaler.pkl'
+    dump(scaler, file_path)
+
+    # Tranformar o arquivo em um tipo File
+    with open(file_path, 'rb') as new_file:
+      scaler_file = File(new_file)
+
+      # Cria um PrevisionModel
+      self.prevision_model = PrevisionModel.objects.create(
+        project_id=database.project.id
+      )
+      # Vincula scaler ao projeto
+      self.prevision_model.add_scaler(scaler_file)
+      self.save()
+
     # Criar o modelo
     # (Deve ser utilizado o tipo de modelo correto)
     model = RandomForestRegressor(
@@ -84,22 +103,18 @@ class Project(models.Model):
         model = self.create_model(dataframe)
 
         # Salvar o modelo em um arquivo
-        file_path = 'model.joblib'
+        file_path = 'model.pkl'
         dump(model, file_path)
 
         # Tranformar o arquivo em um tipo File
         with open(file_path, 'rb') as new_file:
-          django_file = File(new_file)
+          model_file = File(new_file)
 
           # Vincula modelo ao projeto
-          prevision_model = PrevisionModel.objects.create(
-            model_file=django_file,
-            variables=variables,
-            project_id=database.project.id
-          )
-        self.prevision_model = prevision_model
-        self.save()
-
+          self.prevision_model.add_model(model_file)
+          # Vincula variáveis usadas ao projeto
+          self.prevision_model.add_variables(variables)
+          self.save()
 
         # Exclui o modelo da localização temporária
         os.remove(file_path)
