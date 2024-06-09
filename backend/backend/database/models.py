@@ -47,6 +47,16 @@ class Database(models.Model):
     default=None
   )
 
+  def create_empty_database(self):
+    database = Database.objects.create(
+      name="Database vazio",
+      description="Database gerado automaticamente",
+      file=None,
+      normalization=None,
+      project=None,
+    )
+    return database
+
   def create_database(self, path, description, dataframe):
 
     # Transformar o dataframe em um arquivo

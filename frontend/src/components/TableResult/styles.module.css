@@ -1,12 +1,37 @@
+/*  */
 
-.header {
-
+/* Estilos para a tabela */
+table {
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.item {
-  padding-right: 15px;
+/* Estilos para as células de cabeçalho */
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
 }
 
-.body {
-  
+/* Estilos para as células de dados */
+td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+
+  /* Adiciona quebra de linha quando necessário */
+  word-wrap: break-word;
 }
+
+/* Estilos para as linhas alternadas da tabela */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Estilos para a primeira linha da tabela (opcional) */
+
+thead > tr:first-child {
+  font-weight: bold;
+  background-color: #dddddd;
+}
+

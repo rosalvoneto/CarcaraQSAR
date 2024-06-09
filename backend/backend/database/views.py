@@ -67,7 +67,16 @@ def convertAndSendDatabase_view(request):
 
       for i in range(length):
         print("Analisando características:", list_file_content[i])
+        
         project_database = project.get_database()
+        if(project_database == None):
+          project_database = Database.objects.create(
+            name="Database vazio",
+            description="Database gerado automaticamente",
+            file=None,
+            normalization=None,
+            project=project,
+          )
 
         if(project_database):
           print(f"Progresso: {i + 1}/{length}")
@@ -120,27 +129,30 @@ def convertAndSendDatabase_view(request):
       
         # Cria um DataFrame do Pandas com o conteúdo do arquivo
         data_dataframe = pd.read_csv(file_name)
-        rows, columns = data_dataframe.shape
+        lines, columns = data_dataframe.shape
         # Ler o arquivo.csv e o atribui a uma variável (para salvar no Database)
         with open(file_name, 'rb') as arquivo:
           file_content = arquivo.read()
+
         # Salvar database com as informações
-        database = Database.objects.create(
-          name=file_name,
-          file=None,
-          file_separator=',',
-          lines=rows,
-          columns=columns,
-          project=project
-        )
-        database.file.save(file_name, ContentFile(file_content))
+        project_database = project.get_database()
+
+        project_database.name = file_name
+        project_database.description = "Database original"
+        project_database.file.save(file_name, ContentFile(file_content))
+        project_database.file_separator = ','
+        project_database.lines = lines
+        project_database.columns = columns
+        project_database.project = project
+
         # Salvar modificações no backend
+        project_database.save()
         project.save()
 
         os.remove(file_name)
 
         # Abra o arquivo e retorne como uma resposta de arquivo
-        with open(f"media/{database.file}", 'rb') as file:
+        with open(f"media/{project_database.file}", 'rb') as file:
           response = HttpResponse(file.read(), content_type='application/force-download')
           response['Content-Disposition'] = f'attachment; filename="{file_name}"'
           return response
@@ -173,19 +185,32 @@ def sendDatabase_view(request):
       StringIO(file_content), 
       sep=separator
     )
-    rows, columns = data_dataframe.shape
+    lines, columns = data_dataframe.shape
 
-    Database.objects.create(
-      name=uploaded_file.name,
-      file=uploaded_file,
-      file_separator=separator,
-      lines=rows,
-      columns=columns,
-      description="Database original",
-      project=project
-    )
+    # Salvar database com as informações
+    project_database = project.get_database()
+    if(project_database == None):
+      project_database = Database.objects.create(
+        name=uploaded_file.name,
+        description="Database original",
+        file=uploaded_file,
+        file_separator=separator,
+        lines=lines,
+        columns=columns,
+        normalization=None,
+        project=project,
+      )
+
+    project_database.name = uploaded_file.name
+    project_database.description = "Database original"
+    project_database.file = uploaded_file
+    project_database.file_separator = separator
+    project_database.lines = lines
+    project_database.columns = columns
+    project_database.project = project
     
     # Salvar no backend
+    project_database.save()
     project.save()
 
     return JsonResponse({ "message": f"{uploaded_file.name} enviado!"})

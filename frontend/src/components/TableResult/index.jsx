@@ -31,12 +31,12 @@ const TableResult = () => {
       let colunasLinha = [];
       for (let j = 0; j < colunasTotal; j++) {
         if(j == 0) {
-          colunasLinha.push(<td key={j}>{i + 1}</td>);
+          colunasLinha.push(<td className={styles.td} key={j}>{i + 1}</td>);
         } else if(j == 1) {
           const length = molecules[i].length;
 
           colunasLinha.push(
-            <td key={j}>
+            <td className={styles.td} key={j}>
               {
                 molecules[i].map((moleculeIndex, index) => {
                   if(index == (length - 1)) {
@@ -48,13 +48,13 @@ const TableResult = () => {
             </td>
           );
         } else if(j == 2) {
-          colunasLinha.push(<td key={j}>{RArray[i].toFixed(2)}</td>);
+          colunasLinha.push(<td className={styles.td} key={j}>{RArray[i].toFixed(2)}</td>);
         } else if(j == 3) {
-          colunasLinha.push(<td key={j}>{R2Array[i].toFixed(2)}</td>);
+          colunasLinha.push(<td className={styles.td} key={j}>{R2Array[i].toFixed(2)}</td>);
         }
       }
 
-      linhas.push(<tr key={i}>{colunasLinha}</tr>);
+      linhas.push(<tr className={styles.tr} key={i}>{colunasLinha}</tr>);
     }
 
     return linhas;
@@ -80,15 +80,15 @@ const TableResult = () => {
   }, [molecules, RArray, R2Array]);
 
   return (
-    <table>
-      <thead>
-        <tr className={styles.header}>
-          <th className={styles.item}>{`Experimento`}</th>
-          <th className={styles.item}>{`Moléculas do conjunto de teste`}</th>
-          <th className={styles.item}>{`R`}</th>
-          <th className={styles.item}>{`R²`}</th>
-          <th className={styles.item}>{`Rₗₒₒ`}</th>
-          <th className={styles.item}>{`R²ₗₒₒ`}</th>
+    <table className={styles.table}>
+      <thead className={styles.thead}>
+        <tr className={styles.tr}>
+          <th className={styles.th}>{`Experimento`}</th>
+          <th className={styles.th}>{`Moléculas do conjunto de teste`}</th>
+          <th className={styles.th}>{`R`}</th>
+          <th className={styles.th}>{`R²`}</th>
+          <th className={styles.th}>{`Rₗₒₒ`}</th>
+          <th className={styles.th}>{`R²ₗₒₒ`}</th>
         </tr>
       </thead>
       <tbody className={styles.body}>

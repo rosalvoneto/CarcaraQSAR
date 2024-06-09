@@ -136,16 +136,6 @@ export function ProjectsTable({ searchValue }) {
               Data de modificação
             </th>
             <th className={`${styles.descriptionItem} ${styles.item5}`}>
-              {
-              /*
-                <a 
-                  className={styles.button}
-                  onClick={() => shareSelectedItens()}
-                >
-                  <ShareFat size={20} />
-                </a> 
-              */
-              }
             </th>
             <th className={`${styles.descriptionItem} ${styles.item6}`}>
               <a 
