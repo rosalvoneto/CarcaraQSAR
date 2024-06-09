@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+pd.options.mode.chained_assignment = None
 import random
 
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -121,6 +122,7 @@ class ABCAlgorithm():
 
         fitness = [self.evaluate_variables(X, y, bee, model) for bee in bees]
 
+        # Seleciona melhor abelha e melhor fitness
         best_bee = bees[np.argmax(fitness)]
         best_fitness = max(fitness)
         
@@ -129,8 +131,9 @@ class ABCAlgorithm():
 
             # Função de interação
             self.interation_function(self.iteration, self.n_iterations)
-
             self.iteration += 1
+
+            # Geração de abelhas melhores
             for i in range(self.n_bees):
 
                 # Gera nova posição para a abelha
@@ -144,27 +147,37 @@ class ABCAlgorithm():
                 new_fitness = self.evaluate_variables(X, y, new_bee, model)
                 print(new_fitness)
                 
-                # Atualiza se nova posição for melhor
+                # Atualiza abelha antiga pela nova se tiver melhor fitness
                 if new_fitness > fitness[i]:
 
                     bees[i] = new_bee
                     fitness[i] = new_fitness
-                    
-                    # Atualiza melhor global
-                    if new_fitness > best_fitness:
-                        self.not_improvement_count = 0
 
-                        best_bee = new_bee
-                        best_fitness = new_fitness
-                    else:
-                        self.not_improvement_count += 1
+            # Analisar bee e fitness atual
+            actual_bee = bees[np.argmax(fitness)]
+            actual_fitness = max(fitness)
+                    
+            # Atualiza melhor abelha globalmente
+            if actual_fitness > best_fitness:
+                print("=" * 30)
+                print("MELHORANDO")
+                print("=" * 30)
+                self.not_improvement_count = 0
+
+                best_bee = actual_bee
+                best_fitness = actual_fitness
+            else:
+                print("=" * 30)
+                print("PIORANDO")
+                print("=" * 30)
+                self.not_improvement_count += 1
             
             if self.not_improvement_count >= self.limit_not_improvement:
                 print(f"Parando na iteração {self.iteration}")
                 print(f"Não houve melhoria nas últimas {self.limit_not_improvement} iterações")
                 break
                 
-            print(f"Iteração {self.iteration + 1}/{self.n_iterations}, Melhor R²: {best_fitness}")
+            print(f"Iteração {self.iteration}/{self.n_iterations}, Melhor R²: {best_fitness}")
         
         self.best_bee = best_bee
         self.best_fitness = best_fitness

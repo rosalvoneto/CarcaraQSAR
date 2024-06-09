@@ -1,6 +1,7 @@
 
 import random
 import pandas as pd
+pd.options.mode.chained_assignment = None
 from random import randint
 
 from typing import List
@@ -321,7 +322,6 @@ class GAAlgorithm:
 
     return solution, maximum_aptidao_value
 
-  # ======================================================================
 
   def generate_new_database(
     self,

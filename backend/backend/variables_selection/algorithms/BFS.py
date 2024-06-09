@@ -1,6 +1,8 @@
 
 import math
 import pandas as pd
+pd.options.mode.chained_assignment = None
+
 
 from variables_selection.algorithms.utils.utils import convert_binary_array_to_variables, convert_variables_to_binary_array, get_variables
 
@@ -67,7 +69,7 @@ class Graph:
             print(f"Quantidade de variáveis atual: {current_node.count(1)}")
             print(f"Valor R2 = {current_R2} para o nó atual")
 
-            # Abre o arquivo em modo de escrita ('w')
+            # Abre o arquivo em modo de escrita
             with open("Valores R2.csv", "a") as arquivo:
                 # Escreve os dados no arquivo
                 arquivo.write(f"{i}, {current_R2}, {current_node}\n")

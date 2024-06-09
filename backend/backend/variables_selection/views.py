@@ -2,6 +2,8 @@
 import os
 import json
 import pandas as pd
+pd.options.mode.chained_assignment = None
+
 from io import StringIO
 
 from django.shortcuts import get_object_or_404
@@ -475,6 +477,7 @@ def make_selection(project_id):
         )
 
         # Faz a seleção de variáveis
+        print("")
         print("SELEÇÃO COM O ALGORITMO")
         if(algorithm == "Colônia de abelhas"):
           abc = ABCAlgorithm(
@@ -558,11 +561,13 @@ def make_selection(project_id):
           )
 
           # Busca pela melhor variável
+          print("")
           print("BUSCA PELA MELHOR VARIÁVEL")
           best_variable, best_R2 = graph.evaluate_best_variable()
           print("Melhor R2:", best_R2)
 
           # Busca gulosa
+          print("")
           print('BUSCA GULOSA')
           best_node, best_R2 = graph.execution(best_variable)
           print("Melhor R2:", best_R2)
