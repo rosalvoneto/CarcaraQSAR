@@ -1,5 +1,4 @@
 
-import math
 import pandas as pd
 pd.options.mode.chained_assignment = None
 
@@ -8,18 +7,19 @@ from variables_selection.algorithms.utils.utils import convert_binary_array_to_v
 
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
 
-class Graph:
+class BFS:
     def __init__(
         self, 
         dataframe, 
         r2_condition, 
         limit_not_improvement,
         interation_function,
-        n_child_positions
+        n_child_positions,
+        children_quantity
     ):
         self.dataframe = dataframe
         self.graph = {}
@@ -30,6 +30,7 @@ class Graph:
 
         self.interation_function = interation_function
         self.n_child_positions = n_child_positions
+        self.children_quantity = children_quantity
 
     def add_node(self, node):
         self.graph[tuple(node)] = []
@@ -82,9 +83,8 @@ class Graph:
                 self.not_improvement_count = 0
             else:
                 self.not_improvement_count += 1
+            print(f"Vezes sem melhoria: {self.not_improvement_count}")
 
-            print(f"not_improvement_count: {self.not_improvement_count}")
-            
             # Condição de parada: R2
             if current_R2 >= self.r2_condition:
                 print(f"R2 >= {self.r2_condition}. Parando a busca.")
@@ -103,32 +103,32 @@ class Graph:
                 self.limit_not_improvement
             )
             
-            childrens = self.generate_children(
+            # Gera novas crianças e calcula o R2 de cada uma
+            children = self.generate_children(
                 current_node
             )
             bests_R2 = []
-            for child in childrens:
+            for child in children:
                 bests_R2.append(self.calculate_R2(child, full_variables))
             
             # Obtém os índices dos maiores elementos de bests_R2
-            child_quantity = 5
-
+            children_quantity = self.children_quantity
             bests_indexes = sorted(
                 range(len(bests_R2)), 
                 key=lambda i: bests_R2[i], 
                 reverse=True
-            )[:child_quantity]
-
+            )[:children_quantity]
             print(f"Melhores índices: {bests_indexes}")
 
             for index in bests_indexes:
-
                 if (
-                    tuple(childrens[index]) not in visited 
+                    tuple(children[index]) not in visited 
+
+                    # Talvez seja (bests_R2[index] >= best_R2) no lugar
                     and bests_R2[index] >= current_R2
                 ):
                     frontier.append(
-                       (self.calculate_R2(childrens[index], full_variables), childrens[index])
+                       (self.calculate_R2(children[index], full_variables), children[index])
                     )
             
             print(f"Quantidade na barreira: {len(frontier)}")
@@ -207,14 +207,14 @@ class Graph:
         )
 
         # Cria um modelo
-        if(False):
-            model = SVR(kernel='rbf', C=1.0, gamma='scale')
-        else:
+        if(True):
             model = RandomForestRegressor(
                 n_estimators=50,
                 random_state=42,
                 max_features="log2"
             )
+        else:
+            model = SVR(kernel='rbf', C=1.0, gamma='scale')
 
         # Treinar o modelo
         model.fit(X_train, y_train)

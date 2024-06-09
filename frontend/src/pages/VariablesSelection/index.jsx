@@ -57,15 +57,17 @@ export const algorithmsParameters = [
     ['r2_condition_BFS', 'Limite R2 do BFS'],
     ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
     ['n_child_positions', 'Número de variáveis para adicionar no BFS'],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS'],
   ],
   [
-    ["maximum_iterations", "Interações"],
-    ["bees", "Abelhas"],
+    ["maximum_iterations", "Limite de interações"],
+    ["bees", "Quantidade de abelhas"],
     ["limit_not_improvement", "Limite sem melhoria"],
     ["info_gain_quantity", "Ganho de informação"],
     ['r2_condition_BFS', 'Limite R2 do BFS'],
     ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
     ['n_child_positions', 'Número de variáveis para adicionar no BFS'],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS'],
   ]
 ]
 

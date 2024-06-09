@@ -20,9 +20,10 @@ from database.models import Database
 from project_management.models import Project
 from variables_selection.models import VariablesSelection
 from variables_selection.utils import get_variables_settings, is_convertible_to_int_list
-from variables_selection.algorithms.abc import ABCAlgorithm
-from variables_selection.algorithms.ga import GAAlgorithm, Problem
-from variables_selection.algorithms.BFS import Graph
+from variables_selection.algorithms.ABC import ABCAlgorithm
+from variables_selection.algorithms.GA import GAAlgorithm, Problem
+from variables_selection.algorithms.BFS import BFS
+from variables_selection.algorithms.GreedySearch import GreedySearch
 from variables_selection.tasks import tarefa_com_delay, callback_sucesso, callback_falha
 
 from celery import shared_task
@@ -552,12 +553,13 @@ def make_selection(project_id):
             random_state=42,
             max_features="log2"
           )
-          graph = Graph(
+          graph = BFS(
             dataframe=base_compressed,
             r2_condition=parameters['r2_condition_BFS'],
             limit_not_improvement=parameters['limit_not_improvement_BFS'],
             interation_function=update_selection_progress,
-            n_child_positions=parameters['n_child_positions']
+            n_child_positions=parameters['n_child_positions'],
+            children_quantity=parameters['children_quantity'],
           )
 
           # Busca pela melhor variável
