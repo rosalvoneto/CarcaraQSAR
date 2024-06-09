@@ -16,7 +16,8 @@ import {
   createModel, 
   getModel, 
   deleteModel, 
-  downloadModel
+  downloadModel,
+  downloadScaler
 } from '../../api/prevision';
 
 export default function Prevision() {
@@ -82,7 +83,7 @@ export default function Prevision() {
       console.log(response);
       let fileName = 'model';
 
-      link.setAttribute('download', `${fileName}.joblib`);
+      link.setAttribute('download', `${fileName}.pkl`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -90,6 +91,30 @@ export default function Prevision() {
       console.error('Erro ao baixar o arquivo:', error);
     }
   } 
+
+  const hadleToDownloadScaler = async () => {
+    const response = await downloadScaler(
+      projectID, authTokens.access
+    );
+
+    try {
+      // Crie um link temporário e clique nele para iniciar o download
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      console.log(response);
+      let fileName = 'scaler';
+
+      link.setAttribute('download', `${fileName}.pkl`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error);
+    }
+  } 
+
 
   useEffect(() => {
     getVariables(projectID, authTokens.access)
@@ -154,6 +179,12 @@ export default function Prevision() {
                 className={styles.button}
               >
                 Baixar modelo
+              </button>
+              <button 
+                onClick={hadleToDownloadScaler}
+                className={styles.button}
+              >
+                Baixar Normalizador
               </button>
             </>
           :

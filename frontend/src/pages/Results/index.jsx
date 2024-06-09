@@ -35,7 +35,7 @@ export default function Results() {
     }
   }
 
-  const [graphsWithoutFullSet, setGraphsWithoutFullSet] = useState([]);
+  const [graphs, setGraphs] = useState([]);
 
   const downloadGraph = (imageUrl) => {
     const link = document.createElement('a');
@@ -65,7 +65,7 @@ export default function Results() {
     getTrainingGraphs(projectID, authTokens.access)
     .then((graphs) => {
       console.log(graphs);
-      setGraphsWithoutFullSet(graphs);
+      setGraphs(graphs);
     })
     .catch((error) => {
       console.log(error);
@@ -87,26 +87,16 @@ export default function Results() {
         {
           pageNumber != 4
           ? (
-              true
+              graphs.length && graphs[pageNumber]
               ?
                 <div className={styles.graphContainer}>
                   <Graph 
-                    width={
-                      pageNumber == 0
-                      ? 800
-                      : 600
-                    }
-                    image={
-                      graphsWithoutFullSet[pageNumber]
-                    }
+                    width={600}
+                    image={graphs[pageNumber]}
                   />
                   <a
                     className={styles.downloadButton}
-                    onClick={
-                      () => downloadGraph(
-                        graphsWithoutFullSet[pageNumber]
-                      )
-                    }
+                    onClick={() => downloadGraph(graphs[pageNumber])}
                   >
                     <DownloadSimple size={30} color='var(--black-color-1)' />
                   </a>
@@ -115,7 +105,7 @@ export default function Results() {
                 undefined
           )
           :
-              <TableResult />
+            <TableResult />
         }
         
         

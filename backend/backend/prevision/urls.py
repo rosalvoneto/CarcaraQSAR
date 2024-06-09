@@ -7,4 +7,5 @@ urlpatterns = [
   path('has_model', views.hasModel_view, name="has_model"),
   path('delete_model', views.deleteModel_view, name="delete_model"),
   path('download_model', views.donwloadModel_view, name="download_model"),
+  path('download_scaler', views.donwloadScaler_view, name="download_scaler"),
 ]

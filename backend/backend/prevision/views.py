@@ -128,3 +128,18 @@ def donwloadModel_view(request):
     response = HttpResponse(file.read(), content_type='application/force-download')
     response['Content-Disposition'] = f'attachment; filename="{model_file.name}"'
     return response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def donwloadScaler_view(request):
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  prevision_model = project.prevision_model
+  scaler_file = prevision_model.scaler_file
+
+  # Abra o arquivo e retorne como uma resposta de arquivo
+  with open(f"media/{scaler_file}", 'rb') as file:
+    response = HttpResponse(file.read(), content_type='application/force-download')
+    response['Content-Disposition'] = f'attachment; filename="{scaler_file.name}"'
+    return response

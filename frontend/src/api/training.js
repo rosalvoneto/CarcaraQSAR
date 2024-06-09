@@ -110,17 +110,28 @@ export const getTrainingGraphs = async (
   )});
 
   const dataResponses = await Promise.all(requests);
-
+  
   let imagesBlob = []
   for(let i = 0; i < dataResponses.length; i++) {
+    if(dataResponses[i].status != 404) {
       const imageBlob = await dataResponses[i].blob();
       imagesBlob.push(imageBlob);
+    } else {
+      imagesBlob.push(null);
+    }
   }
   let imagesURL = []
   for(let i = 0; i < imagesBlob.length; i++) {
+    if(imagesBlob[i]) {
       const imageUrl = URL.createObjectURL(imagesBlob[i]);
       imagesURL.push(imageUrl);
+    } else {
+      imagesURL.push(null);
+    }
   }
+
+  console.log("AQUIIIIIIIIIIIIIIII");
+  console.log(imagesURL);
 
   return imagesURL;
 }
