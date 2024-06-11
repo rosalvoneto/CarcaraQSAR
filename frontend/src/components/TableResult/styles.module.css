@@ -11,6 +11,9 @@ th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
+
+  /* ou word-break: break-all; */
+  word-wrap: break-word;
 }
 
 /* Estilos para as células de dados */
@@ -18,8 +21,10 @@ td {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
-
+  
   /* Adiciona quebra de linha quando necessário */
+  max-width: calc(100vw - 700px);
+
   word-wrap: break-word;
 }
 
