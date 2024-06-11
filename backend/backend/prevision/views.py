@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from io import StringIO
 
+from sklearn.metrics import mean_squared_error
+
 from django.shortcuts import get_object_or_404
 from django.core.files import File
 from django.http import HttpResponse
@@ -43,16 +45,6 @@ def makePrevision_view(request):
   variables_values = request.POST.get('variables_values')
   variables_values = json.loads(variables_values)
 
-  # # Recupera o Database
-  # database = project.get_database()
-  # # Cria um DataFrame do Pandas com o conteúdo do arquivo
-  # file_content = database.file.read().decode('utf-8')
-  # database_df = pd.read_csv(
-  #   StringIO(file_content), 
-  #   sep=database.file_separator
-  # )
-
-
   if(project.prevision_model):
 
     # Redimensione os dados para uma matriz 2D
@@ -69,7 +61,6 @@ def makePrevision_view(request):
 
     # Faz a normalização dos valores das variáveis
     X_subset = scaler.transform(dataframe)
-    print(X_subset)
 
     # Realiza a previsão
     prevision = model.predict(X_subset)
@@ -143,3 +134,50 @@ def donwloadScaler_view(request):
     response = HttpResponse(file.read(), content_type='application/force-download')
     response['Content-Disposition'] = f'attachment; filename="{scaler_file.name}"'
     return response
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def calculateAll_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  if(project.prevision_model):
+
+    database = project.get_database()
+
+    # Cria um DataFrame do Pandas com o conteúdo do arquivo
+    file_content = database.file.read().decode('utf-8')
+    dataframe = pd.read_csv(
+      StringIO(file_content), 
+      sep=database.file_separator
+    )
+    real_values = dataframe.iloc[:, -1].tolist()
+
+    dataframe = dataframe.drop(dataframe.columns[-1], axis=1)
+    print(dataframe)
+
+    # Recuperar scaler do banco de dados
+    scaler = project.prevision_model.retrieve_scaler()
+    # Recuperar modelo do banco de dados
+    model = project.prevision_model.retrieve_model()
+
+    # Faz a normalização dos valores das variáveis
+    X_subset = scaler.transform(dataframe)
+
+    # Realiza a previsão
+    prevision_values = model.predict(X_subset)
+
+    # Calcular o MSE usando scikit-learn
+    mse = mean_squared_error(real_values, prevision_values)
+    # Calcular o RMSE
+    rmse = np.sqrt(mse)
+
+    # Retorna valor da previsão
+    return Response({
+      'prevision': prevision_values,
+      'rmse': rmse
+    }, status=200)
+  return Response({
+    'message': 'Não há modelo de previsão no banco de dados!'
+  }, status=200)

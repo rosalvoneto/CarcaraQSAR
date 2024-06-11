@@ -17,7 +17,8 @@ import {
   getModel, 
   deleteModel, 
   downloadModel,
-  downloadScaler
+  downloadScaler,
+  calculateAll
 } from '../../api/prevision';
 
 export default function Prevision() {
@@ -44,6 +45,12 @@ export default function Prevision() {
   const hadleToMakePrevision = async () => {
     const response = await makePrevision(
       projectID, variablesValues, authTokens.access
+    );
+  }
+
+  const hadleToCalculateAll = async () => {
+    const response = await calculateAll(
+      projectID, authTokens.access
     );
   }
 
@@ -167,6 +174,12 @@ export default function Prevision() {
                 className={styles.button}
               >
                 Fazer previsão
+              </button>
+              <button 
+                onClick={hadleToCalculateAll}
+                className={styles.button}
+              >
+                Fazer estimativa
               </button>
               <button 
                 onClick={hadleToDeleteModel}
