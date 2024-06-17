@@ -19,6 +19,7 @@ export function Header({ title }) {
         <div className={styles.div}>
           <p className={styles.username}>
             {
+              decodifiedAccessToken &&
               decodifiedAccessToken.username
             }
           </p>
