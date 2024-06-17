@@ -1,0 +1,12 @@
+version: '2'
+authtoken: 2hpFfW7bF1QyVJnQuVgt4N0Hcrl_3ci5o6a5kiugzLjsBcXnt
+tunnels:
+  frontend:
+    proto: http
+    addr: 5173
+    hostname: pigeon-suitable-lately.ngrok-free.app
+  backend:
+    proto: http
+    addr: 80
+    # hostname: pigeon-suitable-lately.ngrok-free.app
+  
