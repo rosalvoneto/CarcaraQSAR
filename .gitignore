@@ -28,5 +28,8 @@ dist-ssr
 *.pyc
 *.pot
 __pycache__
-# media
-# staticfiles
+media
+staticfiles
+db.sqlite3
+*.sqlite3
+AG
