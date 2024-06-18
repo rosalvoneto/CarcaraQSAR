@@ -181,3 +181,58 @@ def calculateAll_view(request):
   return Response({
     'message': 'Não há modelo de previsão no banco de dados!'
   }, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def downloadEstimation_view(request):
+
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  real_values = []
+  prevision_values = []
+
+  if(project.prevision_model):
+
+    database = project.get_database()
+    # Cria um DataFrame do Pandas com o conteúdo do arquivo
+    file_content = database.file.read().decode('utf-8')
+    dataframe = pd.read_csv(
+      StringIO(file_content), 
+      sep=database.file_separator
+    )
+    real_values = dataframe.iloc[:, -1].tolist()
+
+    dataframe = dataframe.drop(dataframe.columns[-1], axis=1)
+
+    # Recuperar scaler do banco de dados
+    scaler = project.prevision_model.retrieve_scaler()
+    # Recuperar modelo do banco de dados
+    model = project.prevision_model.retrieve_model()
+
+    # Faz a normalização dos valores das variáveis
+    X_subset = scaler.transform(dataframe)
+
+    # Realiza a previsão
+    prevision_values = model.predict(X_subset)
+
+
+  file_path = "prevision.csv"
+  dataframe = pd.DataFrame(
+    {'Previsões': prevision_values, 'Valores reais': real_values}
+  )
+  print(dataframe)
+  dataframe.to_csv(file_path, index=False)
+
+  # return Response({
+  #   'prevision': prevision_values,
+  #   'realValues': real_values
+  # }, status=200)
+
+  # Abra o arquivo e retorne como uma resposta de arquivo
+  with open(file_path, 'rb') as file:
+    response = HttpResponse(
+      file.read(), content_type='application/force-download'
+    )
+    response['Content-Disposition'] = f'attachment; filename="{file_path}"'
+    return response

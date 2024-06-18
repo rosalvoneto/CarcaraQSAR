@@ -87,8 +87,6 @@ const TableResult = () => {
           <th className={styles.th}>{`Moléculas do conjunto de teste`}</th>
           <th className={styles.th}>{`R`}</th>
           <th className={styles.th}>{`R²`}</th>
-          <th className={styles.th}>{`Rₗₒₒ`}</th>
-          <th className={styles.th}>{`R²ₗₒₒ`}</th>
         </tr>
       </thead>
       <tbody className={styles.body}>

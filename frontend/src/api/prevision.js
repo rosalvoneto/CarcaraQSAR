@@ -172,3 +172,26 @@ export const calculateAll = async(
   }
   return dataResponse;
 }
+
+// Fazer download das estimativas
+export const downloadEstimation = async(
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/prevision/download_estimation?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  console.log(response);
+
+  let dataResponse = await response.text();
+  if(response.status == 200) {
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}

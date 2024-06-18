@@ -9,4 +9,9 @@ urlpatterns = [
   path('download_model', views.donwloadModel_view, name="download_model"),
   path('download_scaler', views.donwloadScaler_view, name="download_scaler"),
   path('calculate_all', views.calculateAll_view, name="calculate_all"),
+  path(
+    'download_estimation', 
+    views.downloadEstimation_view, 
+    name="download_estimation"
+  ),
 ]

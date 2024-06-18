@@ -1,13 +1,33 @@
 import Cookies from "js-cookie";
 
+// Função para obter o token CSRF dos cookies
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  console.log("VALOR DO COOKIE:", cookieValue);
+  return cookieValue;
+}
+
 export const loginUser = async (e) => {
   e.preventDefault();
+
+  const csrfToken = getCookie('csrftoken');
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/api/token/`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
+        'X-CSRFToken': csrfToken,
       },
       body: JSON.stringify({
         email: e.target.email.value,

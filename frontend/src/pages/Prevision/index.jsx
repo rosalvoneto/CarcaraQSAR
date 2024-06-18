@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { ProgressBar } from '../../components/ProgressBar';
 import Button from '../../components/Button';
+import PopUp from '../../components/PopUp';
 
 import styles from './styles.module.css';
 
@@ -18,7 +19,8 @@ import {
   deleteModel, 
   downloadModel,
   downloadScaler,
-  calculateAll
+  calculateAll,
+  downloadEstimation
 } from '../../api/prevision';
 
 export default function Prevision() {
@@ -36,6 +38,8 @@ export default function Prevision() {
 
   const [hasModel, setHasModel] = useState(false);
 
+  const [previsionValue, setPrevisionValue] = useState(null);
+
   const changeVariableValue = (index, value) => {
     let array = variablesValues;
     array[index] = value;
@@ -46,6 +50,7 @@ export default function Prevision() {
     const response = await makePrevision(
       projectID, variablesValues, authTokens.access
     );
+    setPrevisionValue(response.prevision);
   }
 
   const hadleToCalculateAll = async () => {
@@ -122,6 +127,29 @@ export default function Prevision() {
     }
   } 
 
+  const hadleToDownloadEstimation = async () => {
+    const response = await downloadEstimation(
+      projectID, authTokens.access
+    );
+
+    try {
+      // Crie um link temporário e clique nele para iniciar o download
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      console.log(response);
+      let fileName = 'Estimation.csv';
+
+      link.setAttribute('download', `${fileName}`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Erro ao baixar o arquivo:', error);
+    }
+  } 
+
 
   useEffect(() => {
     getVariables(projectID, authTokens.access)
@@ -176,7 +204,7 @@ export default function Prevision() {
                 Fazer previsão
               </button>
               <button 
-                onClick={hadleToCalculateAll}
+                onClick={hadleToDownloadEstimation}
                 className={styles.button}
               >
                 Fazer estimativa
@@ -209,6 +237,20 @@ export default function Prevision() {
             </button>
           }
       </div>
+      
+      {
+        previsionValue &&
+        <PopUp
+          show={true}
+          title={"Resultado da previsão"}
+          description={previsionValue}
+          action={() => {
+            setPrevisionValue(null);
+          }}
+          showButton={true}
+          buttonName={'Ok'}
+        />
+      }
 
       <Button 
         name={'Voltar'} 
