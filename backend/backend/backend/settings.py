@@ -30,7 +30,11 @@ SECRET_KEY = 'django-insecure-m139&@m^3l-5-w54teh))^e=ow*-12m2%n&tixzvw*jebn28gh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".awsapprunner.com", "*"]
+ALLOWED_HOSTS = [
+    "*", 
+    "http://carcaraqsar.com.br",
+    "http://www.carcaraqsar.com.br",
+]
 
 
 # Application definition
@@ -241,10 +245,39 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'user.User'
 
 # Permissões de acesso
+# Permitir todas as origens
 CORS_ALLOW_ALL_ORIGINS = True
-X_FRAME_OPTIONS = 'ALLOW-FROM https://kpjnpgrg5q.us-east-2.awsapprunner.com'
+# Permitir origens específicas
+X_FRAME_OPTIONS = 'ALLOW-FROM https://carcaraqsar.com.br'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://backend.carcaraqsar.com.br',
+    'http://www.backend.carcaraqsar.com.br',
+    'http://carcaraqsar.com.br',
+    'http://www.carcaraqsar.com.br',
+]
+
+# Configurações básicas de segurança
+CSRF_COOKIE_SECURE = False  # True se usar HTTPS
+SESSION_COOKIE_SECURE = False  # True se usar HTTPS
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_HTTPONLY = False
+
+# Configurações para permitir cookies de autenticação
+# Permite credenciais em solicitações cross-origin
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5173',  # URL do seu frontend React em desenvolvimento
+    'http://carcaraqsar.com.br',  # URL do seu frontend React em produção
+]
+
+# Configurações do JWT
+# Nome do cookie JWT, se personalizado
+JWT_AUTH_COOKIE = 'jwt_tokens'
+
+# Configurações de mídia
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
