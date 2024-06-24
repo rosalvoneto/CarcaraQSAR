@@ -12,13 +12,11 @@ const ProgressBarLoading = ({ progress, maximum }) => {
   }, [progress, maximum]);
 
   return (
-    <div>
-      <div className={styles.container}>
-        <div 
-          style={{ width: `${percentage}%`}} 
-          className={styles.bar}
-        >
-        </div>
+    <div className={styles.container}>
+      <div 
+        style={{ width: `${percentage}%`}} 
+        className={styles.bar}
+      >
       </div>
     </div>
   );

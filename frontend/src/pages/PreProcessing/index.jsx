@@ -18,6 +18,8 @@ import {
   setNormalizationSettings
 } from '../../api/database';
 
+import { updateStatus } from '../../api/project';
+
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 
@@ -143,8 +145,8 @@ export function PreProcessing({ index }) {
   // Segunda página do Pré-processing
   const [choosenNormalization, setChoosenNormalization] = useState();
 
-  const nextButtonAction = () => {
-    const response = setNormalizationSettings(
+  const nextActionButton = async () => {
+    const response = await setNormalizationSettings(
       projectID, choosenNormalization, authTokens.access
     );
     return response;
@@ -159,6 +161,10 @@ export function PreProcessing({ index }) {
     .catch(error => {
       console.log(error);
     })
+  }, [])
+
+  useEffect(() => {
+    updateStatus(projectID, authTokens.access, 'Pré-processamento');
   }, [])
 
   if(pageNumber == 0) {
@@ -263,7 +269,7 @@ export function PreProcessing({ index }) {
             pageNumber: 0
           }}
           side={'right'}
-          action={nextButtonAction}
+          action={nextActionButton}
         />
       </>
     )

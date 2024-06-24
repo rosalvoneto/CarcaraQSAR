@@ -47,5 +47,10 @@ urlpatterns = [
     '', 
     views.getProject_view, 
     name="get_project"
+  ),
+  path(
+    'update_status', 
+    views.updateStatus_view, 
+    name="update_status"
   )
 ]

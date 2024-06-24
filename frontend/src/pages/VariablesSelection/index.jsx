@@ -23,6 +23,8 @@ import {
 from '../../api/variablesSelection';
 import { deleteDatabase, downloadDatabase, getDatabases } from '../../api/database';
 
+import { updateStatus } from '../../api/project';
+
 import { DownloadSimple, TrashSimple } from '@phosphor-icons/react';
 
 import AuthContext from '../../context/AuthContext';
@@ -31,6 +33,7 @@ import { InlineInput } from '../../components/InlineInput';
 import PopUp from '../../components/PopUp';
 import Loading from '../../components/Loading';
 import ProgressBarLoading from '../../components/ProgressBarLoading';
+import ProgressContext from '../../context/ProgressContext';
 
 
 export const algorithms = [
@@ -49,7 +52,7 @@ export const algorithmsParameters = [
   [],
   [
     ['population_quantity', 'Quantidade da população'],
-    ['info_gain_quantity', 'Ganho de informação'],
+    ['info_gain_quantity', 'Quantidade de variáveis iniciais'],
     ["probability_crossover", "Probabilidade de crossover"],
     ['probability_mutation', 'Probabilidade de mutação'],
     ['limit_generations', 'Limite de gerações'],
@@ -63,7 +66,7 @@ export const algorithmsParameters = [
     ["maximum_iterations", "Limite de interações"],
     ["bees", "Quantidade de abelhas"],
     ["limit_not_improvement", "Limite sem melhoria"],
-    ["info_gain_quantity", "Ganho de informação"],
+    ["info_gain_quantity", "Quantidade de variáveis iniciais"],
     ['r2_condition_BFS', 'Limite R2 do BFS'],
     ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
     ['n_child_positions', 'Número de variáveis para adicionar no BFS'],
@@ -94,6 +97,8 @@ export default function VariablesSelection() {
     }
   }
 
+  let delayTimeForGetProgress = 5000;
+
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [algorithmParameters, setAlgorithmParameters] = useState({});
 
@@ -111,9 +116,12 @@ export default function VariablesSelection() {
 
   const [progressValue, setProgressValue] = useState(0);
   const [maximumValue, setMaximumValue] = useState(100);
+  const [timeForEstimation, setTimeForEstimation] = useState(0);
+  const [counterInProgress, setCounterInProgress] = useState(0);
+
+  const { updateProgressExecutions } = useContext(ProgressContext);
 
   const navigate = useNavigate();
-
   const navigateToVariablesSelection = () => {
     navigate(
       `/${projectID}/variables-selection`,
@@ -281,19 +289,61 @@ export default function VariablesSelection() {
     setDatabases(response.databases);
   }
 
+  const makeEstimation = (counterInProgress, progress, maximum, progressRange) => {
+    let timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
+    
+    const progressRestante = (maximum - progress);
+    const progressAtual = progressRange;
+    
+    console.log("Fazendo estimativa...");
+    console.log(counterInProgress);
+    console.log(progressRestante);
+    console.log(progressAtual);
+    
+    let estimation = (progressRestante * timeForProgressAtual) / progressAtual;
+    estimation = estimation / 3600;
+    console.log(estimation);
+    
+    setCounterInProgress(0);
+    setTimeForEstimation(Math.ceil(estimation));
+  }
+
   const getProgress = async() => {
     const response = await getSelectionProgress(projectID, authTokens.access);
     if(response.progress) {
       console.log(response.progress);
       const split = response.progress.split('/');
-      setProgressValue(Number(split[0]));
-      setMaximumValue(Number(split[1]));
+      const progress = Number(split[0]);
+      const maximum = Number(split[1]);
+      
+      // Fazer estimativa de tempo restante
+      if(progress >= 0) {
+        console.log("Contador do progresso:", counterInProgress + 1);
+        
+        if(progress != progressValue) {
+          makeEstimation(counterInProgress + 1 ,progress, maximum, progress - progressValue);
+          
+          // Atualizar progresso
+          setProgressValue(progress);
+          setMaximumValue(maximum);
+
+          // Atualizar progresso no contexto
+          updateProgressExecutions(
+            projectID,
+            'variables-selection',
+            progress,
+            maximum,
+          )
+        }
+
+        setCounterInProgress(counterInProgress + 1);
+      }
     }
   }
 
   useEffect(() => {
     // A função será executada a cada quantidade de segundos
-    const interval = setInterval(getProgress, 5000);
+    const interval = setInterval(getProgress, delayTimeForGetProgress);
     // Função de limpeza para interromper o intervalo quando 
     // o componente for desmontado
     return () => clearInterval(interval);
@@ -356,6 +406,10 @@ export default function VariablesSelection() {
       })
     }
   }, [pageNumber])
+
+  useEffect(() => {
+    updateStatus(projectID, authTokens.access, 'Seleção de variáveis');
+  }, [])
 
   if(pageNumber == 0) {
     return(
@@ -547,7 +601,15 @@ export default function VariablesSelection() {
                   maximum={maximumValue}
                 />
                 <p>
-                  {(progressValue / maximumValue * 100).toFixed(0)}%
+                  {
+                  `${(progressValue / maximumValue * 100).toFixed(0)}%`
+                  }
+                </p>
+                <p>
+                  {
+                    timeForEstimation >= 0 &&
+                    `Estimativa de finalização: ${(timeForEstimation).toFixed(0)} minuto(s)`
+                  }
                 </p>
               </div>
             </PopUp>

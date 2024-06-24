@@ -20,11 +20,11 @@ const Loading = ({ size }) => {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    if (seconds >= 3) {
-      setShowTimer(true);
-    }
-  }, [seconds]);
+  // useEffect(() => {
+  //   if (seconds >= 3) {
+  //     setShowTimer(true);
+  //   }
+  // }, [seconds]);
 
   return(
     <div className={styles.loadingContainer}>

@@ -20,7 +20,10 @@ import {
   getTrainingSettings, setTrainingSettings, train 
 } from '../../api/training';
 
+import { updateStatus } from '../../api/project';
+
 import Loading from '../../components/Loading';
+import ProgressContext from '../../context/ProgressContext';
 
 export const algorithms = [
   "Random Forest",
@@ -58,6 +61,8 @@ export default function Training() {
   const location = useLocation();
   const state = location.state;
 
+  let delayTimeForGetProgress = 5000;
+
   let pageNumber = 0;
   if(state) {
     if(state.pageNumber) {
@@ -73,8 +78,12 @@ export default function Training() {
 
   const [progressValue, setProgressValue] = useState(0);
   const [maximumValue, setMaximumValue] = useState(100);
+  const [timeForEstimation, setTimeForEstimation] = useState(0);
+  const [counterInProgress, setCounterInProgress] = useState(0);
 
   const [algorithmIndex, setAlgorithmIndex] = useState(0);
+
+  const { updateProgressExecutions } = useContext(ProgressContext);
 
   const changeParameters = (key, value) => {
     let values = algorithmParameters;
@@ -84,7 +93,7 @@ export default function Training() {
     console.log(values);
   }
 
-  const nextButtonAction = async() => {
+  const nextActionButton = async() => {
     const trainingSettings = await getTrainingSettings(projectID, authTokens.access);
 
     if(
@@ -137,13 +146,55 @@ export default function Training() {
     navigate(`/${projectID}/results`);
   }
 
+  const makeEstimation = (counterInProgress, progress, maximum, progressRange) => {
+    let timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
+    
+    const progressRestante = (maximum - progress);
+    const progressAtual = progressRange;
+    
+    console.log("Fazendo estimativa...");
+    console.log(counterInProgress);
+    console.log(progressRestante);
+    console.log(progressAtual);
+    
+    let estimation = (progressRestante * timeForProgressAtual) / progressAtual;
+    estimation = estimation / 3600;
+    console.log(estimation);
+    
+    setCounterInProgress(0);
+    setTimeForEstimation(Math.ceil(estimation));
+  }
+
   const getProgress = async() => {
     if(trained != "false") {
       const response = await getTrainingProgress(projectID, authTokens.access);
       if(response.progress) {
         const split = response.progress.split('/');
-        setProgressValue(Number(split[0]));
-        setMaximumValue(Number(split[1]));
+        const progress = Number(split[0]);
+        const maximum = Number(split[1]);
+
+        // Fazer estimativa de tempo restante
+        if(progress >= 0) {
+          console.log("Contador do progresso:", counterInProgress + 1);
+          
+          if(progress != progressValue) {
+            makeEstimation(counterInProgress + 1 ,progress, maximum, progress - progressValue);
+            
+            // Atualizar progresso
+            setProgressValue(progress);
+            setMaximumValue(maximum);
+
+            // Atualizar progresso no contexto
+            updateProgressExecutions(
+              projectID,
+              'training',
+              progress,
+              maximum,
+            )
+          }
+
+          setCounterInProgress(counterInProgress + 1);
+        }
       }
     }
   }
@@ -177,7 +228,7 @@ export default function Training() {
 
   useEffect(() => {
     // A função será executada a cada quantidade de segundos
-    const interval = setInterval(getProgress, 1000);
+    const interval = setInterval(getProgress, delayTimeForGetProgress);
     // Função de limpeza para interromper o intervalo quando 
     // o componente for desmontado
     return () => clearInterval(interval);
@@ -193,6 +244,10 @@ export default function Training() {
   useEffect(() => {
     console.log("Valor do check:", withFullSet);
   }, [withFullSet])
+
+  useEffect(() => {
+    updateStatus(projectID, authTokens.access, 'Treinamento');
+  }, [])
 
   if(pageNumber == 0) {
     return(
@@ -251,7 +306,7 @@ export default function Training() {
             pageNumber: 1
           }}
           side={'right'}
-          action={nextButtonAction}
+          action={nextActionButton}
         />
       </>
     )
@@ -348,6 +403,12 @@ export default function Training() {
                 />
               <p>
                 {(progressValue / maximumValue * 100).toFixed(0)}%
+              </p>
+              <p>
+                {
+                  timeForEstimation >= 0 &&
+                  `Estimativa de finalização: ${(timeForEstimation).toFixed(0)} minuto(s)`
+                }
               </p>
             </div>
           </PopUp>

@@ -122,6 +122,25 @@ class Project(models.Model):
         return True
     return False
 
+  def update_status(self, new_status=None):
+    if(new_status):
+      self.status = new_status
+      self.save()
+    else:
+      status_types = [
+        'Database', 'Pré-processamento', 'Seleção de variáveis', 
+        'Treinamento', 'Resultados', 'Previsão'
+      ]
+
+      index = 0
+      for i in range(len(status_types) - 1):
+        if(self.status == status_types[i]):
+          self.status = status_types[i + 1]
+          index = i + 1
+          break
+      
+      print(f"Status escolhido: {status_types[index]}")
+      self.save()
 
   def __str__(self):
     return f"{self.name}: {self.description}"

@@ -11,6 +11,7 @@ import styles from './styles.module.css';
 import { statesProgressBar } from '../../settings';
 
 import { getTrainingGraphs } from '../../api/training';
+import { updateStatus } from '../../api/project';
 
 import { DownloadSimple } from '@phosphor-icons/react';
 
@@ -70,6 +71,10 @@ export default function Results() {
     .catch((error) => {
       console.log(error);
     })
+  }, [])
+
+  useEffect(() => {
+    updateStatus(projectID, authTokens.access, 'Resultados');
   }, [])
 
   return(

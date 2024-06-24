@@ -3,17 +3,21 @@ import styles from './styles.module.css';
 import cactusImage from '../../assets/cactus.png';
 import logoImage from '../../assets/logo.svg';
 
+import ProgressContext from '../../context/ProgressContext';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { NavigationBarWidth } from '../../settings';
+import ProgressBarLoading from '../ProgressBarLoading';
 
 export default function NavigationBar() {
 
   const navigate = useNavigate();
-
-  const handleTo = (url) => {
-    navigate(url);
+  const handleTo = (url, stateToPass) => {
+    navigate(url, { state: stateToPass });
   };
+
+  const { progressExecutions } = useContext(ProgressContext);
 
   return(
     <div 
@@ -45,6 +49,25 @@ export default function NavigationBar() {
         >
           Novo projeto
         </button>
+
+        {
+          progressExecutions.map((execution, index) => (
+            <div className={styles.containerProgress}>
+              <a onClick={
+                () => handleTo(`/${execution.projectID}/${execution.route}`,
+                { pageNumber: 1 })
+              }>
+                <ProgressBarLoading
+                  progress={execution.actualValue}
+                  maximum={execution.maximumValue}
+                />
+              </a>
+
+            </div>
+          ))
+        }
+
+
       </div>
 
       <img 

@@ -23,6 +23,8 @@ import {
   downloadEstimation
 } from '../../api/prevision';
 
+import { updateStatus } from '../../api/project';
+
 export default function Prevision() {
 
   const { authTokens } = useContext(AuthContext);
@@ -165,6 +167,10 @@ export default function Prevision() {
     .then(response => {
       setHasModel(response.hasModel);
     })
+  }, [])
+
+  useEffect(() => {
+    updateStatus(projectID, authTokens.access, 'Previsão');
   }, [])
 
   return(

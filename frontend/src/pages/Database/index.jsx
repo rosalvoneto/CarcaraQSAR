@@ -15,6 +15,8 @@ import {
   convertAndSendDatabase, getDatabase, sendDatabase 
 } from '../../api/database';
 
+import { updateStatus } from '../../api/project';
+
 import AuthContext from '../../context/AuthContext';
 import ProjectContext from '../../context/ProjectContext';
 
@@ -83,7 +85,7 @@ export function Database() {
     }
   };
 
-  const nextButtonAction = () => {
+  const nextActionButton = async () => {
     if(database.database) {
       return true;
     } else {
@@ -172,6 +174,10 @@ export function Database() {
     }
   }, [selectedSmilesFile])
 
+  useEffect(() => {
+    updateStatus(projectID, authTokens.access, 'Database');
+  }, [])
+
   return(
     <>
       <Header 
@@ -233,7 +239,7 @@ export function Database() {
             pageNumber: 0
           }}
           side={'right'}
-          action={nextButtonAction}
+          action={nextActionButton}
         />
       </div>
     </>

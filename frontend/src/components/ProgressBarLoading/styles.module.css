@@ -1,6 +1,7 @@
 
 .container {
-  width: 300px;
+  max-width: 300px;
+  width: 100%;
   border: 1px solid #000;
   border-radius: 5px;
   overflow: hidden;

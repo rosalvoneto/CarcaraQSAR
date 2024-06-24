@@ -229,3 +229,28 @@ export const getProject = async (projectID, accessToken) => {
 
   return dataResponse;
 }
+
+// Atualizar status
+export const updateStatus = async (projectID, accessToken, newStatus) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+  formData.append('new_status', newStatus);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/project/update_status`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken),
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+    console.log(dataResponse);
+  } else {
+    console.log(`Status: ${response.status}`);
+    console.log('Erro interno do servidor!');
+  }
+}

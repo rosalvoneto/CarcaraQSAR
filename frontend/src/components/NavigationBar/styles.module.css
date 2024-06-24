@@ -57,3 +57,8 @@
   position: relative;
   bottom: 0;
 }
+
+.containerProgress {
+  width: 100%;
+  padding: 10px 30px;
+}
