@@ -156,11 +156,13 @@ export default function Prevision() {
   useEffect(() => {
     getVariables(projectID, authTokens.access)
     .then(response => {
-      setVariablesNames(response.variables);
-      
-      let x = response.variables.length;
-      let array = new Array(x).fill(0);
-      setVariablesValues(array);
+      if(response.variables) {
+        setVariablesNames(response.variables);
+        
+        let x = response.variables.length;
+        let array = new Array(x).fill(0);
+        setVariablesValues(array);
+      }
     })
 
     getModel(projectID, authTokens.access)

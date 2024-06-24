@@ -33,9 +33,20 @@ export const ProgressProvider = ({ children }) => {
     setProgressExecutions(array);
   }
 
+  const removeProgressExecution = (projectID) => {
+    let array = [...progressExecutions];
+    const index = array.findIndex(execution => execution.projectID === projectID);
+  
+    if (index !== -1) {
+      array.splice(index, 1);
+      setProgressExecutions(array);
+    }
+  }
+
   let contextData = {
     progressExecutions: progressExecutions,
-    updateProgressExecutions: updateProgressExecutions
+    updateProgressExecutions: updateProgressExecutions,
+    removeProgressExecution: removeProgressExecution,
   }
   
   return(

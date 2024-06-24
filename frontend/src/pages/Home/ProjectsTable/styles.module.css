@@ -61,9 +61,6 @@
 }
 
 .checkboxContainer {
-  min-height: 30px;
-  height: 100%;
-
-  display: flex;
-  align-items: center;
+  border: 0px solid red;
+  text-align: left;
 }

@@ -26,6 +26,7 @@ import ProjectContext from '../../context/ProjectContext';
 import { InlineInput } from '../../components/InlineInput';
 
 import HelpContainer from '../../components/HelpContainer';
+import Loading from '../../components/Loading';
 
 export const normalizations = [
   "NÃO APLICAR",
@@ -185,8 +186,16 @@ export function PreProcessing({ index }) {
           />
 
           <div className={styles.graphsContainer}>
-            <Graph name={"Histograma"} image={histogram}/>
-            <Graph name={"Box-Plot"} image={boxPlot}/>
+            {
+              histogram
+              ? <Graph name={"Histograma"} image={histogram}/>
+              : <Loading/>
+            }
+            {
+              boxPlot
+              ? <Graph name={"Box-Plot"} image={boxPlot}/>
+              : <Loading/>
+            }
           </div>
 
           <div>

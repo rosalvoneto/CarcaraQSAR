@@ -640,10 +640,9 @@ def getSelectionProgress_view(request):
 
   project_id = request.GET.get('project_id')
   project = get_object_or_404(Project, id=project_id)
+  
   variables_selection = project.variablesselection_set.get()
 
-  algorithm_progress = variables_selection.algorithm_progress
-
   return Response({
-    'progress': algorithm_progress,
+    'progress': variables_selection.algorithm_progress,
   }, status=200)

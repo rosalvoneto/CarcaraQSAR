@@ -168,14 +168,11 @@ def convertAndSendDatabase_view(request):
 def sendDatabase_view(request):
 
   if 'file' in request.FILES:
+    print("ARQUIVO ENCONTRADO!")
+    
     uploaded_file = request.FILES.get('file')
     project_id = request.POST.get('project_id')
     separator = request.POST.get('separator')
-    isSmiles = request.POST.get('separator')
-    if(isSmiles == 'true'):
-      isSmiles = True
-    else:
-      isSmiles = False
 
     project = get_object_or_404(Project, id=project_id)
 
@@ -200,14 +197,14 @@ def sendDatabase_view(request):
         normalization=None,
         project=project,
       )
-
-    project_database.name = uploaded_file.name
-    project_database.description = "Database original"
-    project_database.file = uploaded_file
-    project_database.file_separator = separator
-    project_database.lines = lines
-    project_database.columns = columns
-    project_database.project = project
+    else:
+      project_database.name = uploaded_file.name
+      project_database.description = "Database original"
+      project_database.file = uploaded_file
+      project_database.file_separator = separator
+      project_database.lines = lines
+      project_database.columns = columns
+      project_database.project = project
     
     # Salvar no backend
     project_database.save()

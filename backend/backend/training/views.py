@@ -349,18 +349,15 @@ def getBootstrap_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getTrainingProgress_view(request):
-  try:
-    project_id = request.GET.get('project_id')
-    project = get_object_or_404(Project, id=project_id)
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
 
-    training = project.training_set.get()
-    
-    return Response({
-      'progress': training.progress,
-    }, status=200)
+  training = project.training_set.get()
+  
+  return Response({
+    'progress': training.progress,
+  }, status=200)
 
-  except ObjectDoesNotExist:
-    return HttpResponse("Project or training not found", status=404)
   
 def getBootstrapDetails_view(request):
 
