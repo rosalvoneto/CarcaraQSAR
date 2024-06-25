@@ -1,2 +1,0 @@
-ecabc==3.0.0
-beecolpy==2.3.2
