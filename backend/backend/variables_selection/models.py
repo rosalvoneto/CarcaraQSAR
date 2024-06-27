@@ -21,7 +21,7 @@ class VariablesSelection(models.Model):
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
-  def set_algorithm_progress(self, actual, total):
+  def set_progress(self, actual, total):
     self.algorithm_progress = f"{actual}/{total}"
     self.save()
     

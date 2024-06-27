@@ -82,6 +82,10 @@ class Training(models.Model):
     self.progress = f"{actual}/{total}"
     self.save()
 
+  def set_progress_none(self):
+    self.progress = None
+    self.save()
+
   def __str__(self):
     return f"Treinamento com algoritmo '{self.algorithm.name}'"
   

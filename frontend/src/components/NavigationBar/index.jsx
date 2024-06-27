@@ -4,7 +4,7 @@ import cactusImage from '../../assets/cactus.png';
 import logoImage from '../../assets/logo.svg';
 
 import ProgressContext from '../../context/ProgressContext';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { NavigationBarWidth } from '../../settings';
@@ -24,15 +24,32 @@ export default function NavigationBar() {
   };
 
   const { authTokens } = useContext(AuthContext);
-  const { 
-    progressExecutions, 
-    updateProgressExecutions,
-    removeProgressExecution
-  } = useContext(ProgressContext);
+  const [progressExecutions, setProgressExecutions] = useState([]);
 
   const getProgress = async() => {
-    progressExecutions.map(async (execution) => {
+    
+    // Verifica se há itens no local storage
+    let progressExecutions = []
+    if (localStorage.length > 0) {
+      console.log('Existe pelo menos um item armazenado no local storage.');
+      
+      // Listando todas as chaves e valores armazenados
+      for (let i = 0; i < localStorage.length; i++) {
+        const chave = localStorage.key(i);
+        // Recupera a string JSON do local storage
+        const objetoJSONRecuperado = localStorage.getItem(chave)
+        // Converte a string JSON de volta para um objeto JavaScript
+        const objetoRecuperado = JSON.parse(objetoJSONRecuperado);
 
+        progressExecutions.push(objetoRecuperado);
+      }
+    } else {
+      console.log('Não existe nada armazenado no local storage.');
+    }
+    setProgressExecutions(progressExecutions);
+
+    // Realiza a busca de progresso nos itens do localStorage
+    progressExecutions.map(async (execution) => {
       let response;
       if(execution.route == 'variables-selection') {
         response = await getSelectionProgress(
@@ -50,20 +67,28 @@ export default function NavigationBar() {
         const split = response.progress.split('/');
         const progress = Number(split[0]);
         const maximum = Number(split[1]);
+
+        console.log(`Progresso: ${progress}/${maximum}`);
         
         if(progress >= 0) {
           // Atualizar progresso no contexto
-          updateProgressExecutions(
-            execution.projectID,
-            execution.route,
-            progress,
-            maximum,
-          )
+          let newExecution = execution;
+          execution.progressValue = progress;
+          execution.maximumValue = maximum;
+
+          // Converte o objeto em uma string JSON
+          const executionJSON = JSON.stringify(newExecution);
+          
+          // Guarda a string JSON no local storage
+          localStorage.setItem(
+            `progress_${execution.projectID}`,
+            executionJSON
+          );
         }
       } else {
-        removeProgressExecution(execution.projectID);
+        console.log("Removendo 'execution' do localStorage");
+        localStorage.removeItem(`progress_${execution.projectID}`);
       }
-
     })
   }
 
@@ -108,17 +133,16 @@ export default function NavigationBar() {
 
         {
           progressExecutions.map((execution, index) => (
-            <div className={styles.containerProgress}>
+            <div key={index} className={styles.containerProgress}>
               <a onClick={
                 () => handleTo(`/${execution.projectID}/${execution.route}`,
                 { pageNumber: 1 })
               }>
                 <ProgressBarLoading
-                  progress={execution.actualValue}
+                  progress={execution.progressValue}
                   maximum={execution.maximumValue}
                 />
               </a>
-
             </div>
           ))
         }

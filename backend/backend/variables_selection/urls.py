@@ -25,4 +25,9 @@ urlpatterns = [
     views.getSelectionProgress_view, 
     name='get_selection_progress'
   ),
+  path(
+    'set_selection_progress', 
+    views.setSelectionProgress_view, 
+    name='set_selection_progress'
+  ),
 ]

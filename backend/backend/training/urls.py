@@ -39,13 +39,13 @@ urlpatterns = [
     name='get_bootstrap'
   ),
   path(
-    'get_training_progress', 
-    views.getTrainingProgress_view, 
-    name='get_training_progress'
-  ),
-  path(
     'get_bootstrap_details',
     views.getBootstrapDetails_view,
     name='get_bootstrap_details'
-  )
+  ),
+  path(
+    'set_training_progress', 
+    views.setTrainingProgress_view, 
+    name='set_training_progress'
+  ),
 ]

@@ -17,13 +17,18 @@ import ProgressBarLoading from '../../components/ProgressBarLoading';
 
 import { 
   getTrainingProgress,
-  getTrainingSettings, setTrainingSettings, train 
+  setTrainingProgress, 
+  getTrainingSettings, 
+  setTrainingSettings, 
+  train 
 } from '../../api/training';
 
 import { updateStatus } from '../../api/project';
 
 import Loading from '../../components/Loading';
 import ProgressContext from '../../context/ProgressContext';
+
+import { delayTimeForGetProgress } from '../../settings';
 
 export const algorithms = [
   "Random Forest",
@@ -61,8 +66,6 @@ export default function Training() {
   const location = useLocation();
   const state = location.state;
 
-  let delayTimeForGetProgress = 5000;
-
   let pageNumber = 0;
   if(state) {
     if(state.pageNumber) {
@@ -79,11 +82,8 @@ export default function Training() {
   const [progressValue, setProgressValue] = useState(0);
   const [maximumValue, setMaximumValue] = useState(100);
   const [timeForEstimation, setTimeForEstimation] = useState(0);
-  const [counterInProgress, setCounterInProgress] = useState(0);
 
   const [algorithmIndex, setAlgorithmIndex] = useState(0);
-
-  const { updateProgressExecutions } = useContext(ProgressContext);
 
   const changeParameters = (key, value) => {
     let values = algorithmParameters;
@@ -131,6 +131,13 @@ export default function Training() {
     setTrained("first time");
     if(response) {
       const response = await train(projectID, authTokens.access);
+      await setTrainingProgress(
+        projectID,
+        authTokens.access,
+        100,
+        100
+      );
+
       if(response.status == 500) {
         setTrained("error");
       } else {
@@ -146,22 +153,20 @@ export default function Training() {
     navigate(`/${projectID}/results`);
   }
 
-  const makeEstimation = (counterInProgress, progress, maximum, progressRange) => {
-    let timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
-    
+  const makeEstimation = (counterInProgress, progress, maximum) => {
+    const progressAtual = progress;
+    const timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
     const progressRestante = (maximum - progress);
-    const progressAtual = progressRange;
     
     console.log("Fazendo estimativa...");
-    console.log(counterInProgress);
-    console.log(progressRestante);
-    console.log(progressAtual);
     
-    let estimation = (progressRestante * timeForProgressAtual) / progressAtual;
-    estimation = estimation / 3600;
-    console.log(estimation);
+    const timeForProgressRestante = (progressRestante * timeForProgressAtual) / progressAtual;
+    // Transforma em segundos
+    let estimation = timeForProgressRestante / 1000;
+    // Transforma em minutos
+    estimation = estimation / 60;
+    console.log(estimation, "minutos...");
     
-    setCounterInProgress(0);
     setTimeForEstimation(Math.ceil(estimation));
   }
 
@@ -173,27 +178,43 @@ export default function Training() {
         const progress = Number(split[0]);
         const maximum = Number(split[1]);
 
-        // Fazer estimativa de tempo restante
         if(progress >= 0) {
-          console.log("Contador do progresso:", counterInProgress + 1);
-          
-          if(progress != progressValue) {
-            makeEstimation(counterInProgress + 1 ,progress, maximum, progress - progressValue);
-            
-            // Atualizar progresso
-            setProgressValue(progress);
-            setMaximumValue(maximum);
+          // Atualizar progresso
+          setProgressValue(progress);
+          setMaximumValue(maximum);
 
-            // Atualizar progresso no contexto
-            updateProgressExecutions(
-              projectID,
-              'training',
-              progress,
-              maximum,
-            )
+          // Atualizar progresso no localStorage
+          const executionString = localStorage.getItem(`progress_${projectID}`);
+          let execution = {};
+          if(executionString) {
+            execution = JSON.parse(executionString);
+            if(progress < execution.progressValue) {
+              execution.counter = 0;
+            } else {
+              execution.counter = execution.counter + 1;
+            }
+          } else {
+            execution = {
+              projectID: projectID,
+              route: 'training',
+              progressValue: progress,
+              maximumValue: maximum,
+              counter: 0
+            };
           }
+          
+          // Converte o objeto em uma string JSON
+          const executionJSON = JSON.stringify(execution);
+          
+          // Guarda a string JSON no local storage
+          localStorage.setItem(
+            `progress_${projectID}`,
+            executionJSON
+          );
 
-          setCounterInProgress(counterInProgress + 1);
+          makeEstimation(
+            execution.counter, progress, maximum
+          );
         }
       }
     }

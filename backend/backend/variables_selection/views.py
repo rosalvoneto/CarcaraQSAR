@@ -237,12 +237,6 @@ def removeVariables_view(request):
     'message': 'Database principal não encontrado!',
   }, status=200)
 
-@app.task
-def execute_after_make_selection(response):
-  print("Tarefa finalizada!")
-  print(response)
-
-@app.task
 def make_selection(project_id):
 
   project = get_object_or_404(Project, id=project_id)
@@ -251,7 +245,7 @@ def make_selection(project_id):
 
   def update_selection_progress(actual, maximum):
     nonlocal variables_selection
-    variables_selection.set_algorithm_progress(
+    variables_selection.set_progress(
       actual,
       maximum
     )
@@ -621,16 +615,6 @@ def makeSelection_view(request):
 
   project_id = request.POST.get('project_id')
 
-  """
-  resultado = make_selection.apply_async(
-    args=[project_id], 
-    link=execute_after_make_selection.s()
-  )
-  resposta = {"message": "Tarefa iniciada com sucesso."}
-  return Response(resposta, status=200)
-
-  """
-
   response = make_selection(project_id)
   return Response(response, status=200)
 
@@ -642,6 +626,24 @@ def getSelectionProgress_view(request):
   project = get_object_or_404(Project, id=project_id)
   
   variables_selection = project.variablesselection_set.get()
+
+  return Response({
+    'progress': variables_selection.algorithm_progress,
+  }, status=200)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def setSelectionProgress_view(request):
+
+  project_id = request.POST.get('project_id')
+  progress_value = request.POST.get('progress_value')
+  maximum_value = request.POST.get('maximum_value')
+
+  project = get_object_or_404(Project, id=project_id)
+  variables_selection = project.variablesselection_set.get()
+  
+  variables_selection.set_progress(progress_value, maximum_value)
+  project.save()
 
   return Response({
     'progress': variables_selection.algorithm_progress,

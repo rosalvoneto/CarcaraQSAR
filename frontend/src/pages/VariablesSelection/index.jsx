@@ -18,7 +18,8 @@ import {
   removeDatabaseConstantVariables, 
   removeDatabaseVariables,
   makeSelection,
-  getSelectionProgress
+  getSelectionProgress,
+  setSelectionProgress
 } 
 from '../../api/variablesSelection';
 import { deleteDatabase, downloadDatabase, getDatabases } from '../../api/database';
@@ -35,6 +36,7 @@ import Loading from '../../components/Loading';
 import ProgressBarLoading from '../../components/ProgressBarLoading';
 import ProgressContext from '../../context/ProgressContext';
 
+import { delayTimeForGetProgress } from '../../settings';
 
 export const algorithms = [
   "NÃO APLICAR",
@@ -97,8 +99,6 @@ export default function VariablesSelection() {
     }
   }
 
-  let delayTimeForGetProgress = 5000;
-
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [algorithmParameters, setAlgorithmParameters] = useState({});
 
@@ -118,8 +118,6 @@ export default function VariablesSelection() {
   const [maximumValue, setMaximumValue] = useState(100);
   const [timeForEstimation, setTimeForEstimation] = useState(0);
   const [counterInProgress, setCounterInProgress] = useState(0);
-
-  const { updateProgressExecutions } = useContext(ProgressContext);
 
   const navigate = useNavigate();
   const navigateToVariablesSelection = () => {
@@ -215,6 +213,12 @@ export default function VariablesSelection() {
 
     setSelected("first time");
     const response = await makeSelection(projectID, authTokens.access);
+    await setSelectionProgress(
+      projectID,
+      authTokens.access,
+      100,
+      100
+    );
 
     if(response.error) {
       setSelected("error");
@@ -289,22 +293,20 @@ export default function VariablesSelection() {
     setDatabases(response.databases);
   }
 
-  const makeEstimation = (counterInProgress, progress, maximum, progressRange) => {
-    let timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
-    
+  const makeEstimation = (counterInProgress, progress, maximum) => {
+    const progressAtual = progress;
+    const timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
     const progressRestante = (maximum - progress);
-    const progressAtual = progressRange;
     
     console.log("Fazendo estimativa...");
-    console.log(counterInProgress);
-    console.log(progressRestante);
-    console.log(progressAtual);
     
-    let estimation = (progressRestante * timeForProgressAtual) / progressAtual;
-    estimation = estimation / 3600;
-    console.log(estimation);
+    const timeForProgressRestante = (progressRestante * timeForProgressAtual) / progressAtual;
+    // Transforma em segundos
+    let estimation = timeForProgressRestante / 1000;
+    // Transforma em minutos
+    estimation = estimation / 60;
+    console.log(estimation, "minutos...");
     
-    setCounterInProgress(0);
     setTimeForEstimation(Math.ceil(estimation));
   }
 
@@ -316,27 +318,43 @@ export default function VariablesSelection() {
       const progress = Number(split[0]);
       const maximum = Number(split[1]);
       
-      // Fazer estimativa de tempo restante
       if(progress >= 0) {
-        console.log("Contador do progresso:", counterInProgress + 1);
+        // Atualizar progresso
+        setProgressValue(progress);
+        setMaximumValue(maximum);
+
+          // Atualizar progresso no localStorage
+          const executionString = localStorage.getItem(`progress_${projectID}`);
+          let execution = {};
+          if(executionString) {
+            execution = JSON.parse(executionString);
+            if(progress < execution.progressValue) {
+              execution.counter = 0;
+            } else {
+              execution.counter = execution.counter + 1;
+            }
+          } else {
+            execution = {
+              projectID: projectID,
+              route: 'training',
+              progressValue: progress,
+              maximumValue: maximum,
+              counter: 0
+            };
+          }
         
-        if(progress != progressValue) {
-          makeEstimation(counterInProgress + 1 ,progress, maximum, progress - progressValue);
-          
-          // Atualizar progresso
-          setProgressValue(progress);
-          setMaximumValue(maximum);
+        // Converte o objeto em uma string JSON
+        const executionJSON = JSON.stringify(execution);
+        
+        // Guarda a string JSON no local storage
+        localStorage.setItem(
+          `progress_${projectID}`,
+          executionJSON
+        );
 
-          // Atualizar progresso no contexto
-          updateProgressExecutions(
-            projectID,
-            'variables-selection',
-            progress,
-            maximum,
-          )
-        }
-
-        setCounterInProgress(counterInProgress + 1);
+        makeEstimation(
+          execution.counter, progress, maximum
+        );
       }
     }
   }

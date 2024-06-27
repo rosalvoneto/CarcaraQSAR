@@ -210,8 +210,7 @@ def train_view(request):
         # Atualiza treinamento para concluído
         training.trained = True
         # Zerar o progresso
-        training.progress = None
-        training.save()
+        training.set_progress_none()
 
         return Response({
           'message': 'O treinamento está finalizado!',
@@ -345,19 +344,6 @@ def getBootstrap_view(request):
     return HttpResponse("Project or training not found", status=404)
   except ValueError:
     return HttpResponse("No file associated with bootstrap attribute", status=404)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getTrainingProgress_view(request):
-  project_id = request.GET.get('project_id')
-  project = get_object_or_404(Project, id=project_id)
-
-  training = project.training_set.get()
-  
-  return Response({
-    'progress': training.progress,
-  }, status=200)
-
   
 def getBootstrapDetails_view(request):
 
@@ -381,3 +367,32 @@ def getBootstrapDetails_view(request):
   
   return JsonResponse(response, status=200, safe=False)
   
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getTrainingProgress_view(request):
+  project_id = request.GET.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  training = project.training_set.get()
+  
+  return Response({
+    'progress': training.progress,
+  }, status=200)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def setTrainingProgress_view(request):
+
+  project_id = request.POST.get('project_id')
+  progress_value = request.POST.get('progress_value')
+  maximum_value = request.POST.get('maximum_value')
+
+  project = get_object_or_404(Project, id=project_id)
+  training = project.training_set.get()
+
+  training.set_progress(progress_value, maximum_value)
+  project.save()
+  
+  return Response({
+    'progress': training.progress,
+  }, status=200)

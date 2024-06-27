@@ -1,6 +1,7 @@
 
 export const NavigationBarWidth = 250;
 export const projectName = "Novo Projeto";
+export const delayTimeForGetProgress = 2000;
 
 export const statesProgressBar = [
   {

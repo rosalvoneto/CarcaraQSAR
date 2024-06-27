@@ -196,3 +196,31 @@ export const getSelectionProgress = async(
   }
   return dataResponse
 }
+
+// Seta o progresso na seleção de variáveis
+export const setSelectionProgress = async(
+  projectID, accessToken, progressValue, maximumValue
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+  formData.append('progress_value', progressValue);
+  formData.append('maximum_value', maximumValue);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/set_selection_progress`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+    console.log(dataResponse);
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}

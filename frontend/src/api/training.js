@@ -136,6 +136,29 @@ export const getTrainingGraphs = async (
   return imagesURL;
 }
 
+export const getBootstrapDetails = async (
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/get_bootstrap_details?project_id=${projectID}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  if(response.status == 200) {
+
+    console.log(dataResponse);
+    
+  } else {
+    console.log(`Status: ${response.status}`);
+  }
+  return dataResponse;
+}
+
 // Resgata progresso no treinamento 
 export const getTrainingProgress = async (
   projectID, accessToken
@@ -160,24 +183,28 @@ export const getTrainingProgress = async (
   return dataResponse;
 }
 
-// Resgata progresso no treinamento 
-export const getBootstrapDetails = async (
-  projectID, accessToken
+// Seta progresso no treinamento
+export const setTrainingProgress = async (
+  projectID, accessToken, progressValue, maximumValue
 ) => {
 
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+  formData.append('progress_value', progressValue);
+  formData.append('maximum_value', maximumValue);
+
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/get_bootstrap_details?project_id=${projectID}`, {
-      method: 'GET',
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/set_training_progress`, {
+      method: 'PUT',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
       },
+      body: formData,
   })
-
+  
   let dataResponse = await response.json();
   if(response.status == 200) {
-
     console.log(dataResponse);
-    
   } else {
     console.log(`Status: ${response.status}`);
   }
