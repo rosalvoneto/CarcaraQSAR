@@ -1,3 +1,5 @@
+db.sqlite3
+
 # Logs
 logs
 *.log
@@ -30,7 +32,5 @@ dist-ssr
 __pycache__
 media
 staticfiles
-db.sqlite3
-*.sqlite3
 AG
 myENV
