@@ -35,8 +35,7 @@ def verify_Nan(df):
     for index in nan_positions:
       print(df.iloc[index])
   else:
-    print("O DataFrame não possui valores NaN.")
-
+    pass
 
 
 def leave_one_out(project_id, data, scaler_name, algorithm, parameters):

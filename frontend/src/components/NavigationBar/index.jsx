@@ -68,22 +68,27 @@ export default function NavigationBar() {
         const progress = Number(split[0]);
         const maximum = Number(split[1]);
 
-        console.log(`Progresso: ${progress}/${maximum}`);
-        
-        if(progress >= 0) {
-          // Atualizar progresso no contexto
-          let newExecution = execution;
-          execution.progressValue = progress;
-          execution.maximumValue = maximum;
-
-          // Converte o objeto em uma string JSON
-          const executionJSON = JSON.stringify(newExecution);
+        if(progress != maximum) {
+          console.log(`Progresso: ${progress}/${maximum}`);
           
-          // Guarda a string JSON no local storage
-          localStorage.setItem(
-            `progress_${execution.projectID}`,
-            executionJSON
-          );
+          if(progress >= 0) {
+            // Atualizar progresso no contexto
+            let newExecution = execution;
+            execution.progressValue = progress;
+            execution.maximumValue = maximum;
+
+            // Converte o objeto em uma string JSON
+            const executionJSON = JSON.stringify(newExecution);
+            
+            // Guarda a string JSON no local storage
+            localStorage.setItem(
+              `progress_${execution.projectID}`,
+              executionJSON
+            );
+          }
+        } else {
+          console.log("Removendo 'execution' do localStorage");
+          localStorage.removeItem(`progress_${execution.projectID}`);
         }
       } else {
         console.log("Removendo 'execution' do localStorage");

@@ -606,6 +606,7 @@ def make_selection(project_id):
 
   return {
     'message': 'Database principal não encontrado!',
+    'error': 'Database principal não encontrado!'
   }
 
 

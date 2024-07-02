@@ -213,17 +213,17 @@ export default function VariablesSelection() {
 
     setSelected("first time");
     const response = await makeSelection(projectID, authTokens.access);
-    await setSelectionProgress(
-      projectID,
-      authTokens.access,
-      100,
-      100
-    );
+    localStorage.removeItem(`progress_${projectID}`);
+    console.log("Seleção de variáveis finalizada!");
 
     if(response.error) {
       setSelected("error");
+      console.log("Deu errooo!");
+      alert("Deu errooo!");
     } else {
       setSelected("finished");
+      console.log("FINALIZOUUUU!");
+      alert("Finalizouuuu");
     }
   }
 
@@ -336,7 +336,7 @@ export default function VariablesSelection() {
           } else {
             execution = {
               projectID: projectID,
-              route: 'training',
+              route: 'variables-selection',
               progressValue: progress,
               maximumValue: maximum,
               counter: 0

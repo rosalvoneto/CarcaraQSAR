@@ -131,17 +131,17 @@ export default function Training() {
     setTrained("first time");
     if(response) {
       const response = await train(projectID, authTokens.access);
-      await setTrainingProgress(
-        projectID,
-        authTokens.access,
-        100,
-        100
-      );
+      localStorage.removeItem(`progress_${projectID}`);
+      console.log("Treinamento finalizado!");
 
       if(response.status == 500) {
-        setTrained("error");
+        setSelected("error");
+        console.log("Deu errooo!");
+        alert("Deu errooo!");
       } else {
-        setTrained("finished");
+        setSelected("finished");
+        console.log("FINALIZOUUUU!");
+        alert("Finalizouuuu");
       }
 
       return true;
