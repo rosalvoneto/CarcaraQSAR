@@ -224,11 +224,6 @@ def downloadEstimation_view(request):
   print(dataframe)
   dataframe.to_csv(file_path, index=False)
 
-  # return Response({
-  #   'prevision': prevision_values,
-  #   'realValues': real_values
-  # }, status=200)
-
   # Abra o arquivo e retorne como uma resposta de arquivo
   with open(file_path, 'rb') as file:
     response = HttpResponse(

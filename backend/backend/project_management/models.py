@@ -72,6 +72,9 @@ class Project(models.Model):
       # Vincula scaler ao projeto
       self.prevision_model.add_scaler(scaler_file)
       self.save()
+    
+    # Exclui o modelo da localização temporária
+    os.remove(file_path)
 
     # Criar o modelo
     # (Deve ser utilizado o tipo de modelo correto)
