@@ -131,9 +131,8 @@ export default function Training() {
     setTrained("first time");
     if(response) {
       const response = await train(projectID, authTokens.access);
-      localStorage.removeItem(`progress_${projectID}`);
       console.log("Treinamento finalizado!");
-
+      
       if(response.status == 500) {
         setTrained("error");
         alert("Ocorreu um erro!");
@@ -141,6 +140,7 @@ export default function Training() {
         setTrained("finished");
         alert("Finalizou!");
       }
+      localStorage.removeItem(`progress_${projectID}`);
 
       return true;
     }

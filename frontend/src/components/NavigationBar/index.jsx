@@ -3,7 +3,6 @@ import styles from './styles.module.css';
 import cactusImage from '../../assets/cactus.png';
 import logoImage from '../../assets/logo.svg';
 
-import ProgressContext from '../../context/ProgressContext';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +12,7 @@ import AuthContext from '../../context/AuthContext';
 
 import { getSelectionProgress } from '../../api/variablesSelection';
 import { getTrainingProgress } from '../../api/training';
+import { getProject } from '../../api/project';
 
 export default function NavigationBar() {
 
@@ -23,6 +23,11 @@ export default function NavigationBar() {
 
   const { authTokens } = useContext(AuthContext);
   const [progressExecutions, setProgressExecutions] = useState([]);
+
+  const getProjectDetails = async(projectID) => {
+    const response = await getProject(projectID, authTokens.access);
+    return response.projectData;
+  }
 
   const getProgress = async() => {
     
@@ -72,9 +77,14 @@ export default function NavigationBar() {
           if(progress >= 0) {
             // Atualizar progresso no contexto
             let newExecution = execution;
-            execution.progressValue = progress;
-            execution.maximumValue = maximum;
-            execution.counter = execution.counter + 1;
+            newExecution.progressValue = progress;
+            newExecution.maximumValue = maximum;
+            newExecution.counter = newExecution.counter + 1;
+
+            console.log("ID do projeto:", execution.projectID);
+            const response = await getProjectDetails(execution.projectID);
+            console.log(response.name);
+            newExecution.projectName = response.name;
 
             // Converte o objeto em uma string JSON
             const executionJSON = JSON.stringify(newExecution);
@@ -132,6 +142,9 @@ export default function NavigationBar() {
         {
           progressExecutions.map((execution, index) => (
             <div key={index} className={styles.containerProgress}>
+              <p style={{ fontSize: 13 }}>
+                Execução do projeto: {execution.projectName}
+              </p>
               <a onClick={
                 () => handleTo(`/${execution.projectID}/${execution.route}`,
                 { pageNumber: 1 })

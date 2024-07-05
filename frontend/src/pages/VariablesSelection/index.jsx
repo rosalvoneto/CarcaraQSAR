@@ -215,7 +215,7 @@ export default function VariablesSelection() {
     const response = await makeSelection(projectID, authTokens.access);
     console.log("Seleção de variáveis finalizada!");
 
-    if(response.error) {
+    if(response.status == 500) {
       setSelected("error");
       alert("Ocorreu um erro!");
     } else {

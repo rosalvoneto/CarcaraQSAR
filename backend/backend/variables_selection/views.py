@@ -625,7 +625,11 @@ def makeSelection_view(request):
   project_id = request.POST.get('project_id')
 
   response = make_selection(project_id)
-  return Response(response, status=200)
+  try:
+    error = response['error']
+    return Response(response, status=500)
+  except:
+    return Response(response, status=200)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

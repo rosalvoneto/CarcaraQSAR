@@ -214,6 +214,7 @@ def train_view(request):
         training.trained = True
         # Zerar o progresso
         training.set_progress_none()
+        project.save()
 
         return Response({
           'message': 'O treinamento está finalizado!',
@@ -221,21 +222,40 @@ def train_view(request):
         }, status=200)
       
       else:
+
+        # Zerar o progresso
+        training.set_progress_none()
+        project.save()
+
         return Response({
           'message': 'Não foi encontrada Normalização!',
         }, status=500)
     
+    # Zerar o progresso
+    training.set_progress_none()
+    project.save()
+
     return Response({
       'message': 'Não foi encontrado Database!',
     }, status=500)
 
   except Training.DoesNotExist:
+
+    # Zerar o progresso
+    training.set_progress_none()
+    project.save()
+
     return Response({
       'message': 'Configurações de treinamento não foram encontradas!',
       'error': 'Configurações de treinamento não encontradas!'
     }, status=500)
   
   except Exception as error:
+
+    # Zerar o progresso
+    training.set_progress_none()
+    project.save()
+    
     return Response({
       'message': 'Erro no treinamento',
       'error': str(error)

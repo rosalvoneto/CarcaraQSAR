@@ -167,12 +167,9 @@ export const makeSelection = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
-  return dataResponse
+  console.log(dataResponse.message);
+
+  return response;
 }
 
 // Resgatar o progresso na seleção de variáveis através do algoritmo
