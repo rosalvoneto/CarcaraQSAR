@@ -568,6 +568,8 @@ def make_selection(project_id):
           best_node, best_R2 = graph.execution(best_variable)
           print("Melhor R2:", best_R2)
 
+        update_selection_progress(100, 100)
+
         # Ler CSV do melhor conjunto de variáveis
         dataframe = pd.read_csv("base_best.csv")
 
@@ -596,13 +598,19 @@ def make_selection(project_id):
         }
     
   except Exception as error:
-    print("A seleção retornou o seguinte erro:")
-    print(error, "\n")
 
+    # Zerar o progresso
+    variables_selection.set_progress_none()
+    project.save()
+    
     return {
       'message': 'Erro na seleção',
       'error': str(error),
     }
+  
+  # Zerar o progresso
+  variables_selection.set_progress_none()
+  project.save()
 
   return {
     'message': 'Database principal não encontrado!',

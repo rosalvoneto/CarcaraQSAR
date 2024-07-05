@@ -118,6 +118,7 @@ def train_view(request):
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
 
+  training = project.training_set.get()
   database = project.get_database()
 
   try:
@@ -140,7 +141,7 @@ def train_view(request):
         print("Normalização:", database.normalization)
 
         # Execuções dos algoritmos e salvamento dos gráficos
-
+        
         print("Calculando leave one out:")
         leave_one_out(
           project_id,
@@ -207,6 +208,8 @@ def train_view(request):
           training.importance.save('importance.png', File(image), save=True)
         os.remove(file_name)
 
+        # Atualizando progresso
+        training.set_progress(100, 100)
         # Atualiza treinamento para concluído
         training.trained = True
         # Zerar o progresso
@@ -228,13 +231,11 @@ def train_view(request):
 
   except Training.DoesNotExist:
     return Response({
-      'message': 'Configurações de treinamento não foram encontradas!'
-    }, status=200)
+      'message': 'Configurações de treinamento não foram encontradas!',
+      'error': 'Configurações de treinamento não encontradas!'
+    }, status=500)
   
   except Exception as error:
-    print("O treinamento retornou o seguinte erro:")
-    print(error, "\n")
-
     return Response({
       'message': 'Erro no treinamento',
       'error': str(error)

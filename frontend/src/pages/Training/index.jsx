@@ -135,13 +135,11 @@ export default function Training() {
       console.log("Treinamento finalizado!");
 
       if(response.status == 500) {
-        setSelected("error");
-        console.log("Deu errooo!");
-        alert("Deu errooo!");
+        setTrained("error");
+        alert("Ocorreu um erro!");
       } else {
-        setSelected("finished");
-        console.log("FINALIZOUUUU!");
-        alert("Finalizouuuu");
+        setTrained("finished");
+        alert("Finalizou!");
       }
 
       return true;
@@ -190,8 +188,6 @@ export default function Training() {
             execution = JSON.parse(executionString);
             if(progress < execution.progressValue) {
               execution.counter = 0;
-            } else {
-              execution.counter = execution.counter + 1;
             }
           } else {
             execution = {

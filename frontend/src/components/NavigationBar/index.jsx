@@ -7,7 +7,7 @@ import ProgressContext from '../../context/ProgressContext';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { NavigationBarWidth } from '../../settings';
+import { NavigationBarWidth, delayTimeForGetProgress } from '../../settings';
 import ProgressBarLoading from '../ProgressBarLoading';
 import AuthContext from '../../context/AuthContext';
 
@@ -15,8 +15,6 @@ import { getSelectionProgress } from '../../api/variablesSelection';
 import { getTrainingProgress } from '../../api/training';
 
 export default function NavigationBar() {
-
-  let delayTimeForGetProgress = 5000;
 
   const navigate = useNavigate();
   const handleTo = (url, stateToPass) => {
@@ -76,6 +74,7 @@ export default function NavigationBar() {
             let newExecution = execution;
             execution.progressValue = progress;
             execution.maximumValue = maximum;
+            execution.counter = execution.counter + 1;
 
             // Converte o objeto em uma string JSON
             const executionJSON = JSON.stringify(newExecution);
@@ -86,13 +85,7 @@ export default function NavigationBar() {
               executionJSON
             );
           }
-        } else {
-          console.log("Removendo 'execution' do localStorage");
-          localStorage.removeItem(`progress_${execution.projectID}`);
         }
-      } else {
-        console.log("Removendo 'execution' do localStorage");
-        localStorage.removeItem(`progress_${execution.projectID}`);
       }
     })
   }

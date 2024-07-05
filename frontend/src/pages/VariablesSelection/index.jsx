@@ -213,18 +213,16 @@ export default function VariablesSelection() {
 
     setSelected("first time");
     const response = await makeSelection(projectID, authTokens.access);
-    localStorage.removeItem(`progress_${projectID}`);
     console.log("Seleção de variáveis finalizada!");
 
     if(response.error) {
       setSelected("error");
-      console.log("Deu errooo!");
-      alert("Deu errooo!");
+      alert("Ocorreu um erro!");
     } else {
       setSelected("finished");
-      console.log("FINALIZOUUUU!");
-      alert("Finalizouuuu");
+      alert("Finalizou!");
     }
+    localStorage.removeItem(`progress_${projectID}`);
   }
 
   const handleToChangeRows = async() => {
@@ -323,25 +321,23 @@ export default function VariablesSelection() {
         setProgressValue(progress);
         setMaximumValue(maximum);
 
-          // Atualizar progresso no localStorage
-          const executionString = localStorage.getItem(`progress_${projectID}`);
-          let execution = {};
-          if(executionString) {
-            execution = JSON.parse(executionString);
-            if(progress < execution.progressValue) {
-              execution.counter = 0;
-            } else {
-              execution.counter = execution.counter + 1;
-            }
-          } else {
-            execution = {
-              projectID: projectID,
-              route: 'variables-selection',
-              progressValue: progress,
-              maximumValue: maximum,
-              counter: 0
-            };
+        // Atualizar progresso no localStorage
+        const executionString = localStorage.getItem(`progress_${projectID}`);
+        let execution = {};
+        if(executionString) {
+          execution = JSON.parse(executionString);
+          if(progress < execution.progressValue) {
+            execution.counter = 0;
           }
+        } else {
+          execution = {
+            projectID: projectID,
+            route: 'variables-selection',
+            progressValue: progress,
+            maximumValue: maximum,
+            counter: 0
+          };
+        }
         
         // Converte o objeto em uma string JSON
         const executionJSON = JSON.stringify(execution);
@@ -388,18 +384,13 @@ export default function VariablesSelection() {
       setRowsToRemove(response.rowsToRemove.toString());
 
       if(response.algorithmProgress) {
-        console.log("====================================");
         console.log(response.algorithmProgress);
-        console.log("====================================");
         const split = response.algorithmProgress.split('/');
         setProgressValue(Number(split[0]));
         setMaximumValue(Number(split[1]));
 
         setSelected("hide progress");
-      } else {
-        setSelected("false");
       }
-
     })
     .catch(error => {
       console.log(error);
@@ -661,10 +652,7 @@ export default function VariablesSelection() {
 
               showButton
               buttonName={"Ok"}
-              action={() => {
-                setSelected("false");
-                navigateToVariablesSelection();
-              }}
+              action={navigateToVariablesSelection}
             />
           }
 
