@@ -39,7 +39,7 @@ export const loginUser = async (e) => {
   if(response.status == 200) {
 
     Cookies.set('jwt_tokens', JSON.stringify(dataResponse), { 
-      secure: true,
+      secure: false,
       sameSite: 'strict' 
     });
     window.location.href = '/home';
