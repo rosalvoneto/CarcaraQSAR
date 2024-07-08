@@ -58,7 +58,32 @@
   bottom: 0;
 }
 
-.containerProgress {
+.progressContainer {
   width: 100%;
   padding: 10px 30px;
+}
+
+.fadeContainer {
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.fadeContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 100%;
+  background: linear-gradient(
+    to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)
+  );
+}
+
+.fadeText {
+  width: 90%;
+  display: inline-block;
+  text-overflow: clip;
+  font-size: 13px;
 }

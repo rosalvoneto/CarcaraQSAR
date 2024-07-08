@@ -141,10 +141,12 @@ export default function NavigationBar() {
 
         {
           progressExecutions.map((execution, index) => (
-            <div key={index} className={styles.containerProgress}>
-              <p style={{ fontSize: 13 }}>
-                Execução do projeto: {execution.projectName}
-              </p>
+            <div key={index} className={styles.progressContainer}>
+              <div className={styles.fadeContainer}>
+                <p className={styles.fadeText}>
+                  Execução: {execution.projectName}
+                </p>
+              </div>
               <a onClick={
                 () => handleTo(`/${execution.projectID}/${execution.route}`,
                 { pageNumber: 1 })
