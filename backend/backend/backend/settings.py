@@ -247,13 +247,17 @@ AUTH_USER_MODEL = 'user.User'
 # Permissões de acesso
 # Permitir todas as origens
 CORS_ALLOW_ALL_ORIGINS = True
+# Configurações para permitir cookies de autenticação
+# Permite credenciais em solicitações cross-origin
+CORS_ALLOW_CREDENTIALS = True
+
 # Permitir origens específicas
 X_FRAME_OPTIONS = 'ALLOW-FROM https://carcaraqsar.com.br'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://backend.carcaraqsar.com.br',
-    'http://www.backend.carcaraqsar.com.br',
+    'http://backend.carcaraqsar.com.br:3000',
+    'http://www.backend.carcaraqsar.com.br:3000',
     'http://carcaraqsar.com.br',
     'http://www.carcaraqsar.com.br',
 ]
@@ -264,14 +268,6 @@ SESSION_COOKIE_SECURE = False  # True se usar HTTPS
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_HTTPONLY = False
 SESSION_COOKIE_HTTPONLY = False
-
-# Configurações para permitir cookies de autenticação
-# Permite credenciais em solicitações cross-origin
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:5173',  # URL do seu frontend React em desenvolvimento
-    'http://carcaraqsar.com.br',  # URL do seu frontend React em produção
-]
 
 # Configurações do JWT
 # Nome do cookie JWT, se personalizado
