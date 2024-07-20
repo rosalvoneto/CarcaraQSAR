@@ -6,8 +6,6 @@ import base64
 
 def getHistogramImage(array, num_bins):
 
-  # print(array)
-
   # Calcule o histograma
   hist, bins = np.histogram(array, bins=num_bins)
   # Calcule a amplitude dos intervalos

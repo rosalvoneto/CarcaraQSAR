@@ -7,7 +7,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 # Create your models here.
 
 class MyUserManager(BaseUserManager):
-  def create_user(self, email, username, password=None, country=None, institution=None, **extra_fields):
+  def create_user(
+    self, email, username, password=None, 
+    country=None, institution=None, **extra_fields
+  ):
     if not email:
       raise ValueError('O endereço de e-mail deve ser fornecido!')
     email = self.normalize_email(email)
