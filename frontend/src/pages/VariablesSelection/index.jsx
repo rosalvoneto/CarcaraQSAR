@@ -157,8 +157,6 @@ export default function VariablesSelection() {
   }
 
   const removeVariablesOfTheList = (variablesToRemove) => {
-    console.log("Variáveis para retirar:", variablesToRemove);
-
     let newListOfVariables = rightListOfVariables.filter(variable => 
       !variablesToRemove.includes(variable)
     )
@@ -166,8 +164,6 @@ export default function VariablesSelection() {
   }
 
   const addVariablesToTheList = (variablesToAdd) => {
-    console.log("Variáveis para adicionar:", variablesToAdd);
-
     let newListOfVariables = [...rightListOfVariables];
     variablesToAdd.forEach(variableToAdd => {
       if(!rightListOfVariables.includes(variableToAdd)) {
@@ -182,8 +178,6 @@ export default function VariablesSelection() {
     let values = algorithmParameters;
     values[key] = value;
     setAlgorithmParameters(values);
-
-    console.log(values);
   }
 
   const handleToChangeVariables = async() => {
@@ -213,7 +207,6 @@ export default function VariablesSelection() {
 
     setSelected("first time");
     const response = await makeSelection(projectID, authTokens.access);
-    console.log("Seleção de variáveis finalizada!");
 
     if(response.status == 500) {
       setSelected("error");
@@ -239,7 +232,6 @@ export default function VariablesSelection() {
 
     getDatabases(projectID, authTokens.access)
     .then((response) => {
-      console.log(response.databases);
       setDatabases(response.databases);
     })
   }
@@ -287,7 +279,6 @@ export default function VariablesSelection() {
     );
 
     const response = await getDatabases(projectID, authTokens.access)
-    console.log(response.databases);
     setDatabases(response.databases);
   }
 
@@ -296,14 +287,11 @@ export default function VariablesSelection() {
     const timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
     const progressRestante = (maximum - progress);
     
-    console.log("Fazendo estimativa...");
-    
     const timeForProgressRestante = (progressRestante * timeForProgressAtual) / progressAtual;
     // Transforma em segundos
     let estimation = timeForProgressRestante / 1000;
     // Transforma em minutos
     estimation = estimation / 60;
-    console.log(estimation, "minutos...");
     
     setTimeForEstimation(Math.ceil(estimation));
   }
@@ -311,7 +299,6 @@ export default function VariablesSelection() {
   const getProgress = async() => {
     const response = await getSelectionProgress(projectID, authTokens.access);
     if(response.progress) {
-      console.log(response.progress);
       const split = response.progress.split('/');
       const progress = Number(split[0]);
       const maximum = Number(split[1]);
@@ -366,25 +353,19 @@ export default function VariablesSelection() {
   useEffect(() => {
     getVariablesSettings(projectID, authTokens.access)
     .then(response => {
-      console.log(response.removeConstantVariables);
       setRemoveConstantVariables(response.removeConstantVariables);
 
-      console.log(response.variablesToRemove);
       setRightListOfVariables(response.variablesToRemove);
 
-      console.log(response.algorithm);
       setChoosenAlgorithm(response.algorithm);
       
       if(response.algorithmParameters) {
-        console.log(response.algorithmParameters);
         setAlgorithmParameters(response.algorithmParameters);
       }
       
-      console.log(response.rowsToRemove);
       setRowsToRemove(response.rowsToRemove.toString());
 
       if(response.algorithmProgress) {
-        console.log(response.algorithmProgress);
         const split = response.algorithmProgress.split('/');
         setProgressValue(Number(split[0]));
         setMaximumValue(Number(split[1]));
@@ -410,7 +391,6 @@ export default function VariablesSelection() {
     if(pageNumber == 3) {
       getDatabases(projectID, authTokens.access)
       .then((response) => {
-        console.log(response.databases);
         setDatabases(response.databases);
       })
     }

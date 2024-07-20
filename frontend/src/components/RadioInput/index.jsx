@@ -12,8 +12,6 @@ export function RadionInput(
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
     setOption(event.target.value);
-
-    console.log(event.target.value);
   };
 
   useEffect(() => {

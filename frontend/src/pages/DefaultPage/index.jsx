@@ -15,7 +15,6 @@ export default function DefaultPage({ children }) {
 
   useEffect(() => {
     if(projectID != undefined) {
-      console.log("ID do projeto:", projectID);
       setProjectInfomation(projectID);
     }
   }, [projectID]);

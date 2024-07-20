@@ -15,8 +15,6 @@ export default function Home() {
   // Função para atualizar o estado
   const setNewSearchValue = (newSearchValue) => {
     setSearchValue(newSearchValue);
-
-    console.log(newSearchValue);
   };
   
   return(

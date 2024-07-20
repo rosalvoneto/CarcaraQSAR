@@ -20,12 +20,8 @@ export const sendDatabase = async (
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-    
   } else {
-    console.log(`Status: ${response.status}`);
     return false;
   }
 }
@@ -43,11 +39,7 @@ export const getDatabase = async (projectID, accessToken, transposed) => {
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
-    
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Erro interno do servidor!');
   }
 
@@ -67,11 +59,7 @@ export const getVariables = async (projectID, accessToken) => {
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
-    
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Erro interno do servidor!');
   }
 
@@ -91,11 +79,7 @@ export const getHistogram = async (projectID, variable, divisions, accessToken) 
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
-    
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Erro interno do servidor!');
   }
 
@@ -115,11 +99,7 @@ export const getBoxPlot = async (projectID, variable, accessToken) => {
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
-    
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Erro interno do servidor!');
   }
 
@@ -145,13 +125,6 @@ export const convertAndSendDatabase = async (
   })
 
   let dataResponse = await response.text();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -175,12 +148,8 @@ export const setNormalizationSettings = async (
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-    
   } else {
-    console.log(`Status: ${response.status}`);
     return false;
   }
 }
@@ -202,13 +171,6 @@ export const getNormalizationSettings = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -226,13 +188,6 @@ export const getConversionProgress = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -250,13 +205,6 @@ export const getDatabases = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -274,13 +222,6 @@ export const downloadDatabase = async (
   })
 
   let dataResponse = await response.text();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -298,12 +239,5 @@ export const deleteDatabase = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }

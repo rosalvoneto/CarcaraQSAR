@@ -17,7 +17,6 @@ export const ProjectProvider = ({ children }) => {
   const setProjectInfomation = (projectID) => {
     getProject(projectID, authTokens.access)
     .then((response) => {
-      console.log(response);
       setProjectDetails(response.projectData);
     })
     .catch((error) => {

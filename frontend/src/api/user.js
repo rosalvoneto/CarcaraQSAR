@@ -13,7 +13,6 @@ function getCookie(name) {
           }
       }
   }
-  console.log("VALOR DO COOKIE:", cookieValue);
   return cookieValue;
 }
 
@@ -47,7 +46,6 @@ export const loginUser = async (e) => {
     return dataResponse;
 
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Email ou senha incorretas!');
 
     return null;
@@ -79,12 +77,8 @@ export const createUser = async (e) => {
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Erro interno do servidor!');
     return false;
   }

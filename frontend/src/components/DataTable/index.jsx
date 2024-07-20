@@ -26,7 +26,6 @@ export function DataTable({
   const [conversionProgress, setConversionProgress] = useState("0/100");
 
   const setLoadingValue = (value) => {
-    console.log("Mudando para VALOR:", value);
     setLoading(value);
   }
 

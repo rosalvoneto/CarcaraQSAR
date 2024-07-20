@@ -65,7 +65,6 @@ export default function Results() {
   useEffect(() => {
     getTrainingGraphs(projectID, authTokens.access)
     .then((graphs) => {
-      console.log(graphs);
       setGraphs(graphs);
     })
     .catch((error) => {

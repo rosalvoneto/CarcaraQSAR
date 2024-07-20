@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(dataResponse);
       setDecodifiedAccessToken(dataResponse.access);
       
-      console.log("LOGANDO...");
       setIsAuthenticated(true);
     }
   }
@@ -46,7 +45,6 @@ export const AuthProvider = ({ children }) => {
     setAuthTokens(null);
     setDecodifiedAccessToken(null);
 
-    console.log("DESLOGANDO...");
     setIsAuthenticated(false);
   }
 

@@ -7,7 +7,6 @@ const ProgressBarLoading = ({ progress, maximum }) => {
   const [percentage, setPercentage] = useState(progress / maximum * 100);
 
   useEffect(() => {
-    console.log("Valor da porcentagem:", progress / maximum * 100, "%");
     setPercentage(progress / maximum * 100);
   }, [progress, maximum]);
 

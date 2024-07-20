@@ -2,7 +2,6 @@
 // Cria projeto
 export const createProject = async (e, accessToken) => {
   e.preventDefault();
-  console.log(accessToken)
 
   const name = e.target.name.value;
   const description = e.target.description.value;
@@ -26,12 +25,8 @@ export const createProject = async (e, accessToken) => {
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     window.location.href = '/home';
-    
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Erro interno do servidor!');
   }
 }
@@ -48,12 +43,6 @@ export const searchProjects = async (searchValue, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
   return dataResponse;
 }
 
@@ -70,12 +59,6 @@ export const searchSharedProjects = async (searchValue, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
   return dataResponse;
 }
 
@@ -92,12 +75,6 @@ export const searchDeactivatedProjects = async (searchValue, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
   return dataResponse;
 }
 
@@ -114,12 +91,6 @@ export const activateProject = async (projectID, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
 }
 
 // Desativa projeto
@@ -135,12 +106,6 @@ export const deactivateProject = async (projectID, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
 }
 
 // Compartilha projeto
@@ -156,12 +121,6 @@ export const shareProject = async (projectID, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
 }
 
 // Descompartilha projeto
@@ -177,12 +136,6 @@ export const deshareProject = async (projectID, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
 }
 
 // Remove projeto
@@ -198,12 +151,6 @@ export const removeProject = async (projectID, accessToken) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
 }
 
 // Retorna projeto específico
@@ -219,14 +166,9 @@ export const getProject = async (projectID, accessToken) => {
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
-    
   } else {
-    console.log(`Status: ${response.status}`);
     alert('Erro interno do servidor!');
   }
-
   return dataResponse;
 }
 
@@ -247,10 +189,4 @@ export const updateStatus = async (projectID, accessToken, newStatus) => {
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-    console.log('Erro interno do servidor!');
-  }
 }

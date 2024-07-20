@@ -7,7 +7,6 @@ export const convertStringToFile = (stringFile, fileName) => {
     type: 'application/octet-stream' 
   });
 
-  console.log(file);
   return file;
 };
 

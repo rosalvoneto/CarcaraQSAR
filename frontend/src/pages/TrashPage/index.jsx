@@ -18,8 +18,6 @@ export default function TrashPage() {
   // Função para atualizar o estado
   const setNewSearchValue = (newSearchValue) => {
     setSearchValue(newSearchValue);
-
-    console.log(newSearchValue);
   };
 
   useEffect(() => {
@@ -27,7 +25,6 @@ export default function TrashPage() {
     const checkAuthentication = () => {
       // Obtém o token do cookie
       const token = Cookies.get('jwt_tokens');
-      console.log('TOKEN:', token);
 
       // Verifica se o token existe e não está expirado
       if(token) {

@@ -19,11 +19,6 @@ export const makePrevision = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -45,11 +40,6 @@ export const createModel = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -67,11 +57,6 @@ export const getModel = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -93,11 +78,6 @@ export const deleteModel = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -114,13 +94,7 @@ export const downloadModel = async(
       },
   })
 
-  console.log(response);
-
   let dataResponse = await response.text();
-  if(response.status == 200) {
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -137,13 +111,7 @@ export const downloadScaler = async(
       },
   })
 
-  console.log(response);
-
   let dataResponse = await response.text();
-  if(response.status == 200) {
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -165,11 +133,6 @@ export const calculateAll = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -186,12 +149,6 @@ export const downloadEstimation = async(
       },
   })
 
-  console.log(response);
-
   let dataResponse = await response.text();
-  if(response.status == 200) {
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }

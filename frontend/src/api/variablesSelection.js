@@ -30,12 +30,8 @@ export const setVariablesSettings = async (
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-    
   } else {
-    console.log(`Status: ${response.status}`);
     return false;
   }
 }
@@ -54,11 +50,6 @@ export const getVariablesSettings = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -81,12 +72,8 @@ export const removeDatabaseRows = async(
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-    
   } else {
-    console.log(`Status: ${response.status}`);
     return false;
   }
 }
@@ -110,12 +97,8 @@ export const removeDatabaseConstantVariables = async(
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-    
   } else {
-    console.log(`Status: ${response.status}`);
     return false;
   }
 }
@@ -139,12 +122,8 @@ export const removeDatabaseVariables = async(
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-    
   } else {
-    console.log(`Status: ${response.status}`);
     return false;
   }
 }
@@ -167,8 +146,6 @@ export const makeSelection = async(
   })
 
   let dataResponse = await response.json();
-  console.log(dataResponse.message);
-
   return response;
 }
 
@@ -186,11 +163,6 @@ export const getSelectionProgress = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse
 }
 
@@ -214,10 +186,5 @@ export const setSelectionProgress = async(
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }

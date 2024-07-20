@@ -65,7 +65,6 @@ export default function Prevision() {
     const responseCreation = await createModel(
       projectID, authTokens.access
     );
-    console.log(responseCreation.message);
 
     const response = await getModel(projectID, authTokens.access);
     setHasModel(response.hasModel);
@@ -91,7 +90,6 @@ export default function Prevision() {
       const link = document.createElement('a');
       link.href = url;
       
-      console.log(response);
       let fileName = 'model';
 
       link.setAttribute('download', `${fileName}.pkl`);
@@ -114,7 +112,6 @@ export default function Prevision() {
       const link = document.createElement('a');
       link.href = url;
       
-      console.log(response);
       let fileName = 'scaler';
 
       link.setAttribute('download', `${fileName}.pkl`);
@@ -137,7 +134,6 @@ export default function Prevision() {
       const link = document.createElement('a');
       link.href = url;
       
-      console.log(response);
       let fileName = 'Estimation.csv';
 
       link.setAttribute('download', `${fileName}`);

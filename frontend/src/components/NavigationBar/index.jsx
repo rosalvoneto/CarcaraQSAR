@@ -34,7 +34,6 @@ export default function NavigationBar() {
     // Verifica se há itens no local storage
     let progressExecutions = []
     if (localStorage.length > 0) {
-      console.log('Existe pelo menos um item armazenado no local storage.');
       
       // Listando todas as chaves e valores armazenados
       for (let i = 0; i < localStorage.length; i++) {
@@ -46,8 +45,6 @@ export default function NavigationBar() {
 
         progressExecutions.push(objetoRecuperado);
       }
-    } else {
-      console.log('Não existe nada armazenado no local storage.');
     }
     setProgressExecutions(progressExecutions);
 
@@ -58,12 +55,10 @@ export default function NavigationBar() {
         response = await getSelectionProgress(
           execution.projectID, authTokens.access
         );
-        console.log("Progresso de seleção....");
       } else {
         response = await getTrainingProgress(
           execution.projectID, authTokens.access
         );
-        console.log("Progresso de treinamento....");
       }
 
       if(response.progress) {
@@ -72,7 +67,6 @@ export default function NavigationBar() {
         const maximum = Number(split[1]);
 
         if(progress != maximum) {
-          console.log(`Progresso: ${progress}/${maximum}`);
           
           if(progress >= 0) {
             // Atualizar progresso no contexto
@@ -81,9 +75,7 @@ export default function NavigationBar() {
             newExecution.maximumValue = maximum;
             newExecution.counter = newExecution.counter + 1;
 
-            console.log("ID do projeto:", execution.projectID);
             const response = await getProjectDetails(execution.projectID);
-            console.log(response.name);
             newExecution.projectName = response.name;
 
             // Converte o objeto em uma string JSON

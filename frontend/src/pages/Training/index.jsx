@@ -89,8 +89,6 @@ export default function Training() {
     let values = algorithmParameters;
     values[key] = value;
     setAlgorithmParameters(values);
-
-    console.log(values);
   }
 
   const nextActionButton = async() => {
@@ -100,13 +98,9 @@ export default function Training() {
       trainingSettings.algorithm == choosenAlgorithm && 
       trainingSettings.withFullSet == withFullSet
       ) {
-      console.log("O algoritmo não mudou");
-      console.log("A configuração de conjunto completo não mudou");
-      console.log("Não precisa modificar!");
       return true;
 
     } else {
-      console.log("Algo mudou, precisa modificar!");
       const response = await setTrainingSettings(
         projectID, 
         choosenAlgorithm, 
@@ -131,7 +125,6 @@ export default function Training() {
     setTrained("first time");
     if(response) {
       const response = await train(projectID, authTokens.access);
-      console.log("Treinamento finalizado!");
       
       if(response.status == 500) {
         setTrained("error");
@@ -156,14 +149,11 @@ export default function Training() {
     const timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
     const progressRestante = (maximum - progress);
     
-    console.log("Fazendo estimativa...");
-    
     const timeForProgressRestante = (progressRestante * timeForProgressAtual) / progressAtual;
     // Transforma em segundos
     let estimation = timeForProgressRestante / 1000;
     // Transforma em minutos
     estimation = estimation / 60;
-    console.log(estimation, "minutos...");
     
     setTimeForEstimation(Math.ceil(estimation));
   }
@@ -219,17 +209,13 @@ export default function Training() {
   useEffect(() => {
     getTrainingSettings(projectID, authTokens.access)
     .then((response) => {
-      console.log(response.algorithm);
       setChoosenAlgorithm(response.algorithm);
 
-      console.log(response.parameters);
       setAlgorithmParameters(response.parameters);
 
-      console.log(response.withFullSet);
       setWithFullSet(response.withFullSet);
 
       if(response.algorithmProgress) {
-        console.log(response.algorithmProgress);
         const split = response.algorithmProgress.split('/');
         setProgressValue(Number(split[0]));
         setMaximumValue(Number(split[1]));
@@ -253,13 +239,11 @@ export default function Training() {
 
   useEffect(() => {
     const index = algorithms.indexOf(choosenAlgorithm);
-    console.log("Índice do algoritmo:", index);
     setAlgorithmIndex(index);
 
   }, [choosenAlgorithm]);
 
   useEffect(() => {
-    console.log("Valor do check:", withFullSet);
   }, [withFullSet])
 
   useEffect(() => {

@@ -156,7 +156,6 @@ export default function PreProcessing({ index }) {
   useEffect(() => {
     getNormalizationSettings(projectID, authTokens.access)
     .then(response => {
-      console.log(response.normalization);
       setChoosenNormalization(response.normalization);
     })
     .catch(error => {

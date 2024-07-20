@@ -32,7 +32,6 @@ export function Block({ state, useImage, progress }) {
 
   const navigate = useNavigate();
   const handleTo = (state) => {
-    console.log(state);
     
     navigate(
       `/${projectDetails.id}${state.href}`, { state: state.stateToPass }

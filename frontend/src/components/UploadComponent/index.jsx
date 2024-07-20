@@ -7,7 +7,6 @@ const UploadComponent = ({
   const handleFileChange = (event) => {
     // Atualiza o estado com o arquivo selecionado
     setSelectedFile(event.target.files[0]);
-    console.log("Arquivo selecionado!");
   };
 
   return (

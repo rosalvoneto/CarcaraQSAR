@@ -23,12 +23,8 @@ export const setTrainingSettings = async (
 
   let dataResponse = await response.json();
   if(response.status == 200) {
-
-    console.log(dataResponse);
     return true;
-    
   } else {
-    console.log(`Status: ${response.status}`);
     return false;
   }
 }
@@ -47,13 +43,6 @@ export const getTrainingSettings = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -75,8 +64,6 @@ export const train = async (
   })
   
   let dataResponse = await response.json();
-  console.log(dataResponse.message);
-
   return response;
 }
 
@@ -146,13 +133,6 @@ export const getBootstrapDetails = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -170,13 +150,6 @@ export const getTrainingProgress = async (
   })
 
   let dataResponse = await response.json();
-  if(response.status == 200) {
-
-    console.log(dataResponse);
-    
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
 
@@ -200,10 +173,5 @@ export const setTrainingProgress = async (
   })
   
   let dataResponse = await response.json();
-  if(response.status == 200) {
-    console.log(dataResponse);
-  } else {
-    console.log(`Status: ${response.status}`);
-  }
   return dataResponse;
 }
