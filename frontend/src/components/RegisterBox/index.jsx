@@ -3,6 +3,7 @@ import styles from './styles.module.css';
 import Input from '../Input';
 
 import { useContext } from 'react';
+
 import AuthContext from '../../context/AuthContext';
 
 export default function RegisterBox({ setRegisterBoxAppears }) {

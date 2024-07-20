@@ -130,9 +130,6 @@ export const getTrainingGraphs = async (
     }
   }
 
-  console.log("AQUIIIIIIIIIIIIIIII");
-  console.log(imagesURL);
-
   return imagesURL;
 }
 

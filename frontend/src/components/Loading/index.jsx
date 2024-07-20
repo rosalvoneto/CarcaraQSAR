@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleArrowUp } from '@fortawesome/free-solid-svg-icons';
-
 import { ArrowClockwise } from "@phosphor-icons/react";
 
 import styles from './styles.module.css';

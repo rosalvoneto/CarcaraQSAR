@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styles from './styles.module.css';
 
 export default function PopUp({ 
@@ -31,16 +30,6 @@ export default function PopUp({
             >
               {buttonName}
             </button>
-          }
-          {
-            /* 
-            <button
-              onClick={() => closeAction()}
-              className={styles.closeButton}
-            >
-              Fechar
-            </button> 
-            */
           }
         </div>
       </div>

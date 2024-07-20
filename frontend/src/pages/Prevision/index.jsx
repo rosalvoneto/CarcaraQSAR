@@ -62,25 +62,22 @@ export default function Prevision() {
   }
 
   const hadleToCreateModel = async () => {
-    const response = await createModel(
+    const responseCreation = await createModel(
       projectID, authTokens.access
     );
+    console.log(responseCreation.message);
 
-    getModel(projectID, authTokens.access)
-    .then(response => {
-      setHasModel(response.hasModel);
-    })
+    const response = await getModel(projectID, authTokens.access);
+    setHasModel(response.hasModel);
   }
 
   const hadleToDeleteModel = async () => {
-    const response = await deleteModel(
+    await deleteModel(
       projectID, authTokens.access
     );
 
-    getModel(projectID, authTokens.access)
-    .then(response => {
-      setHasModel(response.hasModel);
-    })
+    const response = await getModel(projectID, authTokens.access);
+    setHasModel(response.hasModel);
   } 
 
   const hadleToDownloadModel = async () => {

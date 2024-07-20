@@ -56,8 +56,12 @@ def makePrevision_view(request):
 
     # Recuperar scaler do banco de dados
     scaler = project.prevision_model.retrieve_scaler()
+    print("Scaler:")
+    print(scaler)
     # Recuperar modelo do banco de dados
     model = project.prevision_model.retrieve_model()
+    print("Model:")
+    print(model)
 
     # Faz a normalização dos valores das variáveis
     X_subset = scaler.transform(dataframe)
