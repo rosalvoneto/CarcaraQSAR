@@ -10,7 +10,7 @@ import styles from './styles.module.css';
 import { createProject } from '../../api/project';
 import AuthContext from '../../context/AuthContext';
 
-export function NewProject() {
+export default function NewProject() {
 
   const { authTokens } = useContext(AuthContext);
 

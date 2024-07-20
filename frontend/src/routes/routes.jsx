@@ -1,19 +1,18 @@
-import { useContext, useEffect, useState } from "react";
 import { Route, Routes as Switch } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 
-import { Login } from "../pages/Login";
-import { Home } from "../pages/Home";
-import { NewProject } from "../pages/NewProject";
-import { Database } from "../pages/Database";
-import { PreProcessing } from "../pages/PreProcessing";
-import { DefaultPage } from "../pages/DefaultPage";
+import Login from "../pages/Login";
+import Home from "../pages/Home";
+import NewProject from "../pages/NewProject";
+import Database from "../pages/Database";
+import PreProcessing from "../pages/PreProcessing";
+import DefaultPage from "../pages/DefaultPage";
 import VariablesSelection from "../pages/VariablesSelection";
 import Training from "../pages/Training";
 import Results from "../pages/Results";
 import Outliers from "../pages/Outliers";
-import { TrashPage } from "../pages/TrashPage";
-import { SharedPage } from "../pages/SharedPage";
+import TrashPage from "../pages/TrashPage";
+import SharedPage from "../pages/SharedPage";
 import Prevision from "../pages/Prevision";
 
 import { Redirect } from "./Redirect";

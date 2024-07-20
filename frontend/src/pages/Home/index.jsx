@@ -8,7 +8,7 @@ import styles from './styles.module.css';
 
 import { useState } from 'react';
 
-export function Home() {
+export default function Home() {
 
   const [searchValue, setSearchValue] = useState("");
 

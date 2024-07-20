@@ -8,7 +8,7 @@ import { NavigationBarWidth } from '../../settings';
 import NavigationBar from '../../components/NavigationBar';
 import ProjectContext from '../../context/ProjectContext';
 
-export function DefaultPage({ children }) {
+export default function DefaultPage({ children }) {
 
   const { projectID } = useParams();
   const { projectDetails, setProjectInfomation } = useContext(ProjectContext);

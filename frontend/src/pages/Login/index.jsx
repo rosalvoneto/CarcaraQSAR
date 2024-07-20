@@ -6,7 +6,7 @@ import styles from './styles.module.css';
 import RegisterBox from "../../components/RegisterBox";
 import Cookies from "js-cookie";
 
-export function Login() {
+export default function Login() {
 
   const [registerBoxAppears, setRegisterBoxAppears] = useState(false);
 

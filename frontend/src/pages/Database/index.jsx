@@ -22,7 +22,7 @@ import ProjectContext from '../../context/ProjectContext';
 
 import { useParams } from 'react-router-dom';
 
-export function Database() {
+export default function Database() {
 
   const href = '/database';
   const progress = 0;

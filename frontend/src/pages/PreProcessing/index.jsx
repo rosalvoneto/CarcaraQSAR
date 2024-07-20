@@ -44,7 +44,7 @@ export const normalizationsDescriptions = [
   "O Normalizer é um método de normalização que ajusta cada amostra de dados individualmente, escalando os valores para que eles tenham norma 1. Isso é útil quando o comprimento das amostras é importante, como em tarefas de processamento de texto ou séries temporais.",
 ];
 
-export function PreProcessing({ index }) {
+export default function PreProcessing({ index }) {
 
   const { authTokens } = useContext(AuthContext);
   const { projectDetails } = useContext(ProjectContext);

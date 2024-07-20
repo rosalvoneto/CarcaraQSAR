@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 
 import Cookies from 'js-cookie';
 
-export function SharedPage() {
+export default function SharedPage() {
 
   const [authenticated, setAuthenticated] = useState(false);
   const [searchValue, setSearchValue] = useState("");

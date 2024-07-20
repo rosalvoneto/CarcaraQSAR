@@ -17,25 +17,25 @@ const TableResult = () => {
   const [RArray, setRArray] = useState([]);
   const [R2Array, setR2Array] = useState([]);
     
-  const [linhas, setLinhas] = useState([]);
+  const [lines, setLines] = useState([]);
 
-  const colunasTotal = 8;
-  const linhasTotal = 10;
+  const columsQuantity = 8;
+  const linesQuantity = 10;
 
   const fillLines = () => {
-    let linhas = []
+    let lines = []
 
     // Criação das linhas da tabela
-    for (let i = 0; i < linhasTotal; i++) {
+    for (let i = 0; i < linesQuantity; i++) {
 
-      let colunasLinha = [];
-      for (let j = 0; j < colunasTotal; j++) {
+      let columnsline = [];
+      for (let j = 0; j < columsQuantity; j++) {
         if(j == 0) {
-          colunasLinha.push(<td className={styles.td} key={j}>{i + 1}</td>);
+          columnsline.push(<td className={styles.td} key={j}>{i + 1}</td>);
         } else if(j == 1) {
           const length = molecules[i].length;
 
-          colunasLinha.push(
+          columnsline.push(
             <td className={styles.td} key={j}>
               {
                 molecules[i].map((moleculeIndex, index) => {
@@ -48,16 +48,16 @@ const TableResult = () => {
             </td>
           );
         } else if(j == 2) {
-          colunasLinha.push(<td className={styles.td} key={j}>{RArray[i].toFixed(2)}</td>);
+          columnsline.push(<td className={styles.td} key={j}>{RArray[i].toFixed(2)}</td>);
         } else if(j == 3) {
-          colunasLinha.push(<td className={styles.td} key={j}>{R2Array[i].toFixed(2)}</td>);
+          columnsline.push(<td className={styles.td} key={j}>{R2Array[i].toFixed(2)}</td>);
         }
       }
 
-      linhas.push(<tr className={styles.tr} key={i}>{colunasLinha}</tr>);
+      lines.push(<tr className={styles.tr} key={i}>{columnsline}</tr>);
     }
 
-    return linhas;
+    return lines;
   }
   
   useEffect(() => {
@@ -75,7 +75,7 @@ const TableResult = () => {
   useEffect(() => {
     if(molecules.length && RArray.length && R2Array.length) {
       let lines = fillLines();
-      setLinhas(lines);
+      setLines(lines);
     }
   }, [molecules, RArray, R2Array]);
 
@@ -90,7 +90,7 @@ const TableResult = () => {
         </tr>
       </thead>
       <tbody className={styles.body}>
-        {linhas}
+        {lines}
       </tbody>
     </table>
   );

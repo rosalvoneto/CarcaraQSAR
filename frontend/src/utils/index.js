@@ -41,20 +41,20 @@ export const convertStringToCSVMatrix = (CSVString, separator) => {
   return csvData;
 };
 
-export function transporMatriz(matriz) {
-  const linhas = matriz.length;
-  const colunas = matriz[0].length;
+export function transposeMatrix(matrix) {
+  const lines = matrix.length;
+  const columns = matrix[0].length;
 
-  // Crie uma nova matriz transposta
-  const matrizTransposta = [];
-  for (let i = 0; i < colunas; i++) {
-    matrizTransposta[i] = [];
-    for (let j = 0; j < linhas; j++) {
-      matrizTransposta[i][j] = matriz[j][i];
+  // Crie uma nova matrix transposta
+  const transposedMatrix = [];
+  for (let i = 0; i < columns; i++) {
+    transposedMatrix[i] = [];
+    for (let j = 0; j < lines; j++) {
+      transposedMatrix[i][j] = matrix[j][i];
     }
   }
 
-  return matrizTransposta;
+  return transposedMatrix;
 }
 
 export function convertJsonObjectInMatrix(jsonData) {
@@ -64,7 +64,7 @@ export function convertJsonObjectInMatrix(jsonData) {
     return keys;
   }, new Set()));
 
-  // Criar uma matriz a partir dos objetos, incluindo apenas as chaves conhecidas
+  // Criar uma matrix a partir dos objetos, incluindo apenas as chaves conhecidas
   let matrix = jsonData.map(function(entry) {
     return allKeys.map(key => entry[key]);
   });
