@@ -74,8 +74,6 @@ def setTrainingSettings_view(request):
   else:
     with_full_set = False
 
-  print("PARAMETROS:", parameters)
-
   project = get_object_or_404(Project, id=project_id)
   try:
     training = project.training_set.get()

@@ -142,7 +142,6 @@ class Project(models.Model):
           index = i + 1
           break
       
-      print(f"Status escolhido: {status_types[index]}")
       self.save()
 
   def __str__(self):

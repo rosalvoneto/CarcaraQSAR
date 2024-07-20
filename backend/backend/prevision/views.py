@@ -159,7 +159,6 @@ def calculateAll_view(request):
     real_values = dataframe.iloc[:, -1].tolist()
 
     dataframe = dataframe.drop(dataframe.columns[-1], axis=1)
-    print(dataframe)
 
     # Recuperar scaler do banco de dados
     scaler = project.prevision_model.retrieve_scaler()
@@ -225,7 +224,6 @@ def downloadEstimation_view(request):
   dataframe = pd.DataFrame(
     {'Previsões': prevision_values, 'Valores reais': real_values}
   )
-  print(dataframe)
   dataframe.to_csv(file_path, index=False)
 
   # Abra o arquivo e retorne como uma resposta de arquivo

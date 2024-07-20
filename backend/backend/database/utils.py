@@ -40,8 +40,6 @@ def getHistogramImage(array, num_bins):
 
 def getBoxPlotImage(array):
 
-  # print(array)
-  
   fig, ax = plt.subplots()
 
   # Crie o box plot

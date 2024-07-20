@@ -30,10 +30,6 @@ def verify_Nan(df):
     print("O DataFrame possui valores NaN.")
     # Identificar posições dos NaNs
     nan_positions = np.where(df.isna())
-    print(nan_positions)  
-
-    for index in nan_positions:
-      print(df.iloc[index])
   else:
     pass
 
@@ -290,7 +286,6 @@ def y_scrambling(project_id, data, algorithm, parameters):
       else:
         r2 = run_exp_for_YScrambling(data, algorithm, parameters, True)
         L_shuffled.append(r2)
-      print(f"{length_progress * j + (i + 1)}/{length_progress * times}")
       training.set_progress(length_progress * j + (i + 1), length_progress * times)
 
   X = [x+1 for x in range(length_progress)]

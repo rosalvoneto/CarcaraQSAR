@@ -145,7 +145,6 @@ class ABCAlgorithm():
                     new_bee.append(random.choice(list(set(range(n_features)) - set(new_bee))))
                 
                 new_fitness = self.evaluate_variables(X, y, new_bee, model)
-                print(new_fitness)
                 
                 # Atualiza abelha antiga pela nova se tiver melhor fitness
                 if new_fitness > fitness[i]:

@@ -22,12 +22,6 @@ def createUser_view(request):
   institution = data.get('institution')
   password = make_password(data.get('password'))
 
-  print(username)
-  print(email)
-  print(country)
-  print(institution)
-  print(password)
-
   # Realize as operações desejadas com os dados
   user = User()
   user.create_user(username, email, country, institution, password)

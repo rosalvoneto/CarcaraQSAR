@@ -52,7 +52,6 @@ def setVariablesSettings_view(request):
   algorithm = request.POST.get('algorithm')
   algorithm_parameters = request.POST.get('algorithm_parameters')
   algorithm_parameters = json.loads(algorithm_parameters)
-  print(algorithm_parameters)
 
   list_of_variables = request.POST.get('list_of_variables')
   list_of_variables = json.loads(list_of_variables)
@@ -272,7 +271,6 @@ def make_selection(project_id):
           StringIO(file_content), 
           sep=database.file_separator
         )
-        print(base)
 
         condition = algorithm != "Colônia de abelhas"
         condition = True

@@ -168,7 +168,6 @@ def convertAndSendDatabase_view(request):
 def sendDatabase_view(request):
 
   if 'file' in request.FILES:
-    print("ARQUIVO ENCONTRADO!")
     
     uploaded_file = request.FILES.get('file')
     project_id = request.POST.get('project_id')

@@ -46,7 +46,7 @@ class Problem:
 
     # Garantir que info_gain_quantity não seja maior que o número de variáveis preditoras
     if info_gain_quantity > length_variables:
-      print(f"info_gain_quantity ({info_gain_quantity}) é maior que on número de preditores ({length_variables}). Ajustando para {length_variables}.")
+      print(f"info_gain_quantity ({info_gain_quantity}) é maior que o número de preditores ({length_variables}). Ajustando para {length_variables}.")
       info_gain_quantity = length_variables
 
     # Suponha que dataframe seja o seu DataFrame

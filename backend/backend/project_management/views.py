@@ -182,7 +182,6 @@ def  updateStatus_view(request):
   new_status = request.POST.get('new_status')
   project = get_object_or_404(Project, id=project_id)
   
-  print("Atualizando status")
   project.update_status(new_status)
 
   return Response({ 
