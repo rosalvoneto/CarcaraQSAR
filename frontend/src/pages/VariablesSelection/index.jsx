@@ -741,7 +741,7 @@ export default function VariablesSelection() {
               {
                 databases.map((dbInformation, index) => {
                   return(
-                    <>
+                    <div key={index}>
                       <p className={styles.name}>
                         <strong>{dbInformation.description}</strong>
                       </p>
@@ -764,7 +764,7 @@ export default function VariablesSelection() {
                       >
                         <TrashSimple size={27} color='var(--black-color-1)' />
                       </a>
-                    </>
+                    </div>
                   )
                 })
               }
