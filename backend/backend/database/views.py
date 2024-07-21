@@ -138,7 +138,7 @@ def convertAndSendDatabase_view(request):
         project_database = project.get_database()
 
         project_database.name = file_name
-        project_database.description = "Database original"
+        project_database.description = "Original Database"
         project_database.file.save(file_name, ContentFile(file_content))
         project_database.file_separator = ','
         project_database.lines = lines
@@ -188,7 +188,7 @@ def sendDatabase_view(request):
     if(project_database == None):
       project_database = Database.objects.create(
         name=uploaded_file.name,
-        description="Database original",
+        description="Original Database",
         file=uploaded_file,
         file_separator=separator,
         lines=lines,
@@ -198,7 +198,7 @@ def sendDatabase_view(request):
       )
     else:
       project_database.name = uploaded_file.name
-      project_database.description = "Database original"
+      project_database.description = "Original Database"
       project_database.file = uploaded_file
       project_database.file_separator = separator
       project_database.lines = lines

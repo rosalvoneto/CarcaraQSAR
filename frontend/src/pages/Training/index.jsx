@@ -32,24 +32,24 @@ import { delayTimeForGetProgress } from '../../settings';
 
 export const algorithms = [
   "Random Forest",
-  "Regressão linear",
+  "Linear Regression",
   "KNN",
   "Support Vector Machines (SVM)",
 ];
 const disabledInputs = [1, 2, 3];
 
 export const algorithmsDescriptions = [
-  "O algoritmo Random Forest é um método de aprendizado de máquina que combina múltiplas árvores de decisão para tomar decisões mais precisas e estáveis. Ele funciona criando um conjunto de árvores de decisão, cada uma treinada em uma amostra aleatória dos dados e usando diferentes conjuntos de recursos. Ao fazer previsões, as árvores votam em conjunto, e a classe ou valor com mais votos é escolhido como a previsão final. Isso reduz a tendência de overfitting e melhora a robustez do modelo.",
-  "A regressão linear é um algoritmo de aprendizado de máquina supervisionado usado para modelar a relação entre uma variável independente (ou mais) e uma variável dependente, geralmente de natureza contínua. Ele assume que a relação entre as variáveis pode ser representada por uma linha reta, daí o termo 'linear'. O objetivo é encontrar os coeficientes que melhor ajustam essa linha aos dados, de modo a minimizar a diferença entre as previsões do modelo e os valores reais.",
-  "O algoritmo KNN (K-Nearest Neighbors) é uma técnica simples e poderosa no campo da aprendizagem de máquina. Sua simplicidade é uma de suas principais vantagens, tornando-o fácil de entender e implementar. Ele opera no princípio de 'vizinhos mais próximos', onde as decisões são baseadas na proximidade dos pontos de dados no espaço de características.",
-  "As Máquinas de Vetores de Suporte são algoritmos de aprendizado de máquina que são usados tanto em tarefas de classificação quanto de regressão. O SVM busca encontrar um hiperplano que melhor separa as classes em um espaço multidimensional, maximizando a margem entre as classes. Isso torna o SVM eficaz na classificação de dados não lineares e na manipulação de dados com dimensionalidade elevada. Além disso, os SVMs podem fazer uso de truques de kernel para transformar dados em espaços de características mais complexos e, assim, abordar problemas de classificação mais desafiadores."
-]
+  "The Random Forest algorithm is a machine learning method that combines multiple decision trees to make more accurate and stable decisions. It works by creating a set of decision trees, each trained on a random sample of the data and using different sets of features. When making predictions, the trees vote together, and the class or value with the most votes is chosen as the final prediction. This reduces the tendency of overfitting and improves the robustness of the model.",
+  "Linear regression is a supervised machine learning algorithm used to model the relationship between one (or more) independent variables and a dependent variable, usually of a continuous nature. It assumes that the relationship between the variables can be represented by a straight line, hence the term 'linear'. The goal is to find the coefficients that best fit this line to the data, in order to minimize the difference between the model's predictions and the actual values.",
+  "The KNN (K-Nearest Neighbors) algorithm is a simple and powerful technique in the field of machine learning. Its simplicity is one of its main advantages, making it easy to understand and implement. It operates on the principle of 'nearest neighbors', where decisions are based on the proximity of data points in the feature space.",
+  "Support Vector Machines are machine learning algorithms used in both classification and regression tasks. The SVM seeks to find a hyperplane that best separates the classes in a multidimensional space, maximizing the margin between the classes. This makes SVM effective in classifying non-linear data and handling high-dimensional data. Additionally, SVMs can make use of kernel tricks to transform data into more complex feature spaces, thereby addressing more challenging classification problems."
+];
 
 export const algorithmsParameters = [
-  [["n_estimators", "Número de árvores"], ["max_features", "Quantidade de features"]],
-  [["regularization", "Regularização"]],
-  [["k_neighbors", "Quantidade K de vizinhos"]],
-  [["kernel", "Kernel"], ["CParameter", "Parâmetro C"]],
+  [["n_estimators", "Number of trees"], ["max_features", "Features quantity"]],
+  [["regularization", "Regularization"]],
+  [["k_neighbors", "K neighbors quantity"]],
+  [["kernel", "Kernel"], ["CParameter", "C Parameter"]],
 ];
 
 export default function Training() {
@@ -265,7 +265,7 @@ export default function Training() {
 
           <div>
             <RadionInput 
-              name={"Aplicar algoritmo"}
+              name={"Apply algorithm"}
               options={algorithms}
               setOption={setChoosenAlgorithm}
               firstOption={choosenAlgorithm}
@@ -280,7 +280,7 @@ export default function Training() {
               /> 
             */
             }
-            <p>Sem o uso de conjunto completo</p>
+            <p>Without using full set</p>
             
           </div>
           
@@ -293,7 +293,7 @@ export default function Training() {
         </div>
 
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={'/variables-selection'}
           stateToPass={{
             pageNumber: 2
@@ -301,7 +301,7 @@ export default function Training() {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={'/training'}
           stateToPass={{
             pageNumber: 1
@@ -353,7 +353,7 @@ export default function Training() {
                   onClick={saveAndTrain}
                   className={styles.button}
                 >
-                  Salvar e Treinar
+                  Save and train
                 </button>
               :
                 <button 
@@ -362,7 +362,7 @@ export default function Training() {
                   }}
                   className={styles.button}
                 >
-                  Mostrar progresso
+                  Show progress
                 </button>
             }
           </div>
@@ -373,8 +373,8 @@ export default function Training() {
           trained == "first time" &&
           <PopUp 
             show={true}
-            title={"Treinamento em andamento..."}
-            description={`O treinamento com o algoritmo ${choosenAlgorithm} está sendo executado!`}
+            title={"Training in progress..."}
+            description={`The training with the ${choosenAlgorithm} algorithm is being executed!`}
 
             showButton
             buttonName={"Ok"}
@@ -388,10 +388,10 @@ export default function Training() {
           trained == "show progress" &&
           <PopUp 
             show={true}
-            title={"Treinando..."}
+            title={"Training..."}
 
             showButton
-            buttonName={"Fechar"}
+            buttonName={"Close"}
             action={() => {
               setTrained("hide progress");
             }}
@@ -401,14 +401,14 @@ export default function Training() {
               <ProgressBarLoading 
                 progress={progressValue}
                 maximum={maximumValue}
-                />
+              />
               <p>
                 {(progressValue / maximumValue * 100).toFixed(0)}%
               </p>
               <p>
                 {
                   timeForEstimation >= 0 &&
-                  `Estimativa de finalização: ${(timeForEstimation).toFixed(0)} minuto(s)`
+                  `Estimation: ${(timeForEstimation).toFixed(0)} minutes`
                 }
               </p>
             </div>
@@ -419,13 +419,13 @@ export default function Training() {
           trained == "error" &&
           <PopUp 
             show={true}
-            title={"Problema no treinamento"}
+            title={"Training problem"}
             description={
-              `Um erro interno do servidor não permitiu concluir o treinamento.`
+              `An internal server error prevented the training from being completed.`
             }
 
             showButton
-            buttonName={"Fechar"}
+            buttonName={"Close"}
             action={() => setTrained("false")}
           />
         }
@@ -434,19 +434,19 @@ export default function Training() {
           trained == "finished" &&
           <PopUp 
             show={true}
-            title={"Treinamento finalizado"}
+            title={"Training completed"}
             description={
-              `O treinamento com o algoritmo ${choosenAlgorithm} está finalizado! Clique no botão abaixo para ver os resultados do treinamento!`
+              `The training with the ${choosenAlgorithm} algorithm is completed! Click the button below to see the training results!`
             }
 
             showButton
-            buttonName={"Ver resultados"}
+            buttonName={"See results"}
             action={navigateToResults}
           />
         }
 
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={'/training'}
           stateToPass={{
             pageNumber: 0
@@ -456,7 +456,7 @@ export default function Training() {
         {
           trained == "finished" &&
           <Button 
-            name={'Próximo'} 
+            name={'Next'} 
             URL={'/results'}
             stateToPass={{
               pageNumber: 0

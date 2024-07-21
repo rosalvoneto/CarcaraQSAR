@@ -125,7 +125,7 @@ def removeRows_view(request):
 
       database.create_database(
         path="Database_with_dropped_lines.csv",
-        description="Database após a remoção de linhas",
+        description="Database after removing rows",
         dataframe=dataframe
       )
 
@@ -169,7 +169,7 @@ def removeConstantVariables_view(request):
         # Criar novo Database
         database.create_database(
           path="Database_without_constant_variables.csv",
-          description="Database após a remoção de variáveis constantes",
+          description="Database after removing constant variables",
           dataframe=dataframe
         )
 
@@ -220,7 +220,7 @@ def removeVariables_view(request):
         # Criar novo Database
         database.create_database(
           path="Database_without_choosen_variables.csv",
-          description="Database após a remoção de variáveis pelo usuário",
+          description="Database after user removes variables",
           dataframe=dataframe
         )
 
@@ -348,7 +348,7 @@ def make_selection(project_id):
           # Criar novo Database
           database.create_database(
             path="Database_with_only_algorithm_execution.csv",
-            description="Database após somente a execução do algoritmo",
+            description="Database after just executing the algorithm",
             dataframe=base_compressed
           )
           
@@ -387,7 +387,7 @@ def make_selection(project_id):
         # Criar novo Database
         database.create_database(
           path="Database_with_algorithm_execution.csv",
-          description="Database após a execução do algoritmo",
+          description="Database after algorithm execution",
           dataframe=dataframe
         )
 

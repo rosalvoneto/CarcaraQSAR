@@ -130,10 +130,10 @@ export function ProjectsTable({ searchValue }) {
                 onClick={() => setIsChecked(!isCheked)}
               />
             </th>
-            <th className={`${styles.descriptionItem} ${styles.item2}`}>Nome</th>
+            <th className={`${styles.descriptionItem} ${styles.item2}`}>Name</th>
             <th className={`${styles.descriptionItem} ${styles.item3}`}>Status</th>
             <th className={`${styles.descriptionItem} ${styles.item4}`}>
-              Data de modificação
+              Modification date
             </th>
             <th className={`${styles.descriptionItem} ${styles.item5}`}>
             </th>

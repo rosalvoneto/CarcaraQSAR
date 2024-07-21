@@ -15,10 +15,10 @@ const UploadComponent = ({
         {
           selectedFile 
           ? (
-            `Base de dados: ${selectedFile.name}`
+            `Database: ${selectedFile.name}`
           )
           : (
-            "Escolha sua base de dados"
+            "Choose your database"
           )
         }
       </label>

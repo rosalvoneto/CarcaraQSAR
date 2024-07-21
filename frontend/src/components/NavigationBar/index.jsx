@@ -111,24 +111,24 @@ export default function NavigationBar() {
         <a className={styles.link}
           onClick={() => handleTo('/home')}
         >
-          Todos os projetos
+          All projects
         </a>
         <a className={styles.link}
           onClick={() => handleTo('/shared')}
         >
-          Compartilhados
+          Shared projects
         </a>
         <a className={styles.link}
           onClick={() => handleTo('/trash')}
         >
-          Projetos excluídos
+          Deleted projects
         </a>
 
         <button 
           className={styles.button}
           onClick={() => handleTo('/new')}
         >
-          Novo projeto
+          New project
         </button>
 
         {

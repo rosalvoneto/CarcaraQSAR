@@ -5,25 +5,25 @@ export const delayTimeForGetProgress = 2000;
 export const statesProgressBar = [
   {
     index: 0,
-    name: "Base de dados",
+    name: "Database",
     childs: [],
     href: '/database',
     stateToPass: {},
   },
   {
     index: 1,
-    name: "Pré-processamento",
+    name: "Pre processing",
     childs: [
       {
         index: 0,
-        name: "Estatística descritiva",
+        name: "Descriptive statistics",
         childs: [],
         href: '/pre-processing',
         stateToPass: { pageNumber: 0 },
       },
       {
         index: 1,
-        name: "Normalização dos dados",
+        name: "Normalization",
         childs: [],
         href: '/pre-processing',
         stateToPass: { pageNumber: 1 },
@@ -34,32 +34,32 @@ export const statesProgressBar = [
   },
   {
     index: 2,
-    name: "Seleção de Variáveis",
+    name: "Variables selection",
     childs: [
       {
         index: 0,
-        name: "Remover variáveis",
+        name: "Remove variables",
         childs: [],
         href: '/variables-selection',
         stateToPass: { pageNumber: 0 },
       },
       {
         index: 1,
-        name: "Aplicar algoritmo Bioinspirado",
+        name: "Apply Bioinspired algorithm",
         childs: [],
         href: '/variables-selection',
         stateToPass: { pageNumber: 1 },
       },
       {
         index: 2,
-        name: "Remover linhas",
+        name: "Remove rows",
         childs: [],
         href: '/variables-selection',
         stateToPass: { pageNumber: 2 },
       },
       {
         index: 3,
-        name: "Histórico da base de dados",
+        name: "Database history",
         childs: [],
         href: '/variables-selection',
         stateToPass: { pageNumber: 3 },
@@ -70,18 +70,18 @@ export const statesProgressBar = [
   },
   {
     index: 3,
-    name: "Treinamento",
+    name: "Training",
     childs: [
       {
         index: 0,
-        name: "Algoritmo",
+        name: "Algorithm",
         childs: [],
         href: '/training',
         stateToPass: { pageNumber: 0 },
       },
       {
         index: 1,
-        name: "Hiperparâmetros",
+        name: "Hyper parameters",
         childs: [],
         href: '/training',
         stateToPass: { pageNumber: 1 },
@@ -92,11 +92,11 @@ export const statesProgressBar = [
   },
   {
     index: 4,
-    name: "Resultados",
+    name: "Results",
     childs: [
       {
         index: 0,
-        name: "Importância das variáveis",
+        name: "Variables importance",
         childs: [],
         href: '/results',
         stateToPass: { pageNumber: 0 },
@@ -135,7 +135,7 @@ export const statesProgressBar = [
   },
   {
     index: 5,
-    name: "Previsão",
+    name: "Prevision",
     childs: [],
     href: '/prevision',
     stateToPass: {},

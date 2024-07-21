@@ -121,7 +121,7 @@ export default function Results() {
         ?
           <>
             <Button 
-              name={'Voltar'} 
+              name={'Back'} 
               URL={
                 pageNumber
                 ?
@@ -139,7 +139,7 @@ export default function Results() {
               side={'left'}
             />
             <Button 
-              name={'Próximo'} 
+              name={'Next'} 
               URL={'/results'}
               stateToPass={{
                 pageNumber: pageNumber + 1
@@ -150,7 +150,7 @@ export default function Results() {
         :
           <>
             <Button 
-              name={'Voltar'} 
+              name={'Back'} 
               URL={'/results'}
               stateToPass={{
                 pageNumber: pageNumber - 1
@@ -158,7 +158,7 @@ export default function Results() {
               side={'left'}
             />
             <Button 
-              name={'Próximo'} 
+              name={'Next'} 
               URL={'/prevision'}
               stateToPass={{
                 pageNumber: 0

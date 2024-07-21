@@ -49,7 +49,7 @@ export default function SharedPage() {
         &&  <>
               <Header />
               <div className={styles.inputContainer}>
-                <Input name={"Compartilhados"} setValue={setNewSearchValue}/>
+                <Input name={"Shared"} setValue={setNewSearchValue}/>
               </div>
               <SharedProjectsTable searchValue={searchValue}/>
             </>

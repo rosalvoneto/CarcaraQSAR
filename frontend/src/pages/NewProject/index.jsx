@@ -27,14 +27,14 @@ export default function NewProject() {
       >
         <div className={styles.contentContainer}>
           <Input 
-            tipo={"input"} name={"Nome do Projeto"}
+            tipo={"input"} name={"Project name"}
             inputName={"name"}
             type={"text"}
             setValue={setName}
             value={name}
           />
           <TextArea 
-            tipo={"textarea"} name={"Descrição"}
+            tipo={"textarea"} name={"Description"}
             inputName={"description"}
             setValue={setDescription}
             value={description}
@@ -43,7 +43,7 @@ export default function NewProject() {
           <input 
             type='submit'
             className={styles.button}
-            value={'Criar Projeto'}
+            value={'Create project'}
           />
         </div>
       </form>

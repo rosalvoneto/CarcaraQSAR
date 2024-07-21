@@ -22,7 +22,7 @@ export default function Home() {
       <>
         <Header />
         <div className={styles.inputContainer}>
-          <Input name={"Todos os projetos"} setValue={setNewSearchValue}/>
+          <Input name={"All projects"} setValue={setNewSearchValue}/>
         </div>
         <ProjectsTable searchValue={searchValue}/>
       </>

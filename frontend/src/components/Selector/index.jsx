@@ -87,7 +87,7 @@ export function Selector({
     <div className={styles.container}>
       <input
         type="text"
-        placeholder="Digite a opção desejada"
+        placeholder="Type the choosen variable"
         className={styles.input}
 
         value={inputText}

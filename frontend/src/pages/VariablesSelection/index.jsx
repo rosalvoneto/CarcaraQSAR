@@ -39,44 +39,45 @@ import ProgressContext from '../../context/ProgressContext';
 import { delayTimeForGetProgress } from '../../settings';
 
 export const algorithms = [
-  "NÃO APLICAR",
-  "Algoritmo genético",
-  "Colônia de abelhas",
+  "DO NOT USE",
+  "Genetic Algorithm",
+  "Bee Colony",
 ];
 
 export const algorithmsDescriptions = [
-  "Nenhum algoritmo foi escolhido",
-  "Os Algoritmos Genéticos são uma técnica de otimização baseada na seleção natural e genética. Eles operam em populações de soluções candidatas e utilizam operadores genéticos, como mutação e cruzamento, para evoluir e melhorar essas soluções ao longo de várias gerações. Esses algoritmos são amplamente usados para encontrar soluções aproximadas para problemas complexos de otimização e busca.",
-  "Inspirado no comportamento de colônias de abelhas, o Algoritmo de Colônia de Abelhas é uma técnica de otimização baseada na exploração de soluções candidatas em um espaço de busca. Abelhas virtuais procuram soluções em locais específicos e compartilham informações sobre a qualidade das soluções encontradas com outras abelhas, permitindo a convergência para uma solução ótima em problemas de otimização complexos.",
-]
+  "No algorithm was chosen",
+  "Genetic Algorithms are an optimization technique based on natural selection and genetics. They operate on populations of candidate solutions and use genetic operators, such as mutation and crossover, to evolve and improve these solutions over several generations. These algorithms are widely used to find approximate solutions for complex optimization and search problems.",
+  "Inspired by the behavior of bee colonies, the Bee Colony Algorithm is an optimization technique based on the exploration of candidate solutions in a search space. Virtual bees search for solutions in specific locations and share information about the quality of the solutions found with other bees, allowing convergence to an optimal solution in complex optimization problems.",
+];
+
 
 export const algorithmsParameters = [
   [],
   [
-    ['population_quantity', 'Quantidade da população'],
-    ['info_gain_quantity', 'Quantidade de variáveis iniciais'],
-    ["probability_crossover", "Probabilidade de crossover"],
-    ['probability_mutation', 'Probabilidade de mutação'],
-    ['limit_generations', 'Limite de gerações'],
-    ['limit_not_improvement', 'Limite sem melhoria'],
-    ['r2_condition_BFS', 'Limite R2 do BFS'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS'],
+    ['population_quantity', 'Population quantity'],
+    ['info_gain_quantity', 'Initial variable quantity'],
+    ["probability_crossover", "Crossover probability"],
+    ['probability_mutation', 'Mutation probability'],
+    ['limit_generations', 'Generation limit'],
+    ['limit_not_improvement', 'No improvement limit'],
+    ['r2_condition_BFS', 'R2 limit for BFS'],
+    ['limit_not_improvement_BFS', 'No improvement limit for BFS'],
+    ['n_child_positions', 'Number of variables to add in BFS'],
+    ['children_quantity', 'Number of children generated from parent node in BFS'],
   ],
   [
-    ["maximum_iterations", "Limite de interações"],
-    ["bees", "Quantidade de abelhas"],
-    ["limit_not_improvement", "Limite sem melhoria"],
-    ["info_gain_quantity", "Quantidade de variáveis iniciais"],
-    ['r2_condition_BFS', 'Limite R2 do BFS'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS'],
+    ["maximum_iterations", "Iteration limit"],
+    ["bees", "Number of bees"],
+    ["limit_not_improvement", "No improvement limit"],
+    ["info_gain_quantity", "Initial variable quantity"],
+    ['r2_condition_BFS', 'R2 limit for BFS'],
+    ['limit_not_improvement_BFS', 'No improvement limit for BFS'],
+    ['n_child_positions', 'Number of variables to add in BFS'],
+    ['children_quantity', 'Number of children generated from parent node in BFS'],
   ]
 ]
 
-export const optionsToRemoveVariables = ["Sim", "Não"];
+export const optionsToRemoveVariables = ["Yes", "No"];
 
 export default function VariablesSelection() {
 
@@ -413,7 +414,7 @@ export default function VariablesSelection() {
 
         <div className={styles.container}>
           <RadionInput 
-            name={"Remover automaticamente variáveis constantes"}
+            name={"Remove constant variables"}
             options={optionsToRemoveVariables}
             setOption={handleChangeRemoveConstantVariables}
             firstOption={
@@ -424,7 +425,7 @@ export default function VariablesSelection() {
           />
 
           <p className={styles.name}>
-            <strong>{"Remover variáveis manualmente"}</strong>
+            <strong>{"Remove variables manually"}</strong>
           </p>
 
           <div className={styles.inputContainer}>
@@ -473,7 +474,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/pre-processing`}
           stateToPass={{
             pageNumber: 1
@@ -481,7 +482,7 @@ export default function VariablesSelection() {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/variables-selection`} 
           stateToPass={{
             pageNumber: 1
@@ -506,7 +507,7 @@ export default function VariablesSelection() {
           <div className={styles.algorithmContainer}>
             <div>
               <RadionInput 
-                name={"Algoritmo BioInspirado"}
+                name={"Bioinspired algorithm"}
                 options={algorithms}
                 setOption={setChoosenAlgorithm}
                 firstOption={choosenAlgorithm}
@@ -558,9 +559,9 @@ export default function VariablesSelection() {
             selected == "first time" &&
             <PopUp 
               show={true}
-              title={"Seleção em andamento..."}
+              title={"Selection in progress..."}
               description={
-                `A seleção com o algoritmo ${choosenAlgorithm} está sendo executada!`
+                `The selection with the ${choosenAlgorithm} algorithm is being executed!`
               }
 
               showButton
@@ -575,12 +576,12 @@ export default function VariablesSelection() {
             selected == "show progress" &&
             <PopUp 
               show={true}
-              title={"Selecionando..."}
+              title={"Selecting..."}
 
               showButton
-              buttonName={"Fechar"}
+              buttonName={"Close"}
               action={() => {
-                setSelected("hide progress")
+                setSelected("hide progress");
               }}
             >
               <Loading size={45} />
@@ -597,7 +598,7 @@ export default function VariablesSelection() {
                 <p>
                   {
                     timeForEstimation >= 0 &&
-                    `Estimativa de finalização: ${(timeForEstimation).toFixed(0)} minuto(s)`
+                    `Estimation: ${(timeForEstimation).toFixed(0)} minutes`
                   }
                 </p>
               </div>
@@ -608,13 +609,13 @@ export default function VariablesSelection() {
             selected == "error" &&
             <PopUp 
               show={true}
-              title={"Erro"}
+              title={"Error"}
               description={
-                `Um erro interno do servidor não permitiu concluir a seleção.`
+                `An internal server error prevented the selection from being completed.`
               }
 
               showButton
-              buttonName={"Fechar"}
+              buttonName={"Close"}
               action={() => {
                 setSelected("false");
               }}
@@ -625,9 +626,9 @@ export default function VariablesSelection() {
             selected == "finished" &&
             <PopUp 
               show={true}
-              title={"Seleção finalizada"}
+              title={"Selection completed"}
               description={
-                `Seleção finalizada.`
+                `Selection completed.`
               }
 
               showButton
@@ -646,7 +647,7 @@ export default function VariablesSelection() {
                   onClick={handleToMakeSelection}
                   className={styles.button}
                 >
-                  Salvar e Selecionar
+                  Save and Select
                 </button>
               :
                 <button 
@@ -655,7 +656,7 @@ export default function VariablesSelection() {
                   }}
                   className={styles.button}
                 >
-                  Mostrar progresso
+                  Show progress
                 </button>
               
             )
@@ -664,7 +665,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/variables-selection`}
           stateToPass={{
             pageNumber: 0
@@ -674,7 +675,7 @@ export default function VariablesSelection() {
         {
           algorithmIndex == 0 &&
           <Button 
-            name={'Próximo'} 
+            name={'Next'} 
             URL={`/variables-selection`} 
             stateToPass={{
               pageNumber: 2
@@ -697,7 +698,7 @@ export default function VariablesSelection() {
 
         <div className={styles.container}>
           <InlineInput 
-            name={"Linhas para remover:"}
+            name={"Rows to remove:"}
             width={"80%"}
             setValue={setRowsToRemove}
             value={rowsToRemove}
@@ -705,7 +706,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/variables-selection`}
           stateToPass={{
             pageNumber: 1
@@ -713,7 +714,7 @@ export default function VariablesSelection() {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/variables-selection`} 
           stateToPass={{
             pageNumber: 3
@@ -745,9 +746,9 @@ export default function VariablesSelection() {
                         <strong>{dbInformation.description}</strong>
                       </p>
                       <div className={styles.historyBlock}>
-                        <p>Nome: {dbInformation.name}</p>
-                        <p>Data: {dbInformation.created_at}</p>
-                        <p>{dbInformation.lines} linhas e {dbInformation.columns} colunas</p>
+                        <p>Name: {dbInformation.name}</p>
+                        <p>Date: {dbInformation.created_at}</p>
+                        <p>{dbInformation.lines} rows and {dbInformation.columns} columns</p>
                       </div>
                       <a
                         onClick={() => {
@@ -773,7 +774,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/variables-selection`}
           stateToPass={{
             pageNumber: 2
@@ -781,7 +782,7 @@ export default function VariablesSelection() {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/training`} 
           stateToPass={{
             pageNumber: 0

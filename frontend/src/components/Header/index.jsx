@@ -23,7 +23,7 @@ export function Header({ title }) {
               decodifiedAccessToken.username
             }
           </p>
-          <a className={styles.logout} onClick={logoutUser}>Sair</a>
+          <a className={styles.logout} onClick={logoutUser}>Log out</a>
         </div>
         <img 
           src={defaultUserImage} 

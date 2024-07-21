@@ -45,7 +45,7 @@ export default function Login() {
       </div>
       <select className={styles.select}>
         <option value="Portugues">Português</option>
-        <option value="Ingles">Inglês</option>
+        <option value="Ingles">English</option>
       </select>
     </>
   )

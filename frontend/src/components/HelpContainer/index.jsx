@@ -14,7 +14,7 @@ const HelpContainer = () => {
   return(
     <>
       <a onClick={() => handleClick()}>
-        {active ? 'Fechar ajuda' : 'Quero ajuda'}
+        {active ? 'Close help' : 'Open help'}
       </a>
       {
         active &&
