@@ -168,7 +168,7 @@ def convertAndSendDatabase_view(request):
 def sendDatabase_view(request):
 
   if 'file' in request.FILES:
-    
+
     uploaded_file = request.FILES.get('file')
     project_id = request.POST.get('project_id')
     separator = request.POST.get('separator')
@@ -212,6 +212,13 @@ def sendDatabase_view(request):
     return JsonResponse({ "message": f"{uploaded_file.name} enviado!"})
   return JsonResponse({ "message": "Arquivo não enviado!" })
 
+def substituir_valores(lista_dicionarios, valor_antigo, valor_novo):
+    for dicionario in lista_dicionarios:
+        for chave, valor in dicionario.items():
+            if valor == valor_antigo:
+                dicionario[chave] = valor_novo
+    return lista_dicionarios
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getDatabase_view(request):
@@ -237,6 +244,8 @@ def getDatabase_view(request):
 
       # Pega somente as primeiras linhas do database
       data_dataframe = data_dataframe.head()
+      print("Dataframe")
+      print(data_dataframe)
 
       # Faz a transposição se necessário
       columns = data_dataframe.columns
@@ -249,22 +258,48 @@ def getDatabase_view(request):
           'a' + str(i) for i in range(1, len(data_dataframe.columns) + 1)
         ]
         data_dataframe.columns = columns_names
+      
+      # data_dataframe = data_dataframe.apply(pd.to_numeric, errors='coerce')
 
-      # Transforma para o formato Json
+      # # Substituir NaN por None
+      # data_dataframe = replace_nan_with_none(data_dataframe)
+      # data_dataframe = replace_nan_with_none(data_dataframe)
+      # data_dataframe = replace_nan_with_none(data_dataframe)
+      # data_dataframe = replace_nan_with_none(data_dataframe)
+      # data_dataframe = replace_nan_with_none(data_dataframe)
+      # data_dataframe = replace_nan_with_none(data_dataframe)
+      # print("Dataframe após substituição de NaN por None")
+      # print(data_dataframe)
+        
+      # # Substituir NaN por None
+      # data_dataframe = data_dataframe.where(pd.null(data_dataframe), None)
+      # print(data_dataframe)
+
+      # Substituir NaN por None
+      data_dataframe = data_dataframe.fillna(value='None')
+
+      # Transforma o DataFrame para uma lista de dicionários
       data_dictionary = data_dataframe.to_dict(orient='records')
+      new_data_dictionary = substituir_valores(data_dictionary, 'None', None)
+      print(new_data_dictionary)
 
-      return JsonResponse({
-        'database': data_dictionary,
+      # json_data = [
+      #   {"v1": 1.0, "v2": None, "v3": None}, 
+      #   {"v1": 1.2, "v2": None, "v3": 4.0}
+      # ]
+
+      return Response({
+        'database': new_data_dictionary,
         'fileSeparator': database.file_separator,
         'name': database.name,
         'lines': database.lines,
         'columns': database.columns,
-      })
+      }, status=200)
   
-  return JsonResponse({
+  return Response({
     'message': 'Nenhum arquivo no projeto!',
     'database': None,
-  })
+  }, status=200)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
