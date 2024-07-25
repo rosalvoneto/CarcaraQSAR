@@ -51,8 +51,9 @@ class Problem:
 
     # Suponha que dataframe seja o seu DataFrame
     # Separar as variáveis preditoras da variável alvo
-    X = self.dataframe.drop(columns=['alvo'])
-    y = self.dataframe['alvo']
+    X = self.dataframe.iloc[:, :-1]
+    y = self.dataframe.iloc[:, -1]
+
 
     
     # Calcular a Information Gain para cada variável

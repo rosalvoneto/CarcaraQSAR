@@ -81,8 +81,8 @@ class ABCAlgorithm():
 
         # Suponha que dataframe seja o seu DataFrame
         # Separar as variáveis preditoras da variável alvo
-        X = dataframe.drop(columns=['alvo'])
-        y = dataframe['alvo']
+        X = dataframe.iloc[:, :-1]
+        y = dataframe.iloc[:, -1]
 
         length_variables = len(dataframe.columns) - 1
         
