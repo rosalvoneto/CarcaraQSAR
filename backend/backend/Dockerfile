@@ -1,12 +1,11 @@
-FROM openjdk:11-jre-slim
+FROM ubuntu:20.04
 
-# Instala o Python 3.10 e outras dependências
+# Instala as dependências necessárias e o JRE
 RUN apt-get update && \
-    apt-get install -y \
-    software-properties-common && \
+    apt-get install -y software-properties-common && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
-    apt-get install -y python3.10 python3.10-distutils python3.10-venv && \
+    apt-get install -y python3.10 python3.10-distutils python3.10-venv openjdk-11-jre && \
     apt-get install -y curl && \
     curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 && \
     apt-get clean && \
