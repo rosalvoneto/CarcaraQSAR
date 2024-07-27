@@ -3,8 +3,8 @@ FROM python:3.10
 ENV PYTHONUNBUFFERED=1
 
 # Instala o JRE
-RUN sudo apt-get update && \
-    sudo apt install default-jdk
+RUN apt update && \
+    apt install default-jdk
 
 WORKDIR /app
 
