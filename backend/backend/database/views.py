@@ -281,7 +281,6 @@ def getDatabase_view(request):
       # Transforma o DataFrame para uma lista de dicionários
       data_dictionary = data_dataframe.to_dict(orient='records')
       new_data_dictionary = substituir_valores(data_dictionary, 'None', None)
-      print(new_data_dictionary)
 
       # json_data = [
       #   {"v1": 1.0, "v2": None, "v3": None}, 

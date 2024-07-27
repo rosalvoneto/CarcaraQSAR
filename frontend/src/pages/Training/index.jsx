@@ -46,10 +46,10 @@ export const algorithmsDescriptions = [
 ]
 
 export const algorithmsParameters = [
-  [["n_estimators", "Número de árvores"], ["max_features", "Quantidade de features"]],
-  [["regularization", "Regularização"]],
-  [["k_neighbors", "Quantidade K de vizinhos"]],
-  [["kernel", "Kernel"], ["CParameter", "Parâmetro C"]],
+  [["n_estimators", "Número de árvores", 50], ["max_features", "Quantidade de features", 5]],
+  [["regularization", "Regularização", 0]],
+  [["k_neighbors", "Quantidade K de vizinhos", 0]],
+  [["kernel", "Kernel", 0], ["CParameter", "Parâmetro C", 0]],
 ];
 
 export default function Training() {
@@ -211,7 +211,26 @@ export default function Training() {
     .then((response) => {
       setChoosenAlgorithm(response.algorithm);
 
-      setAlgorithmParameters(response.parameters);
+      if(Object.keys(response.parameters).length) {
+        setAlgorithmParameters(response.parameters);
+      } else {
+        // Inicializar o objeto resultante
+        let resultObject = {};
+
+        // Iterar sobre cada sub-array em algorithmsParameters
+        algorithmsParameters.forEach(sublist => {
+          sublist.forEach(item => {
+            const key = item[0];
+            const value = item[2];
+            resultObject[key] = value;
+          });
+        });
+
+        // Exibir o objeto resultante
+        console.log(resultObject);
+        setAlgorithmParameters(resultObject);
+      }
+      console.log(response);
 
       setWithFullSet(response.withFullSet);
 
@@ -332,14 +351,14 @@ export default function Training() {
                 ].map((key, index) => {
                   return(
                     <InlineInput 
-                      key={index}
+                      key={`${algorithmIndex}-${index}`}
                       name={key[1]} 
                       type={'number'}
                       setValue={(value) => changeParameters(key[0], value)}
                       value={
                         algorithmParameters[key[0]] 
                         ? algorithmParameters[key[0]] 
-                        : 0
+                        : algorithmsParameters[algorithmIndex][index][2]
                       }
                     />
                   )

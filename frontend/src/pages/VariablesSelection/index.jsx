@@ -53,26 +53,26 @@ export const algorithmsDescriptions = [
 export const algorithmsParameters = [
   [],
   [
-    ['population_quantity', 'Quantidade da população'],
-    ['info_gain_quantity', 'Quantidade de variáveis iniciais'],
-    ["probability_crossover", "Probabilidade de crossover"],
-    ['probability_mutation', 'Probabilidade de mutação'],
-    ['limit_generations', 'Limite de gerações'],
-    ['limit_not_improvement', 'Limite sem melhoria'],
-    ['r2_condition_BFS', 'Limite R2 do BFS'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS'],
+    ['population_quantity', 'Quantidade da população', 50],
+    ['info_gain_quantity', 'Quantidade de variáveis iniciais', 50],
+    ["probability_crossover", "Probabilidade de crossover", 0.6],
+    ['probability_mutation', 'Probabilidade de mutação', 0.01],
+    ['limit_generations', 'Limite de gerações', 500],
+    ['limit_not_improvement', 'Limite sem melhoria', 500],
+    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30],
+    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2],
   ],
   [
-    ["maximum_iterations", "Limite de interações"],
-    ["bees", "Quantidade de abelhas"],
-    ["limit_not_improvement", "Limite sem melhoria"],
-    ["info_gain_quantity", "Quantidade de variáveis iniciais"],
-    ['r2_condition_BFS', 'Limite R2 do BFS'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS'],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS'],
+    ["maximum_iterations", "Limite de interações", 500],
+    ["bees", "Quantidade de abelhas", 50],
+    ["limit_not_improvement", "Limite sem melhoria", 50],
+    ["info_gain_quantity", "Quantidade de variáveis iniciais", 50],
+    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30],
+    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2],
   ]
 ]
 
@@ -359,9 +359,26 @@ export default function VariablesSelection() {
 
       setChoosenAlgorithm(response.algorithm);
       
-      if(response.algorithmParameters) {
+      if(Object.keys(response.algorithmParameters).length) {
         setAlgorithmParameters(response.algorithmParameters);
+      } else {
+        // Inicializar o objeto resultante
+        let resultObject = {};
+
+        // Iterar sobre cada sub-array em algorithmsParameters
+        algorithmsParameters.forEach(sublist => {
+          sublist.forEach(item => {
+            const key = item[0];
+            const value = item[2];
+            resultObject[key] = value;
+          });
+        });
+
+        // Exibir o objeto resultante
+        console.log(resultObject);
+        setAlgorithmParameters(resultObject);
       }
+      console.log(response);
       
       setRowsToRemove(response.rowsToRemove.toString());
 
@@ -521,14 +538,14 @@ export default function VariablesSelection() {
                     ].map((key, index) => {
                       return(
                         <InlineInput 
-                          key={index}
+                          key={`${algorithmIndex}-${index}`}
                           name={key[1]} 
                           type={'number'}
                           setValue={(value) => changeParameters(key[0], value)}
                           value={
                             algorithmParameters[key[0]] 
                             ? algorithmParameters[key[0]] 
-                            : 0
+                            : algorithmsParameters[algorithmIndex][index][2]
                           }
                         />
                       )
