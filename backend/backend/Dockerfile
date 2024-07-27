@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Instala o JRE
 RUN apt update && \
-    apt install default-jdk
+    apt install -y default-jdk
 
 WORKDIR /app
 
