@@ -14,9 +14,6 @@ RUN python3 -m pip install -r requirements.txt
 
 COPY . .
 
-# Converte o arquivo startup.sh para o formato Unix
-RUN dos2unix startup.sh
-
 EXPOSE 8000
 
-CMD ["sh", "startup.sh"]
+CMD sh -c "python3 manage.py migrate && python3 manage.py collectstatic --no-input && gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 15000 backend.wsgi"
