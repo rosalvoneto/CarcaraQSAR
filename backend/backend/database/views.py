@@ -183,6 +183,15 @@ def sendDatabase_view(request):
     )
     lines, columns = data_dataframe.shape
 
+    has_nan_values = data_dataframe.isna().any().any()
+    print(f"Valores NaN no dataframe: {has_nan_values}")
+
+    if(has_nan_values):
+      return Response({
+        'message': 'O database possui valores NaN',
+        'error': 'O database possui valores NaN',
+      }, status=500)
+
     # Salvar database com as informações
     project_database = project.get_database()
     if(project_database == None):
@@ -258,37 +267,18 @@ def getDatabase_view(request):
           'a' + str(i) for i in range(1, len(data_dataframe.columns) + 1)
         ]
         data_dataframe.columns = columns_names
-      
-      # data_dataframe = data_dataframe.apply(pd.to_numeric, errors='coerce')
 
       # # Substituir NaN por None
-      # data_dataframe = replace_nan_with_none(data_dataframe)
-      # data_dataframe = replace_nan_with_none(data_dataframe)
-      # data_dataframe = replace_nan_with_none(data_dataframe)
-      # data_dataframe = replace_nan_with_none(data_dataframe)
-      # data_dataframe = replace_nan_with_none(data_dataframe)
-      # data_dataframe = replace_nan_with_none(data_dataframe)
-      # print("Dataframe após substituição de NaN por None")
-      # print(data_dataframe)
-        
-      # # Substituir NaN por None
-      # data_dataframe = data_dataframe.where(pd.null(data_dataframe), None)
-      # print(data_dataframe)
-
-      # Substituir NaN por None
-      data_dataframe = data_dataframe.fillna(value='None')
+      # data_dataframe = data_dataframe.fillna(value='None')
 
       # Transforma o DataFrame para uma lista de dicionários
       data_dictionary = data_dataframe.to_dict(orient='records')
-      new_data_dictionary = substituir_valores(data_dictionary, 'None', None)
-
-      # json_data = [
-      #   {"v1": 1.0, "v2": None, "v3": None}, 
-      #   {"v1": 1.2, "v2": None, "v3": 4.0}
-      # ]
+      
+      # # Substituir 'None' por None
+      # data_dictionary = substituir_valores(data_dictionary, 'None', None)
 
       return Response({
-        'database': new_data_dictionary,
+        'database': data_dictionary,
         'fileSeparator': database.file_separator,
         'name': database.name,
         'lines': database.lines,

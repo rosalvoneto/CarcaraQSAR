@@ -18,12 +18,7 @@ export const sendDatabase = async (
       body: formData,
   })
 
-  let dataResponse = await response.json();
-  if(response.status == 200) {
-    return true;
-  } else {
-    return false;
-  }
+  return response;
 }
 
 // Recebe Base de dados do backend

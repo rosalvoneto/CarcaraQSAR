@@ -272,6 +272,11 @@ def make_selection(project_id):
           sep=database.file_separator
         )
 
+        columns_with_nan = base.columns[base.isna().any()].tolist()
+        print("Lista de colunas com valores NaN:")
+        print(columns_with_nan)
+        print(base[base.isna().any(axis=1)])
+
         condition = algorithm != "Colônia de abelhas"
         condition = True
 
@@ -409,6 +414,8 @@ def make_selection(project_id):
         }
     
   except Exception as error:
+
+    print(error)
 
     # Zerar o progresso
     variables_selection.set_progress_none()

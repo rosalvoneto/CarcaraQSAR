@@ -10,6 +10,7 @@ import styles from './styles.module.css';
 import { InlineInput } from '../../components/InlineInput';
 import Button from '../../components/Button';
 import UploadComponent from '../../components/UploadComponent';
+import PopUp from '../../components/PopUp';
 
 import { 
   convertAndSendDatabase, getDatabase, sendDatabase 
@@ -40,6 +41,9 @@ export default function Database() {
   const [transpose, setTranspose] = useState(false);
   const [separator, setSeparator] = useState(',');
 
+  const [databaseError, setDatabaseError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [database, setDatabase] = useState({
     database: undefined,
     name: null,
@@ -50,10 +54,23 @@ export default function Database() {
   // Enviar Database para o backend
   const saveDatabase = async () => {
     if(selectedFile) {
-      const isSaved = await sendDatabase(
+      const response = await sendDatabase(
         projectID, selectedFile, separator, authTokens.access
       );
-      return isSaved;
+      
+      const dataResponse = await response.json();
+      console.log(dataResponse);
+      if(dataResponse.error) {
+        setDatabaseError(true);
+        setErrorMessage(dataResponse.error);
+
+        return false;
+      }
+      if(response.status == 200) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
@@ -242,6 +259,24 @@ export default function Database() {
           action={nextActionButton}
         />
       </div>
+
+      {
+        databaseError &&
+        <PopUp 
+          show={true}
+          title={"Erro no Database"}
+          description={
+            `${errorMessage}`
+          }
+  
+          showButton
+          buttonName={"Fechar"}
+          action={() => {
+            setDatabaseError(false);
+            setErrorMessage("");
+          }}
+        />
+      }
     </>
   )
 }
