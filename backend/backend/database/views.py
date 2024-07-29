@@ -129,6 +129,17 @@ def convertAndSendDatabase_view(request):
       
         # Cria um DataFrame do Pandas com o conteúdo do arquivo
         data_dataframe = pd.read_csv(file_name)
+
+        has_nan_values = data_dataframe.isna().any().any()
+        print(f"Valores NaN no dataframe: {has_nan_values}")
+
+        status_code = 200
+        status_message = 'Arquivo convertido com sucesso'
+        if(has_nan_values):
+          status_code = 400
+          status_message = 'Alguns campos do arquivo estão vazios! Submeta novamente corrigido'
+        
+
         lines, columns = data_dataframe.shape
         # Ler o arquivo.csv e o atribui a uma variável (para salvar no Database)
         with open(file_name, 'rb') as arquivo:
@@ -153,15 +164,23 @@ def convertAndSendDatabase_view(request):
 
         # Abra o arquivo e retorne como uma resposta de arquivo
         with open(f"media/{project_database.file}", 'rb') as file:
-          response = HttpResponse(file.read(), content_type='application/force-download')
+          response = HttpResponse(
+            file.read(), 
+            content_type='application/force-download', 
+            status=status_code
+          )
           response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+          response['X-Message'] = status_message
+          response['X-Status-Code'] =f'{status_code}'
           return response
 
     analisingFeatures()
     response = createFileAndSave()
     return response
 
-  return JsonResponse({ "message": "Nenhum arquivo encontrado!" })
+  return Response({ 
+    "message": "Nenhum arquivo encontrado!" 
+  })
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -188,8 +207,8 @@ def sendDatabase_view(request):
 
     if(has_nan_values):
       return Response({
-        'message': 'O database possui valores NaN',
-        'error': 'O database possui valores NaN',
+        'message': 'O database possui valores NaN!',
+        'error': 'A planilha possui células vazias! É preciso fazer upload de uma nova base de dados!',
       }, status=500)
 
     # Salvar database com as informações

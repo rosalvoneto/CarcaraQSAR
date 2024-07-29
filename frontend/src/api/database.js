@@ -118,9 +118,8 @@ export const convertAndSendDatabase = async (
       },
       body: formData,
   })
-
-  let dataResponse = await response.text();
-  return dataResponse;
+  
+  return response;
 }
 
 // Salva tipo de normalização escolhida

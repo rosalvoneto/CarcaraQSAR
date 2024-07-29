@@ -172,10 +172,23 @@ export default function Database() {
 
       convertAndSendDatabase(projectID, selectedSmilesFile, authTokens.access)
       .then((response) => {
-        // Fazer o download do arquivo CSV
-        return handleDownload(response);
+
+        console.log("Status:", response.status);
+        const message = response.headers.get('X-Message');
+        console.log(message);
+
+        if(response.status == 400) {
+          setDatabaseError(true);
+          setErrorMessage('Alguns campos do arquivo estão vazios! Submeta novamente');
+        }
+
+        response.text()
+        .then((dataResponse) => {
+          // Fazer o download do arquivo CSV
+          return handleDownload(dataResponse);
+        })
       })
-      .then((response) => {
+      .then(() => {
         // Resgatar informações do novo Database
         return getDatabase(projectID, authTokens.access, transpose)
       })
