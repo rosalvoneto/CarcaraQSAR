@@ -242,12 +242,17 @@ def make_selection(project_id):
   database = project.get_database()
   variables_selection = project.variablesselection_set.get()
 
-  def update_selection_progress(actual, maximum):
+  def update_selection_progress(
+    actual, maximum, actual_step, total_steps, execution_type
+  ):
     nonlocal variables_selection
     variables_selection.set_progress(
       actual,
-      maximum
+      maximum,
+      actual_step,
+      total_steps
     )
+    variables_selection.set_execution_type(execution_type)
 
   # Índices para remover
   # indexes = [77, 81, 84, 92, 98]
@@ -384,7 +389,7 @@ def make_selection(project_id):
           best_node, best_R2 = graph.execution(best_variable)
           print("Melhor R2:", best_R2)
 
-        update_selection_progress(100, 100)
+        update_selection_progress(100, 100, 3, 3, "Finalizado")
 
         # Ler CSV do melhor conjunto de variáveis
         dataframe = pd.read_csv("base_best.csv")
@@ -460,6 +465,7 @@ def getSelectionProgress_view(request):
 
   return Response({
     'progress': variables_selection.algorithm_progress,
+    'executionType': variables_selection.algorithm_execution_type,
   }, status=200)
 
 @api_view(['PUT'])

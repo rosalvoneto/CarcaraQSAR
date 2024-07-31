@@ -163,7 +163,7 @@ export const getSelectionProgress = async(
   })
 
   let dataResponse = await response.json();
-  return dataResponse
+  return dataResponse;
 }
 
 // Seta o progresso na seleção de variáveis

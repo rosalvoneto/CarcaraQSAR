@@ -206,9 +206,15 @@ def sendDatabase_view(request):
     print(f"Valores NaN no dataframe: {has_nan_values}")
 
     if(has_nan_values):
+      nan_columns = data_dataframe.columns[data_dataframe.isna().any()].tolist()
+
+      # # Remover colunas com quaisquer valores NaN
+      # data_dataframe = data_dataframe.drop(columns=nan_columns)
+
       return Response({
         'message': 'O database possui valores NaN!',
         'error': 'A planilha possui células vazias! É preciso fazer upload de uma nova base de dados!',
+        'nan_columns': nan_columns,
       }, status=500)
 
     # Salvar database com as informações

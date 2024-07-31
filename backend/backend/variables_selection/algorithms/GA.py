@@ -401,7 +401,13 @@ class GAAlgorithm:
       self.not_improvement_count <= self.limit_not_improvement
     ):
       # Função de interação
-      self.interation_function(self.generations, self.limit_generations)
+      self.interation_function(
+        self.generations, 
+        self.limit_generations,
+        1,
+        3,
+        "Algoritmo AG"
+      )
 
       self.generate_new_generation()
       self.evaluate()

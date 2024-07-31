@@ -34,7 +34,6 @@ import { InlineInput } from '../../components/InlineInput';
 import PopUp from '../../components/PopUp';
 import Loading from '../../components/Loading';
 import ProgressBarLoading from '../../components/ProgressBarLoading';
-import ProgressContext from '../../context/ProgressContext';
 
 import { delayTimeForGetProgress } from '../../settings';
 
@@ -116,8 +115,11 @@ export default function VariablesSelection() {
 
   const [progressValue, setProgressValue] = useState(0);
   const [maximumValue, setMaximumValue] = useState(100);
+  const [actualStep, setActualStep] = useState(0);
+  const [totalStep, setTotalStep] = useState(0);
   const [timeForEstimation, setTimeForEstimation] = useState(0);
-  const [counterInProgress, setCounterInProgress] = useState(0);
+
+  const [executionType, setExecutionType] = useState("");
 
   const navigate = useNavigate();
   const navigateToVariablesSelection = () => {
@@ -298,15 +300,23 @@ export default function VariablesSelection() {
 
   const getProgress = async() => {
     const response = await getSelectionProgress(projectID, authTokens.access);
+    console.log(response);
+
     if(response.progress) {
       const split = response.progress.split('/');
       const progress = Number(split[0]);
       const maximum = Number(split[1]);
+      const actualStep = Number(split[2]);
+      const totalStep = Number(split[3]);
       
       if(progress >= 0) {
         // Atualizar progresso
         setProgressValue(progress);
         setMaximumValue(maximum);
+        setActualStep(actualStep);
+        setTotalStep(totalStep);
+
+        setExecutionType(response.executionType);
 
         // Atualizar progresso no localStorage
         const executionString = localStorage.getItem(`progress_${projectID}`);
@@ -322,10 +332,10 @@ export default function VariablesSelection() {
             route: 'variables-selection',
             progressValue: progress,
             maximumValue: maximum,
-            counter: 0
+            counter: 0,
           };
         }
-        
+
         // Converte o objeto em uma string JSON
         const executionJSON = JSON.stringify(execution);
         
@@ -609,6 +619,13 @@ export default function VariablesSelection() {
                 <p>
                   {
                   `${(progressValue / maximumValue * 100).toFixed(0)}%`
+                  }
+                </p>
+                <p>
+                  {
+                    executionType.length
+                    ? `Processo ${actualStep}/${totalStep}: ${executionType}`
+                    : undefined
                   }
                 </p>
                 <p>

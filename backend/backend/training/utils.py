@@ -118,7 +118,7 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
   fig, ax = plt.subplots()
 
   ax.scatter(L_Y, L, c=y)
-  ax.set_title(f'Leave One Out - NORMAL \n r={r:.3f} and r2={r2:.3f}')
+  ax.set_title(f'Leave One Out - NORMAL \n Q2={r2:.3f}')
   ax.set_xlabel('Y Real')
   ax.set_ylabel('Y Pred')
 

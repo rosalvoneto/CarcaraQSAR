@@ -14,6 +14,12 @@ class VariablesSelection(models.Model):
     blank=True,
     default=None
   )
+  algorithm_execution_type = models.CharField(
+    max_length=100,
+    null=True,
+    blank=True,
+    default=None
+  )
 
   rows_to_remove = models.JSONField(default=list)
 
@@ -21,8 +27,12 @@ class VariablesSelection(models.Model):
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
-  def set_progress(self, actual, total):
-    self.algorithm_progress = f"{actual}/{total}"
+  def set_execution_type(self, execution_type):
+    self.algorithm_execution_type = execution_type
+    self.save()
+
+  def set_progress(self, actual, total, actual_step, total_steps):
+    self.algorithm_progress = f"{actual}/{total}/{actual_step}/{total_steps}"
     self.save()
     
   def set_progress_none(self):

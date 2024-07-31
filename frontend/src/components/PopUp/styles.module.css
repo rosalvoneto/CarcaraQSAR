@@ -34,7 +34,13 @@
 }
 
 .popupDescription {
+  width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
 
+  max-height: 40vh;
+
+  overflow-y: auto;
 }
 
 .buttonsContainer {

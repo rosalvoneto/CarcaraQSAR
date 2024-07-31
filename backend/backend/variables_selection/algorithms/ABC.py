@@ -130,7 +130,13 @@ class ABCAlgorithm():
         while self.iteration < self.n_iterations:
 
             # Função de interação
-            self.interation_function(self.iteration, self.n_iterations)
+            self.interation_function(
+                self.iteration, 
+                self.n_iterations,
+                1,
+                3,
+                "Algoritmo ABC"
+            )
             self.iteration += 1
 
             # Geração de abelhas melhores

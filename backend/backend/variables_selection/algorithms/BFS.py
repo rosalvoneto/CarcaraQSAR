@@ -100,7 +100,10 @@ class BFS:
             # Função da interação
             self.interation_function(
                 self.not_improvement_count,
-                self.limit_not_improvement
+                self.limit_not_improvement,
+                3,
+                3,
+                "Algoritmo BFS"
             )
             
             # Gera novas crianças e calcula o R2 de cada uma
@@ -238,7 +241,13 @@ class BFS:
             metric_values.append(metric)
 
             # Função da interação
-            self.interation_function(i + 1, len(variables))
+            self.interation_function(
+                i + 1, 
+                len(variables),
+                2,
+                3,
+                "Busca da melhor variável"
+            )
         
         best_R2 = max(metric_values)
         maximum_index = metric_values.index(best_R2)
