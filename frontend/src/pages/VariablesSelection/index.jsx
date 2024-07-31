@@ -214,8 +214,14 @@ export default function VariablesSelection() {
       setSelected("error");
       alert("Ocorreu um erro!");
     } else {
-      setSelected("finished");
-      alert("Finalizou!");
+      // Atualizar progresso
+      setProgressValue(100);
+      setMaximumValue(100);
+      setTimeout(() => {
+        alert("Finalizou!");
+        setSelected("finished");
+      }, 2000);
+
     }
     localStorage.removeItem(`progress_${projectID}`);
   }
