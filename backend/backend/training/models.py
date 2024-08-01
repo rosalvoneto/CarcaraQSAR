@@ -44,6 +44,12 @@ class Training(models.Model):
     blank=True,
     default=None
   )
+  execution_type = models.CharField(
+    max_length=100,
+    null=True,
+    blank=True,
+    default=None
+  )
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -78,8 +84,12 @@ class Training(models.Model):
     default=None
   )
 
-  def set_progress(self, actual, total):
-    self.progress = f"{actual}/{total}"
+  def set_execution_type(self, execution_type):
+    self.execution_type = execution_type
+    self.save()
+
+  def set_progress(self, actual, total, actual_step, total_steps):
+    self.progress = f"{actual}/{total}/{actual_step}/{total_steps}"
     self.save()
 
   def set_progress_none(self):

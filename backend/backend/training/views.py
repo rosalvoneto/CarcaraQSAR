@@ -207,7 +207,13 @@ def train_view(request):
         os.remove(file_name)
 
         # Atualizando progresso
-        training.set_progress(100, 100)
+        training.set_progress(
+          100, 
+          100,
+          5,
+          5
+        )
+        training.set_execution_type("Finalizou")
         # Atualiza treinamento para concluído
         training.trained = True
         # Zerar o progresso
@@ -249,6 +255,9 @@ def train_view(request):
     }, status=500)
   
   except Exception as error:
+    
+    print("AQUIIIIIIIIIIIII")
+    print(error)
 
     # Zerar o progresso
     training.set_progress_none()
@@ -396,6 +405,7 @@ def getTrainingProgress_view(request):
   
   return Response({
     'progress': training.progress,
+    'executionType': training.execution_type,
   }, status=200)
 
 @api_view(['PUT'])

@@ -64,6 +64,7 @@ export const train = async (
   })
   
   let dataResponse = await response.json();
+  console.log(dataResponse)
   return response;
 }
 

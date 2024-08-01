@@ -102,7 +102,13 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
       L_Y_pred.append(y_pred)
       
 
-      training.set_progress(i + 1, length_progress)
+      training.set_progress(
+        i + 1, 
+        length_progress,
+        1,
+        5
+      )
+      training.set_execution_type("Leave One Out")
 
 
   L = [x[0] for x in L_Y_pred]
@@ -208,7 +214,13 @@ def cross_validation(project_id, data, scaler_name, algorithm, parameters):
     r2 = run_exp_for_KFold(data, algorithm, parameters)
     L.append(r2)
 
-    training.set_progress(i + 1, length_progress)
+    training.set_progress(
+      i + 1, 
+      length_progress,
+      2,
+      5
+    )
+    training.set_execution_type("Cross Validation")
 
   df = pd.DataFrame(list(enumerate(L, start=1)), columns=['Reptirion', 'r2'])
   Y = df['r2'].to_numpy()
@@ -286,7 +298,13 @@ def y_scrambling(project_id, data, algorithm, parameters):
       else:
         r2 = run_exp_for_YScrambling(data, algorithm, parameters, True)
         L_shuffled.append(r2)
-      training.set_progress(length_progress * j + (i + 1), length_progress * times)
+      training.set_progress(
+        length_progress * j + (i + 1), 
+        length_progress * times,
+        3,
+        5 
+      )
+      training.set_execution_type("Y-Scrambling")
 
   X = [x+1 for x in range(length_progress)]
 
@@ -321,6 +339,15 @@ def bootstrap(project_id, data, algorithm, parameters, index):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
+
+  training.set_progress(
+    0,
+    100,
+    4,
+    5
+  )
+  training.set_execution_type("Bootstrap")
+  
 
   N = range(data.shape[0])
   lista = [x for x in N]
@@ -376,12 +403,28 @@ def bootstrap(project_id, data, algorithm, parameters, index):
   # Limpeza da exibição
   plt.clf()
 
+  training.set_progress(
+    100,
+    100,
+    4,
+    5
+  )
+  training.set_execution_type("Bootstrap")
+
   return True
 
 def importance(project_id, data, algorithm, parameters):
 
   project = get_object_or_404(Project, id=project_id)
   training = project.training_set.get()
+
+  training.set_progress(
+    0,
+    100,
+    5,
+    5
+  )
+  training.set_execution_type("Importance")
 
   # Separa o Dataset em dois diferentes Dataframes
   X_data = data.iloc[:,:-1]
@@ -449,5 +492,13 @@ def importance(project_id, data, algorithm, parameters):
 
   # Limpeza da exibição
   plt.clf()
+
+  training.set_progress(
+    100,
+    100,
+    5,
+    5
+  )
+  training.set_execution_type("Importance")
 
   return True
