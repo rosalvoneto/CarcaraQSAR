@@ -52,26 +52,26 @@ export const algorithmsDescriptions = [
 export const algorithmsParameters = [
   [],
   [
-    ['population_quantity', 'Quantidade da população', 50],
-    ['info_gain_quantity', 'Quantidade de variáveis iniciais', 50],
-    ["probability_crossover", "Probabilidade de crossover", 0.6],
-    ['probability_mutation', 'Probabilidade de mutação', 0.01],
-    ['limit_generations', 'Limite de gerações', 500],
-    ['limit_not_improvement', 'Limite sem melhoria', 500],
-    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2],
+    ['population_quantity', 'Quantidade da população', 50, 'Número total de soluções presentes em cada geração.'],
+    ['info_gain_quantity', 'Quantidade de variáveis iniciais', 50, 'Quantidade de variáveis que estarão ativas no início do algoritmo.'],
+    ["probability_crossover", "Probabilidade de crossover", 0.6, 'Probabilidade de que dois indivíduos selecionados para reprodução irão trocar partes de suas soluções para criar novos indivíduos (ou filhos).'],
+    ['probability_mutation', 'Probabilidade de mutação', 0.01, 'Probabilidade de que pequenas alterações aleatórias serão feitas nos indivíduos da população.'],
+    ['limit_generations', 'Limite de gerações', 500, 'Número máximo de ciclos de reprodução e seleção que o algoritmo irá executar.'],
+    ['limit_not_improvement', 'Limite sem melhoria', 500, 'Número máximo de interações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor.'],
+    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99, 'R2 é uma métrica de avaliação. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis. Esse parâmetro define o valor R2 ideal para que o algoritmo pare a sua execução.'],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor R2.'],
+    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que adicionadas a cada interação para análise'],
   ],
   [
-    ["maximum_iterations", "Limite de interações", 500],
-    ["bees", "Quantidade de abelhas", 50],
-    ["limit_not_improvement", "Limite sem melhoria", 50],
-    ["info_gain_quantity", "Quantidade de variáveis iniciais", 50],
-    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2],
+    ["maximum_iterations", "Limite de interações", 500, 'Número máximo de vezes que o algoritmo irá executar seu ciclo de busca de soluções.'],
+    ["bees", "Quantidade de abelhas", 50, 'Número de abelhas (ou agentes) que irão procurar soluções dentro do espaço de busca.'],
+    ["limit_not_improvement", "Limite sem melhoria", 50, 'Número máximo de interações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor.'],
+    ["info_gain_quantity", "Quantidade de variáveis iniciais", 50, 'Quantidade de variáveis que estarão ativas no início do algoritmo'],
+    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99, 'R2 é uma métrica de avaliação. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis. Esse parâmetro define o valor R2 ideal para que o algoritmo pare a sua execução.'],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor R2.'],
+    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que adicionadas a cada interação para análise'],
   ]
 ]
 
@@ -570,12 +570,44 @@ export default function VariablesSelection() {
                     undefined
                 }
               </div>
+              {
+                algorithmIndex != 0 &&
+                (
+                  selected == "false"
+                  ?
+                    <button 
+                      onClick={handleToMakeSelection}
+                      className={styles.button}
+                    >
+                      Salvar e Selecionar
+                    </button>
+                  :
+                    <button 
+                      onClick={() => {
+                        setSelected("show progress");
+                      }}
+                      className={styles.button}
+                    >
+                      Mostrar progresso
+                    </button>
+                  
+                )
+              }
             </div>
 
             <div className={styles.informationContainer}>
               <p className={styles.information}>
                 { algorithmsDescriptions[algorithmIndex] }
               </p>
+              {
+                algorithmsParameters[algorithmIndex].map(parameter => {
+                  return(
+                    <p className={styles.information}>
+                      {`${parameter[1]}: ${parameter[3]}`}
+                    </p>
+                  )
+                })
+              }
               {
                 /* 
                 <ProgressBarLoading 
@@ -675,32 +707,6 @@ export default function VariablesSelection() {
               action={navigateToVariablesSelection}
             />
           }
-
-
-          {
-            algorithmIndex != 0 &&
-            (
-              selected == "false"
-              ?
-                <button 
-                  onClick={handleToMakeSelection}
-                  className={styles.button}
-                >
-                  Salvar e Selecionar
-                </button>
-              :
-                <button 
-                  onClick={() => {
-                    setSelected("show progress");
-                  }}
-                  className={styles.button}
-                >
-                  Mostrar progresso
-                </button>
-              
-            )
-          }
-
         </div>
         
         <Button
