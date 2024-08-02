@@ -59,7 +59,6 @@ export default function Database() {
       );
       
       const dataResponse = await response.json();
-      console.log(dataResponse);
       if(dataResponse.error) {
         setDatabaseError(true);
         setErrorMessage(
@@ -175,9 +174,7 @@ export default function Database() {
       convertAndSendDatabase(projectID, selectedSmilesFile, authTokens.access)
       .then((response) => {
 
-        console.log("Status:", response.status);
         const message = response.headers.get('X-Message');
-        console.log(message);
 
         if(response.status == 400) {
           setDatabaseError(true);

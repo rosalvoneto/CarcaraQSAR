@@ -138,7 +138,6 @@ export default function Training() {
     setTrained("first time");
     if(response) {
       const response = await train(projectID, authTokens.access);
-      console.log(response);
       
       if(response.status == 500) {
         setTrained("error");
@@ -255,11 +254,8 @@ export default function Training() {
         });
 
         // Exibir o objeto resultante
-        console.log(resultObject);
         setAlgorithmParameters(resultObject);
       }
-      console.log(response);
-
       setWithFullSet(response.withFullSet);
 
       if(response.algorithmProgress) {

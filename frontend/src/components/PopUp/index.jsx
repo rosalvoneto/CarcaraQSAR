@@ -1,7 +1,8 @@
 import styles from './styles.module.css';
 
 export default function PopUp({ 
-  children, show, title, description, showButton, buttonName, action
+  children, show, title, description, showButton, buttonName, action,
+  showSecondButton, secondButtonName, secondAction 
 }) {
 
   return(
@@ -29,6 +30,15 @@ export default function PopUp({
               onClick={() => action()}
             >
               {buttonName}
+            </button>
+          }
+          {
+            showSecondButton &&
+            <button 
+              className={styles.popupButton}
+              onClick={() => secondAction()}
+            >
+              {secondButtonName}
             </button>
           }
         </div>

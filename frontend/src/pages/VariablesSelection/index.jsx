@@ -18,8 +18,10 @@ import {
   removeDatabaseConstantVariables, 
   removeDatabaseVariables,
   makeSelection,
+  cancelSelection,
+  checkSelectionStatus,
   getSelectionProgress,
-  setSelectionProgress
+  setSelectionProgress,
 } 
 from '../../api/variablesSelection';
 import { deleteDatabase, downloadDatabase, getDatabases } from '../../api/database';
@@ -120,6 +122,7 @@ export default function VariablesSelection() {
   const [timeForEstimation, setTimeForEstimation] = useState(0);
 
   const [executionType, setExecutionType] = useState("");
+  const [useGetProgress, setUseGetProgress] = useState(false);
 
   const navigate = useNavigate();
   const navigateToVariablesSelection = () => {
@@ -208,23 +211,33 @@ export default function VariablesSelection() {
     );
 
     setSelected("first time");
+    setUseGetProgress(true);
     const response = await makeSelection(projectID, authTokens.access);
 
-    if(response.status == 500) {
-      setSelected("error");
-      alert("Ocorreu um erro!");
-    } else {
-      // Atualizar progresso
-      setProgressValue(100);
-      setMaximumValue(100);
-      setTimeout(() => {
-        alert("Finalizou!");
-        setSelected("finished");
-      }, 2000);
+    // if(response.status == 500) {
+    //   setSelected("error");
+    //   alert("Ocorreu um erro!");
+    // } else {
+    //   // Atualizar progresso
+    //   setProgressValue(100);
+    //   setMaximumValue(100);
+    //   setTimeout(() => {
+    //     alert("Finalizou!");
+    //     setSelected("finished");
+    //   }, 2000);
 
-    }
-    localStorage.removeItem(`progress_${projectID}`);
+    // }
+    // localStorage.removeItem(`progress_${projectID}`);
   }
+
+  const handleToCancelSelection = async() => {
+    const response = await cancelSelection(projectID, authTokens.access);
+    console.log(response);
+    
+    setSelected("false");
+    setUseGetProgress(false);
+    localStorage.removeItem(`progress_${projectID}`);
+  } 
 
   const handleToChangeRows = async() => {
     await setVariablesSettings(
@@ -305,6 +318,28 @@ export default function VariablesSelection() {
   }
 
   const getProgress = async() => {
+    const responseTask = await checkSelectionStatus(
+      projectID, authTokens.access
+    );
+    console.log(responseTask);
+    if(responseTask.state == 'SUCCESS') {
+      setUseGetProgress(false);
+      // Atualizar progresso
+      setProgressValue(100);
+      setMaximumValue(100);
+      setTimeout(() => {
+        alert("Finalizou!");
+        setSelected("finished");
+      }, 2000);
+      localStorage.removeItem(`progress_${projectID}`);
+
+    } else if(responseTask.state == 'FAILURE' || responseTask.state == 'ERROR') {
+      setUseGetProgress(false);
+      setSelected("error");
+      alert("Ocorreu um erro!");
+      localStorage.removeItem(`progress_${projectID}`);
+    }
+
     const response = await getSelectionProgress(projectID, authTokens.access);
     console.log(response);
 
@@ -359,11 +394,13 @@ export default function VariablesSelection() {
   }
 
   useEffect(() => {
-    // A função será executada a cada quantidade de segundos
-    const interval = setInterval(getProgress, delayTimeForGetProgress);
-    // Função de limpeza para interromper o intervalo quando 
-    // o componente for desmontado
-    return () => clearInterval(interval);
+    if(useGetProgress) {
+      // A função será executada a cada quantidade de segundos
+      const interval = setInterval(getProgress, delayTimeForGetProgress);
+      // Função de limpeza para interromper o intervalo quando 
+      // o componente for desmontado
+      return () => clearInterval(interval);
+    }
   }, [selected]);
 
   useEffect(() => {
@@ -391,10 +428,8 @@ export default function VariablesSelection() {
         });
 
         // Exibir o objeto resultante
-        console.log(resultObject);
         setAlgorithmParameters(resultObject);
       }
-      console.log(response);
       
       setRowsToRemove(response.rowsToRemove.toString());
 
@@ -600,9 +635,9 @@ export default function VariablesSelection() {
                 { algorithmsDescriptions[algorithmIndex] }
               </p>
               {
-                algorithmsParameters[algorithmIndex].map(parameter => {
+                algorithmsParameters[algorithmIndex].map((parameter, index) => {
                   return(
-                    <p className={styles.information}>
+                    <p key={index} className={styles.information}>
                       {`${parameter[1]}: ${parameter[3]}`}
                     </p>
                   )
@@ -647,6 +682,10 @@ export default function VariablesSelection() {
               action={() => {
                 setSelected("hide progress")
               }}
+
+              showSecondButton
+              secondButtonName={"Cancelar"}
+              secondAction={() => handleToCancelSelection()}
             >
               <Loading size={45} />
               <div className={styles.progressContainer}>

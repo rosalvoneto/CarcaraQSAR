@@ -8,11 +8,11 @@ from io import StringIO
 
 from django.shortcuts import get_object_or_404
 from django.core.files import File
+from django.http import HttpResponse, JsonResponse
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 
@@ -26,7 +26,10 @@ from variables_selection.algorithms.BFS import BFS
 from variables_selection.algorithms.GreedySearch import GreedySearch
 from variables_selection.tasks import tarefa_com_delay, callback_sucesso, callback_falha
 
+from django.views.decorators.csrf import csrf_exempt
+
 from celery import shared_task
+from celery.result import AsyncResult
 from celery.signals import task_success, task_failure
 
 from backend.celery import app
@@ -236,10 +239,12 @@ def removeVariables_view(request):
     'message': 'Database principal não encontrado!',
   }, status=200)
 
-def make_selection(project_id):
+@shared_task(bind=True)
+def make_selection(self, project_id):
 
   project = get_object_or_404(Project, id=project_id)
   database = project.get_database()
+
   variables_selection = project.variablesselection_set.get()
 
   def update_selection_progress(
@@ -278,9 +283,6 @@ def make_selection(project_id):
         )
 
         columns_with_nan = base.columns[base.isna().any()].tolist()
-        print("Lista de colunas com valores NaN:")
-        print(columns_with_nan)
-        print(base[base.isna().any(axis=1)])
 
         condition = algorithm != "Colônia de abelhas"
         condition = True
@@ -415,7 +417,7 @@ def make_selection(project_id):
         project.save()
 
         return {
-          'message': 'Seleção de variáveis aplicada!',
+          'message': 'Seleção de variáveis aplicada!'
         }
     
   except Exception as error:
@@ -446,13 +448,84 @@ def make_selection(project_id):
 def makeSelection_view(request):
 
   project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  
+  variables_selection = project.variablesselection_set.get()
 
-  response = make_selection(project_id)
-  try:
-    error = response['error']
-    return Response(response, status=500)
-  except:
-    return Response(response, status=200)
+  if not project_id:
+    return Response({
+      'error': 'O ID do projeto é requerido!'
+    }, status=400)
+  
+  task = make_selection.apply_async(args=[project_id])
+
+  variables_selection.set_algorithm_task_id(task.id)
+  project.save()
+
+  return Response({
+    'message': 'Seleção de variáveis em andamento!',
+    'taskId': task.id,
+  }, status=202)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def cancelSelection_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  
+  variables_selection = project.variablesselection_set.get()
+
+  task_id = variables_selection.algorithm_task_id
+
+  task = AsyncResult(task_id)
+  task.revoke(terminate=True)
+
+  # Atualizar progresso
+  variables_selection.set_progress_none()
+  project.save()
+
+  return Response({
+    'status': 'Cancelamento da seleção de variáveis!'
+  })
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def checkStatusSelection_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  
+  variables_selection = project.variablesselection_set.get()
+
+  task_id = variables_selection.algorithm_task_id
+
+  task = AsyncResult(task_id)
+  if task.state == 'PENDING':
+    response = {
+      'state': task.state,
+      'status': 'A tarefa está em execução!'
+    }
+  elif task.state != 'FAILURE':
+    response = {
+      'result': task.result
+    }
+    if 'error' in task.result:
+      response['state'] = 'ERROR'
+      response['status'] = 'Houve um erro na execução da tarefa!'
+    else:
+      response['state'] = 'SUCCESS'
+      response['status'] = 'A tarefa foi completa!'
+  else:
+    response = {
+      'state': task.state,
+      'status': str(task.info),
+    }
+  return Response(response)
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

@@ -256,7 +256,6 @@ def train_view(request):
   
   except Exception as error:
     
-    print("AQUIIIIIIIIIIIII")
     print(error)
 
     # Zerar o progresso

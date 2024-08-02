@@ -149,6 +149,48 @@ export const makeSelection = async(
   return response;
 }
 
+// Cancela a seleção de variáveis com o algoritmo bioinspirado
+export const cancelSelection = async(
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/cancel_selection`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  return dataResponse;
+}
+
+// Cancela a seleção de variáveis com o algoritmo bioinspirado
+export const checkSelectionStatus = async(
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/variables-selection/status_selection`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  return dataResponse;
+}
+
 // Resgatar o progresso na seleção de variáveis através do algoritmo
 export const getSelectionProgress = async(
   projectID, accessToken
