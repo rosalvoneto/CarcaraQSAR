@@ -20,6 +20,17 @@
   height: fit-content;
 }
 
+.parametersDescriptionsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  gap: 10px;
+
+  height: fit-content;
+}
+
 .information {
   width: 500px;
   height: fit-content;

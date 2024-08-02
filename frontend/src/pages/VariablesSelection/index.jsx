@@ -61,7 +61,7 @@ export const algorithmsParameters = [
     ['r2_condition_BFS', 'Limite R2 do BFS', 0.99, 'R2 é uma métrica de avaliação. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis. Esse parâmetro define o valor R2 ideal para que o algoritmo pare a sua execução.'],
     ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor R2.'],
     ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que adicionadas a cada interação para análise'],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que são adicionadas a cada interação para análise.'],
   ],
   [
     ["maximum_iterations", "Limite de interações", 500, 'Número máximo de vezes que o algoritmo irá executar seu ciclo de busca de soluções.'],
@@ -71,7 +71,7 @@ export const algorithmsParameters = [
     ['r2_condition_BFS', 'Limite R2 do BFS', 0.99, 'R2 é uma métrica de avaliação. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis. Esse parâmetro define o valor R2 ideal para que o algoritmo pare a sua execução.'],
     ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor R2.'],
     ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que adicionadas a cada interação para análise'],
+    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que são adicionadas a cada interação para análise.'],
   ]
 ]
 

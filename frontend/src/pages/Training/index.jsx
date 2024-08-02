@@ -45,10 +45,20 @@ export const algorithmsDescriptions = [
 ]
 
 export const algorithmsParameters = [
-  [["n_estimators", "Número de árvores", 50], ["max_features", "Quantidade de features", 5]],
-  [["regularization", "Regularização", 0]],
-  [["k_neighbors", "Quantidade K de vizinhos", 0]],
-  [["kernel", "Kernel", 0], ["CParameter", "Parâmetro C", 0]],
+  [
+    ["n_estimators", "Número de árvores", 50, 'Quantidade de árvores de decisão que serão criadas no modelo de Random Forest.'], 
+    ["max_features", "Quantidade de features", 5, 'Número de características (ou variáveis) selecionadas aleatoriamente para considerar ao dividir um nó em cada árvore.']
+  ],
+  [
+    ["regularization", "Regularização", 0, 'Técnica usada para penalizar coeficientes grandes no modelo de regressão para prevenir overfitting.']
+  ],
+  [
+    ["k_neighbors", "Quantidade K de vizinhos", 0, 'Número de vizinhos mais próximos considerados ao classificar ou prever um novo ponto.']
+  ],
+  [
+    ["kernel", "Kernel", 0, 'Função usada para transformar os dados em um espaço de alta dimensão onde se torna mais fácil separar as classes com um hiperplano.'], 
+    ["CParameter", "Parâmetro C", 0, 'Parâmetro de regularização que controla a margem de erro permitida para a separação das classes.']
+  ],
 ];
 
 export default function Training() {
@@ -401,6 +411,17 @@ export default function Training() {
                 >
                   Mostrar progresso
                 </button>
+            }
+          </div>
+          <div className={styles.parametersDescriptionsContainer}>
+            {
+              algorithmsParameters[algorithmIndex].map(parameter => {
+                return(
+                  <p className={styles.information}>
+                    {`${parameter[1]}: ${parameter[3]}`}
+                  </p>
+                )
+              })
             }
           </div>
 
