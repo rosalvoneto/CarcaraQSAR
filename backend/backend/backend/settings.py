@@ -279,7 +279,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Configurações do Celery
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-# URL do seu broker de mensagens
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost'
+# URL do broker de mensagens
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+
 # URL para resultados das tarefas (opcional)
-CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+# Outras configurações do Celery, se necessário
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
