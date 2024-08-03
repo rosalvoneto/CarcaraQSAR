@@ -437,12 +437,8 @@ export default function VariablesSelection() {
       setRowsToRemove(response.rowsToRemove.toString());
 
       if(response.algorithmProgress) {
-        const split = response.algorithmProgress.split('/');
-        const progress = Number(split[0]);
-        const maximum = Number(split[1]);
-        setProgressValue(progress);
-        setMaximumValue(maximum);
         setSelected('hide progress');
+        setUseGetProgress(true);
       }
     })
     .catch(error => {

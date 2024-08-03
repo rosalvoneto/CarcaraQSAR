@@ -10,7 +10,7 @@ import { NavigationBarWidth, delayTimeForGetProgress } from '../../settings';
 import ProgressBarLoading from '../ProgressBarLoading';
 import AuthContext from '../../context/AuthContext';
 
-import { getSelectionProgress } from '../../api/variablesSelection';
+import { checkSelectionStatus, getSelectionProgress } from '../../api/variablesSelection';
 import { getTrainingProgress } from '../../api/training';
 import { getProject } from '../../api/project';
 
@@ -49,6 +49,33 @@ export default function NavigationBar() {
 
     progressExecutions.map(async (execution) => {
       console.log("NAVIGATION BAR");
+
+      // Realiza a busca do status da tarefa
+      const responseTask = await checkSelectionStatus(
+        execution.projectID, authTokens.access
+      );
+      console.log(responseTask);
+
+      if(responseTask.state == 'SUCCESS') {
+        // Atualizar progresso no local storage
+        execution.progressValue = 100;
+        execution.maximumValue = 100;
+
+        const executionJSON = JSON.stringify(execution);
+        localStorage.setItem(
+          `progress_${execution.projectID}`,
+          executionJSON
+        );
+
+        setTimeout(() => {
+          alert(`Finalização de processo no projeto '${execution.projectName}'!`);
+        }, 2000);
+        localStorage.removeItem(`progress_${execution.projectID}`);
+
+      } else if(responseTask.state == 'FAILURE' || responseTask.state == 'ERROR') {
+        alert(`Erro no processo do projeto '${execution.projectName}'!`);
+        localStorage.removeItem(`progress_${execution.projectID}`);
+      }
 
       // Realiza a busca de progresso da tarefa
       let response;
@@ -90,13 +117,11 @@ export default function NavigationBar() {
   }
 
   useEffect(() => {
-    if(progressExecutions.length > 0) {
-      // A função será executada a cada quantidade de segundos
-      const interval = setInterval(getProgress, delayTimeForGetProgress);
-      // Função de limpeza para interromper o intervalo quando 
-      // o componente for desmontado
-      return () => clearInterval(interval);
-    }
+    // A função será executada a cada quantidade de segundos
+    const interval = setInterval(getProgress, delayTimeForGetProgress);
+    // Função de limpeza para interromper o intervalo quando 
+    // o componente for desmontado
+    return () => clearInterval(interval);
   }, []);
 
   return(
