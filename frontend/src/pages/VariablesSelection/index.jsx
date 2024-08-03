@@ -47,31 +47,31 @@ export const algorithms = [
 
 export const algorithmsDescriptions = [
   "Nenhum algoritmo foi escolhido",
-  "Os Algoritmos Genéticos são uma técnica de otimização baseada na seleção natural e genética. Eles operam em populações de soluções candidatas e utilizam operadores genéticos, como mutação e cruzamento, para evoluir e melhorar essas soluções ao longo de várias gerações. Esses algoritmos são amplamente usados para encontrar soluções aproximadas para problemas complexos de otimização e busca.",
-  "Inspirado no comportamento de colônias de abelhas, o Algoritmo de Colônia de Abelhas é uma técnica de otimização baseada na exploração de soluções candidatas em um espaço de busca. Abelhas virtuais procuram soluções em locais específicos e compartilham informações sobre a qualidade das soluções encontradas com outras abelhas, permitindo a convergência para uma solução ótima em problemas de otimização complexos.",
+  "O Algoritmo Genético é uma técnica de otimização baseada na seleção natural e genética. Eles operam em populações de soluções candidatas e utilizam operadores genéticos, como mutação e cruzamento, para evoluir e melhorar essas soluções ao longo de várias gerações. Esses algoritmos são amplamente usados para encontrar soluções aproximadas para problemas complexos de otimização e busca.",
+  "Inspirado no comportamento de colônias de abelhas, este algoritmo é uma técnica de otimização baseada na exploração de soluções candidatas em um espaço de busca. Abelhas virtuais procuram soluções em locais específicos e compartilham informações sobre a qualidade das soluções encontradas com outras abelhas, permitindo a convergência para uma solução ótima em problemas de otimização complexos.",
 ]
 
 export const algorithmsParameters = [
   [],
   [
-    ['population_quantity', 'Quantidade da população', 50, 'Número total de soluções presentes em cada geração.'],
+    ['population_quantity', 'Quantidade da população', 50, 'Número total de subconjuntos de variáveis ativas presentes em cada geração.'],
     ['info_gain_quantity', 'Quantidade de variáveis iniciais', 50, 'Quantidade de variáveis que estarão ativas no início do algoritmo.'],
     ["probability_crossover", "Probabilidade de crossover", 0.6, 'Probabilidade de que dois indivíduos selecionados para reprodução irão trocar partes de suas soluções para criar novos indivíduos (ou filhos).'],
     ['probability_mutation', 'Probabilidade de mutação', 0.01, 'Probabilidade de que pequenas alterações aleatórias serão feitas nos indivíduos da população.'],
     ['limit_generations', 'Limite de gerações', 500, 'Número máximo de ciclos de reprodução e seleção que o algoritmo irá executar.'],
-    ['limit_not_improvement', 'Limite sem melhoria', 500, 'Número máximo de interações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor.'],
-    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99, 'R2 é uma métrica de avaliação. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis. Esse parâmetro define o valor R2 ideal para que o algoritmo pare a sua execução.'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor R2.'],
+    ['limit_not_improvement', 'Limite sem melhoria', 500, 'Número máximo de iterações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor.'],
+    ['r2_condition_BFS', 'Limite Q2 do BFS', 0.99, 'Q2 é uma métrica de avaliação de validação cruzada. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis selecionado. Esse parâmetro define o valor Q2 ideal para que o algoritmo pare a sua execução.'],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor Q2.'],
     ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
     ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que são adicionadas a cada interação para análise.'],
   ],
   [
-    ["maximum_iterations", "Limite de interações", 500, 'Número máximo de vezes que o algoritmo irá executar seu ciclo de busca de soluções.'],
+    ["maximum_iterations", "Limite de iterações", 500, 'Número máximo de vezes que o algoritmo irá executar seu ciclo de busca de soluções.'],
     ["bees", "Quantidade de abelhas", 50, 'Número de abelhas (ou agentes) que irão procurar soluções dentro do espaço de busca.'],
-    ["limit_not_improvement", "Limite sem melhoria", 50, 'Número máximo de interações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor.'],
-    ["info_gain_quantity", "Quantidade de variáveis iniciais", 50, 'Quantidade de variáveis que estarão ativas no início do algoritmo'],
-    ['r2_condition_BFS', 'Limite R2 do BFS', 0.99, 'R2 é uma métrica de avaliação. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis. Esse parâmetro define o valor R2 ideal para que o algoritmo pare a sua execução.'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor R2.'],
+    ["limit_not_improvement", "Limite sem melhoria", 50, 'Número máximo de iterações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor para o parâmetro avaliado (Q2).'],
+    ["info_gain_quantity", "Quantidade de variáveis iniciais", 50, 'Quantidade de variáveis que estarão ativas no início do algoritmo.'],
+    ['r2_condition_BFS', 'Limite Q2 do BFS', 0.99, 'Q2 é uma métrica de avaliação de validação cruzada. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis selecionado. Esse parâmetro define o valor Q2 ideal para que o algoritmo pare a sua execução.'],
+    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem que haja melhoria no valor Q2.'],
     ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
     ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que são adicionadas a cada interação para análise.'],
   ]
@@ -318,10 +318,14 @@ export default function VariablesSelection() {
   }
 
   const getProgress = async() => {
+    console.log("VARIABLES SELECTION");
+
+    // Realiza a busca do status da tarefa
     const responseTask = await checkSelectionStatus(
       projectID, authTokens.access
     );
     console.log(responseTask);
+
     if(responseTask.state == 'SUCCESS') {
       setUseGetProgress(false);
       // Atualizar progresso
@@ -332,7 +336,6 @@ export default function VariablesSelection() {
         setSelected("finished");
       }, 2000);
       localStorage.removeItem(`progress_${projectID}`);
-
     } else if(responseTask.state == 'FAILURE' || responseTask.state == 'ERROR') {
       setUseGetProgress(false);
       setSelected("error");
@@ -340,6 +343,7 @@ export default function VariablesSelection() {
       localStorage.removeItem(`progress_${projectID}`);
     }
 
+    // Realiza a busca de progresso da tarefa
     const response = await getSelectionProgress(projectID, authTokens.access);
     console.log(response);
 
@@ -351,7 +355,7 @@ export default function VariablesSelection() {
       const totalStep = Number(split[3]);
       
       if(progress >= 0) {
-        // Atualizar progresso
+        // Atualizar progresso no estado local
         setProgressValue(progress);
         setMaximumValue(maximum);
         setActualStep(actualStep);
@@ -367,6 +371,8 @@ export default function VariablesSelection() {
           if(progress < execution.progressValue) {
             execution.counter = 0;
           }
+          execution.progressValue = progress;
+          execution.maximumValue = maximum;
         } else {
           execution = {
             projectID: projectID,
@@ -376,16 +382,13 @@ export default function VariablesSelection() {
             counter: 0,
           };
         }
-
-        // Converte o objeto em uma string JSON
         const executionJSON = JSON.stringify(execution);
-        
-        // Guarda a string JSON no local storage
         localStorage.setItem(
           `progress_${projectID}`,
           executionJSON
         );
-
+        
+        // Faz a estimativa de finalização
         makeEstimation(
           execution.counter, progress, maximum
         );
@@ -435,10 +438,11 @@ export default function VariablesSelection() {
 
       if(response.algorithmProgress) {
         const split = response.algorithmProgress.split('/');
-        setProgressValue(Number(split[0]));
-        setMaximumValue(Number(split[1]));
-
-        setSelected("hide progress");
+        const progress = Number(split[0]);
+        const maximum = Number(split[1]);
+        setProgressValue(progress);
+        setMaximumValue(maximum);
+        setSelected('hide progress');
       }
     })
     .catch(error => {

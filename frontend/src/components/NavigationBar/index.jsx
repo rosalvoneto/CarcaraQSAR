@@ -31,7 +31,7 @@ export default function NavigationBar() {
 
   const getProgress = async() => {
     
-    // Verifica se há itens no local storage
+    // Verifica itens no local storage e os armazena
     let progressExecutions = []
     if (localStorage.length > 0) {
       
@@ -42,14 +42,15 @@ export default function NavigationBar() {
         const objetoJSONRecuperado = localStorage.getItem(chave)
         // Converte a string JSON de volta para um objeto JavaScript
         const objetoRecuperado = JSON.parse(objetoJSONRecuperado);
-
         progressExecutions.push(objetoRecuperado);
       }
     }
     setProgressExecutions(progressExecutions);
 
-    // Realiza a busca de progresso nos itens do localStorage
     progressExecutions.map(async (execution) => {
+      console.log("NAVIGATION BAR");
+
+      // Realiza a busca de progresso da tarefa
       let response;
       if(execution.route == 'variables-selection') {
         response = await getSelectionProgress(
@@ -60,44 +61,42 @@ export default function NavigationBar() {
           execution.projectID, authTokens.access
         );
       }
+      console.log(response);
 
       if(response.progress) {
         const split = response.progress.split('/');
         const progress = Number(split[0]);
         const maximum = Number(split[1]);
 
-        if(progress != maximum) {
+        if(progress >= 0) {
+          // Atualizar progresso no localStorage
+          let newExecution = execution;
+          newExecution.progressValue = progress;
+          newExecution.maximumValue = maximum;
+          newExecution.counter = newExecution.counter + 1;
+
+          const response = await getProjectDetails(execution.projectID);
+          newExecution.projectName = response.name;
+
+          const executionJSON = JSON.stringify(newExecution);
           
-          if(progress >= 0) {
-            // Atualizar progresso no contexto
-            let newExecution = execution;
-            newExecution.progressValue = progress;
-            newExecution.maximumValue = maximum;
-            newExecution.counter = newExecution.counter + 1;
-
-            const response = await getProjectDetails(execution.projectID);
-            newExecution.projectName = response.name;
-
-            // Converte o objeto em uma string JSON
-            const executionJSON = JSON.stringify(newExecution);
-            
-            // Guarda a string JSON no local storage
-            localStorage.setItem(
-              `progress_${execution.projectID}`,
-              executionJSON
-            );
-          }
+          localStorage.setItem(
+            `progress_${execution.projectID}`,
+            executionJSON
+          );
         }
       }
     })
   }
 
   useEffect(() => {
-    // A função será executada a cada quantidade de segundos
-    const interval = setInterval(getProgress, delayTimeForGetProgress);
-    // Função de limpeza para interromper o intervalo quando 
-    // o componente for desmontado
-    return () => clearInterval(interval);
+    if(progressExecutions.length > 0) {
+      // A função será executada a cada quantidade de segundos
+      const interval = setInterval(getProgress, delayTimeForGetProgress);
+      // Função de limpeza para interromper o intervalo quando 
+      // o componente for desmontado
+      return () => clearInterval(interval);
+    }
   }, []);
 
   return(

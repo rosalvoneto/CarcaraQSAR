@@ -392,6 +392,8 @@ def make_selection(self, project_id):
           print("Melhor R2:", best_R2)
 
         update_selection_progress(100, 100, 3, 3, "Finalizado")
+        print("Progresso:")
+        print(variables_selection.algorithm_progress)
 
         # Ler CSV do melhor conjunto de variáveis
         dataframe = pd.read_csv("base_best.csv")
