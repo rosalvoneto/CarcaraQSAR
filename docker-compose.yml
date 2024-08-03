@@ -20,14 +20,8 @@ services:
       - ./backend/backend:/app
     environment:
       - DEBUG=1
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:latest
-    container_name: redis_container
-    ports:
-      - '6379:6379'
+      # Adiciona a URL do broker de mensagens
+      - CELERY_BROKER_URL=redis://redis:6379/0
 
   celery:
     build: ./backend/backend
@@ -40,3 +34,11 @@ services:
       - redis
     environment:
       - DEBUG=1
+      # Adiciona a URL do broker de mensagens
+      - CELERY_BROKER_URL=redis://redis:6379/0
+
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - '6379:6379'

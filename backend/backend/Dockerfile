@@ -2,7 +2,6 @@ FROM python:3.10
 
 ENV PYTHONUNBUFFERED=1
 
-# Instala o JRE, dos2unix e redis-tools
 RUN apt update && \
     apt install -y default-jdk dos2unix redis-tools redis-server \
     redis-server
