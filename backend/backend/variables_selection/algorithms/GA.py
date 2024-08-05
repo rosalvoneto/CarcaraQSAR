@@ -117,10 +117,11 @@ class Problem:
 
     for i in range(quantity):
       value = self.convertBinaryArrayToInt(self.initial_binary_array)
-      value_bitstring = BitArray(
-        int = value + i, length = int(self.full_variables_length)
-      )
-
+      try:
+        value_bitstring = BitArray(uint=value + i, length=self.full_variables_length)
+      except:
+        value_bitstring = BitArray(uint=value - i, length=self.full_variables_length)
+      print(value_bitstring)
       population.append(value_bitstring)
     
     return population

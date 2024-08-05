@@ -3,6 +3,7 @@ import os
 import json
 import pandas as pd
 pd.options.mode.chained_assignment = None
+import ast
 
 from io import StringIO
 
@@ -23,16 +24,9 @@ from variables_selection.utils import get_variables_settings, is_convertible_to_
 from variables_selection.algorithms.ABC import ABCAlgorithm
 from variables_selection.algorithms.GA import GAAlgorithm, Problem
 from variables_selection.algorithms.BFS import BFS
-from variables_selection.algorithms.GreedySearch import GreedySearch
-from variables_selection.tasks import tarefa_com_delay, callback_sucesso, callback_falha
-
-from django.views.decorators.csrf import csrf_exempt
 
 from celery import shared_task
 from celery.result import AsyncResult
-from celery.signals import task_success, task_failure
-
-from backend.celery import app
 
 
 # Create your views here.
@@ -505,26 +499,30 @@ def checkSelectionStatus_view(request):
   task_id = variables_selection.algorithm_task_id
 
   task = AsyncResult(task_id)
-  if task.state == 'PENDING':
-    response = {
-      'state': task.state,
-      'status': 'A tarefa está em execução!'
-    }
-  elif task.state != 'FAILURE':
-    response = {
-      'result': task.result
-    }
+  response = {
+    'state': task.state,
+    'status': 'Unknown',
+    'result': None
+  }
+  # Converte a string para um dicionário
+  resultDictionary = ast.literal_eval(str(task.result))
+
+  if task.state != 'PENDING':
     if 'error' in task.result:
       response['state'] = 'ERROR'
       response['status'] = 'Houve um erro na execução da tarefa!'
-    else:
-      response['state'] = 'SUCCESS'
-      response['status'] = 'A tarefa foi completa!'
+      response['result'] = resultDictionary
+  elif task.state == 'PENDING':
+    response['status'] = 'A tarefa está em execução!'
+  elif task.state == 'SUCCESS':
+    response['result'] = resultDictionary
+    response['status'] = 'A tarefa foi completada com sucesso!'
+  elif task.state == 'FAILURE':
+    response['status'] = 'Houve uma falha na execução da tarefa!'
+    response['result'] = resultDictionary
   else:
-    response = {
-      'state': task.state,
-      'status': str(task.info),
-    }
+    response['status'] = 'A tarefa está em estado desconhecido!'
+  
   return Response(response)
 
 

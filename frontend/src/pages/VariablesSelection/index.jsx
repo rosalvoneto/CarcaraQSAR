@@ -123,6 +123,7 @@ export default function VariablesSelection() {
 
   const [executionType, setExecutionType] = useState("");
   const [useGetProgress, setUseGetProgress] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
   const navigateToVariablesSelection = () => {
@@ -324,6 +325,10 @@ export default function VariablesSelection() {
     } else if(responseTask.state == 'FAILURE' || responseTask.state == 'ERROR') {
       setUseGetProgress(false);
       setSelected("error");
+      
+      const { error } = responseTask.result;
+      setErrorMessage(error);
+
       alert("Ocorreu um erro!");
       localStorage.removeItem(`progress_${projectID}`);
     }
@@ -699,7 +704,14 @@ export default function VariablesSelection() {
               show={true}
               title={"Erro"}
               description={
-                `Um erro interno do servidor não permitiu concluir a seleção.`
+                <>
+                  <p>
+                    Um erro interno do servidor não permitiu concluir a seleção.
+                  </p>
+                  <p>
+                    {errorMessage}
+                  </p>
+                </>
               }
 
               showButton

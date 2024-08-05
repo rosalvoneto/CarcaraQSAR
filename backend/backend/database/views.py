@@ -34,6 +34,18 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
 import time
 
+# Função para verificar se um valor é numérico e não é NaN
+def is_numeric(val):
+  try:
+    # Verificar se o valor é NaN
+    if pd.isnull(val):
+      return False
+    # Tentar converter o valor para float
+    float(val)
+    return True
+  except (ValueError, TypeError):
+    return False
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def convertAndSendDatabase_view(request):
@@ -202,20 +214,20 @@ def sendDatabase_view(request):
     )
     lines, columns = data_dataframe.shape
 
-    has_nan_values = data_dataframe.isna().any().any()
-    print(f"Valores NaN no dataframe: {has_nan_values}")
+    # Aplicar a função ao DataFrame e identificar as células não numéricas
+    non_numeric_mask = data_dataframe.applymap(lambda x: not is_numeric(x))
+    non_numeric_cells = np.where(non_numeric_mask)
 
-    if(has_nan_values):
-      nan_columns = data_dataframe.columns[data_dataframe.isna().any()].tolist()
-
-      # # Remover colunas com quaisquer valores NaN
-      # data_dataframe = data_dataframe.drop(columns=nan_columns)
+    for row, column in zip(non_numeric_cells[0], non_numeric_cells[1]):
+      print(f"({row}, {column}) with value '{data_dataframe.iat[row, column]}'")
 
       return Response({
-        'message': 'O database possui valores NaN!',
-        'error': 'A planilha possui células vazias! É preciso fazer upload de uma nova base de dados!',
-        'nan_columns': nan_columns,
-      }, status=500)
+        'message': 'O database possui valores não numéricos!',
+        'error': 'A planilha possui valores não numéricos! É preciso fazer upload de uma nova base de dados!',
+        'column': data_dataframe.columns[column],
+        'row': row
+      }, status=500) 
+    
 
     # Salvar database com as informações
     project_database = project.get_database()

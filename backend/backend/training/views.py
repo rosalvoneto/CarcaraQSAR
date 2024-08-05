@@ -2,6 +2,7 @@ import pandas as pd
 import json
 
 import os
+import ast
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -330,29 +331,33 @@ def checkTrainingStatus_view(request):
   training = project.training_set.get()
 
   task_id = training.task_id
-
   task = AsyncResult(task_id)
-  if task.state == 'PENDING':
-    response = {
-      'state': task.state,
-      'status': 'A tarefa está em execução!'
-    }
-  elif task.state != 'FAILURE':
-    response = {
-      'result': task.result
-    }
+  response = {
+    'state': task.state,
+    'status': 'Unknown',
+    'result': None
+  }
+  # Converte a string para um dicionário
+  resultDictionary = ast.literal_eval(str(task.result))
+
+  if task.state != 'PENDING':
     if 'error' in task.result:
       response['state'] = 'ERROR'
       response['status'] = 'Houve um erro na execução da tarefa!'
-    else:
-      response['state'] = 'SUCCESS'
-      response['status'] = 'A tarefa foi completa!'
+      response['result'] = resultDictionary
+  elif task.state == 'PENDING':
+    response['status'] = 'A tarefa está em execução!'
+  elif task.state == 'SUCCESS':
+    response['result'] = resultDictionary
+    response['status'] = 'A tarefa foi completada com sucesso!'
+  elif task.state == 'FAILURE':
+    response['status'] = 'Houve uma falha na execução da tarefa!'
+    response['result'] = resultDictionary
   else:
-    response = {
-      'state': task.state,
-      'status': str(task.info),
-    }
+    response['status'] = 'A tarefa está em estado desconhecido!'
+  
   return Response(response)
+
 
 
 @api_view(['GET'])

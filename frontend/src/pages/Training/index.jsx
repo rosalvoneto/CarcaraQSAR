@@ -96,10 +96,12 @@ export default function Training() {
   const [totalStep, setTotalStep] = useState(0);
   const [timeForEstimation, setTimeForEstimation] = useState(0);
 
+  const [algorithmIndex, setAlgorithmIndex] = useState(0);
+
   const [executionType, setExecutionType] = useState("");
   const [useGetProgress, setUseGetProgress] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [algorithmIndex, setAlgorithmIndex] = useState(0);
 
   const changeParameters = (key, value) => {
     let values = algorithmParameters;
@@ -197,6 +199,10 @@ export default function Training() {
     } else if(responseTask.state == 'FAILURE' || responseTask.state == 'ERROR') {
       setUseGetProgress(false);
       setTrained("error");
+
+      const { error } = responseTask.result;
+      setErrorMessage(error);
+
       alert("Ocorreu um erro!");
       localStorage.removeItem(`progress_${projectID}`);
     }
@@ -423,9 +429,9 @@ export default function Training() {
           </div>
           <div className={styles.parametersDescriptionsContainer}>
             {
-              algorithmsParameters[algorithmIndex].map(parameter => {
+              algorithmsParameters[algorithmIndex].map((parameter, index) => {
                 return(
-                  <p className={styles.information}>
+                  <p  key={index} className={styles.information}>
                     {`${parameter[1]}: ${parameter[3]}`}
                   </p>
                 )
@@ -498,7 +504,14 @@ export default function Training() {
             show={true}
             title={"Problema no treinamento"}
             description={
-              `Um erro interno do servidor não permitiu concluir o treinamento.`
+              <>
+                <p>
+                  Um erro interno do servidor não permitiu concluir o treinamento.
+                </p>
+                <p>
+                  {errorMessage}
+                </p>
+              </>
             }
 
             showButton

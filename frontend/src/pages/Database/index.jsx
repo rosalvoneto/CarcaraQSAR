@@ -62,7 +62,8 @@ export default function Database() {
       if(dataResponse.error) {
         setDatabaseError(true);
         setErrorMessage(
-          `${dataResponse.error} Colunas com células vazias: ${dataResponse.nan_columns}`
+          `${dataResponse.error} Célula vazia:
+          Coluna ${dataResponse.column}, linha ${dataResponse.row}...`
         );
 
         return false;
