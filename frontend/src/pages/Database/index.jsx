@@ -67,7 +67,7 @@ export default function Database() {
         setDatabaseError(true);
         setErrorMessage(
           `${dataResponse.error} Célula vazia:
-          Coluna ${dataResponse.column}, linha ${dataResponse.row}...`
+          Coluna ${dataResponse.column}, linha ${dataResponse.row}.`
         );
 
         return false;
@@ -91,7 +91,11 @@ export default function Database() {
       link.href = url;
 
       // Exemplo de uma string contendo o nome do arquivo com várias extensões
-      let fileName = selectedSmilesFile.name;
+      let fileName;
+      if(selectedSmilesFile)
+        fileName = selectedSmilesFile.name;
+      else
+        fileName = 'Database';
 
       // Encontrar a última ocorrência do ponto na string
       let lastIndex = fileName.lastIndexOf('.');
@@ -188,13 +192,25 @@ export default function Database() {
           })
           setIsSMILESConversion(false);
           setDatabaseError(true);
+
+        } else if(response.status == 401) {
+          response.json()
+          .then(dataResponse => {
+            setErrorMessage(dataResponse.message);
+            setIsSMILESConversion(false);
+            setDatabaseError(true);
+
+            return dataResponse;
+          })
         }
 
         return response.text();
       })
       .then((dataResponse) => {
         // Fazer o download do arquivo CSV
-        return handleDownload(dataResponse);
+        if(typeof(dataResponse) === 'string') {
+          return handleDownload(dataResponse);
+        }
       })
       .then(() => {
         // Resgatar informações do novo Database

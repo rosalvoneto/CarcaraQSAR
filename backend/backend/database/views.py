@@ -1,6 +1,5 @@
 from io import StringIO
 import pandas as pd
-import json
 import csv
 
 from threading import Thread
@@ -46,6 +45,22 @@ def is_numeric(val):
   except (ValueError, TypeError):
     return False
 
+# Verifica se o CSV está no formato desejado
+def is_valid_csv(reader, file_io):
+  try:
+    for row in reader:
+      if len(row) != 2:
+        return False
+    # Verifica se há pelo menos uma linha (além do cabeçalho)
+    file_io.seek(0)
+    num_rows = sum(1 for row in reader)
+
+    return num_rows >= 1
+  
+  except Exception as e:
+    print(f"Erro ao ler o arquivo: {e}")
+    return False
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def convertAndSendDatabase_view(request):
@@ -57,8 +72,21 @@ def convertAndSendDatabase_view(request):
 
     project = get_object_or_404(Project, id=project_id)
 
-    # Cria uma lista das linhas do arquivo
+    # Lê o conteúdo do arquivo
     file_content = uploaded_file.read().decode('utf-8')
+
+    # Usa StringIO para tratar o conteúdo como um arquivo
+    file_io = StringIO(file_content)
+    reader = csv.reader(file_io)
+    valid_csv = is_valid_csv(reader, file_io)
+    if(not valid_csv):
+      print('ARQUIVO NÃO VÁLIDO')
+      response = Response({
+        'message': 'Formado não válido do arquivo SMILES!'
+      }, status=401)
+      return response
+    print('ARQUIVO VÁLIDO')
+
     list_file_content = file_content.split('\n')
     try:
       list_file_content.remove('')
@@ -112,7 +140,7 @@ def convertAndSendDatabase_view(request):
       
       keys = list(keys)
       keys.append('alvo')
-    
+
     # Cria o arquivo com as características, o salva e o retorna
     def createFileAndSave():
       nonlocal keys

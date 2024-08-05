@@ -1,0 +1,2 @@
+COc1c(cc(cc1OC)C(=O)/C=C/c2cc(OC)ccc2O)OC,4.89
+COc1c(cc(cc1OC)C(=O)/C=C/c2cc(C)ccc2O)OC
