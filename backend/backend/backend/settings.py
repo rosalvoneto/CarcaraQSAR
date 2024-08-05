@@ -251,6 +251,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Permite credenciais em solicitações cross-origin
 CORS_ALLOW_CREDENTIALS = True
 
+# CORS_ALLOW_HEADERS = list(default_headers) + [
+#     'X-Message',
+#     'X-Status-Code',
+# ]
+
 # Permitir origens específicas
 X_FRAME_OPTIONS = 'ALLOW-FROM https://carcaraqsar.com.br'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

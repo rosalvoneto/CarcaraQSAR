@@ -114,7 +114,7 @@ export const convertAndSendDatabase = async (
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/convert_and_send`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + String(accessToken)
+        'Authorization': 'Bearer ' + String(accessToken),
       },
       body: formData,
   })
@@ -226,6 +226,23 @@ export const deleteDatabase = async (
 
   let response = await fetch(
     `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/delete_database?project_id=${projectID}&database_index=${index}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+  })
+
+  let dataResponse = await response.json();
+  return dataResponse;
+}
+
+// Pega a mensagem de Upload do Database
+export const getFileMessageInDatabase = async (
+  projectID, accessToken
+) => {
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/database/file_message_database?project_id=${projectID}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)

@@ -60,7 +60,10 @@ def convertAndSendDatabase_view(request):
     # Cria uma lista das linhas do arquivo
     file_content = uploaded_file.read().decode('utf-8')
     list_file_content = file_content.split('\n')
-    list_file_content.remove('')
+    try:
+      list_file_content.remove('')
+    except:
+      pass
 
     # Variáveis auxiliares
     keys = set()
@@ -139,26 +142,32 @@ def convertAndSendDatabase_view(request):
 
           csv_writer.writerow(line_descriptors_split)
       
-        # Cria um DataFrame do Pandas com o conteúdo do arquivo
-        data_dataframe = pd.read_csv(file_name)
+      # Cria um DataFrame do Pandas com o conteúdo do arquivo
+      data_dataframe = pd.read_csv(file_name)
 
-        has_nan_values = data_dataframe.isna().any().any()
-        print(f"Valores NaN no dataframe: {has_nan_values}")
+      status_code = 200
+      only_valid_cells_on_dataframe = True
+      status_message = 'Arquivo convertido com sucesso!'
+      # Aplicar a função ao DataFrame e identificar as células não numéricas
+      non_numeric_mask = data_dataframe.applymap(lambda x: not is_numeric(x))
+      non_numeric_cells = np.where(non_numeric_mask)
 
-        status_code = 200
-        status_message = 'Arquivo convertido com sucesso'
-        if(has_nan_values):
-          status_code = 400
-          status_message = 'Alguns campos do arquivo estão vazios! Submeta novamente corrigido'
-        
+      for row, column in zip(non_numeric_cells[0], non_numeric_cells[1]):
+        print(f"({row}, {column}) with value '{data_dataframe.iat[row, column]}'")
+        only_valid_cells_on_dataframe = False
+        status_code = 400
+        status_message = f'Algumas células estão vazias! Submeta novamente corrigido. Célula vazia: coluna {data_dataframe.columns[column]} e linha {row}.'
+        break
 
-        lines, columns = data_dataframe.shape
+      # Database atual
+      project_database = project.get_database()
+
+      if(only_valid_cells_on_dataframe):
         # Ler o arquivo.csv e o atribui a uma variável (para salvar no Database)
         with open(file_name, 'rb') as arquivo:
           file_content = arquivo.read()
 
-        # Salvar database com as informações
-        project_database = project.get_database()
+        lines, columns = data_dataframe.shape
 
         project_database.name = file_name
         project_database.description = "Database original"
@@ -168,23 +177,30 @@ def convertAndSendDatabase_view(request):
         project_database.columns = columns
         project_database.project = project
 
-        # Salvar modificações no backend
-        project_database.save()
-        project.save()
+      else:
+        project_database.file_message = status_message
 
-        os.remove(file_name)
+      # Salvar modificações no backend
+      project_database.save()
+      project.save()
 
-        # Abra o arquivo e retorne como uma resposta de arquivo
-        with open(f"media/{project_database.file}", 'rb') as file:
-          response = HttpResponse(
-            file.read(), 
-            content_type='application/force-download', 
-            status=status_code
-          )
-          response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-          response['X-Message'] = status_message
-          response['X-Status-Code'] =f'{status_code}'
-          return response
+
+      # Abra o arquivo e retorne como uma resposta de arquivo
+      with open(f"{file_name}", 'rb') as file:
+        # Criar a resposta HTTP com o conteúdo do arquivo
+        response = HttpResponse(
+          file.read(), 
+          content_type='application/force-download', 
+          status=status_code
+        )
+        # Definir cabeçalhos para o download do arquivo
+        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+        
+        # Adicionar mensagens personalizadas nos cabeçalhos
+        response['X-Message'] = status_message
+        response['X-Status-Code'] = str(status_code)
+
+        return response
 
     analisingFeatures()
     response = createFileAndSave()
@@ -193,6 +209,22 @@ def convertAndSendDatabase_view(request):
   return Response({ 
     "message": "Nenhum arquivo encontrado!" 
   })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getFileMessageDatabase_view(request):
+  project_id = request.GET.get('project_id')
+
+  project = get_object_or_404(Project, id=project_id)
+  database = project.get_database()
+
+  if(database):
+    return Response({
+      'message': database.file_message,
+    }, status=200)
+  return Response({
+    'message': 'Não há Database!',
+  }, status=200)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

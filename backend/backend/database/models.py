@@ -21,6 +21,13 @@ class Database(models.Model):
   name = models.CharField(max_length=100)
   description = models.CharField(max_length=300 ,default="")
   file =  models.FileField(upload_to='databases/', null=True, blank=True)
+  file_message = models.CharField(
+    max_length=100,
+    null=True,
+    blank=True,
+    default=None
+  )
+
   file_separator = models.CharField(max_length=1, default=',')
   lines = models.IntegerField(default=0)
   columns = models.IntegerField(default=0)

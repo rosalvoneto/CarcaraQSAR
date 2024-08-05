@@ -13,7 +13,10 @@ import UploadComponent from '../../components/UploadComponent';
 import PopUp from '../../components/PopUp';
 
 import { 
-  convertAndSendDatabase, getDatabase, sendDatabase 
+  sendDatabase,
+  convertAndSendDatabase, 
+  getDatabase, 
+  getFileMessageInDatabase, 
 } from '../../api/database';
 
 import { updateStatus } from '../../api/project';
@@ -43,6 +46,7 @@ export default function Database() {
 
   const [databaseError, setDatabaseError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loadingTrigger, setLoadingTrigger] = useState(true);
 
   const [database, setDatabase] = useState({
     database: undefined,
@@ -178,15 +182,19 @@ export default function Database() {
         const message = response.headers.get('X-Message');
 
         if(response.status == 400) {
+          getFileMessageInDatabase(projectID, authTokens.access)
+          .then(response => {
+            setErrorMessage(response.message);
+          })
+          setIsSMILESConversion(false);
           setDatabaseError(true);
-          setErrorMessage('Alguns campos do arquivo estão vazios! Submeta novamente');
         }
 
-        response.text()
-        .then((dataResponse) => {
-          // Fazer o download do arquivo CSV
-          return handleDownload(dataResponse);
-        })
+        return response.text();
+      })
+      .then((dataResponse) => {
+        // Fazer o download do arquivo CSV
+        return handleDownload(dataResponse);
       })
       .then(() => {
         // Resgatar informações do novo Database

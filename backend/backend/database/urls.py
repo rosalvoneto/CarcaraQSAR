@@ -41,5 +41,10 @@ urlpatterns = [
     'delete_database',
     views.deleteDatabase_view,
     name='delete_database'
+  ),
+  path(
+    'file_message_database',
+    views.getFileMessageDatabase_view,
+    name='file_message_database'
   )
 ]
