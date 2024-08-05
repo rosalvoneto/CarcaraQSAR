@@ -128,7 +128,7 @@ export const removeDatabaseVariables = async(
   }
 }
 
-// Faz a seleção de variáveis com o algoritmo bioinspirado
+// Faz a seleção de variáveis com o algoritmo
 export const makeSelection = async(
   projectID, accessToken
 ) => {
@@ -149,7 +149,7 @@ export const makeSelection = async(
   return response;
 }
 
-// Cancela a seleção de variáveis com o algoritmo bioinspirado
+// Cancela a seleção de variáveis com o algoritmo
 export const cancelSelection = async(
   projectID, accessToken
 ) => {
@@ -170,7 +170,7 @@ export const cancelSelection = async(
   return dataResponse;
 }
 
-// Cancela a seleção de variáveis com o algoritmo bioinspirado
+// Verifica o status da seleção de variáveis com o algoritmo
 export const checkSelectionStatus = async(
   projectID, accessToken
 ) => {

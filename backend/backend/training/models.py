@@ -50,6 +50,12 @@ class Training(models.Model):
     blank=True,
     default=None
   )
+  task_id = models.CharField(
+    max_length=100,
+    null=True,
+    blank=True,
+    default=None
+  )
 
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -84,17 +90,27 @@ class Training(models.Model):
     default=None
   )
 
-  def set_execution_type(self, execution_type):
-    self.execution_type = execution_type
-    self.save()
-
   def set_progress(self, actual, total, actual_step, total_steps):
     self.progress = f"{actual}/{total}/{actual_step}/{total_steps}"
     self.save()
 
+  def set_execution_type(self, execution_type):
+    self.execution_type = execution_type
+    self.save()
+
   def set_progress_none(self):
     self.progress = None
+    self.execution_type = None
     self.save()
+
+  def set_task_id(self, task_id):
+    self.task_id = task_id
+    self.save()
+
+  def set_task_id_none(self):
+    self.task_id = None
+    self.save()
+
 
   def __str__(self):
     return f"Treinamento com algoritmo '{self.algorithm.name}'"

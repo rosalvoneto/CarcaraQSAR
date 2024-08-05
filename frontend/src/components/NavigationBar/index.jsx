@@ -11,7 +11,7 @@ import ProgressBarLoading from '../ProgressBarLoading';
 import AuthContext from '../../context/AuthContext';
 
 import { checkSelectionStatus, getSelectionProgress } from '../../api/variablesSelection';
-import { getTrainingProgress } from '../../api/training';
+import { checkTrainingStatus, getTrainingProgress } from '../../api/training';
 import { getProject } from '../../api/project';
 
 export default function NavigationBar() {
@@ -51,9 +51,16 @@ export default function NavigationBar() {
       console.log("NAVIGATION BAR");
 
       // Realiza a busca do status da tarefa
-      const responseTask = await checkSelectionStatus(
-        execution.projectID, authTokens.access
-      );
+      let responseTask;
+      if(execution.route == 'variables-selection') {
+        responseTask = await checkSelectionStatus(
+          execution.projectID, authTokens.access
+        );
+      } else {
+        responseTask = await checkTrainingStatus(
+          execution.projectID, authTokens.access
+        );
+      }
       console.log(responseTask);
 
       if(responseTask.state == 'SUCCESS') {

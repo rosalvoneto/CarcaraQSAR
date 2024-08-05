@@ -19,6 +19,12 @@ from .utils import bootstrap, cross_validation, importance, leave_one_out, y_scr
 from project_management.models import Project
 from .models import Algorithm, Training
 
+from celery import shared_task
+from celery.result import AsyncResult
+from celery.signals import task_success, task_failure
+
+from backend.celery import app
+
   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -107,13 +113,10 @@ def setTrainingSettings_view(request):
       'message': 'Treinamento criado!'
     }, status=200)
   
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def train_view(request):
+@shared_task(bind=True)
+def make_training(self, project_id):
 
   print("Treinando...")
-
-  project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)
 
   training = project.training_set.get()
@@ -213,17 +216,16 @@ def train_view(request):
           5,
           5
         )
-        training.set_execution_type("Finalizou")
+        training.set_execution_type("Finalizado")
         # Atualiza treinamento para concluído
         training.trained = True
         # Zerar o progresso
         training.set_progress_none()
         project.save()
 
-        return Response({
-          'message': 'O treinamento está finalizado!',
-          'trained': training.trained,
-        }, status=200)
+        return {
+          'message': 'Treinamento aplicado!',
+        }
       
       else:
 
@@ -231,17 +233,19 @@ def train_view(request):
         training.set_progress_none()
         project.save()
 
-        return Response({
+        return {
           'message': 'Não foi encontrada Normalização!',
-        }, status=500)
+          'error': 'Não foi encontrada Normalização!',
+        }
     
     # Zerar o progresso
     training.set_progress_none()
     project.save()
 
-    return Response({
+    return {
       'message': 'Não foi encontrado Database!',
-    }, status=500)
+      'error': 'Não foi encontrado Database!'
+    }
 
   except Training.DoesNotExist:
 
@@ -249,10 +253,10 @@ def train_view(request):
     training.set_progress_none()
     project.save()
 
-    return Response({
+    return {
       'message': 'Configurações de treinamento não foram encontradas!',
       'error': 'Configurações de treinamento não encontradas!'
-    }, status=500)
+    }
   
   except Exception as error:
     
@@ -262,11 +266,95 @@ def train_view(request):
     training.set_progress_none()
     project.save()
     
-    return Response({
+    return {
       'message': 'Erro no treinamento',
       'error': str(error)
-    }, status=500)
+    }
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def makeTraining_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+
+  training = project.training_set.get()
+
+  if not project_id:
+    return Response({
+      'error': 'O ID do projeto é requerido!'
+    }, status=400)
+
+  task = make_training.apply_async(args=[project_id])
+
+  training.set_task_id(task.id)
+  project.save()
+
+  return Response({
+    'message': 'Treinamento em andamento!',
+    'taskId': task.id,
+  }, status=202)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def cancelTraining_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
   
+  training = project.training_set.get()
+
+  task_id = training.task_id
+
+  task = AsyncResult(task_id)
+  task.revoke(terminate=True)
+
+  # Atualizar progresso
+  training.set_progress_none()
+  project.save()
+
+  return Response({
+    'status': 'Cancelamento do treinamento!'
+  })
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def checkTrainingStatus_view(request):
+
+  project_id = request.POST.get('project_id')
+  project = get_object_or_404(Project, id=project_id)
+  
+  training = project.training_set.get()
+
+  task_id = training.task_id
+
+  task = AsyncResult(task_id)
+  if task.state == 'PENDING':
+    response = {
+      'state': task.state,
+      'status': 'A tarefa está em execução!'
+    }
+  elif task.state != 'FAILURE':
+    response = {
+      'result': task.result
+    }
+    if 'error' in task.result:
+      response['state'] = 'ERROR'
+      response['status'] = 'Houve um erro na execução da tarefa!'
+    else:
+      response['state'] = 'SUCCESS'
+      response['status'] = 'A tarefa foi completa!'
+  else:
+    response = {
+      'state': task.state,
+      'status': str(task.info),
+    }
+  return Response(response)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getLeaveOneOut_view(request):

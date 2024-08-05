@@ -21,7 +21,7 @@ urlpatterns = [
   path('remove_variables',views.removeVariables_view, name='remove_variables' ),
   path('make_selection', views.makeSelection_view, name='make_selection'),
   path('cancel_selection', views.cancelSelection_view, name='cancel_selection'),
-  path('status_selection', views.checkStatusSelection_view, name='status_selection'),
+  path('status_selection', views.checkSelectionStatus_view, name='status_selection'),
   path(
     'get_selection_progress', 
     views.getSelectionProgress_view, 

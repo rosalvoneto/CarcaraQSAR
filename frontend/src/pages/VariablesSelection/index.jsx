@@ -212,22 +212,7 @@ export default function VariablesSelection() {
 
     setSelected("first time");
     setUseGetProgress(true);
-    const response = await makeSelection(projectID, authTokens.access);
-
-    // if(response.status == 500) {
-    //   setSelected("error");
-    //   alert("Ocorreu um erro!");
-    // } else {
-    //   // Atualizar progresso
-    //   setProgressValue(100);
-    //   setMaximumValue(100);
-    //   setTimeout(() => {
-    //     alert("Finalizou!");
-    //     setSelected("finished");
-    //   }, 2000);
-
-    // }
-    // localStorage.removeItem(`progress_${projectID}`);
+    await makeSelection(projectID, authTokens.access);
   }
 
   const handleToCancelSelection = async() => {
@@ -392,6 +377,7 @@ export default function VariablesSelection() {
         makeEstimation(
           execution.counter, progress, maximum
         );
+        console.log(timeForEstimation);
       }
     }
   }
@@ -643,14 +629,6 @@ export default function VariablesSelection() {
                   )
                 })
               }
-              {
-                /* 
-                <ProgressBarLoading 
-                  progress={0}
-                  maximum={100}
-                /> 
-                */
-              }
             </div>
           </div>
 
@@ -685,7 +663,7 @@ export default function VariablesSelection() {
 
               showSecondButton
               secondButtonName={"Cancelar"}
-              secondAction={() => handleToCancelSelection()}
+              secondAction={handleToCancelSelection}
             >
               <Loading size={45} />
               <div className={styles.progressContainer}>

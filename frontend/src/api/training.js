@@ -46,8 +46,8 @@ export const getTrainingSettings = async (
   return dataResponse;
 }
 
-// Treinamento
-export const train = async (
+// Faz o treinamento
+export const makeTraining = async (
   projectID, accessToken
 ) => {
 
@@ -55,8 +55,8 @@ export const train = async (
   formData.append('project_id', projectID);
 
   let response = await fetch(
-    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/train`, {
-      method: 'POST',
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/make_training`, {
+      method: 'PUT',
       headers: {
         'Authorization': 'Bearer ' + String(accessToken)
       },
@@ -65,6 +65,48 @@ export const train = async (
   
   let dataResponse = await response.json();
   return response;
+}
+
+// Cancela o treinamento
+export const cancelTraining = async(
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/cancel_training`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  return dataResponse;
+}
+
+// Verifica o status do treinamento
+export const checkTrainingStatus = async(
+  projectID, accessToken
+) => {
+
+  const formData = new FormData();
+  formData.append('project_id', projectID);
+
+  let response = await fetch(
+    `${import.meta.env.VITE_REACT_APP_BACKEND_LINK}/training/status_training`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + String(accessToken)
+      },
+      body: formData,
+  })
+
+  let dataResponse = await response.json();
+  return dataResponse;
 }
 
 // Resgata gráficos do treinamento

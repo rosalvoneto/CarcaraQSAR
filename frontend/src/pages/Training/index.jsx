@@ -18,7 +18,9 @@ import ProgressBarLoading from '../../components/ProgressBarLoading';
 import { 
   getTrainingSettings, 
   setTrainingSettings, 
-  train,
+  makeTraining,
+  cancelTraining,
+  checkTrainingStatus,
   getTrainingProgress,
   setTrainingProgress, 
 } from '../../api/training';
@@ -95,6 +97,7 @@ export default function Training() {
   const [timeForEstimation, setTimeForEstimation] = useState(0);
 
   const [executionType, setExecutionType] = useState("");
+  const [useGetProgress, setUseGetProgress] = useState(false);
 
   const [algorithmIndex, setAlgorithmIndex] = useState(0);
 
@@ -136,28 +139,23 @@ export default function Training() {
     );
     
     setTrained("first time");
+    setUseGetProgress(true);
     if(response) {
-      const response = await train(projectID, authTokens.access);
-      
-      if(response.status == 500) {
-        setTrained("error");
-        alert("Ocorreu um erro!");
-      } else {
-        // Atualizar progresso
-        setProgressValue(100);
-        setMaximumValue(100);
-        setTimeout(() => {
-          alert("Finalizou!");
-          setTrained("finished");
-        }, 2000);
-
-      }
-      localStorage.removeItem(`progress_${projectID}`);
+      await makeTraining(projectID, authTokens.access);
 
       return true;
     }
     return false;
   }
+
+  const handleToCancelTraining = async() => {
+    const response = await cancelTraining(projectID, authTokens.access);
+    console.log(response);
+    
+    setTrained("false");
+    setUseGetProgress(false);
+    localStorage.removeItem(`progress_${projectID}`);
+  } 
 
   const navigateToResults = () => {
     navigate(`/${projectID}/results`);
@@ -178,57 +176,81 @@ export default function Training() {
   }
 
   const getProgress = async() => {
-    if(trained != "false") {
-      const response = await getTrainingProgress(projectID, authTokens.access);
-      console.log(response);
+    console.log("TRAINING");
 
-      if(response.progress) {
-        const split = response.progress.split('/');
-        const progress = Number(split[0]);
-        const maximum = Number(split[1]);
-        const actualStep = Number(split[2]);
-        const totalStep = Number(split[3]);
+    // Realiza a busca do status da tarefa
+    const responseTask = await checkTrainingStatus(
+      projectID, authTokens.access
+    );
+    console.log(responseTask);
 
-        if(progress >= 0) {
-          // Atualizar progresso
-          setProgressValue(progress);
-          setMaximumValue(maximum);
-          setActualStep(actualStep);
-          setTotalStep(totalStep);
+    if(responseTask.state == 'SUCCESS') {
+      setUseGetProgress(false);
+      // Atualizar progresso
+      setProgressValue(100);
+      setMaximumValue(100);
+      setTimeout(() => {
+        alert("Finalizou!");
+        setTrained("finished");
+      }, 2000);
+      localStorage.removeItem(`progress_${projectID}`);
+    } else if(responseTask.state == 'FAILURE' || responseTask.state == 'ERROR') {
+      setUseGetProgress(false);
+      setTrained("error");
+      alert("Ocorreu um erro!");
+      localStorage.removeItem(`progress_${projectID}`);
+    }
 
-          setExecutionType(response.executionType);
+    // Realiza a busca de progresso da tarefa
+    const response = await getTrainingProgress(projectID, authTokens.access);
+    console.log(response);
 
-          // Atualizar progresso no localStorage
-          const executionString = localStorage.getItem(`progress_${projectID}`);
-          let execution = {};
-          if(executionString) {
-            execution = JSON.parse(executionString);
-            if(progress < execution.progressValue) {
-              execution.counter = 0;
-            }
-          } else {
-            execution = {
-              projectID: projectID,
-              route: 'training',
-              progressValue: progress,
-              maximumValue: maximum,
-              counter: 0
-            };
+    if(response.progress) {
+      const split = response.progress.split('/');
+      const progress = Number(split[0]);
+      const maximum = Number(split[1]);
+      const actualStep = Number(split[2]);
+      const totalStep = Number(split[3]);
+
+      if(progress >= 0) {
+        // Atualizar progresso no estado local
+        setProgressValue(progress);
+        setMaximumValue(maximum);
+        setActualStep(actualStep);
+        setTotalStep(totalStep);
+
+        setExecutionType(response.executionType);
+
+        // Atualizar progresso no localStorage
+        const executionString = localStorage.getItem(`progress_${projectID}`);
+        let execution = {};
+        if(executionString) {
+          execution = JSON.parse(executionString);
+          if(progress < execution.progressValue) {
+            execution.counter = 0;
           }
-          
-          // Converte o objeto em uma string JSON
-          const executionJSON = JSON.stringify(execution);
-          
-          // Guarda a string JSON no local storage
-          localStorage.setItem(
-            `progress_${projectID}`,
-            executionJSON
-          );
-
-          makeEstimation(
-            execution.counter, progress, maximum
-          );
+          execution.progressValue = progress;
+          execution.maximumValue = maximum;
+        } else {
+          execution = {
+            projectID: projectID,
+            route: 'training',
+            progressValue: progress,
+            maximumValue: maximum,
+            counter: 0
+          };
         }
+        const executionJSON = JSON.stringify(execution);
+        localStorage.setItem(
+          `progress_${projectID}`,
+          executionJSON
+        );
+        
+        // Faz a estimativa de finalização
+        makeEstimation(
+          execution.counter, progress, maximum
+        );
+        console.log(timeForEstimation);
       }
     }
   }
@@ -259,11 +281,8 @@ export default function Training() {
       setWithFullSet(response.withFullSet);
 
       if(response.algorithmProgress) {
-        const split = response.algorithmProgress.split('/');
-        setProgressValue(Number(split[0]));
-        setMaximumValue(Number(split[1]));
-
         setTrained("hide progress");
+        setUseGetProgress(true);
       }
     })
     .catch(error => {
@@ -273,11 +292,13 @@ export default function Training() {
   }, []);
 
   useEffect(() => {
-    // A função será executada a cada quantidade de segundos
-    const interval = setInterval(getProgress, delayTimeForGetProgress);
-    // Função de limpeza para interromper o intervalo quando 
-    // o componente for desmontado
-    return () => clearInterval(interval);
+    if(useGetProgress) {
+      // A função será executada a cada quantidade de segundos
+      const interval = setInterval(getProgress, delayTimeForGetProgress);
+      // Função de limpeza para interromper o intervalo quando 
+      // o componente for desmontado
+      return () => clearInterval(interval);
+    }
   }, [trained]);
 
   useEffect(() => {
@@ -314,15 +335,6 @@ export default function Training() {
               firstOption={choosenAlgorithm}
               disabledInputs={disabledInputs}
             />
-            {
-            /*
-              <CheckboxInput 
-                name={"Com conjunto completo?"}
-                value={withFullSet} 
-                setValue={setWithFullSet}
-              /> 
-            */
-            }
             <p>Sem o uso de conjunto completo</p>
             
           </div>
@@ -449,6 +461,10 @@ export default function Training() {
             action={() => {
               setTrained("hide progress");
             }}
+
+            showSecondButton
+            secondButtonName={"Cancelar"}
+            secondAction={handleToCancelTraining}
           >
             <Loading size={45} />
             <div className={styles.progressContainer}>

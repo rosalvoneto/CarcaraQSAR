@@ -495,7 +495,7 @@ def cancelSelection_view(request):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def checkStatusSelection_view(request):
+def checkSelectionStatus_view(request):
 
   project_id = request.POST.get('project_id')
   project = get_object_or_404(Project, id=project_id)

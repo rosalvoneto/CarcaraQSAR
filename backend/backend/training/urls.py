@@ -12,7 +12,9 @@ urlpatterns = [
     views.getTrainingSettings_view, 
     name='get_training_settings'
   ),
-  path('train', views.train_view, name='train'),
+  path('make_training', views.makeTraining_view, name='make_training'),
+  path('cancel_training', views.cancelTraining_view, name='cancel_training'),
+  path('status_training', views.checkTrainingStatus_view, name='status_training'),
   path(
     'get_leave_one_out', 
     views.getLeaveOneOut_view, 
