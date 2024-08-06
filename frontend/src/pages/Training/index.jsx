@@ -166,13 +166,13 @@ export default function Training() {
   }
 
   const makeEstimation = (counterInProgress, progress, maximum) => {
-    const progressAtual = progress;
-    const timeForProgressAtual = counterInProgress * delayTimeForGetProgress;
-    const progressRestante = (maximum - progress);
+    const currentProgress = progress;
+    const timeForCurrentProgress = counterInProgress * delayTimeForGetProgress;
+    const remainingProgress = (maximum - progress);
     
-    const timeForProgressRestante = (progressRestante * timeForProgressAtual) / progressAtual;
+    const timeForRemainingProgress = (remainingProgress * timeForCurrentProgress) / currentProgress;
     // Transforma em segundos
-    let estimation = timeForProgressRestante / 1000;
+    let estimation = timeForRemainingProgress / 1000;
     // Transforma em minutos
     estimation = estimation / 60;
     
