@@ -103,7 +103,7 @@ class BFS:
                 self.limit_not_improvement,
                 3,
                 3,
-                "Algoritmo BFS"
+                "Best first search algorithm (BFS)"
             )
             
             # Gera novas crianças e calcula o R2 de cada uma
@@ -246,7 +246,7 @@ class BFS:
                 len(variables),
                 2,
                 3,
-                "Busca da melhor variável"
+                "Search for the best variable"
             )
         
         best_R2 = max(metric_values)

@@ -10,7 +10,7 @@ class Algorithm(models.Model):
   # Campo de escolha para o algoritmo
   ALGORITHM_CHOICES = [
     ('random_forest', 'Random Forest'),
-    ('linear_regression', 'Regressão linear'),
+    ('linear_regression', 'Linear regression'),
     ('KNN', 'KNN'),
     ('svm', 'Support Vector Machines (SVM)'),
   ]

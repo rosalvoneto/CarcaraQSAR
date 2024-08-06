@@ -165,7 +165,7 @@ export default function Prevision() {
   }, [])
 
   useEffect(() => {
-    updateStatus(projectID, authTokens.access, 'Previsão');
+    updateStatus(projectID, authTokens.access, 'Prevision');
   }, [])
 
   return(
@@ -202,31 +202,31 @@ export default function Prevision() {
                 onClick={hadleToMakePrevision}
                 className={styles.button}
               >
-                Fazer previsão
+                Make prevision
               </button>
               <button 
                 onClick={hadleToDownloadEstimation}
                 className={styles.button}
               >
-                Fazer estimativa
+                Make estimation
               </button>
               <button 
                 onClick={hadleToDeleteModel}
                 className={styles.button}
               >
-                Excluir modelo
+                Delete model
               </button>
               <button 
                 onClick={hadleToDownloadModel}
                 className={styles.button}
               >
-                Baixar modelo
+                Download model
               </button>
               <button 
                 onClick={hadleToDownloadScaler}
                 className={styles.button}
               >
-                Baixar Normalizador
+                Download scaler
               </button>
             </>
           :
@@ -234,7 +234,7 @@ export default function Prevision() {
               onClick={hadleToCreateModel}
               className={styles.button}
             >
-              Criar modelo
+              Create model
             </button>
           }
       </div>
@@ -243,7 +243,7 @@ export default function Prevision() {
         previsionValue &&
         <PopUp
           show={true}
-          title={"Resultado da previsão"}
+          title={"Prevision result"}
           description={previsionValue}
           action={() => {
             setPrevisionValue(null);
@@ -254,7 +254,7 @@ export default function Prevision() {
       }
 
       <Button 
-        name={'Voltar'} 
+        name={'Back'} 
         URL={'/results'}
         stateToPass={{
           pageNumber: 4
@@ -262,7 +262,7 @@ export default function Prevision() {
         side={'left'}
       />
       <Button 
-        name={'Finalizar'} 
+        name={'Finish'} 
         URL={'/home'}
         useStrictURL={true}
         side={'right'}

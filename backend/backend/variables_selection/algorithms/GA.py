@@ -121,7 +121,6 @@ class Problem:
         value_bitstring = BitArray(uint=value + i, length=self.full_variables_length)
       except:
         value_bitstring = BitArray(uint=value - i, length=self.full_variables_length)
-      print(value_bitstring)
       population.append(value_bitstring)
     
     return population
@@ -407,7 +406,7 @@ class GAAlgorithm:
         self.limit_generations,
         1,
         3,
-        "Algoritmo AG"
+        "Genetic algorithm"
       )
 
       self.generate_new_generation()

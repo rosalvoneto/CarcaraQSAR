@@ -83,10 +83,10 @@ const TableResult = () => {
     <table className={styles.table}>
       <thead className={styles.thead}>
         <tr className={styles.tr}>
-          <th className={styles.th}>{`Experimento`}</th>
-          <th className={styles.th}>{`Moléculas do conjunto de teste`}</th>
-          <th className={styles.th}>{`R`}</th>
-          <th className={styles.th}>{`R²`}</th>
+          <th className={styles.th}>{`Experiment`}</th>
+          <th className={styles.th}>{`Test set molecules`}</th>
+          <th className={styles.th}>{`Q`}</th>
+          <th className={styles.th}>{`Q²`}</th>
         </tr>
       </thead>
       <tbody className={styles.body}>

@@ -217,7 +217,7 @@ def make_training(self, project_id):
           5,
           5
         )
-        training.set_execution_type("Finalizado")
+        training.set_execution_type("Finished")
         # Atualiza treinamento para concluído
         training.trained = True
         # Zerar o progresso

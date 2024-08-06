@@ -52,7 +52,6 @@ def makePrevision_view(request):
       [variables_values],
       columns=project.prevision_model.variables
     )
-    print(dataframe)
 
     # Recuperar scaler do banco de dados
     scaler = project.prevision_model.retrieve_scaler()

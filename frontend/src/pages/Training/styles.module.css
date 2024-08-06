@@ -11,23 +11,13 @@
 
 .informationContainer {
   border: 0px solid red;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 100%;
-  height: fit-content;
-}
-
-.parametersDescriptionsContainer {
+  
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  gap: 10px;
-
+  
+  width: 100%;
   height: fit-content;
 }
 
@@ -40,6 +30,8 @@
   border-radius: 10px;
   color: var(--white-color-1);
   background-color: var(--primary-color-1);
+
+  margin-bottom: 10px;
 }
 
 .contentContainer {
@@ -60,8 +52,6 @@
 }
 
 .parametersContainer {
-  margin-top: 15px;
-
   border: 0px solid red;
 }
 

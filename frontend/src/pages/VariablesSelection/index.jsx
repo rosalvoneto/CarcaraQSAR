@@ -40,44 +40,46 @@ import ProgressBarLoading from '../../components/ProgressBarLoading';
 import { delayTimeForGetProgress } from '../../settings';
 
 export const algorithms = [
-  "NÃO APLICAR",
-  "Algoritmo genético",
-  "Colônia de abelhas",
+  "Do not apply",
+  "Genetic algorithm",
+  "Bee colony algorithm",
 ];
 
 export const algorithmsDescriptions = [
-  "Nenhum algoritmo foi escolhido",
-  "O Algoritmo Genético é uma técnica de otimização baseada na seleção natural e genética. Eles operam em populações de soluções candidatas e utilizam operadores genéticos, como mutação e cruzamento, para evoluir e melhorar essas soluções ao longo de várias gerações. Esses algoritmos são amplamente usados para encontrar soluções aproximadas para problemas complexos de otimização e busca.",
-  "Inspirado no comportamento de colônias de abelhas, este algoritmo é uma técnica de otimização baseada na exploração de soluções candidatas em um espaço de busca. Abelhas virtuais procuram soluções em locais específicos e compartilham informações sobre a qualidade das soluções encontradas com outras abelhas, permitindo a convergência para uma solução ótima em problemas de otimização complexos.",
-]
+  "No algorithm was chosen",
+  "The Genetic Algorithm is an optimization technique based on natural selection and genetics. They operate on populations of candidate solutions and use genetic operators such as mutation and crossover to evolve and improve these solutions over several generations. These algorithms are widely used to find approximate solutions for complex optimization and search problems.",
+  "Inspired by the behavior of bee colonies, this algorithm is an optimization technique based on the exploration of candidate solutions in a search space. Virtual bees search for solutions in specific locations and share information about the quality of the solutions found with other bees, allowing convergence to an optimal solution in complex optimization problems.",
+];
+
 
 export const algorithmsParameters = [
   [],
   [
-    ['population_quantity', 'Quantidade da população', 50, 'Número total de subconjuntos de variáveis ativas presentes em cada geração.'],
-    ['info_gain_quantity', 'Quantidade de variáveis iniciais', 50, 'Quantidade de variáveis que estarão ativas no início do algoritmo.'],
-    ["probability_crossover", "Probabilidade de crossover", 0.6, 'Probabilidade de que dois indivíduos selecionados para reprodução irão trocar partes de suas soluções para criar novos indivíduos (ou filhos).'],
-    ['probability_mutation', 'Probabilidade de mutação', 0.01, 'Probabilidade de que pequenas alterações aleatórias serão feitas nos indivíduos da população.'],
-    ['limit_generations', 'Limite de gerações', 500, 'Número máximo de ciclos de reprodução e seleção que o algoritmo irá executar.'],
-    ['limit_not_improvement', 'Limite sem melhoria', 500, 'Número máximo de iterações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor.'],
-    ['r2_condition_BFS', 'Limite Q2 do BFS', 0.99, 'Q2 é uma métrica de avaliação de validação cruzada. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis selecionado. Esse parâmetro define o valor Q2 ideal para que o algoritmo pare a sua execução.'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem melhoria no valor Q2.'],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que são adicionadas a cada interação para análise.'],
+    ['population_quantity', 'Population Quantity', 50, 'Each item in the population is a possible solution to the problem. A possible solution in this case is a set of variables in which only a subset of them is active for the creation of the model. Thus, this parameter defines how many variations of sets of variables we will have in each generation of the algorithm execution.'],
+    ['info_gain_quantity', 'Initial Variable Quantity', 50, 'Number of variables that will be active at the beginning of the algorithm.'],
+    ["probability_crossover", "Crossover Probability", 0.6, 'Probability that two individuals selected for reproduction will exchange parts of their solutions to create new individuals (or offspring).'],
+    ['probability_mutation', 'Mutation Probability', 0.01, 'Probability that small random changes will be made to the individuals in the population.'],
+    ['limit_generations', 'Generation Limit', 500, 'Maximum number of reproduction and selection cycles that the algorithm will execute.'],
+    ['limit_not_improvement', 'No Improvement Limit', 500, 'Maximum number of consecutive iterations that the algorithm can execute without finding a better solution.'],
+    ['r2_condition_BFS', 'BFS Q2 Limit', 0.99, 'Q2 is the cross-validation evaluation metric. The closer to the value 1, the better the selected set of variables. This parameter defines the ideal Q2 value for the algorithm to stop its execution.'],
+    ['limit_not_improvement_BFS', 'No Improvement BFS Limit', 30, 'Limit of times the algorithm cycle will run without improvement in the Q2 value.'],
+    ['n_child_positions', 'Number of Variables to Add in BFS', 1, 'Defines how many variables should be added in each cycle.'],
+    ['children_quantity', 'Number of Offspring Generated from Parent Node in BFS', 2, 'Defines the number of variations of sets of variables that are added in each interaction for analysis.'],
   ],
   [
-    ["maximum_iterations", "Limite de iterações", 500, 'Número máximo de vezes que o algoritmo irá executar seu ciclo de busca de soluções.'],
-    ["bees", "Quantidade de abelhas", 50, 'Número de abelhas (ou agentes) que irão procurar soluções dentro do espaço de busca.'],
-    ["limit_not_improvement", "Limite sem melhoria", 50, 'Número máximo de iterações consecutivas que o algoritmo pode executar sem encontrar uma solução melhor para o parâmetro avaliado (Q2).'],
-    ["info_gain_quantity", "Quantidade de variáveis iniciais", 50, 'Quantidade de variáveis que estarão ativas no início do algoritmo.'],
-    ['r2_condition_BFS', 'Limite Q2 do BFS', 0.99, 'Q2 é uma métrica de avaliação de validação cruzada. Quanto mais próximo do valor 1, melhor é o conjunto de variáveis selecionado. Esse parâmetro define o valor Q2 ideal para que o algoritmo pare a sua execução.'],
-    ['limit_not_improvement_BFS', 'Limite sem melhoria do BFS', 30, 'Limite de vezes que o ciclo do algoritmo irá rodar sem que haja melhoria no valor Q2.'],
-    ['n_child_positions', 'Número de variáveis para adicionar no BFS', 1, 'Define quantas variáveis devem ser adicionadas a cada ciclo.'],
-    ['children_quantity', 'Número de filhos gerados a partir do nó pai no BFS', 2, 'Define a quantidade de variações de conjuntos de variáveis que são adicionadas a cada interação para análise.'],
+    ["maximum_iterations", "Iteration Limit", 500, 'Maximum number of times the algorithm will execute its solution search cycle.'],
+    ["bees", "Number of Bees", 50, 'Number of bees (or agents) that will search for solutions within the search space.'],
+    ["limit_not_improvement", "No Improvement Limit", 50, 'Maximum number of consecutive iterations that the algorithm can execute without finding a better solution for the evaluated parameter (Q2).'],
+    ["info_gain_quantity", "Initial Variable Quantity", 50, 'Number of variables that will be active at the beginning of the algorithm.'],
+    ['r2_condition_BFS', 'BFS Q2 Limit', 0.99, 'Q2 is the cross-validation evaluation metric. The closer to the value 1, the better the selected set of variables. This parameter defines the ideal Q2 value for the algorithm to stop its execution.'],
+    ['limit_not_improvement_BFS', 'No Improvement BFS Limit', 30, 'Limit of times the algorithm cycle will run without improvement in the Q2 value.'],
+    ['n_child_positions', 'Number of Variables to Add in BFS', 1, 'Defines how many variables should be added in each cycle.'],
+    ['children_quantity', 'Number of Offspring Generated from Parent Node in BFS', 2, 'Defines the number of variations of sets of variables that are added in each interaction for analysis.'],
   ]
-]
+];
 
-export const optionsToRemoveVariables = ["Sim", "Não"];
+
+export const optionsToRemoveVariables = ["Yes", "No"];
 
 export default function VariablesSelection() {
 
@@ -456,7 +458,7 @@ export default function VariablesSelection() {
   }, [pageNumber])
 
   useEffect(() => {
-    updateStatus(projectID, authTokens.access, 'Seleção de variáveis');
+    updateStatus(projectID, authTokens.access, 'Variables selection');
   }, [])
 
   if(pageNumber == 0) {
@@ -472,7 +474,7 @@ export default function VariablesSelection() {
 
         <div className={styles.container}>
           <RadionInput 
-            name={"Remover automaticamente variáveis constantes"}
+            name={"Automatically remove constant variables"}
             options={optionsToRemoveVariables}
             setOption={handleChangeRemoveConstantVariables}
             firstOption={
@@ -483,7 +485,7 @@ export default function VariablesSelection() {
           />
 
           <p className={styles.name}>
-            <strong>{"Remover variáveis manualmente"}</strong>
+            <strong>{"Remove variables manually"}</strong>
           </p>
 
           <div className={styles.inputContainer}>
@@ -532,7 +534,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/pre-processing`}
           stateToPass={{
             pageNumber: 1
@@ -540,7 +542,7 @@ export default function VariablesSelection() {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/variables-selection`} 
           stateToPass={{
             pageNumber: 1
@@ -565,7 +567,7 @@ export default function VariablesSelection() {
           <div className={styles.algorithmContainer}>
             <div>
               <RadionInput 
-                name={"Algoritmo BioInspirado"}
+                name={"Bioinspired Algorithm"}
                 options={algorithms}
                 setOption={setChoosenAlgorithm}
                 firstOption={choosenAlgorithm}
@@ -605,7 +607,7 @@ export default function VariablesSelection() {
                       onClick={handleToMakeSelection}
                       className={styles.button}
                     >
-                      Salvar e Selecionar
+                      Save and select
                     </button>
                   :
                     <button 
@@ -614,7 +616,7 @@ export default function VariablesSelection() {
                       }}
                       className={styles.button}
                     >
-                      Mostrar progresso
+                      Show progress
                     </button>
                   
                 )
@@ -641,9 +643,9 @@ export default function VariablesSelection() {
             selected == "first time" &&
             <PopUp 
               show={true}
-              title={"Seleção em andamento..."}
+              title={"Selection in progress..."}
               description={
-                `A seleção com o algoritmo ${choosenAlgorithm} está sendo executada!`
+                `The selection with '${choosenAlgorithm}' is running!`
               }
 
               showButton
@@ -658,16 +660,16 @@ export default function VariablesSelection() {
             selected == "show progress" &&
             <PopUp 
               show={true}
-              title={"Selecionando..."}
+              title={"Selecting..."}
 
               showButton
-              buttonName={"Fechar"}
+              buttonName={"Close"}
               action={() => {
                 setSelected("hide progress")
               }}
 
               showSecondButton
-              secondButtonName={"Cancelar"}
+              secondButtonName={"Cancel"}
               secondAction={handleToCancelSelection}
             >
               <Loading size={45} />
@@ -684,14 +686,14 @@ export default function VariablesSelection() {
                 <p>
                   {
                     executionType.length
-                    ? `Processo ${actualStep}/${totalStep}: ${executionType}`
+                    ? `Process ${actualStep}/${totalStep}: ${executionType}`
                     : undefined
                   }
                 </p>
                 <p>
                   {
                     timeForEstimation >= 0 &&
-                    `Estimativa de finalização: ${(timeForEstimation).toFixed(0)} minuto(s)`
+                    `Completion estimate: ${(timeForEstimation).toFixed(0)} minutes`
                   }
                 </p>
               </div>
@@ -702,11 +704,11 @@ export default function VariablesSelection() {
             selected == "error" &&
             <PopUp 
               show={true}
-              title={"Erro"}
+              title={"Selection problem"}
               description={
                 <>
                   <p>
-                    Um erro interno do servidor não permitiu concluir a seleção.
+                    An internal server error prevented the selection from being completed.
                   </p>
                   <p>
                     {errorMessage}
@@ -715,7 +717,7 @@ export default function VariablesSelection() {
               }
 
               showButton
-              buttonName={"Fechar"}
+              buttonName={"Close"}
               action={() => {
                 setSelected("false");
               }}
@@ -726,9 +728,9 @@ export default function VariablesSelection() {
             selected == "finished" &&
             <PopUp 
               show={true}
-              title={"Seleção finalizada"}
+              title={"Finalized selection"}
               description={
-                `Seleção finalizada.`
+                `The selection has been finalized! Click the button below to proceed!`
               }
 
               showButton
@@ -739,7 +741,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/variables-selection`}
           stateToPass={{
             pageNumber: 0
@@ -749,7 +751,7 @@ export default function VariablesSelection() {
         {
           algorithmIndex == 0 &&
           <Button 
-            name={'Próximo'} 
+            name={'Next'} 
             URL={`/variables-selection`} 
             stateToPass={{
               pageNumber: 2
@@ -772,7 +774,7 @@ export default function VariablesSelection() {
 
         <div className={styles.container}>
           <InlineInput 
-            name={"Linhas para remover:"}
+            name={"Rows to remove:"}
             width={"80%"}
             setValue={setRowsToRemove}
             value={rowsToRemove}
@@ -780,7 +782,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/variables-selection`}
           stateToPass={{
             pageNumber: 1
@@ -788,7 +790,7 @@ export default function VariablesSelection() {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/variables-selection`} 
           stateToPass={{
             pageNumber: 3
@@ -820,9 +822,9 @@ export default function VariablesSelection() {
                         <strong>{dbInformation.description}</strong>
                       </p>
                       <div className={styles.historyBlock}>
-                        <p>Nome: {dbInformation.name}</p>
-                        <p>Data: {dbInformation.created_at}</p>
-                        <p>{dbInformation.lines} linhas e {dbInformation.columns} colunas</p>
+                        <p>Name: {dbInformation.name}</p>
+                        <p>Date: {dbInformation.created_at}</p>
+                        <p>{dbInformation.lines} rows e {dbInformation.columns} columns</p>
                       </div>
                       <a
                         onClick={() => {
@@ -848,7 +850,7 @@ export default function VariablesSelection() {
         </div>
         
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/variables-selection`}
           stateToPass={{
             pageNumber: 2
@@ -856,7 +858,7 @@ export default function VariablesSelection() {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/training`} 
           stateToPass={{
             pageNumber: 0

@@ -31,7 +31,7 @@ export default function Outliers() {
       />
 
       <Button 
-        name={'Voltar'} 
+        name={'Back'} 
         URL={'/results'}
         stateToPass={{
           pageNumber: 4
@@ -39,7 +39,7 @@ export default function Outliers() {
         side={'left'}
       />
       <Button 
-        name={'Finalizar'} 
+        name={'Finish'} 
         URL={'/home'}
         useStrictURL={true}
         side={'right'}

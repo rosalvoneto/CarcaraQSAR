@@ -89,7 +89,7 @@ export function DataTable({
             progress={Number(conversionProgress.split('/')[0])}
             maximum={Number(conversionProgress.split('/')[1])}
           />
-          <p> {conversionProgress} linhas do arquivo</p>
+          <p> {conversionProgress} rows on file</p>
         </div>
       )
     } else {

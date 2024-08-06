@@ -135,7 +135,7 @@ class ABCAlgorithm():
                 self.n_iterations,
                 1,
                 3,
-                "Algoritmo ABC"
+                "Bee colony algorithm"
             )
             self.iteration += 1
 

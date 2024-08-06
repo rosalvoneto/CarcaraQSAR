@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='algorithm',
             name='name',
-            field=models.CharField(choices=[('random_forest', 'Random Forest'), ('linear_regression', 'Regressão linear'), ('logistic_regression', 'Regressão logística'), ('svm', 'Support Vector Machines (SVM)')], max_length=200, unique=True),
+            field=models.CharField(choices=[('random_forest', 'Random Forest'), ('linear_regression', 'Linear regression'), ('logistic_regression', 'Regressão logística'), ('svm', 'Support Vector Machines (SVM)')], max_length=200, unique=True),
         ),
     ]

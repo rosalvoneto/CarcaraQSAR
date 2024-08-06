@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='algorithm',
             name='name',
-            field=models.CharField(choices=[('random_forest', 'Random Forest'), ('linear_regression', 'Regressão linear'), ('KNN', 'KNN'), ('svm', 'Support Vector Machines (SVM)')], max_length=200),
+            field=models.CharField(choices=[('random_forest', 'Random Forest'), ('linear_regression', 'Linear regression'), ('KNN', 'KNN'), ('svm', 'Support Vector Machines (SVM)')], max_length=200),
         ),
         migrations.DeleteModel(
             name='LinearRegression',

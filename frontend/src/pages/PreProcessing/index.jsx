@@ -29,7 +29,7 @@ import HelpContainer from '../../components/HelpContainer';
 import Loading from '../../components/Loading';
 
 export const normalizations = [
-  "NÃO APLICAR",
+  "Do not apply",
   "MinMaxScaler",
   "StandardScaler",
   "RobustScaler",
@@ -37,11 +37,11 @@ export const normalizations = [
 ];
 
 export const normalizationsDescriptions = [
-  "Nenhuma mudança será aplicada no Database.",
-  "O MinMaxScaler é um método de normalização que dimensiona os dados para um intervalo específico, geralmente entre 0 e 1. Isso é alcançado transformando os valores de tal forma que o valor mínimo se torna 0 e o valor máximo se torna 1, preservando a relação de proporção entre os dados originais.",
-  "O StandardScaler é um método de normalização que transforma os dados de tal forma que eles tenham média zero e desvio padrão igual a 1. Isso é útil para dados que seguem uma distribuição normal e ajuda a eliminar o viés de escala nos algoritmos de aprendizado de máquina.",
-  "O RobustScaler é uma técnica de normalização que é resistente a outliers. Ele dimensiona os dados, tornando-os robustos a valores discrepantes, usando estatísticas robustas, como a mediana e o intervalo interquartil.",
-  "O Normalizer é um método de normalização que ajusta cada amostra de dados individualmente, escalando os valores para que eles tenham norma 1. Isso é útil quando o comprimento das amostras é importante, como em tarefas de processamento de texto ou séries temporais.",
+  "No changes will be applied to the Database.",
+  "The MinMaxScaler is a normalization method that scales the data to a specific range, usually between 0 and 1. This is achieved by transforming the values so that the minimum value becomes 0 and the maximum value becomes 1, preserving the proportional relationship between the original data.",
+  "The StandardScaler is a normalization method that transforms the data so that they have a mean of zero and a standard deviation of one. This is useful for data that follows a normal distribution and helps eliminate scale bias in machine learning algorithms.",
+  "The RobustScaler is a normalization technique that is resistant to outliers. It scales the data, making it robust to outliers, using robust statistics such as the median and the interquartile range.",
+  "The Normalizer is a normalization method that adjusts each data sample individually, scaling the values so that they have a norm of 1. This is useful when the length of the samples is important, such as in text processing or time series tasks.",
 ];
 
 export default function PreProcessing({ index }) {
@@ -164,7 +164,7 @@ export default function PreProcessing({ index }) {
   }, [])
 
   useEffect(() => {
-    updateStatus(projectID, authTokens.access, 'Pré-processamento');
+    updateStatus(projectID, authTokens.access, 'Pre-processing');
   }, [])
 
   if(pageNumber == 0) {
@@ -187,7 +187,7 @@ export default function PreProcessing({ index }) {
           <div className={styles.graphsContainer}>
             {
               histogram
-              ? <Graph name={"Histograma"} image={histogram}/>
+              ? <Graph name={"Histogram"} image={histogram}/>
               : <Loading/>
             }
             {
@@ -199,14 +199,14 @@ export default function PreProcessing({ index }) {
 
           <div>
             <InlineInput 
-              name={"Divisões para o Histograma: "} type={'number'}
+              name={"Divisions for histogram: "} type={'number'}
               value={divisions}
               width={65}
             />
             <HelpContainer />
             <div className={styles.ballonInformationContainer}>
               <p className={styles.ballonInformation}>
-                {`${numberOfNaNValues} valor(es) NaN desconsiderados`}
+                {`${numberOfNaNValues} NaN values disregarded`}
               </p>
             </div>
           </div>
@@ -214,12 +214,12 @@ export default function PreProcessing({ index }) {
         </div>
         
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/database`}
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/pre-processing`} 
           stateToPass={{
             pageNumber: 1
@@ -244,15 +244,11 @@ export default function PreProcessing({ index }) {
 
           <div>
             <RadionInput 
-              name={"Normalização dos dados"}
+              name={"Normalization"}
               options={normalizations} 
               setOption={setChoosenNormalization}
               firstOption={choosenNormalization}
             />
-            {
-              choosenNormalization != normalizations[0] && undefined
-              /* <a onClick={() => {}}>Normalizar</a> */
-            }
           </div>
           <div className={styles.informationContainer}>
             <p className={styles.information}>
@@ -263,7 +259,7 @@ export default function PreProcessing({ index }) {
         </div>
 
         <Button 
-          name={'Voltar'} 
+          name={'Back'} 
           URL={`/pre-processing`}
           stateToPass={{
             pageNumber: 0
@@ -271,7 +267,7 @@ export default function PreProcessing({ index }) {
           side={'left'}
         />
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/variables-selection`}
           stateToPass={{
             pageNumber: 0

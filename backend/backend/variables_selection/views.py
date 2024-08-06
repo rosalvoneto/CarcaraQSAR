@@ -8,8 +8,6 @@ import ast
 from io import StringIO
 
 from django.shortcuts import get_object_or_404
-from django.core.files import File
-from django.http import HttpResponse, JsonResponse
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -17,7 +15,6 @@ from rest_framework.permissions import IsAuthenticated
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 
-from database.models import Database
 from project_management.models import Project
 from variables_selection.models import VariablesSelection
 from variables_selection.utils import get_variables_settings, is_convertible_to_int_list
@@ -166,7 +163,7 @@ def removeConstantVariables_view(request):
         # Criar novo Database
         database.create_database(
           path="Database_without_constant_variables.csv",
-          description="Database após a remoção de variáveis constantes",
+          description="Database after removing constant variables",
           dataframe=dataframe
         )
 
@@ -217,7 +214,7 @@ def removeVariables_view(request):
         # Criar novo Database
         database.create_database(
           path="Database_without_choosen_variables.csv",
-          description="Database após a remoção de variáveis pelo usuário",
+          description="Database after user removes variables",
           dataframe=dataframe
         )
 
@@ -263,7 +260,7 @@ def make_selection(self, project_id):
         parameters = response["algorithmParameters"]
         algorithm = response["algorithm"]
 
-        if(algorithm == "NÃO APLICAR"):
+        if(algorithm == "Do not apply"):
           return Response({
             'message': 'Seleção de variáveis não aplicada!',
           }, status=200)
@@ -278,7 +275,7 @@ def make_selection(self, project_id):
 
         columns_with_nan = base.columns[base.isna().any()].tolist()
 
-        condition = algorithm != "Colônia de abelhas"
+        condition = algorithm != "Bee colony algorithm"
         condition = True
 
         # Cria um modelo
@@ -291,7 +288,7 @@ def make_selection(self, project_id):
         # Faz a seleção de variáveis
         print("")
         print("SELEÇÃO COM O ALGORITMO")
-        if(algorithm == "Colônia de abelhas"):
+        if(algorithm == "Bee colony algorithm"):
           abc = ABCAlgorithm(
             bees=parameters["bees"],
             maximum_iterations=parameters["maximum_iterations"],
@@ -317,7 +314,7 @@ def make_selection(self, project_id):
             best_subset
           )
 
-        elif(algorithm == "Algoritmo genético"):
+        elif(algorithm == "Genetic algorithm"):
           problem = Problem(base)
           population = problem.generateBestPopulation(
             quantity=parameters['population_quantity'],
@@ -354,7 +351,7 @@ def make_selection(self, project_id):
           # Criar novo Database
           database.create_database(
             path="Database_with_only_algorithm_execution.csv",
-            description="Database após somente a execução do algoritmo",
+            description="Database after algorithm execution",
             dataframe=base_compressed
           )
           
@@ -385,7 +382,7 @@ def make_selection(self, project_id):
           best_node, best_R2 = graph.execution(best_variable)
           print("Melhor R2:", best_R2)
 
-        update_selection_progress(100, 100, 3, 3, "Finalizado")
+        update_selection_progress(100, 100, 3, 3, "Finished")
         print("Progresso:")
         print(variables_selection.algorithm_progress)
 
@@ -395,7 +392,7 @@ def make_selection(self, project_id):
         # Criar novo Database
         database.create_database(
           path="Database_with_algorithm_execution.csv",
-          description="Database após a execução do algoritmo",
+          description="Database after algorithm and BFS execution",
           dataframe=dataframe
         )
 

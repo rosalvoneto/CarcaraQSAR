@@ -49,7 +49,7 @@ export default function TrashPage() {
         && <>
             <Header />
             <div className={styles.inputContainer}>
-              <Input name={"Lixeira"} setValue={setNewSearchValue}/>
+              <Input name={"Trash"} setValue={setNewSearchValue}/>
             </div>
             <TrashProjectsTable searchValue={searchValue}/>
           </>

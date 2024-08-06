@@ -2,15 +2,10 @@ from io import StringIO
 import pandas as pd
 import csv
 
-from threading import Thread
+import warnings
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from django.http import FileResponse, StreamingHttpResponse
-import os
-from collections import OrderedDict
-
-from django.utils.encoding import smart_str
 from django.core.files.base import ContentFile
 
 from padelpy import from_smiles
@@ -28,10 +23,7 @@ from project_management.models import Project
 from database.models import Database, Normalization
 from database.serializers import DatabaseSerializer
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 import numpy as np
-import time
 
 # Função para verificar se um valor é numérico e não é NaN
 def is_numeric(val):
@@ -91,7 +83,7 @@ def convertAndSendDatabase_view(request):
     if(not valid_csv):
       print('ARQUIVO NÃO VÁLIDO')
       response = Response({
-        'message': 'Formado não válido do arquivo SMILES!'
+        'message': 'Invalid SMILES file format!'
       }, status=401)
       return response
     print('ARQUIVO VÁLIDO')
@@ -123,8 +115,8 @@ def convertAndSendDatabase_view(request):
         project_database = project.get_database()
         if(project_database == None):
           project_database = Database.objects.create(
-            name="Database vazio",
-            description="Database gerado automaticamente",
+            name="Empty Database",
+            description="Automatically generated database",
             file=None,
             normalization=None,
             project=project,
@@ -185,15 +177,17 @@ def convertAndSendDatabase_view(request):
       status_code = 200
       only_valid_cells_on_dataframe = True
       status_message = 'Arquivo convertido com sucesso!'
-      # Aplicar a função ao DataFrame e identificar as células não numéricas
-      non_numeric_mask = data_dataframe.applymap(lambda x: not is_numeric(x))
-      non_numeric_cells = np.where(non_numeric_mask)
+      with warnings.catch_warnings():
+        warnings.simplefilter(action='ignore', category=FutureWarning)
+        # Aplicar a função ao DataFrame e identificar as células não numéricas
+        non_numeric_mask = data_dataframe.applymap(lambda x: not is_numeric(x))
+        non_numeric_cells = np.where(non_numeric_mask)
 
       for row, column in zip(non_numeric_cells[0], non_numeric_cells[1]):
         print(f"({row}, {column}) with value '{data_dataframe.iat[row, column]}'")
         only_valid_cells_on_dataframe = False
         status_code = 400
-        status_message = f'Algumas células estão vazias! Submeta novamente corrigido. Célula vazia: coluna {data_dataframe.columns[column]} e linha {row}.'
+        status_message = f'Some cells have non-numeric values! Resubmit corrected. Cell with non-numeric: column {data_dataframe.columns[column]} and row {row}.'
         break
 
       # Database atual
@@ -207,7 +201,7 @@ def convertAndSendDatabase_view(request):
         lines, columns = data_dataframe.shape
 
         project_database.name = file_name
-        project_database.description = "Database original"
+        project_database.description = "Original database"
         project_database.file.save(file_name, ContentFile(file_content))
         project_database.file_separator = ','
         project_database.lines = lines
@@ -283,16 +277,18 @@ def sendDatabase_view(request):
     )
     lines, columns = data_dataframe.shape
 
-    # Aplicar a função ao DataFrame e identificar as células não numéricas
-    non_numeric_mask = data_dataframe.applymap(lambda x: not is_numeric(x))
-    non_numeric_cells = np.where(non_numeric_mask)
+    with warnings.catch_warnings():
+      warnings.simplefilter(action='ignore', category=FutureWarning)
+      # Aplicar a função ao DataFrame e identificar as células não numéricas
+      non_numeric_mask = data_dataframe.applymap(lambda x: not is_numeric(x))
+      non_numeric_cells = np.where(non_numeric_mask)
 
     for row, column in zip(non_numeric_cells[0], non_numeric_cells[1]):
       print(f"({row}, {column}) with value '{data_dataframe.iat[row, column]}'")
 
       return Response({
         'message': 'O database possui valores não numéricos!',
-        'error': f'Algumas células estão vazias! Submeta novamente corrigido. Célula vazia: coluna {data_dataframe.columns[column]} e linha {row}.'
+        'error': f'Some cells have non-numeric values! Resubmit corrected. Cell with non-numeric: column {data_dataframe.columns[column]} and row {row}.'
       }, status=500) 
     
 
@@ -301,7 +297,7 @@ def sendDatabase_view(request):
     if(project_database == None):
       project_database = Database.objects.create(
         name=uploaded_file.name,
-        description="Database original",
+        description="Original database",
         file=uploaded_file,
         file_separator=separator,
         lines=lines,
@@ -311,7 +307,7 @@ def sendDatabase_view(request):
       )
     else:
       project_database.name = uploaded_file.name
-      project_database.description = "Database original"
+      project_database.description = "Original database"
       project_database.file = uploaded_file
       project_database.file_separator = separator
       project_database.lines = lines
@@ -556,7 +552,7 @@ def getNormalizationSettings_view(request):
 
     else:
       
-      normalization = Normalization.objects.create(name="NÃO APLICAR")
+      normalization = Normalization.objects.create(name="Do not apply")
       database.normalization = normalization
       database.save()
 

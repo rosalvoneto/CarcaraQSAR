@@ -19,7 +19,7 @@ def get_variables_settings(project):
     variables_selection = VariablesSelection.objects.create(
       remove_constant_variables=False,
       variables_to_remove=[],
-      algorithm="NÃO APLICAR",
+      algorithm="Do not apply",
       algorithm_parameters={},
       rows_to_remove=[],
       project=project,

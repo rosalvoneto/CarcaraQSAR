@@ -16,13 +16,13 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
 
   return(
     <form onSubmit={loginUser} className={styles.container}>
-      <h4 className={styles.title}>Autenticação</h4>
+      <h4 className={styles.title}>Login</h4>
 
       <div className={styles.inputsContainer}>
         <Input inputName={'email'} name={"Email"} type={'email'}/>
         <div className={styles.inputContainer}>
-          <Input inputName={'password'} name={"Senha"} type={'password'}/>
-          <a className={styles.link}>Esqueci a senha</a>
+          <Input inputName={'password'} name={"Password"} type={'password'}/>
+          <a className={styles.link}>I forgot the password</a>
         </div>
       </div>
 
@@ -30,13 +30,13 @@ export default function AuntenticBox({ setRegisterBoxAppears }) {
         <input 
           type='submit'
           className={styles.button}
-          value={'Entrar'}
+          value={'Enter'}
         />
         <a 
           className={styles.centerLink}
           onClick={handleRegisterBox}
         >
-          Novo por aqui? Crie um conta
+          New here? Create an account
         </a>
       </div>
     </form>

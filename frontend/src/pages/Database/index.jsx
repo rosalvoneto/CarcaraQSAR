@@ -242,20 +242,20 @@ export default function Database() {
       <div className={styles.container}>
 
         <InlineInput 
-          name={"Tipo de separador"} type={'text'} width={26}
+          name={"Separator"} type={'text'} width={26}
           value={separator} setValue={setSeparator}
         />
 
         <UploadComponent
           name={'uploadTXTorCSV'}
-          description={'Escolher arquivo (CSV, TXT)'}
+          description={'Choose file (CSV, TXT)'}
           accept={".txt, .csv"}
           setSelectedFile={setSelectedFile}
           selectedFile={selectedFile}
           />
         <UploadComponent
           name={'uploadSmiles'}
-          description={'Escolher arquivo SMILES'}
+          description={'Choose file SMILES'}
           accept={".txt, .csv, .smi"}
           setSelectedFile={setSelectedSmilesFile}
           selectedFile={selectedSmilesFile}
@@ -263,7 +263,7 @@ export default function Database() {
 
         <div className={styles.tableInfomation}>
           <CheckboxInput 
-            name={"Transposição:"}
+            name={"Transposition:"}
             value={transpose} 
             setValue={(value) => {
               setTranspose(value);
@@ -272,7 +272,7 @@ export default function Database() {
           />
           <p className={styles.tableDescription}>
             {
-              `${database.lines} linhas x ${database.columns} colunas`
+              `${database.lines} rows x ${database.columns} columns`
             }
           </p>
         </div>
@@ -284,7 +284,7 @@ export default function Database() {
         />
         
         <Button 
-          name={'Próximo'} 
+          name={'Next'} 
           URL={`/pre-processing`}
           stateToPass={{
             pageNumber: 0
@@ -298,13 +298,13 @@ export default function Database() {
         databaseError &&
         <PopUp 
           show={true}
-          title={"Erro no Database"}
+          title={"Database error"}
           description={
             `${errorMessage}`
           }
   
           showButton
-          buttonName={"Fechar"}
+          buttonName={"Close"}
           action={() => {
             setDatabaseError(false);
             setErrorMessage("");

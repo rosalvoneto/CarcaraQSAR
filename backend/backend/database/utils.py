@@ -16,9 +16,9 @@ def getHistogramImage(array, num_bins):
   # Crie o histograma usando Matplotlib
   ax.bar(bins[:-1], hist, width=amplitude_intervals, edgecolor='black')
 
-  ax.set_title('Histograma')
-  ax.set_xlabel('Valores')
-  ax.set_ylabel('Frequência')
+  ax.set_title('Histogram')
+  ax.set_xlabel('Values')
+  ax.set_ylabel('Frequency')
 
   # Renderize a figura
   canvas = FigureCanvasAgg(fig)
@@ -44,8 +44,8 @@ def getBoxPlotImage(array):
 
   # Crie o box plot
   ax.boxplot(array)
-  ax.set_title('Box Plot')
-  ax.set_xlabel('Valores')
+  ax.set_title('Box-Plot')
+  ax.set_xlabel('Values')
 
   # Renderize a figura usando FigureCanvasAgg
   canvas = FigureCanvasAgg(fig)
