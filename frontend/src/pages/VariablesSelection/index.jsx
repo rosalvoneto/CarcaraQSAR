@@ -320,7 +320,7 @@ export default function VariablesSelection() {
       setProgressValue(100);
       setMaximumValue(100);
       setTimeout(() => {
-        alert("Finalizou!");
+        alert("Process finished!");
         setSelected("finished");
       }, 2000);
       localStorage.removeItem(`progress_${projectID}`);
@@ -331,7 +331,7 @@ export default function VariablesSelection() {
       const { error } = responseTask.result;
       setErrorMessage(error);
 
-      alert("Ocorreu um erro!");
+      alert("An error has occurred!");
       localStorage.removeItem(`progress_${projectID}`);
     }
 

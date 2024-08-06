@@ -35,7 +35,7 @@ export const getDatabase = async (projectID, accessToken, transposed) => {
   let dataResponse = await response.json();
   if(response.status == 200) {
   } else {
-    alert('Erro interno do servidor!');
+    alert('Internal server error!');
   }
 
   return dataResponse;
@@ -55,7 +55,7 @@ export const getVariables = async (projectID, accessToken) => {
   let dataResponse = await response.json();
   if(response.status == 200) {
   } else {
-    alert('Erro interno do servidor!');
+    alert('Internal server error!');
   }
 
   return dataResponse;
@@ -75,7 +75,7 @@ export const getHistogram = async (projectID, variable, divisions, accessToken) 
   let dataResponse = await response.json();
   if(response.status == 200) {
   } else {
-    alert('Erro interno do servidor!');
+    alert('Internal server error!');
   }
 
   return dataResponse;
@@ -95,7 +95,7 @@ export const getBoxPlot = async (projectID, variable, accessToken) => {
   let dataResponse = await response.json();
   if(response.status == 200) {
   } else {
-    alert('Erro interno do servidor!');
+    alert('Internal server error!');
   }
 
   return dataResponse;

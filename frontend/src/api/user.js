@@ -46,7 +46,7 @@ export const loginUser = async (e) => {
     return dataResponse;
 
   } else {
-    alert('Email ou senha incorretas!');
+    alert('Incorrect email or password!');
 
     return null;
   }
@@ -79,7 +79,7 @@ export const createUser = async (e) => {
   if(response.status == 200) {
     return true;
   } else {
-    alert('Erro interno do servidor!');
+    alert('Internal server error!');
     return false;
   }
 }

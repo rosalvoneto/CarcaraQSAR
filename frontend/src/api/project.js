@@ -7,7 +7,7 @@ export const createProject = async (e, accessToken) => {
   const description = e.target.description.value;
 
   if(name == "" || description == "") {
-    return alert("Preencha os campos corretamente!")
+    return alert("Fill in the fields correctly!")
   }
 
   let response = await fetch(
@@ -27,7 +27,7 @@ export const createProject = async (e, accessToken) => {
   if(response.status == 200) {
     window.location.href = '/home';
   } else {
-    alert('Erro interno do servidor!');
+    alert('Internal server error!');
   }
 }
 
@@ -167,7 +167,7 @@ export const getProject = async (projectID, accessToken) => {
   let dataResponse = await response.json();
   if(response.status == 200) {
   } else {
-    alert('Erro interno do servidor!');
+    alert('Internal server error!');
   }
   return dataResponse;
 }

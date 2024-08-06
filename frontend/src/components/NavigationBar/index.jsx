@@ -75,12 +75,12 @@ export default function NavigationBar() {
         );
 
         setTimeout(() => {
-          alert(`Finalização de processo no projeto '${execution.projectName}'!`);
+          alert(`Finalization of process in the project '${execution.projectName}'!`);
         }, 2000);
         localStorage.removeItem(`progress_${execution.projectID}`);
 
       } else if(responseTask.state == 'FAILURE' || responseTask.state == 'ERROR') {
-        alert(`Erro no processo do projeto '${execution.projectName}'!`);
+        alert(`Error in the process of project '${execution.projectName}'!`);
         localStorage.removeItem(`progress_${execution.projectID}`);
       }
 

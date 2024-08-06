@@ -113,7 +113,7 @@ export default function Database() {
     if(database.database) {
       return true;
     } else {
-      alert('Você não escolheu nenhum arquivo');
+      alert("You didn't choose any file!");
       return false;
     }
   }

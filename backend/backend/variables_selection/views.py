@@ -119,7 +119,7 @@ def removeRows_view(request):
 
       database.create_database(
         path="Database_with_dropped_lines.csv",
-        description="Database após a remoção de linhas",
+        description="Database after removing rows",
         dataframe=dataframe
       )
 
