@@ -44,21 +44,30 @@ def is_numeric(val):
     return True
   except (ValueError, TypeError):
     return False
-
+  
 # Verifica se o CSV está no formato desejado
 def is_valid_csv(reader, file_io):
   try:
+    # Verifica se todas as linhas possuem exatamente 2 colunas
     for row in reader:
       if len(row) != 2:
         return False
-    # Verifica se há pelo menos uma linha (além do cabeçalho)
+
+      # Verifica se a segunda coluna é numérica
+      try:
+        float(row[1])
+      except ValueError:
+        return False
+
+    # Volta ao início do arquivo e conta o número de linhas
     file_io.seek(0)
     num_rows = sum(1 for row in reader)
 
+    # Verifica se há pelo menos uma linha
     return num_rows >= 1
-  
+
   except Exception as e:
-    print(f"Erro ao ler o arquivo: {e}")
+    print(f"Erro ao processar o arquivo: {e}")
     return False
 
 @api_view(['POST'])
@@ -283,9 +292,7 @@ def sendDatabase_view(request):
 
       return Response({
         'message': 'O database possui valores não numéricos!',
-        'error': 'A planilha possui valores não numéricos! É preciso fazer upload de uma nova base de dados!',
-        'column': data_dataframe.columns[column],
-        'row': row
+        'error': f'Algumas células estão vazias! Submeta novamente corrigido. Célula vazia: coluna {data_dataframe.columns[column]} e linha {row}.'
       }, status=500) 
     
 

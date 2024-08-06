@@ -65,10 +65,7 @@ export default function Database() {
       const dataResponse = await response.json();
       if(dataResponse.error) {
         setDatabaseError(true);
-        setErrorMessage(
-          `${dataResponse.error} Célula vazia:
-          Coluna ${dataResponse.column}, linha ${dataResponse.row}.`
-        );
+        setErrorMessage(dataResponse.error);
 
         return false;
       }
