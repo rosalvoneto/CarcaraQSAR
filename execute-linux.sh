@@ -6,4 +6,4 @@ SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 # Muda para o diretório do script
 cd "$SCRIPT_DIR"
 
-docker-compose up
+docker compose up
