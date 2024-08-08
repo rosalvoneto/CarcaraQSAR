@@ -78,6 +78,12 @@ export const algorithmsParameters = [
   ]
 ];
 
+export const models = [
+  "Random Forest",
+  "Support Vector Machines - SVM",
+  "K-Nearest Neighbors - KNN",
+  "Linear Regression",
+];
 
 export const optionsToRemoveVariables = ["Yes", "No"];
 
@@ -104,7 +110,8 @@ export default function VariablesSelection() {
 
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [algorithmParameters, setAlgorithmParameters] = useState({});
-
+  const [choosenModel, setChoosenModel] = useState();
+  
   const [removeConstantVariables, setRemoveConstantVariables] = useState();
 
   const [rightListOfVariables, setRightListOfVariables] = useState([]);
@@ -195,6 +202,7 @@ export default function VariablesSelection() {
       rightListOfVariables,
       choosenAlgorithm,
       algorithmParameters,
+      choosenModel,
       rowsToRemove,
       authTokens.access
     );
@@ -209,6 +217,7 @@ export default function VariablesSelection() {
       rightListOfVariables,
       choosenAlgorithm,
       algorithmParameters,
+      choosenModel,
       rowsToRemove,
       authTokens.access
     );
@@ -234,6 +243,7 @@ export default function VariablesSelection() {
       rightListOfVariables,
       choosenAlgorithm,
       algorithmParameters,
+      choosenModel,
       rowsToRemove,
       authTokens.access
     );
@@ -426,6 +436,10 @@ export default function VariablesSelection() {
         // Exibir o objeto resultante
         setAlgorithmParameters(resultObject);
       }
+
+      if(response.model) {
+        setChoosenModel(response.model);
+      }
       
       setRowsToRemove(response.rowsToRemove.toString());
 
@@ -565,62 +579,71 @@ export default function VariablesSelection() {
 
         <div className={styles.container}>
           <div className={styles.algorithmContainer}>
-            <div>
-              <RadionInput 
-                name={"Bioinspired Algorithm"}
-                options={algorithms}
-                setOption={setChoosenAlgorithm}
-                firstOption={choosenAlgorithm}
-              />
+            <div style={{ gap: 20, display: 'flex', flexDirection: 'column' }}>
+              <div>
+                <RadionInput 
+                  name={"Bioinspired Algorithm"}
+                  options={algorithms}
+                  setOption={setChoosenAlgorithm}
+                  firstOption={choosenAlgorithm}
+                />
 
+                <div className={styles.parametersContainer}>
+                  {
+                    true
+                    ?
+                      algorithmsParameters[
+                        algorithmIndex
+                      ].map((key, index) => {
+                        return(
+                          <InlineInput 
+                            key={`${algorithmIndex}-${index}`}
+                            name={key[1]} 
+                            type={'number'}
+                            setValue={(value) => changeParameters(key[0], value)}
+                            value={
+                              algorithmParameters[key[0]] 
+                              ? algorithmParameters[key[0]] 
+                              : algorithmsParameters[algorithmIndex][index][2]
+                            }
+                          />
+                        )
+                      })
+                    :
+                      undefined
+                  }
+                </div>
+              </div>
               <div className={styles.parametersContainer}>
+                <RadionInput 
+                  name={"Model used for evaluation"}
+                  options={models}
+                  setOption={setChoosenModel}
+                  firstOption={choosenModel}
+                />
                 {
-                  true
-                  ?
-                    algorithmsParameters[
-                      algorithmIndex
-                    ].map((key, index) => {
-                      return(
-                        <InlineInput 
-                          key={`${algorithmIndex}-${index}`}
-                          name={key[1]} 
-                          type={'number'}
-                          setValue={(value) => changeParameters(key[0], value)}
-                          value={
-                            algorithmParameters[key[0]] 
-                            ? algorithmParameters[key[0]] 
-                            : algorithmsParameters[algorithmIndex][index][2]
-                          }
-                        />
-                      )
-                    })
-                  :
-                    undefined
+                  algorithmIndex != 0 &&
+                  (
+                    selected == "false"
+                    ?
+                      <button 
+                        onClick={handleToMakeSelection}
+                        className={styles.button}
+                      >
+                        Save and select
+                      </button>
+                    :
+                      <button 
+                        onClick={() => {
+                          setSelected("show progress");
+                        }}
+                        className={styles.button}
+                      >
+                        Show progress
+                      </button>
+                  )
                 }
               </div>
-              {
-                algorithmIndex != 0 &&
-                (
-                  selected == "false"
-                  ?
-                    <button 
-                      onClick={handleToMakeSelection}
-                      className={styles.button}
-                    >
-                      Save and select
-                    </button>
-                  :
-                    <button 
-                      onClick={() => {
-                        setSelected("show progress");
-                      }}
-                      className={styles.button}
-                    >
-                      Show progress
-                    </button>
-                  
-                )
-              }
             </div>
 
             <div className={styles.informationContainer}>

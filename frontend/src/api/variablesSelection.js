@@ -4,6 +4,7 @@ export const setVariablesSettings = async (
   projectID, 
   removeConstantVariables, listOfVariables,
   algorithm, algorithmParameters, 
+  model,
   rowsToRemoveString,
   accessToken
 ) => {
@@ -16,6 +17,7 @@ export const setVariablesSettings = async (
   formData.append('algorithm', algorithm);
   formData.append('algorithm_parameters', parametersString);
   formData.append('remove_constant_variables', removeConstantVariables);
+  formData.append('model', model);
   formData.append('list_of_variables', listOfVariablesString);
   formData.append('rows_to_remove', rowsToRemoveString);
 

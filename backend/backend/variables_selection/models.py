@@ -8,6 +8,12 @@ class VariablesSelection(models.Model):
 
   algorithm = models.CharField(max_length=200)
   algorithm_parameters = models.JSONField(default=dict)
+  model = models.CharField(
+    max_length=100,
+    null=True,
+    blank=True,
+    default=None
+  )
   algorithm_progress = models.CharField(
     max_length=10,
     null=True,
@@ -60,12 +66,14 @@ class VariablesSelection(models.Model):
       variables_to_remove,
       algorithm,
       algorithm_parameters,
+      model,
       rows_to_remove
     ):
     self.remove_constant_variables = remove_constant_variables
     self.variables_to_remove = variables_to_remove
     self.algorithm = algorithm
     self.algorithm_parameters = algorithm_parameters
+    self.model = model
     self.rows_to_remove = rows_to_remove
     self.save()
 

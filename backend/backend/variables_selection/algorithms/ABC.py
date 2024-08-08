@@ -3,7 +3,7 @@ import pandas as pd
 pd.options.mode.chained_assignment = None
 import random
 
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from sklearn.feature_selection import mutual_info_regression

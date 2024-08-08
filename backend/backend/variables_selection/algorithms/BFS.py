@@ -8,8 +8,11 @@ from variables_selection.algorithms.utils.utils import convert_binary_array_to_v
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.svm import SVR
+
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.linear_model import LinearRegression
 
 class BFS:
     def __init__(
@@ -19,7 +22,8 @@ class BFS:
         limit_not_improvement,
         interation_function,
         n_child_positions,
-        children_quantity
+        children_quantity,
+        model
     ):
         self.dataframe = dataframe
         self.graph = {}
@@ -31,6 +35,8 @@ class BFS:
         self.interation_function = interation_function
         self.n_child_positions = n_child_positions
         self.children_quantity = children_quantity
+
+        self.model = model
 
     def add_node(self, node):
         self.graph[tuple(node)] = []
@@ -209,15 +215,7 @@ class BFS:
             X, y, test_size=0.2, random_state=42
         )
 
-        # Cria um modelo
-        if(True):
-            model = RandomForestRegressor(
-                n_estimators=50,
-                random_state=42,
-                max_features="log2"
-            )
-        else:
-            model = SVR(kernel='rbf', C=1.0, gamma='scale')
+        model = self.model
 
         # Treinar o modelo
         model.fit(X_train, y_train)

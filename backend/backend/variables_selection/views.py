@@ -12,8 +12,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.linear_model import LinearRegression
 
 from project_management.models import Project
 from variables_selection.models import VariablesSelection
@@ -46,6 +49,7 @@ def setVariablesSettings_view(request):
   algorithm = request.POST.get('algorithm')
   algorithm_parameters = request.POST.get('algorithm_parameters')
   algorithm_parameters = json.loads(algorithm_parameters)
+  model = request.POST.get('model')
 
   list_of_variables = request.POST.get('list_of_variables')
   list_of_variables = json.loads(list_of_variables)
@@ -66,6 +70,7 @@ def setVariablesSettings_view(request):
       variables_to_remove=list_of_variables,
       algorithm=algorithm,
       algorithm_parameters=algorithm_parameters,
+      model=model,
       rows_to_remove=rows_to_remove,
     )
 
@@ -79,6 +84,7 @@ def setVariablesSettings_view(request):
       variables_to_remove=list_of_variables,
       algorithm=algorithm,
       algorithm_parameters=algorithm_parameters,
+      model=model,
       rows_to_remove=rows_to_remove,
       project=project,
     )
@@ -279,11 +285,36 @@ def make_selection(self, project_id):
         condition = True
 
         # Cria um modelo
-        model = RandomForestRegressor(
-          n_estimators=200,
-          random_state=42,
-          max_features="log2",
-        )
+        choosen_model = variables_selection.model
+        model = None
+        if(choosen_model == 'Support Vector Machines - SVM'):
+          model = SVR(
+            kernel='rbf', 
+            C=1.0, 
+            gamma='scale'
+          )
+          print("MODEL: Support Vector Machines - SVM")
+        elif(choosen_model == 'K-Nearest Neighbors - KNN'):
+          model = KNeighborsRegressor(
+            # Número de vizinhos (k)
+            n_neighbors=5,
+            # Pode usar 'distance' para ponderar pelos inversos das distâncias
+            weights='uniform'
+          )
+          print("MODEL: K-Nearest Neighbors - KNN")
+        elif(choosen_model == 'Linear Regression'):
+          model = LinearRegression(
+            # Ajusta o intercepto (b0)
+            fit_intercept=True,
+          )
+          print("MODEL: Linear Regression")
+        else:
+          model = RandomForestRegressor(
+            n_estimators=50,
+            random_state=42,
+            max_features="log2",
+          )
+          print("MODEL: Random Forest")
 
         # Faz a seleção de variáveis
         print("")
@@ -355,12 +386,6 @@ def make_selection(self, project_id):
             dataframe=base_compressed
           )
           
-          # Criar um modelo
-          model = RandomForestRegressor(
-            n_estimators=50,
-            random_state=42,
-            max_features="log2"
-          )
           graph = BFS(
             dataframe=base_compressed,
             r2_condition=parameters['r2_condition_BFS'],
@@ -368,6 +393,7 @@ def make_selection(self, project_id):
             interation_function=update_selection_progress,
             n_child_positions=parameters['n_child_positions'],
             children_quantity=parameters['children_quantity'],
+            model=model
           )
 
           # Busca pela melhor variável

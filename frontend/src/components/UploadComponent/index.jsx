@@ -5,8 +5,14 @@ const UploadComponent = ({
 }) => {
 
   const handleFileChange = (event) => {
-    // Atualiza o estado com o arquivo selecionado
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      // Atualiza o estado com o arquivo selecionado
+      setSelectedFile(file);
+    }
+
+    // Reseta o valor do input para permitir o upload do mesmo arquivo novamente
+    event.target.value = null;
   };
 
   return (

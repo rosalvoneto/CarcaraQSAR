@@ -11,6 +11,7 @@ def get_variables_settings(project):
       'variablesToRemove': variables_selection.variables_to_remove,
       'algorithm': variables_selection.algorithm,
       'algorithmParameters': variables_selection.algorithm_parameters,
+      'model': variables_selection.model,
       'rowsToRemove': variables_selection.rows_to_remove,
       'algorithmProgress': variables_selection.algorithm_progress
     }
@@ -21,6 +22,7 @@ def get_variables_settings(project):
       variables_to_remove=[],
       algorithm="Do not apply",
       algorithm_parameters={},
+      model='Random Forest',
       rows_to_remove=[],
       project=project,
       algorithm_progress=None,
@@ -31,6 +33,7 @@ def get_variables_settings(project):
       'variablesToRemove': variables_selection.variables_to_remove,
       'algorithm': variables_selection.algorithm,
       'algorithmParameters': variables_selection.algorithm_parameters,
+      'model': variables_selection.model,
       'rowsToRemove': variables_selection.rows_to_remove,
       'algorithmProgress': variables_selection.algorithm_progress
     }
