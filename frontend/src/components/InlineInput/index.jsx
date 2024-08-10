@@ -8,7 +8,7 @@ export function InlineInput({ name, type, width, value, setValue }) {
 
   return(
     <div className={styles.inlineInputContainer}>
-      <p className={styles.descritptor}>{ name }</p>
+      <p className={styles.descriptor}>{ name }</p>
       <input 
         type={type}
         className={styles.input} 

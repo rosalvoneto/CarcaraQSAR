@@ -51,7 +51,6 @@ export const algorithmsDescriptions = [
   "Inspired by the behavior of bee colonies, this algorithm is an optimization technique based on the exploration of candidate solutions in a search space. Virtual bees search for solutions in specific locations and share information about the quality of the solutions found with other bees, allowing convergence to an optimal solution in complex optimization problems.",
 ];
 
-
 export const algorithmsParameters = [
   [],
   [
@@ -85,6 +84,24 @@ export const models = [
   "Linear Regression",
 ];
 
+export const modelsDescriptions = [
+  "Random Forest: A machine learning algorithm that operates by constructing multiple decision trees during training and then outputting the class that is the mode of the classes (for classification) or the mean prediction (for regression) of the individual trees. It is known for being robust against overfitting and effective in handling datasets with many input variables.",
+  
+  "Support Vector Machines - SVM: A supervised machine learning model primarily used for classification tasks. SVM works by finding a hyperplane that best separates the different classes of data in the input space. It is effective in high-dimensional spaces and when the number of dimensions exceeds the number of samples.",
+  
+  "K-Nearest Neighbors - KNN: A simple and intuitive machine learning algorithm used for classification and regression tasks. It works by finding the 'k' nearest examples in the feature space and assigns the label or the average of these neighbors to the new sample. KNN is non-parametric and instance-based, meaning it stores all the training examples.",
+  
+  "Linear Regression: A machine learning model used to predict numerical values. It assumes a linear relationship between the input variables (independent) and the output variable (dependent). Linear regression fits a coefficient to each input variable to minimize the sum of the squared differences between the predictions and the actual values."
+];
+
+
+export const modelsParameters = [
+  [],
+  [],
+  [],
+  [],
+];
+
 export const optionsToRemoveVariables = ["Yes", "No"];
 
 export default function VariablesSelection() {
@@ -100,6 +117,7 @@ export default function VariablesSelection() {
   const state = location.state;
 
   const [algorithmIndex, setAlgorithmIndex] = useState(0);
+  const [modelIndex, setModelIndex] = useState(0);
 
   let pageNumber = 0;
   if(state) {
@@ -133,6 +151,8 @@ export default function VariablesSelection() {
   const [executionType, setExecutionType] = useState("");
   const [useGetProgress, setUseGetProgress] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const [showParameters, setShowParameters] = useState([]);
 
   const navigate = useNavigate();
   const navigateToVariablesSelection = () => {
@@ -454,13 +474,29 @@ export default function VariablesSelection() {
   }, [])
 
   useEffect(() => {
+    const falseArray = new Array(
+      algorithmsParameters[algorithmIndex].length
+    ).fill(false);
+    setShowParameters(falseArray);
+  }, [algorithmIndex])
+
+  useEffect(() => {
     const index = algorithms.indexOf(choosenAlgorithm);
     if(index == -1) {
       setAlgorithmIndex(0);
     } else {
       setAlgorithmIndex(index);
     }
-  }, [choosenAlgorithm]);    
+  }, [choosenAlgorithm]);  
+  
+  useEffect(() => {
+    const index = models.indexOf(choosenModel);
+    if(index == -1) {
+      setModelIndex(0);
+    } else {
+      setModelIndex(index);
+    }
+  }, [choosenModel]); 
 
   useEffect(() => {
     if(pageNumber == 3) {
@@ -596,17 +632,32 @@ export default function VariablesSelection() {
                         algorithmIndex
                       ].map((key, index) => {
                         return(
-                          <InlineInput 
-                            key={`${algorithmIndex}-${index}`}
-                            name={key[1]} 
-                            type={'number'}
-                            setValue={(value) => changeParameters(key[0], value)}
-                            value={
-                              algorithmParameters[key[0]] 
-                              ? algorithmParameters[key[0]] 
-                              : algorithmsParameters[algorithmIndex][index][2]
-                            }
-                          />
+                          <div 
+                            key={`${algorithmIndex}-${index}`} 
+                            className={styles.parametersContentContainer}
+                          >
+                            <InlineInput 
+                              name={key[1]} 
+                              type={'number'}
+                              setValue={(value) => changeParameters(key[0], value)}
+                              value={
+                                algorithmParameters[key[0]] 
+                                ? algorithmParameters[key[0]] 
+                                : algorithmsParameters[algorithmIndex][index][2]
+                              }
+                            />
+                            <a 
+                              className={`${styles.helpButton} ${showParameters[index] ? styles.clickedHelpButton : ''}`}
+                              onClick={() => {
+                                let array = [...showParameters];
+                                array[index] = !array[index];
+                                setShowParameters(array);
+                                console.log(showParameters);
+                              }}
+                            >
+                              ?
+                            </a>
+                          </div>
                         )
                       })
                     :
@@ -621,6 +672,29 @@ export default function VariablesSelection() {
                   setOption={setChoosenModel}
                   firstOption={choosenModel}
                 />
+                {
+                /*
+                {
+                  modelsParameters[
+                    modelIndex
+                  ].map((key, index) => {
+                    return(
+                      <InlineInput 
+                        key={`${modelIndex}-${index}`}
+                        name={key[1]} 
+                        type={'number'}
+                        setValue={(value) => changeModels(key[0], value)}
+                        value={
+                          modelParameters[key[0]] 
+                          ? modelParameters[key[0]] 
+                          : modelsParameters[modelIndex][index][2]
+                        }
+                      />
+                    )
+                  })
+                } 
+                */
+                }
                 {
                   algorithmIndex != 0 &&
                   (
@@ -651,14 +725,18 @@ export default function VariablesSelection() {
                 { algorithmsDescriptions[algorithmIndex] }
               </p>
               {
+                showParameters &&
                 algorithmsParameters[algorithmIndex].map((parameter, index) => {
-                  return(
+                  return showParameters[index] ? (
                     <p key={index} className={styles.information}>
                       {`${parameter[1]}: ${parameter[3]}`}
                     </p>
-                  )
+                  ) : null;
                 })
               }
+              <p className={styles.information}>
+                { modelsDescriptions[modelIndex] }
+              </p>
             </div>
           </div>
 

@@ -105,3 +105,25 @@
 
   /* border: 1px solid red; */
 }
+
+.parametersContentContainer{
+  display: flex;
+  align-items: center;
+}
+
+.helpButton {
+  margin-left: 10px;
+  padding: 5px;
+  border-radius: 10px;
+
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: background-color 0.3s ease;
+}
+
+.clickedHelpButton {
+  background-color: var(--primary-color-1);
+}
