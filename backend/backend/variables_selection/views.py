@@ -527,8 +527,11 @@ def checkSelectionStatus_view(request):
     'status': 'Unknown',
     'result': None
   }
-  # Converte a string para um dicionário
-  resultDictionary = ast.literal_eval(str(task.result))
+  
+  try:
+    resultDictionary = ast.literal_eval(str(task.result))
+  except:
+    resultDictionary = {}
 
   if task.state != 'PENDING':
     if 'error' in task.result:

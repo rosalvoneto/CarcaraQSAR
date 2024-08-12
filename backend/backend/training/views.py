@@ -127,7 +127,7 @@ def make_training(self, project_id):
     if(database):
 
       print("FILE:", database.file)
-      data = pd.read_csv(f"media/{database.file}")
+      data = pd.read_csv(f"media/{database.file}", sep=database.file_separator)
       rows, columns = data.shape
       print(f"{rows} linhas e {columns} colunas")
       
@@ -337,8 +337,11 @@ def checkTrainingStatus_view(request):
     'status': 'Unknown',
     'result': None
   }
-  # Converte a string para um dicionário
-  resultDictionary = ast.literal_eval(str(task.result))
+  
+  try:
+    resultDictionary = ast.literal_eval(str(task.result))
+  except:
+    resultDictionary = {}
 
   if task.state != 'PENDING':
     if 'error' in task.result:

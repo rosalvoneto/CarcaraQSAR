@@ -46,7 +46,7 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
   Y = data.iloc[:,-1]
 
   X_norm = X
-  if(scaler_name != "NÃO APLICAR"):
+  if(scaler_name != "Do not apply"):
 
     # scaler padrão
     scaler = MinMaxScaler()
@@ -179,7 +179,7 @@ def cross_validation(project_id, data, scaler_name, algorithm, parameters):
   Y = data.iloc[:,-1]
 
   X_norm = X
-  if(scaler_name != "NÃO APLICAR"):
+  if(scaler_name != "Do not apply"):
 
     # scaler padrão
     scaler = MinMaxScaler()
@@ -452,16 +452,12 @@ def importance(project_id, data, algorithm, parameters):
     axis=0
   )
   elapsed_time = time.time() - start_time
-
   print(f"Elapsed time to compute the importances: {elapsed_time:.3f} seconds")
+
   feature_names = list(X_train.columns)
-
-  start_time = time.time()
   result = permutation_importance(
-    rf, X_test, y_test, n_repeats=10, random_state=42, n_jobs=2
+    rf, X_test, y_test, n_repeats=10, random_state=42, n_jobs=1
   )
-  elapsed_time = time.time() - start_time
-  print(f"Elapsed time to compute the importances: {elapsed_time:.3f} seconds")
 
   forest_importances = pd.Series(
     result.importances_mean, index=feature_names
