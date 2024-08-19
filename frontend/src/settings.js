@@ -81,7 +81,7 @@ export const statesProgressBar = [
       },
       {
         index: 1,
-        name: "hyperparameters",
+        name: "Hyperparameters",
         childs: [],
         href: '/training',
         stateToPass: { pageNumber: 1 },

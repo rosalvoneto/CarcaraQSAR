@@ -360,7 +360,7 @@ export default function Training() {
           name={'Back'} 
           URL={'/variables-selection'}
           stateToPass={{
-            pageNumber: 2
+            pageNumber: 3
           }}
           side={'left'}
         />

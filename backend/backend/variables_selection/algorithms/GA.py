@@ -373,7 +373,6 @@ class GAAlgorithm:
 
     print(f"Geração: {self.generations}")
     print(f"Aptidão {self.aptidao[worst_index]} continuará na geração atual...")
-    print(f"Aptidão: {self.aptidao}")
 
 
   def evaluate(self):

@@ -50,6 +50,8 @@ def setVariablesSettings_view(request):
   algorithm_parameters = request.POST.get('algorithm_parameters')
   algorithm_parameters = json.loads(algorithm_parameters)
   model = request.POST.get('model')
+  model_parameters = request.POST.get('model_parameters')
+  model_parameters = json.loads(model_parameters)
 
   list_of_variables = request.POST.get('list_of_variables')
   list_of_variables = json.loads(list_of_variables)
@@ -71,6 +73,7 @@ def setVariablesSettings_view(request):
       algorithm=algorithm,
       algorithm_parameters=algorithm_parameters,
       model=model,
+      model_parameters=model_parameters,
       rows_to_remove=rows_to_remove,
     )
 
@@ -85,6 +88,7 @@ def setVariablesSettings_view(request):
       algorithm=algorithm,
       algorithm_parameters=algorithm_parameters,
       model=model,
+      model_parameters=model_parameters,
       rows_to_remove=rows_to_remove,
       project=project,
     )
@@ -265,6 +269,8 @@ def make_selection(self, project_id):
         response = get_variables_settings(project)
         parameters = response["algorithmParameters"]
         algorithm = response["algorithm"]
+        choosen_model = response["model"]
+        model_parameters = response["modelParameters"]
 
         if(algorithm == "Do not apply"):
           return Response({
@@ -279,27 +285,22 @@ def make_selection(self, project_id):
           sep=database.file_separator
         )
 
-        columns_with_nan = base.columns[base.isna().any()].tolist()
-
         condition = algorithm != "Bee colony algorithm"
         condition = True
 
         # Cria um modelo
-        choosen_model = variables_selection.model
         model = None
         if(choosen_model == 'Support Vector Machines - SVM'):
           model = SVR(
             kernel='rbf', 
-            C=1.0, 
+            C=model_parameters["CParameter"], 
             gamma='scale'
           )
           print("MODEL: Support Vector Machines - SVM")
         elif(choosen_model == 'K-Nearest Neighbors - KNN'):
           model = KNeighborsRegressor(
             # Número de vizinhos (k)
-            n_neighbors=5,
-            # Pode usar 'distance' para ponderar pelos inversos das distâncias
-            weights='uniform'
+            n_neighbors=model_parameters["k_neighbors"],
           )
           print("MODEL: K-Nearest Neighbors - KNN")
         elif(choosen_model == 'Linear Regression'):
@@ -310,9 +311,9 @@ def make_selection(self, project_id):
           print("MODEL: Linear Regression")
         else:
           model = RandomForestRegressor(
-            n_estimators=50,
+            n_estimators=model_parameters["n_estimators"],
+            max_features=model_parameters["max_features"],
             random_state=42,
-            max_features="log2",
           )
           print("MODEL: Random Forest")
 
@@ -405,7 +406,7 @@ def make_selection(self, project_id):
           # Busca gulosa
           print("")
           print('BUSCA GULOSA')
-          best_node, best_R2 = graph.execution(best_variable)
+          _, best_R2 = graph.execution(best_variable)
           print("Melhor R2:", best_R2)
 
         update_selection_progress(100, 100, 3, 3, "Finished")

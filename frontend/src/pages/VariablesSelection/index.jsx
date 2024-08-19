@@ -94,11 +94,17 @@ export const modelsDescriptions = [
   "Linear Regression: A machine learning model used to predict numerical values. It assumes a linear relationship between the input variables (independent) and the output variable (dependent). Linear regression fits a coefficient to each input variable to minimize the sum of the squared differences between the predictions and the actual values."
 ];
 
-
 export const modelsParameters = [
-  [],
-  [],
-  [],
+  [
+    ["n_estimators", "Number of Trees", 50, 'Number of decision trees that will be created in the Random Forest model.'], 
+    ["max_features", "Number of Features", 5, 'Number of features (or variables) randomly selected to consider when splitting a node in each tree.']
+  ],
+  [
+    ["CParameter", "C Parameter", 1.0, 'Regularization parameter that controls the margin of error allowed for class separation.']
+  ],
+  [
+    ["k_neighbors", "K Neighbors Quantity", 5, 'Number of nearest neighbors considered when classifying or predicting a new point.']
+  ],
   [],
 ];
 
@@ -129,6 +135,7 @@ export default function VariablesSelection() {
   const [choosenAlgorithm, setChoosenAlgorithm] = useState();
   const [algorithmParameters, setAlgorithmParameters] = useState({});
   const [choosenModel, setChoosenModel] = useState();
+  const [modelParameters, setModelParameters] = useState({});
   
   const [removeConstantVariables, setRemoveConstantVariables] = useState();
 
@@ -209,10 +216,16 @@ export default function VariablesSelection() {
     
   }
 
-  const changeParameters = (key, value) => {
+  const changeAlgorithmParameters = (key, value) => {
     let values = algorithmParameters;
     values[key] = value;
     setAlgorithmParameters(values);
+  }
+  
+  const changeModelParameters = (key, value) => {
+    let values = modelParameters;
+    values[key] = value;
+    setModelParameters(values);
   }
 
   const handleToChangeVariables = async() => {
@@ -223,6 +236,7 @@ export default function VariablesSelection() {
       choosenAlgorithm,
       algorithmParameters,
       choosenModel,
+      modelParameters,
       rowsToRemove,
       authTokens.access
     );
@@ -238,6 +252,7 @@ export default function VariablesSelection() {
       choosenAlgorithm,
       algorithmParameters,
       choosenModel,
+      modelParameters,
       rowsToRemove,
       authTokens.access
     );
@@ -249,7 +264,6 @@ export default function VariablesSelection() {
 
   const handleToCancelSelection = async() => {
     const response = await cancelSelection(projectID, authTokens.access);
-    console.log(response);
     
     setSelected("false");
     setUseGetProgress(false);
@@ -264,6 +278,7 @@ export default function VariablesSelection() {
       choosenAlgorithm,
       algorithmParameters,
       choosenModel,
+      modelParameters,
       rowsToRemove,
       authTokens.access
     );
@@ -336,13 +351,10 @@ export default function VariablesSelection() {
   }
 
   const getProgress = async() => {
-    console.log("VARIABLES SELECTION");
-
     // Realiza a busca do status da tarefa
     const responseTask = await checkSelectionStatus(
       projectID, authTokens.access
     );
-    console.log(responseTask);
 
     if(responseTask.state == 'SUCCESS') {
       setUseGetProgress(false);
@@ -367,7 +379,6 @@ export default function VariablesSelection() {
 
     // Realiza a busca de progresso da tarefa
     const response = await getSelectionProgress(projectID, authTokens.access);
-    console.log(response);
 
     if(response.progress) {
       const split = response.progress.split('/');
@@ -414,7 +425,6 @@ export default function VariablesSelection() {
         makeEstimation(
           execution.counter, progress, maximum
         );
-        console.log(timeForEstimation);
       }
     }
   }
@@ -437,7 +447,11 @@ export default function VariablesSelection() {
       setRightListOfVariables(response.variablesToRemove);
 
       setChoosenAlgorithm(response.algorithm);
+      if(response.model) {
+        setChoosenModel(response.model);
+      }
       
+      // Setar parâmetros do algoritmo
       if(Object.keys(response.algorithmParameters).length) {
         setAlgorithmParameters(response.algorithmParameters);
       } else {
@@ -456,9 +470,25 @@ export default function VariablesSelection() {
         // Exibir o objeto resultante
         setAlgorithmParameters(resultObject);
       }
+      
+      // Setar parâmetros do modelo
+      if(Object.keys(response.modelParameters).length) {
+        setModelParameters(response.modelParameters);
+      } else {
+        // Inicializar o objeto resultante
+        let resultObject = {};
 
-      if(response.model) {
-        setChoosenModel(response.model);
+        // Iterar sobre cada sub-array em modelsParameters
+        modelsParameters.forEach(sublist => {
+          sublist.forEach(item => {
+            const key = item[0];
+            const value = item[2];
+            resultObject[key] = value;
+          });
+        });
+
+        // Exibir o objeto resultante
+        setModelParameters(resultObject);
       }
       
       setRowsToRemove(response.rowsToRemove.toString());
@@ -639,7 +669,7 @@ export default function VariablesSelection() {
                             <InlineInput 
                               name={key[1]} 
                               type={'number'}
-                              setValue={(value) => changeParameters(key[0], value)}
+                              setValue={(value) => changeAlgorithmParameters(key[0], value)}
                               value={
                                 algorithmParameters[key[0]] 
                                 ? algorithmParameters[key[0]] 
@@ -652,7 +682,6 @@ export default function VariablesSelection() {
                                 let array = [...showParameters];
                                 array[index] = !array[index];
                                 setShowParameters(array);
-                                console.log(showParameters);
                               }}
                             >
                               ?
@@ -673,28 +702,27 @@ export default function VariablesSelection() {
                   firstOption={choosenModel}
                 />
                 {
-                /*
-                {
-                  modelsParameters[
-                    modelIndex
-                  ].map((key, index) => {
-                    return(
-                      <InlineInput 
-                        key={`${modelIndex}-${index}`}
-                        name={key[1]} 
-                        type={'number'}
-                        setValue={(value) => changeModels(key[0], value)}
-                        value={
-                          modelParameters[key[0]] 
-                          ? modelParameters[key[0]] 
-                          : modelsParameters[modelIndex][index][2]
-                        }
-                      />
-                    )
-                  })
+                  true
+                  ?
+                    modelsParameters[modelIndex].map((key, index) => {
+                      return(
+                        <InlineInput 
+                          key={`${modelIndex}-${index}`}
+                          name={key[1]} 
+                          type={'number'}
+                          setValue={(value) => changeModelParameters(key[0], value)}
+                          value={
+                            modelParameters[key[0]] 
+                            ? modelParameters[key[0]] 
+                            : modelsParameters[modelIndex][index][2]
+                          }
+                        />
+                      )
+                    })
+                  :
+                    undefined
                 } 
-                */
-                }
+                
                 {
                   algorithmIndex != 0 &&
                   (

@@ -12,6 +12,7 @@ def get_variables_settings(project):
       'algorithm': variables_selection.algorithm,
       'algorithmParameters': variables_selection.algorithm_parameters,
       'model': variables_selection.model,
+      'modelParameters': variables_selection.model_parameters,
       'rowsToRemove': variables_selection.rows_to_remove,
       'algorithmProgress': variables_selection.algorithm_progress
     }
@@ -34,6 +35,7 @@ def get_variables_settings(project):
       'algorithm': variables_selection.algorithm,
       'algorithmParameters': variables_selection.algorithm_parameters,
       'model': variables_selection.model,
+      'modelParameters': variables_selection.model_parameters,
       'rowsToRemove': variables_selection.rows_to_remove,
       'algorithmProgress': variables_selection.algorithm_progress
     }

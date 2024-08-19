@@ -4,20 +4,27 @@ export const setVariablesSettings = async (
   projectID, 
   removeConstantVariables, listOfVariables,
   algorithm, algorithmParameters, 
-  model,
+  model, modelParameters,
   rowsToRemoveString,
   accessToken
 ) => {
 
-  const listOfVariablesString = JSON.stringify(listOfVariables)
-  const parametersString = JSON.stringify(algorithmParameters)
+  console.log("MODEL");
+  console.log(modelParameters);
+  console.log("ALGORITMO");
+  console.log(algorithmParameters);
+
+  const listOfVariablesString = JSON.stringify(listOfVariables);
+  const algorithmParametersString = JSON.stringify(algorithmParameters);
+  const modelParametersString = JSON.stringify(modelParameters);
 
   const formData = new FormData();
   formData.append('project_id', projectID);
   formData.append('algorithm', algorithm);
-  formData.append('algorithm_parameters', parametersString);
-  formData.append('remove_constant_variables', removeConstantVariables);
+  formData.append('algorithm_parameters', algorithmParametersString);
   formData.append('model', model);
+  formData.append('model_parameters', modelParametersString);
+  formData.append('remove_constant_variables', removeConstantVariables);
   formData.append('list_of_variables', listOfVariablesString);
   formData.append('rows_to_remove', rowsToRemoveString);
 
