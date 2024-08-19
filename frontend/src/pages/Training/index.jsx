@@ -33,17 +33,21 @@ import { delayTimeForGetProgress } from '../../settings';
 
 export const algorithms = [
   "Random Forest",
-  "Linear regression",
-  "KNN",
-  "Support Vector Machines (SVM)",
+  "Support Vector Machines - SVM",
+  "K-Nearest Neighbors - KNN",
+  "Linear Regression",
 ];
-const disabledInputs = [1, 2, 3];
+
+const disabledInputs = [];
 
 export const algorithmsDescriptions = [
   "The Random Forest algorithm is a machine learning method that combines multiple decision trees to make more accurate and stable decisions. It works by creating a set of decision trees, each trained on a random sample of the data and using different sets of features. When making predictions, the trees vote together, and the class or value with the most votes is chosen as the final prediction. This reduces the tendency of overfitting and improves the robustness of the model.",
-  "Linear regression is a supervised machine learning algorithm used to model the relationship between one (or more) independent variables and a dependent variable, usually of a continuous nature. It assumes that the relationship between the variables can be represented by a straight line, hence the term 'linear'. The goal is to find the coefficients that best fit this line to the data, so as to minimize the difference between the model's predictions and the actual values.",
+
+  "Support Vector Machines (SVMs) are machine learning algorithms used for both classification and regression tasks. The SVM seeks to find a hyperplane that best separates the classes in a multidimensional space, maximizing the margin between the classes. This makes SVM effective in classifying non-linear data and handling high-dimensional data. Additionally, SVMs can make use of kernel tricks to transform data into more complex feature spaces, thus addressing more challenging classification problems.",
+
   "The KNN (K-Nearest Neighbors) algorithm is a simple and powerful technique in the field of machine learning. Its simplicity is one of its main advantages, making it easy to understand and implement. It operates on the principle of 'nearest neighbors', where decisions are based on the proximity of data points in the feature space.",
-  "Support Vector Machines (SVMs) are machine learning algorithms used for both classification and regression tasks. The SVM seeks to find a hyperplane that best separates the classes in a multidimensional space, maximizing the margin between the classes. This makes SVM effective in classifying non-linear data and handling high-dimensional data. Additionally, SVMs can make use of kernel tricks to transform data into more complex feature spaces, thus addressing more challenging classification problems."
+  
+  "Linear regression is a supervised machine learning algorithm used to model the relationship between one (or more) independent variables and a dependent variable, usually of a continuous nature. It assumes that the relationship between the variables can be represented by a straight line, hence the term 'linear'. The goal is to find the coefficients that best fit this line to the data, so as to minimize the difference between the model's predictions and the actual values.",
 ];
 
 
@@ -53,15 +57,12 @@ export const algorithmsParameters = [
     ["max_features", "Number of Features", 5, 'Number of features (or variables) randomly selected to consider when splitting a node in each tree.']
   ],
   [
-    ["regularization", "Regularization", 0, 'Technique used to penalize large coefficients in the regression model to prevent overfitting.']
+    ["CParameter", "C Parameter", 1, 'Regularization parameter that controls the margin of error allowed for class separation.']
   ],
   [
-    ["k_neighbors", "K Neighbors Quantity", 0, 'Number of nearest neighbors considered when classifying or predicting a new point.']
+    ["k_neighbors", "K Neighbors Quantity", 5, 'Number of nearest neighbors considered when classifying or predicting a new point.']
   ],
-  [
-    ["kernel", "Kernel", 0, 'Function used to transform the data into a high-dimensional space where it becomes easier to separate classes with a hyperplane.'], 
-    ["CParameter", "C Parameter", 0, 'Regularization parameter that controls the margin of error allowed for class separation.']
-  ],
+  [],
 ];
 
 
@@ -322,61 +323,203 @@ export default function Training() {
     updateStatus(projectID, authTokens.access, 'Training');
   }, [])
 
-  if(pageNumber == 0) {
-    return(
-      <>
-        <Header 
-          title={projectDetails.name}
-        />
-        <ProgressBar 
-          progressNumber={progress}
-          subProgressNumber={pageNumber}
-        />
+  return(
+    <>
+      <Header 
+        title={projectDetails.name}
+      />
+      <ProgressBar 
+        progressNumber={progress}
+        subProgressNumber={pageNumber}
+      />
 
-        <div className={styles.container}>
+      <div className={styles.container}>
 
-          <div className={styles.leftDiv}>
-            <RadionInput 
-              name={"Apply algorithm"}
-              options={algorithms}
-              setOption={setChoosenAlgorithm}
-              firstOption={choosenAlgorithm}
-              disabledInputs={disabledInputs}
-            />
-            <p>Without using full set</p>
+        <div className={styles.leftDiv}>
+          <RadionInput 
+            name={"Choose model"}
+            options={algorithms}
+            setOption={setChoosenAlgorithm}
+            firstOption={choosenAlgorithm}
+            disabledInputs={disabledInputs}
+          />
+          <p>Without using full set</p>
+          <div className={styles.parametersContainer}>
+            {
+              algorithmsParameters[
+                algorithmIndex
+              ].map((key, index) => {
+                return(
+                  <InlineInput 
+                    key={`${algorithmIndex}-${index}`}
+                    name={key[1]} 
+                    type={'number'}
+                    setValue={(value) => changeParameters(key[0], value)}
+                    value={
+                      algorithmParameters[key[0]] 
+                      ? algorithmParameters[key[0]] 
+                      : algorithmsParameters[algorithmIndex][index][2]
+                    }
+                  />
+                )
+              })
+            }
           </div>
-
-          <div className={styles.rightDiv}>
-            <div className={styles.informationContainer}>
-              <p className={styles.information}>
-                {algorithmsDescriptions[algorithms.indexOf(choosenAlgorithm)]}
-              </p>
-            </div>
-          </div>
-
+          {
+            trained == "false"
+            ?
+              <button 
+                onClick={saveAndTrain}
+                className={styles.button}
+              >
+                Save and train
+              </button>
+            :
+              <button 
+                onClick={() => {
+                  setTrained("show progress");
+                }}
+                className={styles.button}
+              >
+                Show progress
+              </button>
+          }
         </div>
 
-        <Button 
-          name={'Back'} 
-          URL={'/variables-selection'}
-          stateToPass={{
-            pageNumber: 3
-          }}
-          side={'left'}
-        />
-        <Button 
-          name={'Next'} 
-          URL={'/training'}
-          stateToPass={{
-            pageNumber: 1
-          }}
-          side={'right'}
-          action={nextActionButton}
-        />
-      </>
-    )
+        <div className={styles.rightDiv}>
+          <div className={styles.informationContainer}>
+            <p className={styles.information}>
+              {algorithmsDescriptions[algorithms.indexOf(choosenAlgorithm)]}
+            </p>
+            {
+              algorithmsParameters[algorithmIndex].map((parameter, index) => {
+                return(
+                  <p  key={index} className={styles.information}>
+                    {`${parameter[1]}: ${parameter[3]}`}
+                  </p>
+                )
+              })
+            }
+          </div>
+        </div>
 
-  } else if(pageNumber == 1) {
+      </div>
+
+      {
+        trained == "first time" &&
+        <PopUp 
+          show={true}
+          title={"Training in progress..."}
+          description={`The training with '${choosenAlgorithm}' is running!`}
+
+          showButton
+          buttonName={"Ok"}
+          action={() => {
+            setTrained("show progress");
+          }}
+        />
+      }
+
+      {
+        trained == "show progress" &&
+        <PopUp 
+          show={true}
+          title={"Training..."}
+
+          showButton
+          buttonName={"Close"}
+          action={() => {
+            setTrained("hide progress");
+          }}
+
+          showSecondButton
+          secondButtonName={"Cancel"}
+          secondAction={handleToCancelTraining}
+        >
+          <Loading size={45} />
+          <div className={styles.progressContainer}>
+            <ProgressBarLoading 
+              progress={progressValue}
+              maximum={maximumValue}
+              />
+            <p>
+              {(progressValue / maximumValue * 100).toFixed(0)}%
+            </p>
+            <p>
+              {
+                executionType.length
+                ? `Process ${actualStep}/${totalStep}: ${executionType}`
+                : undefined
+              }
+            </p>
+            <p>
+              {
+                timeForEstimation >= 0 &&
+                `Completion estimate: ${(timeForEstimation).toFixed(0)} minutes`
+              }
+            </p>
+          </div>
+        </PopUp>
+      }
+
+      {
+        trained == "error" &&
+        <PopUp 
+          show={true}
+          title={"Training problem"}
+          description={
+            <>
+              <p>
+                An internal server error prevented the training from being completed.
+              </p>
+              <p>
+                {errorMessage}
+              </p>
+            </>
+          }
+
+          showButton
+          buttonName={"Fechar"}
+          action={() => setTrained("false")}
+        />
+      }
+
+      {
+        trained == "finished" &&
+        <PopUp 
+          show={true}
+          title={"Training completed"}
+          description={
+            `The training with '${choosenAlgorithm}' is finished! Click the button below to see the training results!`
+          }
+
+          showButton
+          buttonName={"Results"}
+          action={navigateToResults}
+        />
+      }
+
+      <Button 
+        name={'Back'} 
+        URL={'/variables-selection'}
+        stateToPass={{
+          pageNumber: 3
+        }}
+        side={'left'}
+      />
+      <Button 
+        name={'Next'} 
+        URL={'/results'}
+        stateToPass={{
+          pageNumber: 0
+        }}
+        side={'right'}
+        action={nextActionButton}
+      />
+    </>
+  )
+
+  if(pageNumber == 1) {
     return(
       <>
         <Header
@@ -389,156 +532,12 @@ export default function Training() {
 
         <div className={styles.container}>
           <div className={styles.leftDiv}>
-            <div className={styles.parametersContainer}>
-              {
-                algorithmsParameters[
-                  algorithmIndex
-                ].map((key, index) => {
-                  return(
-                    <InlineInput 
-                      key={`${algorithmIndex}-${index}`}
-                      name={key[1]} 
-                      type={'number'}
-                      setValue={(value) => changeParameters(key[0], value)}
-                      value={
-                        algorithmParameters[key[0]] 
-                        ? algorithmParameters[key[0]] 
-                        : algorithmsParameters[algorithmIndex][index][2]
-                      }
-                    />
-                  )
-                })
-              }
-            </div>
-            {
-              trained == "false"
-              ?
-                <button 
-                  onClick={saveAndTrain}
-                  className={styles.button}
-                >
-                  Save and train
-                </button>
-              :
-                <button 
-                  onClick={() => {
-                    setTrained("show progress");
-                  }}
-                  className={styles.button}
-                >
-                  Show progress
-                </button>
-            }
+          
           </div>
           <div className={styles.rightDiv}>
-            <div className={styles.informationContainer}>
-              {
-                algorithmsParameters[algorithmIndex].map((parameter, index) => {
-                  return(
-                    <p  key={index} className={styles.information}>
-                      {`${parameter[1]}: ${parameter[3]}`}
-                    </p>
-                  )
-                })
-              }
-            </div>
+            
           </div>
-
         </div>
-
-        {
-          trained == "first time" &&
-          <PopUp 
-            show={true}
-            title={"Training in progress..."}
-            description={`The training with '${choosenAlgorithm}' is running!`}
-
-            showButton
-            buttonName={"Ok"}
-            action={() => {
-              setTrained("show progress");
-            }}
-          />
-        }
-
-        {
-          trained == "show progress" &&
-          <PopUp 
-            show={true}
-            title={"Training..."}
-
-            showButton
-            buttonName={"Close"}
-            action={() => {
-              setTrained("hide progress");
-            }}
-
-            showSecondButton
-            secondButtonName={"Cancel"}
-            secondAction={handleToCancelTraining}
-          >
-            <Loading size={45} />
-            <div className={styles.progressContainer}>
-              <ProgressBarLoading 
-                progress={progressValue}
-                maximum={maximumValue}
-                />
-              <p>
-                {(progressValue / maximumValue * 100).toFixed(0)}%
-              </p>
-              <p>
-                {
-                  executionType.length
-                  ? `Process ${actualStep}/${totalStep}: ${executionType}`
-                  : undefined
-                }
-              </p>
-              <p>
-                {
-                  timeForEstimation >= 0 &&
-                  `Completion estimate: ${(timeForEstimation).toFixed(0)} minutes`
-                }
-              </p>
-            </div>
-          </PopUp>
-        }
-
-        {
-          trained == "error" &&
-          <PopUp 
-            show={true}
-            title={"Training problem"}
-            description={
-              <>
-                <p>
-                  An internal server error prevented the training from being completed.
-                </p>
-                <p>
-                  {errorMessage}
-                </p>
-              </>
-            }
-
-            showButton
-            buttonName={"Fechar"}
-            action={() => setTrained("false")}
-          />
-        }
-
-        {
-          trained == "finished" &&
-          <PopUp 
-            show={true}
-            title={"Training completed"}
-            description={
-              `The training with '${choosenAlgorithm}' is finished! Click the button below to see the training results!`
-            }
-
-            showButton
-            buttonName={"Results"}
-            action={navigateToResults}
-          />
-        }
 
         <Button 
           name={'Back'} 

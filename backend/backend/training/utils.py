@@ -5,6 +5,10 @@ import numpy as np
 from sklearn.utils import shuffle
 
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.linear_model import LinearRegression
+
 from sklearn.model_selection import LeaveOneOut
 from sklearn.model_selection import KFold
 
@@ -73,6 +77,12 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
 
   if(algorithm == "Random Forest"):
     print(f"Usando algoritmo Random Forest")
+  elif(algorithm == "Support Vector Machines - SVM"):
+    print(f"Usando algoritmo Support Vector Machines - SVM")
+  elif(algorithm == "K-Nearest Neighbors - KNN"):
+    print(f"Usando algoritmo K-Nearest Neighbors - KNN")
+  elif(algorithm == "Linear Regression"):
+    print(f"Usando algoritmo Linear Regression")
   else:
     print("Não foi usado nenhum algoritmo!")
 
@@ -87,28 +97,43 @@ def leave_one_out(project_id, data, scaler_name, algorithm, parameters):
 
     verify_Nan(Y_train)
 
+    rf = None
     if(algorithm == "Random Forest"):
-
       rf = RandomForestRegressor(
         n_estimators=parameters["n_estimators"], 
         max_features=parameters["max_features"]
       )
-
-
-      rf = rf.fit(X_train, Y_train)
-      y_pred = rf.predict(X_teste)
-
-      L_Y.append(list(Y_teste)[0])
-      L_Y_pred.append(y_pred)
-      
-
-      training.set_progress(
-        i + 1, 
-        length_progress,
-        1,
-        5
+    elif(algorithm == "Support Vector Machines - SVM"):
+      rf = SVR(
+        kernel='rbf', 
+        C=parameters["CParameter"], 
+        gamma='scale'
       )
-      training.set_execution_type("Leave One Out")
+    elif(algorithm == "K-Nearest Neighbors - KNN"):
+      rf = KNeighborsRegressor(
+        # Número de vizinhos (k)
+        n_neighbors=parameters["k_neighbors"],
+      )
+    elif(algorithm == "Linear Regression"):
+      rf = LinearRegression(
+        # Ajusta o intercepto (b0)
+        fit_intercept=True,
+      )
+
+    rf = rf.fit(X_train, Y_train)
+    y_pred = rf.predict(X_teste)
+
+    L_Y.append(list(Y_teste)[0])
+    L_Y_pred.append(y_pred)
+    
+
+    training.set_progress(
+      i + 1, 
+      length_progress,
+      1,
+      5
+    )
+    training.set_execution_type("Leave One Out")
 
 
   L = [x[0] for x in L_Y_pred]
@@ -152,17 +177,34 @@ def run_exp_for_KFold(data, algorithm, parameters):
     X_teste = data.iloc[test_index,:-1]
     Y_teste = data.iloc[test_index,-1]
 
+    rf = None
     if(algorithm == "Random Forest"):
       rf = RandomForestRegressor(
         n_estimators=parameters["n_estimators"], 
         max_features=parameters["max_features"]
-      )        
+      )
+    elif(algorithm == "Support Vector Machines - SVM"):
+      rf = SVR(
+        kernel='rbf', 
+        C=parameters["CParameter"], 
+        gamma='scale'
+      )
+    elif(algorithm == "K-Nearest Neighbors - KNN"):
+      rf = KNeighborsRegressor(
+        # Número de vizinhos (k)
+        n_neighbors=parameters["k_neighbors"],
+      )
+    elif(algorithm == "Linear Regression"):
+      rf = LinearRegression(
+        # Ajusta o intercepto (b0)
+        fit_intercept=True,
+      )
 
-      rf = rf.fit(X_train, Y_train)
-      y_pred = rf.predict(X_teste)
+    rf = rf.fit(X_train, Y_train)
+    y_pred = rf.predict(X_teste)
 
-      L_Y.extend(Y_teste)
-      L_Y_pred.extend(y_pred)
+    L_Y.extend(Y_teste)
+    L_Y_pred.extend(y_pred)
 
   L = L_Y_pred
   r2 = r2_score(L_Y, L)
@@ -204,6 +246,12 @@ def cross_validation(project_id, data, scaler_name, algorithm, parameters):
   
   if(algorithm == "Random Forest"):
     print(f"Usando algoritmo Random Forest")
+  elif(algorithm == "Support Vector Machines - SVM"):
+    print(f"Usando algoritmo Support Vector Machines - SVM")
+  elif(algorithm == "K-Nearest Neighbors - KNN"):
+    print(f"Usando algoritmo K-Nearest Neighbors - KNN")
+  elif(algorithm == "Linear Regression"):
+    print(f"Usando algoritmo Linear Regression")
   else:
     print("Não foi usado nenhum algoritmo!")
 
@@ -259,16 +307,34 @@ def run_exp_for_YScrambling(data, algorithm, parameters, suffle_Y):
     if(suffle_Y):
       Y_train = shuffle(Y_train)
 
+    rf = None
     if(algorithm == "Random Forest"):
       rf = RandomForestRegressor(
         n_estimators=parameters["n_estimators"], 
         max_features=parameters["max_features"]
       )
-      rf = rf.fit(X_train, Y_train)
-      y_pred = rf.predict(X_teste)
+    elif(algorithm == "Support Vector Machines - SVM"):
+      rf = SVR(
+        kernel='rbf', 
+        C=parameters["CParameter"], 
+        gamma='scale'
+      )
+    elif(algorithm == "K-Nearest Neighbors - KNN"):
+      rf = KNeighborsRegressor(
+        # Número de vizinhos (k)
+        n_neighbors=parameters["k_neighbors"],
+      )
+    elif(algorithm == "Linear Regression"):
+      rf = LinearRegression(
+        # Ajusta o intercepto (b0)
+        fit_intercept=True,
+      )
 
-      L_Y.append(list(Y_teste)[0])
-      L_Y_pred.append(y_pred)
+    rf = rf.fit(X_train, Y_train)
+    y_pred = rf.predict(X_teste)
+
+    L_Y.append(list(Y_teste)[0])
+    L_Y_pred.append(y_pred)
       
   L = [x[0] for x in L_Y_pred]
   r2 = r2_score(L_Y, L)
@@ -283,6 +349,17 @@ def y_scrambling(project_id, data, algorithm, parameters):
   # Salva o dados separados
   X_data = data.iloc[:,:-1]
   y_data = data.iloc[:,-1].to_numpy()
+
+  if(algorithm == "Random Forest"):
+    print(f"Usando algoritmo Random Forest")
+  elif(algorithm == "Support Vector Machines - SVM"):
+    print(f"Usando algoritmo Support Vector Machines - SVM")
+  elif(algorithm == "K-Nearest Neighbors - KNN"):
+    print(f"Usando algoritmo K-Nearest Neighbors - KNN")
+  elif(algorithm == "Linear Regression"):
+    print(f"Usando algoritmo Linear Regression")
+  else:
+    print("Não foi usado nenhum algoritmo!")
 
   times = 2
   length_progress = 50
@@ -363,13 +440,31 @@ def bootstrap(project_id, data, algorithm, parameters, index):
   X_teste = data.iloc[test_index,:-1]
   Y_teste = data.iloc[test_index,-1]
 
+  rf = None
   if(algorithm == "Random Forest"):
     rf = RandomForestRegressor(
       n_estimators=parameters["n_estimators"], 
       max_features=parameters["max_features"]
     )
-    rf = rf.fit(X_train, Y_train)
-    y_pred = rf.predict(X_teste)
+  elif(algorithm == "Support Vector Machines - SVM"):
+    rf = SVR(
+      kernel='rbf', 
+      C=parameters["CParameter"], 
+      gamma='scale'
+    )
+  elif(algorithm == "K-Nearest Neighbors - KNN"):
+    rf = KNeighborsRegressor(
+      # Número de vizinhos (k)
+      n_neighbors=parameters["k_neighbors"],
+    )
+  elif(algorithm == "Linear Regression"):
+    rf = LinearRegression(
+      # Ajusta o intercepto (b0)
+      fit_intercept=True,
+    )
+  
+  rf = rf.fit(X_train, Y_train)
+  y_pred = rf.predict(X_teste)
 
   L = [x[0] for x in L_Y_pred]
 
@@ -437,22 +532,39 @@ def importance(project_id, data, algorithm, parameters):
     random_state=0
   )
 
+  rf = None
   if(algorithm == "Random Forest"):
     rf = RandomForestRegressor(
       n_estimators=parameters["n_estimators"], 
       max_features=parameters["max_features"]
     )
-    rf = rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
+  elif(algorithm == "Support Vector Machines - SVM"):
+    rf = SVR(
+      kernel='rbf', 
+      C=parameters["CParameter"], 
+      gamma='scale'
+    )
+  elif(algorithm == "K-Nearest Neighbors - KNN"):
+    rf = KNeighborsRegressor(
+      # Número de vizinhos (k)
+      n_neighbors=parameters["k_neighbors"],
+    )
+  elif(algorithm == "Linear Regression"):
+    rf = LinearRegression(
+      # Ajusta o intercepto (b0)
+      fit_intercept=True,
+    )
+  rf = rf.fit(X_train, y_train)
+  y_pred = rf.predict(X_test)
 
-  start_time = time.time()
-  importances = rf.feature_importances_
-  std = np.std(
-    [tree.feature_importances_ for tree in rf.estimators_],
-    axis=0
-  )
-  elapsed_time = time.time() - start_time
-  print(f"Elapsed time to compute the importances: {elapsed_time:.3f} seconds")
+  # start_time = time.time()
+  # importances = rf.feature_importances_
+  # std = np.std(
+  #   [tree.feature_importances_ for tree in rf.estimators_],
+  #   axis=0
+  # )
+  # elapsed_time = time.time() - start_time
+  # print(f"Elapsed time to compute the importances: {elapsed_time:.3f} seconds")
 
   feature_names = list(X_train.columns)
   result = permutation_importance(
