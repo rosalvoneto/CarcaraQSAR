@@ -321,12 +321,12 @@ def sendDatabase_view(request):
     return JsonResponse({ "message": f"{uploaded_file.name} enviado!"})
   return JsonResponse({ "message": "Arquivo não enviado!" })
 
-def substituir_valores(lista_dicionarios, valor_antigo, valor_novo):
-    for dicionario in lista_dicionarios:
-        for chave, valor in dicionario.items():
-            if valor == valor_antigo:
-                dicionario[chave] = valor_novo
-    return lista_dicionarios
+# def substituir_valores(lista_dicionarios, valor_antigo, valor_novo):
+#     for dicionario in lista_dicionarios:
+#         for chave, valor in dicionario.items():
+#             if valor == valor_antigo:
+#                 dicionario[chave] = valor_novo
+#     return lista_dicionarios
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

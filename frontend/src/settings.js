@@ -52,17 +52,10 @@ export const statesProgressBar = [
       },
       {
         index: 2,
-        name: "Remove rows",
-        childs: [],
-        href: '/variables-selection',
-        stateToPass: { pageNumber: 2 },
-      },
-      {
-        index: 3,
         name: "Database history",
         childs: [],
         href: '/variables-selection',
-        stateToPass: { pageNumber: 3 },
+        stateToPass: { pageNumber: 2 },
       },
     ],
     href: '/variables-selection',

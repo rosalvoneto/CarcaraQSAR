@@ -1,0 +1,12 @@
+COc1c(cc(cc1OC)C(=O)/C=C/c2cc(OC)ccc2O)OC,4.89
+COc1c(cc(cc1OC)C(=O)/C=C/c2cc(C)ccc2O)OC,4.91
+Oc2ccc(Br)cc2/C=C/C(=O)c1cc(OC)c(OC)c(OC)c1,4.95
+COc1c(cc(cc1OC)C(=O)/C=C/c2cc(ccc2O)[N+]([O-])=O)OC,4.39
+COc2cc(cc(OC)c2C(=O)/C=C/c1cc(OC)ccc1O)OC,4.82
+COc2cc(cc(OC)c2C(=O)/C=C/c1cc(C)ccc1O)OC,4
+COc2cc(cc(OC)c2C(=O)/C=C/c1cc(C)ccc1O)OC,4.38
+Oc2c(/C=C/C(=O)c1c(OC)cc(OC)cc1OC)cc(Br)cc2,4.83
+COc2cc(cc(OC)c2C(=O)/C=C/c1cc(I)ccc1O)OC,4.77
+COc2cc(cc(OC)c2C(=O)/C=C/c1cc([N+]([O-])=O)ccc1O)OC,4.41
+COc2cc(cc(OC)c2C(=O)/C=C/c1ccc(OC)cc1O)OC,4
+COc2cc(cc(OC)c2C(=O)/C=C/c1ccc(C)cc1O)OC,4

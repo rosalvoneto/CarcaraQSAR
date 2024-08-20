@@ -503,7 +503,7 @@ export default function Training() {
         name={'Back'} 
         URL={'/variables-selection'}
         stateToPass={{
-          pageNumber: 3
+          pageNumber: 2
         }}
         side={'left'}
       />

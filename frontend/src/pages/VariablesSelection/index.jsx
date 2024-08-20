@@ -529,7 +529,7 @@ export default function VariablesSelection() {
   }, [choosenModel]); 
 
   useEffect(() => {
-    if(pageNumber == 3) {
+    if(pageNumber == 2) {
       getDatabases(projectID, authTokens.access)
       .then((response) => {
         setDatabases(response.databases);
@@ -902,45 +902,6 @@ export default function VariablesSelection() {
         />
 
         <div className={styles.container}>
-          <InlineInput 
-            name={"Rows to remove:"}
-            width={"80%"}
-            setValue={setRowsToRemove}
-            value={rowsToRemove}
-          />
-        </div>
-        
-        <Button 
-          name={'Back'} 
-          URL={`/variables-selection`}
-          stateToPass={{
-            pageNumber: 1
-          }}
-          side={'left'}
-        />
-        <Button 
-          name={'Next'} 
-          URL={`/variables-selection`} 
-          stateToPass={{
-            pageNumber: 3
-          }}
-          side={'right'}
-          action={handleToChangeRows}
-        />
-      </>
-    )
-  } else if(pageNumber == 3) {
-    return(
-      <>
-        <Header 
-          title={projectDetails.name}
-        />
-        <ProgressBar 
-          progressNumber={progress}
-          subProgressNumber={pageNumber}
-        />
-
-        <div className={styles.container}>
 
             <div className={styles.contentContainer}>
               {
@@ -982,7 +943,7 @@ export default function VariablesSelection() {
           name={'Back'} 
           URL={`/variables-selection`}
           stateToPass={{
-            pageNumber: 2
+            pageNumber: 1
           }}
           side={'left'}
         />
