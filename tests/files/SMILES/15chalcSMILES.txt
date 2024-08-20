@@ -7,6 +7,7 @@ COc2cc(cc(OC)c2C(=O)/C=C/c1cc(C)ccc1O)OC,4
 COc2cc(cc(OC)c2C(=O)/C=C/c1cc(C)ccc1O)OC,4.38
 Oc2c(/C=C/C(=O)c1c(OC)cc(OC)cc1OC)cc(Br)cc2,4.83
 COc2cc(cc(OC)c2C(=O)/C=C/c1cc(I)ccc1O)OC,4.77
+COc2cc(cc(OC)c2C(=O)/C=C/c1cc(I)ccc1O)OC,4.77
 COc2cc(cc(OC)c2C(=O)/C=C/c1cc([N+]([O-])=O)ccc1O)OC,4.41
 COc2cc(cc(OC)c2C(=O)/C=C/c1ccc(OC)cc1O)OC,4
 COc2cc(cc(OC)c2C(=O)/C=C/c1ccc(C)cc1O)OC,4

@@ -12,4 +12,3 @@ COc2cc(cc(OC)c2C(=O)/C=C/c1ccc(OC)cc1O)OC,4
 COc2cc(cc(OC)c2C(=O)/C=C/c1ccc(C)cc1O)OC,4
 Oc1c(cccc1OC)/C=C/C(=O)c2c(OC)cc(OC)cc2OC,4.25
 COc1c(OC)c(ccc1OC)C(=O)/C=C/c2cc(OC)ccc2O,4.94
-COc2cc(cc(OC)c2C(=O)/C=C/c1cc(C)ccc1O)OC,4.38

@@ -117,8 +117,8 @@ class Training(models.Model):
   
 class BootstrapValues(models.Model):
   molecules = models.JSONField(default=list)
-  R_value = models.FloatField()
-  R2_value = models.FloatField()
+  R_value = models.FloatField(null=True)
+  R2_value = models.FloatField(null=True)
 
   training = models.ForeignKey(
     Training, 
