@@ -1,7 +1,7 @@
 import styles from './styles.module.css';
 
 import cactusImage from '../../assets/cactus.png';
-import logoImage from '../../assets/logo.svg';
+import logoImage from '../../assets/logo.png';
 
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
