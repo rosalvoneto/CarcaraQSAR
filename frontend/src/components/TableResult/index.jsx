@@ -48,9 +48,21 @@ const TableResult = () => {
             </td>
           );
         } else if(j == 2) {
-          columnsline.push(<td className={styles.td} key={j}>{RArray[i].toFixed(2)}</td>);
+          try {
+            columnsline.push(
+              <td className={styles.td} key={j}>{RArray[i].toFixed(2)}</td>
+            );
+          } catch (e) {
+            console.log(e);
+          }
         } else if(j == 3) {
-          columnsline.push(<td className={styles.td} key={j}>{R2Array[i].toFixed(2)}</td>);
+          try {
+            columnsline.push(
+              <td className={styles.td} key={j}>{R2Array[i].toFixed(2)}</td>
+            );
+          } catch(e) {
+            console.log(e);
+          }
         }
       }
 
