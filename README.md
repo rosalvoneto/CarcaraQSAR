@@ -139,6 +139,6 @@ CarcaraQSAR is licensed under **CC BY-NC (Creative Commons Attribution-NonCommer
 
 **CarcaraQSAR: A Computational Framework for Relating Chemical Descriptors to Biological Activity**  
 Daniel Alencar Penha Carvalho, Rosalvo Ferreira de Oliveira Neto, Edilson B. Alencar Filho  
-Published in *SoftwareX*  
+To be submitted to *SoftwareX*.
 
 For more details, visit the [GitHub repository](https://github.com/rosalvoneto/CarcaraQSAR).
