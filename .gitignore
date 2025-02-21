@@ -34,3 +34,13 @@ media
 staticfiles
 AG
 myENV
+
+# Python virtual environments
+venv/
+.venv/
+env/
+.env/
+ENV/
+**/venv/
+**/env/
+backend/backend/venv/
