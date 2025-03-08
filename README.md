@@ -10,9 +10,9 @@ Its user-friendly interface eliminates the need for extensive programming knowle
 
 Click the link below to watch the demonstration video.
 
-```
-   https://www.youtube.com/watch?v=ALBr-ow9J_o
-```
+
+https://www.youtube.com/watch?v=ALBr-ow9J_o
+
 
 ## What is a QSAR Model?
 
