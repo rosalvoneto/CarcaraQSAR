@@ -6,6 +6,14 @@ CarcaraQSAR is an open-source, web-based framework designed to simplify the deve
 
 Its user-friendly interface eliminates the need for extensive programming knowledge, making QSAR modeling more accessible. CarcaraQSAR supports multiple validation strategies, including cross-validation and Y-randomization, ensuring robust and reproducible models. The platform is scalable, allowing cloud deployment, and is particularly suited for applications in drug discovery and computational chemistry.
 
+## Demonstration Video
+
+Click the link below to watch the demonstration video.
+
+```
+   https://www.youtube.com/watch?v=ALBr-ow9J_o
+```
+
 ## What is a QSAR Model?
 
 A QSAR (Quantitative Structure-Activity Relationship) model is a computational technique used in chemistry and pharmaceutical sciences to predict the biological, chemical, or toxicological properties of compounds based on their molecular structure. These models are essential in fields like drug design, toxicology, and environmental chemistry.
