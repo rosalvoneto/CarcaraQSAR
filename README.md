@@ -59,7 +59,7 @@ sudo apt install redis-tools redis-server
    npm run dev
    ```
 
-3. **Backend Setup** (Open a new terminal)
+3. **Backend Setup** (Open a new terminal in the current path)
    ```bash
    cd backend/backend
    python3 -m venv venv
@@ -69,7 +69,7 @@ sudo apt install redis-tools redis-server
    python3 manage.py runserver 0.0.0.0:8000
    ```
 
-4. **Start Redis and Celery** (Open a new terminal)
+4. **Start Redis and Celery** (Open a new terminal in the current path)
    ```bash
    redis-server &
    celery -A backend worker -l info
