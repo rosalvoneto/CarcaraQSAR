@@ -84,48 +84,147 @@ sudo apt install redis-tools redis-server
 ---
 
 ### **Windows Installation**
-#### **Prerequisites**
-Before installing, make sure you have:
-- **Git** (https://git-scm.com/downloads)
-- **Python + pip** (https://www.python.org/downloads/)
-- **Node.js + npm** (https://nodejs.org/)
-- **Redis** (Download from https://github.com/microsoftarchive/redis/releases)
 
-#### **Installation Steps**
-1. Open **PowerShell** as Administrator and run:
-   ```powershell
-   git clone https://github.com/rosalvoneto/CarcaraQSAR
-   cd CarcaraQSAR
-   ```
+#### **1. Instalar o WSL**
 
-2. **Frontend Setup**
-   ```powershell
-   cd frontend
-   npm install
-   npm run dev
-   ```
+Se você ainda não tem o WSL instalado, siga esses passos:
 
-3. **Backend Setup** (Open a new terminal)
-   ```powershell
-   cd backend/backend
-   python -m venv venv
-   venv\Scripts\activate
-   pip install -r requirements.txt
-   python manage.py migrate
-   python manage.py runserver 0.0.0.0:8000
-   ```
+1. **Habilite o WSL e o Virtual Machine Platform**:
+    - Abra o PowerShell como Administrador e execute o seguinte comando:
+    
+    ```powershell
+    wsl --install
+    ```
+    
+2. **Escolha a distribuição Linux**:
+    - O WSL instalará o Ubuntu por padrão. Para confirmar se o Ubuntu foi instalado, execute:
+    
+    ```powershell
+    wsl --list --verbose
+    ```
+    
+3. **Reinicie o PC** para completar a instalação.
+4. Após o reboot, **abra o Ubuntu** (ou a distribuição escolhida) e siga as instruções para configurar o nome de usuário e senha.
 
-4. **Start Redis and Celery** (Open a new terminal)
-   ```powershell
-   redis-server
-   celery -A backend worker -l info
-   ```
+#### **2. Criação do script `setup_project.sh`**
 
-5. Open your browser and go to:
-   ```
-   http://localhost:5173/
-   ```
-   Register a new account and start using CarcaraQSAR.
+Copie o script abaixo para a sua área de transferência.
+
+```bash
+#!/bin/bash
+
+echo "======================="
+echo "Setup do CarcaraQSAR"
+echo "======================="
+
+# Atualizar e instalar dependências do sistema
+echo "Atualizando e instalando pacotes do sistema..."
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip redis-server nodejs npm git libpq-dev
+
+# Iniciar Redis se ainda não estiver rodando
+if pgrep -x "redis-server" > /dev/null; then
+    echo "Redis já está rodando."
+else
+    echo "Iniciando Redis..."
+    sudo service redis-server start
+fi
+
+# Clonar o repositório apenas se ainda não existir
+if [ ! -d "CarcaraQSAR" ]; then
+    echo "Clonando o repositório CarcaraQSAR..."
+    git clone https://github.com/rosalvoneto/CarcaraQSAR
+else
+    echo "Repositório CarcaraQSAR já existe. Pulando clone."
+fi
+
+cd CarcaraQSAR
+
+# Configuração do frontend
+echo "Configurando o frontend..."
+cd frontend
+npm install
+
+if pgrep -f "vite" > /dev/null; then
+    echo "O servidor frontend (Vite) já está rodando."
+else
+    echo "Iniciando o frontend (Vite)..."
+    npm run dev &>/dev/null &
+fi
+
+# Voltar para o diretório raiz do backend
+cd ../backend/backend
+
+# Criar e ativar o ambiente virtual se necessário
+if [ ! -d "venv" ]; then
+    echo "Criando ambiente virtual..."
+    python3 -m venv venv
+fi
+
+echo "Ativando o ambiente virtual..."
+source venv/bin/activate
+
+# Instalar as dependências do Python
+echo "Instalando dependências Python..."
+pip install -r requirements.txt
+
+# Rodar migrações do Django
+echo "Aplicando migrações do Django..."
+python3 manage.py migrate
+
+# Rodar o servidor Django se não estiver rodando
+if pgrep -f "runserver" > /dev/null; then
+    echo "O backend Django já está rodando."
+else
+    echo "Iniciando o backend (Django)..."
+    python3 manage.py runserver 0.0.0.0:8000 &>/dev/null &
+fi
+
+# Rodar o Celery se não estiver rodando
+if pgrep -f "celery" > /dev/null; then
+    echo "O Celery já está rodando."
+else
+    echo "Iniciando o Celery..."
+    celery -A backend worker -l info &>/dev/null &
+fi
+
+# Conclusão
+echo "Configuração concluída!"
+echo "Frontend: http://localhost:5173/"
+echo "Backend (Django): http://localhost:8000/"
+```
+
+#### **3. Passo a Passo para Usar o Script**
+
+1. **Crie o arquivo `setup_project.sh` no diretório onde deseja rodar o projeto**:
+No terminal do WSL, no diretório onde você quer que o projeto seja instalado, execute:
+    
+    ```bash
+    touch setup_project.sh
+    nano setup_project.sh
+    ```
+    
+2. **Cole o conteúdo do script acima no arquivo `setup_project.sh`**.
+3. **Torne o script executável**:
+    
+    No terminal do WSL, execute:
+    
+    ```bash
+    chmod +x setup_project.sh
+    ```
+    
+4. **Execute o script**:
+    
+    Ainda no terminal do WSL, execute o script com o seguinte comando:
+    
+    ```bash
+    ./setup_project.sh
+    ```
+    
+
+#### 4. Entrar no CarcaraQSAR
+
+Agora, basta abrir o link http://localhost:5173/ no navegador e explorar o projeto!
 
 ---
 
