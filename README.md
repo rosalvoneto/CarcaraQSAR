@@ -233,9 +233,10 @@ Agora, basta abrir o link http://localhost:5173/ no navegador e explorar o proje
 For a quick demonstration, an **online version** of CarcaraQSAR is available. However, note that this instance has **limited hardware resources** and should **not be used for large-scale projects**.
 
 ### **Access the Demo**
-- **Website**: [CarcaraQSAR Demo](http://www.carcaraqsar.com.br/)
-- **User**: `admin@gmail.com`
-- **Password**: `admin`
+
+To request access, please fill out the form below:
+
+👉 Access the [Demo Form](https://docs.google.com/forms/d/e/1FAIpQLSeSRkAcAiNLV-lW6awXK2yan8bDyr6PxwimBj1DhQ8YDuC5jQ/viewform?usp=dialog)
 
 To test the platform, use the dataset **F25_S50_YL.csv**, available in the root directory of the GitHub repository.
 
